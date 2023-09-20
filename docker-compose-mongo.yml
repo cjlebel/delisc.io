@@ -1,0 +1,46 @@
+version: "3.7"
+# Truncate Log Files: https://tecadmin.net/truncate-docker-container-logfile/
+# List log files for all containers
+# sudo du -h $(docker inspect --format='{{.LogPath}}' $(docker ps -qa))
+services:
+
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    hostname: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: ${PASSWORD}
+    ports:
+      - "27018:27017"
+    networks:
+      - db-network
+    volumes:
+      - mongodb:/data/db
+      - ${USERDIR}/mongodb/config:/configdb
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:latest-ubuntu
+    container_name: "sqlserver"
+    hostname: sqlserver
+    restart: always
+    environment:
+      - MSSQL_SA_PASSWORD=${PASSWORD}
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Standard
+      - MSSQL_AGENT_ENABLED=True
+    ports:
+      - 1433:1433
+    networks:
+      - db-network
+    volumes:
+      - sqlserver:/var/opt/mssql
+      - $USERDIR/mssql/logs:/var/opt/sqlserver/log
+      - $USERDIR/mssql/backups:/var/opt/sqlserver/backup
+
+volumes:
+  mongodb:
+  sqlserver:
+networks:
+  db-network:     

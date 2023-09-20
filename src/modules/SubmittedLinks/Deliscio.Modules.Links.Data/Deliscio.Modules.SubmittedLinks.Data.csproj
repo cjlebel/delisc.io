@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
+    <ProjectReference Include="..\Deliscio.Modules.SubmittedLinks.Abstractions\Deliscio.Modules.SubmittedLinks.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

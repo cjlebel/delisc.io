@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\SQL\**" />
+    <EmbeddedResource Remove="Data\SQL\**" />
+    <None Remove="Data\SQL\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Bson" Version="2.21.0" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.10.0.77988">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Structurizr.Annotations" Version="0.9.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
+    <ProjectReference Include="..\..\..\core\Deliscio.Core.Data\Deliscio.Core.Data.csproj" />
+    <ProjectReference Include="..\..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
+  </ItemGroup>
+
+</Project>
