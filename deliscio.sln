@@ -53,6 +53,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.unitTestGeneratorConfig = .unitTestGeneratorConfig
 		docker-compose-mongo.yml = docker-compose-mongo.yml
 		env.txt = env.txt
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Tools.CsvImporter", "src\tools\Deliscio.Tools.CsvImporter\Deliscio.Tools.CsvImporter.csproj", "{65AFAD76-3B6E-43A4-A94B-599BC912DB71}"
@@ -65,13 +66,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.Links", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{999FC850-B0BF-4661-B7A8-7509F3DC8683}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deliscio.Tests.Unit.Modules.Links", "tests\unit\modules\Deliscio.Tests.Unit.Modules.Links\Deliscio.Tests.Unit.Modules.Links.csproj", "{82DD7CDB-A5B8-4CB1-98B1-1C06593E54EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Tests.Unit.Modules.Links", "tests\unit\modules\Deliscio.Tests.Unit.Modules.Links\Deliscio.Tests.Unit.Modules.Links.csproj", "{82DD7CDB-A5B8-4CB1-98B1-1C06593E54EA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apis", "Apis", "{E794F7B4-F237-446E-9FA5-FDBC154FDF49}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApis", "WebApis", "{B61C225C-7AF5-4A0B-9ACC-0E5557DF447A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deliscio.Tests.Functional.Apis.WebApis", "tests\functional\apis\webapis\Deliscio.Tests.Functional.Apis.WebApis\Deliscio.Tests.Functional.Apis.WebApis.csproj", "{E36C93F3-A604-451C-8312-550354BE81B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Tests.Functional.Apis.WebApis", "tests\functional\apis\webapis\Deliscio.Tests.Functional.Apis.WebApis\Deliscio.Tests.Functional.Apis.WebApis.csproj", "{E36C93F3-A604-451C-8312-550354BE81B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
