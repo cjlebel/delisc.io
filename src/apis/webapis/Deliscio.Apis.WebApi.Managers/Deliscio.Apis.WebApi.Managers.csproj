@@ -15,6 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\modules\UserLinks\Deliscio.Modules.UserLinks.csproj" />
 		<ProjectReference Include="..\Deliscio.Apis.WebApis.Common\Deliscio.Apis.WebApi.Common.csproj" />
 	</ItemGroup>
 

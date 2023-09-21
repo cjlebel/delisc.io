@@ -1,10 +1,9 @@
-using System.Linq;
 using System.Net;
-using Ardalis.GuardClauses;
-using Deliscio.Apis.WebApi.Common.Responses;
-using Deliscio.Modules.Links.Interfaces;
-using Deliscio.Modules.Links.Models;
+using Deliscio.Core.Models;
+using Deliscio.Modules.Links.Common.Models;
+using Deliscio.Modules.Links.Common.Queries;
 using Deliscio.Modules.Links.Requests;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,8 +14,8 @@ namespace Deliscio.Apis.WebApi.Common.APIs;
 
 public class LinksApiEndpoints : BaseApiEndpoints
 {
-    private readonly ILinksService _linksService;
     private readonly ILogger<LinksApiEndpoints> _logger;
+    private readonly IMediator _mediator;
 
     private const string ID_CANNOT_BE_NULL_OR_WHITESPACE = "Id cannot be null or whitespace";
     private const string LINK_COULD_NOT_BE_FOUND = "The Link for Id {0} could not be found";
@@ -24,9 +23,9 @@ public class LinksApiEndpoints : BaseApiEndpoints
     private const string PAGENO_CANNOT_BE_LESS_THAN_ONE = "PageNo cannot be less than 1";
     private const string PAGESIZE_CANNOT_BE_LESS_THAN_ONE = "PageSize cannot be less than 1";
 
-    public LinksApiEndpoints(ILinksService linksService, ILogger<LinksApiEndpoints> logger)
+    public LinksApiEndpoints(IMediator mediator, ILogger<LinksApiEndpoints> logger)
     {
-        _linksService = linksService;
+        _mediator = mediator;
         _logger = logger;
     }
 
@@ -34,30 +33,11 @@ public class LinksApiEndpoints : BaseApiEndpoints
     {
         MapGetLink(endpoints);
         MapGetLinksAsPager(endpoints);
-
+        MapSubmitLink(endpoints);
     }
 
     private void MapGetLink(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("v1/links/",
-            async ([FromBody] SubmitLinkRequest? request) =>
-            {
-                if (request is null)
-                    return Results.BadRequest("Request cannot be null");
-
-                var isValid = request.IsValid();
-
-                if (!isValid.Value)
-                    return Results.BadRequest($"Submit Link Failed:{Environment.NewLine}{string.Join(Environment.NewLine, isValid.Errors.Select(e => e.ErrorMessage).ToArray())}");
-
-                var isSubmitted = await _linksService.SubmitLinkAsync(request);
-
-                return Results.Ok(isSubmitted);
-            })
-            .ProducesProblem((int)HttpStatusCode.OK)
-            .ProducesProblem((int)HttpStatusCode.BadRequest)
-            .WithDisplayName("SubmitLink");
-
         // Id is required, so this will never be hit if id is empty (it will go to the next endpoint that has an optional pageNo and pageSize)
         endpoints.MapGet("v1/links/{id}",
                 async ([FromRoute] string id, CancellationToken cancellationToken) =>
@@ -65,7 +45,8 @@ public class LinksApiEndpoints : BaseApiEndpoints
                     if (string.IsNullOrWhiteSpace(id))
                         return Results.BadRequest(ID_CANNOT_BE_NULL_OR_WHITESPACE);
 
-                    var result = await _linksService.GetAsync(id, cancellationToken);
+                    var query = new GetLinkByIdQuery();
+                    var result = await _mediator.Send(query, cancellationToken);
 
                     if (result is null)
                         return Results.NotFound(string.Format(LINK_COULD_NOT_BE_FOUND, id));
@@ -100,16 +81,15 @@ public class LinksApiEndpoints : BaseApiEndpoints
                 if (newPageSize < 1)
                     return Results.BadRequest(PAGESIZE_CANNOT_BE_LESS_THAN_ONE);
 
-                var results = await _linksService.GetAsync(newPageNo, newPageSize, cancellationToken);
+                var query = new GetLinksQuery(newPageNo, newPageSize);
+                var results = await _mediator.Send(query, cancellationToken);
 
-                if (!results.Results.Any())
+                if (!results.Items.Any())
                     return Results.NotFound(string.Format(LINKS_COULD_NOT_BE_FOUND, pageNo));
 
-                var pager = GetPager(results.Results, newPageNo, newPageSize, results.TotalCount);
-
-                return Results.Ok(pager);
+                return Results.Ok(results);
             })
-            .Produces<PagedResponse<Link>>()
+            .Produces<PagedResults<Link>>()
             .ProducesProblem((int)HttpStatusCode.OK)
             .ProducesProblem((int)HttpStatusCode.NotFound)
             .ProducesProblem((int)HttpStatusCode.BadRequest)
@@ -117,5 +97,27 @@ public class LinksApiEndpoints : BaseApiEndpoints
             .WithSummary("Get paginated collection of links")
             .WithDescription("This endpoint retrieves paginated links based on pageNo and pageSize. If either pageNo or pageSize is less than 1, a BadRequest is returned");
         //.WithGroupName("Links");
+    }
+
+    private void MapSubmitLink(IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapPost("v1/links/",
+            async ([FromBody] SubmitLinkRequest? request) =>
+            {
+                if (request is null)
+                    return Results.BadRequest("Request cannot be null");
+
+                var isValid = request.IsValid();
+
+                if (!isValid.Value)
+                    return Results.BadRequest($"Submit Link Failed:{Environment.NewLine}{string.Join(Environment.NewLine, isValid.Errors.Select(e => e.ErrorMessage).ToArray())}");
+
+                var isSubmitted = false; //await _linksService.SubmitLinkAsync(request);
+
+                return Results.Ok(isSubmitted);
+            })
+            .ProducesProblem((int)HttpStatusCode.OK)
+            .ProducesProblem((int)HttpStatusCode.BadRequest)
+            .WithDisplayName("SubmitLink");
     }
 }

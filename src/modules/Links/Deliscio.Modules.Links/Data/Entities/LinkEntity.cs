@@ -5,7 +5,7 @@ using Deliscio.Core.Data.Mongo.Attributes;
 namespace Deliscio.Modules.Links.Data.Entities;
 
 /// <summary>
-/// Represents a link that has been submitted to the system, but not yet processed.
+/// Represents a link that has been submitted to the central repository.
 /// </summary>
 /// <seealso cref="MongoEntityBase" />
 [Table("Link")]

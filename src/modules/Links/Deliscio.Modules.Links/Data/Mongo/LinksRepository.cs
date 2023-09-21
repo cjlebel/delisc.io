@@ -9,7 +9,7 @@ using MongoDB.Driver;
 namespace Deliscio.Modules.Links.Data.Mongo;
 
 /// <summary>
-/// 
+/// Responsible for interacting with the MongoDb database for the Links module
 /// </summary>
 public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksRepository
 {
@@ -51,7 +51,6 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
     }
 
     #endregion
-
 
     #region - Tags -
 

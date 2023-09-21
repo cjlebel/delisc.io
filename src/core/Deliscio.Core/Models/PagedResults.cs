@@ -1,6 +1,6 @@
-namespace Deliscio.Apis.WebApi.Common.Responses;
+namespace Deliscio.Core.Models;
 
-public class PagedResponse<T>
+public record PagedResults<T>
 {
     public IEnumerable<T> Items { get; set; }
     public int PageNumber { get; set; }
@@ -8,7 +8,7 @@ public class PagedResponse<T>
     public int TotalResults { get; set; }
     public int TotalPages => (int)Math.Ceiling((double)TotalResults / PageSize);
 
-    public PagedResponse(IEnumerable<T> items, int pageNumber, int pageSize, int totalResults)
+    public PagedResults(IEnumerable<T> items, int pageNumber, int pageSize, int totalResults)
     {
         Items = items;
         PageNumber = pageNumber;

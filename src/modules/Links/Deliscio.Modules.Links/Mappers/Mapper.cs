@@ -1,5 +1,5 @@
+using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Data.Entities;
-using Deliscio.Modules.Links.Models;
 
 namespace Deliscio.Modules.Links.Mappers;
 

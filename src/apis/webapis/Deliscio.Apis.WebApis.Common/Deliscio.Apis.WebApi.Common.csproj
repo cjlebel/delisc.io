@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Carter" Version="7.1.0" />
+		<PackageReference Include="Carter" Version="7.2.0" />
 		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.10.0.77988">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,6 +21,11 @@
 		<Folder Include="APIs\" />
 		<Folder Include="Models\" />
 		<Folder Include="Requests\" />
+		<Folder Include="Responses\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -1,4 +1,6 @@
 using Deliscio.Apis.WebApi.Api.Common.Interfaces;
+using MediatR;
+using Microsoft.Extensions.Logging;
 using Structurizr.Annotations;
 
 namespace Deliscio.Apis.WebApi.Managers;
@@ -7,23 +9,21 @@ namespace Deliscio.Apis.WebApi.Managers;
 [UsedByContainer("Web API")]
 public class LinksManager : ILinksManager
 {
-    //private readonly ILogger<LinksManager> _logger;
-    //private readonly ILinksService _linksService;
+    private readonly ILogger<LinksManager> _logger;
+    private readonly IMediator _mediator;
 
-    //public LinksManager(ILinksService linksService, ILogger<LinksManager> logger)
-    //{
-    //    _logger = logger;
-    //    _linksService = linksService;
-    //}
+    public LinksManager(IMediator mediator, ILogger<LinksManager> logger)
+    {
+        _logger = logger;
+        _mediator = mediator;
+    }
 
-    //public async Task<Link> GetAsync(string id, CancellationToken token = default)
+    //public async Task<IEnumerable<Link>> GetLink(string id)
     //{
-    //    var result = await _linksService.GetAsync(id, token);
+    //    // Create a query request and dispatch it using MediatR
+    //    var query = new GetU { UserId = userId };
+    //    var result = await _mediator.Send(query);
+
     //    return result;
-    //}
-
-    //public Task<IEnumerable<Link>> GetAsync(int pageNo = 1, int pageSize = 25, string userId = "", CancellationToken token = default)
-    //{
-    //    throw new NotImplementedException();
     //}
 }

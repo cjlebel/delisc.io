@@ -284,13 +284,13 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     public void Update(TDocument entity, CancellationToken token = default)
     {
         entity.DateUpdated = DateTimeOffset.UtcNow;
-        Collection.ReplaceOne(d => d.Id == entity.Id, entity);
+        Collection.ReplaceOne(d => d.Id == entity.Id, entity, cancellationToken: token);
     }
 
     public async Task UpdateAsync(TDocument entity, CancellationToken token = default)
     {
         entity.DateUpdated = DateTime.UtcNow;
-        await Collection.ReplaceOneAsync(d => d.Id == entity.Id, entity);
+        await Collection.ReplaceOneAsync(d => d.Id == entity.Id, entity, cancellationToken: token);
     }
 
     #region - Privates -

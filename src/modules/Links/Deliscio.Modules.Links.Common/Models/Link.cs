@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 
-namespace Deliscio.Modules.Links.Models;
+namespace Deliscio.Modules.Links.Common.Models;
 
 public class Link
 {
@@ -34,7 +34,7 @@ public class Link
     /// </value>
     public bool IsFlagged { get; set; } = false;
 
-    public ReadOnlyCollection<Tag> Tags { get; set; }
+    public ReadOnlyCollection<LinkTag> Tags { get; set; }
 
     public string Title { get; set; }
 
@@ -51,7 +51,7 @@ public class Link
         Title = string.Empty;
         Url = url;
         CreatedById = createdById;
-        Tags = new ReadOnlyCollection<Tag>(new List<Tag>());
+        Tags = new ReadOnlyCollection<LinkTag>(new List<LinkTag>());
     }
 
     public Link(Guid id, string url, Guid createdById)
@@ -60,21 +60,21 @@ public class Link
         Title = string.Empty;
         Url = url;
         CreatedById = createdById.ToString();
-        Tags = new ReadOnlyCollection<Tag>(new List<Tag>());
+        Tags = new ReadOnlyCollection<LinkTag>(new List<LinkTag>());
     }
 
-    public Link(Guid id, string url, string title, string description, IEnumerable<Tag>? tags)
+    public Link(Guid id, string url, string title, string description, IEnumerable<LinkTag>? tags)
         : this(id.ToString(), url, title, description, tags)
     {
     }
 
-    public Link(string id, string url, string title, string description, IEnumerable<Tag>? tags)
+    public Link(string id, string url, string title, string description, IEnumerable<LinkTag>? tags)
     {
         Id = string.IsNullOrWhiteSpace(id) ? Guid.NewGuid().ToString() : id;
         Title = title;
         Description = description;
         Url = url;
-        Tags = new ReadOnlyCollection<Tag>((IList<Tag>)(tags ?? Enumerable.Empty<Tag>()));
+        Tags = new ReadOnlyCollection<LinkTag>((IList<LinkTag>)(tags ?? Enumerable.Empty<LinkTag>()));
     }
 
     public Link Create(string url)
@@ -104,7 +104,7 @@ public class Link
 
         var arrTags = tags as string[] ?? Array.Empty<string>();
 
-        return new Link(Guid.Empty, url, title, description, (arrTags.Select(Tag.Create)))
+        return new Link(Guid.Empty, url, title, description, (arrTags.Select(LinkTag.Create)))
         {
             DateCreated = DateTimeOffset.UtcNow,
             DateUpdated = DateTimeOffset.UtcNow,

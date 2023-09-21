@@ -29,6 +29,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\modules\Links\Deliscio.Modules.Links.MediatR\Deliscio.Modules.Links.MediatR.csproj" />
 		<ProjectReference Include="..\Deliscio.Apis.WebApis.Common\Deliscio.Apis.WebApi.Common.csproj" />
 	</ItemGroup>
 

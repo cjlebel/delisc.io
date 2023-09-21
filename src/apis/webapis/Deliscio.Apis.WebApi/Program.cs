@@ -2,9 +2,15 @@
 using Deliscio.Apis.WebApi.Common.APIs;
 using Deliscio.Core.Configuration;
 using Deliscio.Core.Data.Mongo;
+using Deliscio.Core.Models;
 using Deliscio.Modules.Links;
+using Deliscio.Modules.Links.Common.Interfaces;
+using Deliscio.Modules.Links.Common.Models;
+using Deliscio.Modules.Links.Common.Queries;
 using Deliscio.Modules.Links.Data.Mongo;
 using Deliscio.Modules.Links.Interfaces;
+using Deliscio.Modules.Links.MediatR.Handlers;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Structurizr.Annotations;
@@ -50,6 +56,12 @@ public class Program
         //    options.AssumeDefaultVersionWhenUnspecified = true;
         //    options.ReportApiVersions = true;
         //});
+
+        builder.Services.AddSingleton<IRequestHandler<GetLinkByIdQuery, Link?>, GetLinkByIdQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetLinksByDomainQuery, PagedResults<Link>>, GetLinkByDomainQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetLinksByTagsQuery, PagedResults<Link>>, GetLinkByTagsQueryHandler>();
+
+
 
         builder.Services.AddSingleton<ILinksRepository, LinksRepository>();
 
