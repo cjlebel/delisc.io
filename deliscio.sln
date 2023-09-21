@@ -84,6 +84,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.LinksQueue
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.UserLinks", "src\modules\UserLinks\Deliscio.Modules.UserLinks.csproj", "{7C61941A-A278-489D-A234-087982188916}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LinksProcessor", "LinksProcessor", "{807B60C0-B77B-4D11-97FF-867DACA3EA51}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{CD657082-621C-4259-BFBB-86719BE0EE27}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Workers.LinksProcessor", "src\workers\LinksProcessor\Deliscio.Workers.LinksProcessor.csproj", "{6B06CE26-A9E8-439C-9C5D-1E1AC748E4B1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Common", "src\common\Common\Deliscio.Common.csproj", "{D0834B2E-4784-41EF-89A7-4BD9AF5F8B71}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -146,6 +154,14 @@ Global
 		{7C61941A-A278-489D-A234-087982188916}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C61941A-A278-489D-A234-087982188916}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C61941A-A278-489D-A234-087982188916}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B06CE26-A9E8-439C-9C5D-1E1AC748E4B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B06CE26-A9E8-439C-9C5D-1E1AC748E4B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B06CE26-A9E8-439C-9C5D-1E1AC748E4B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B06CE26-A9E8-439C-9C5D-1E1AC748E4B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0834B2E-4784-41EF-89A7-4BD9AF5F8B71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0834B2E-4784-41EF-89A7-4BD9AF5F8B71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0834B2E-4784-41EF-89A7-4BD9AF5F8B71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0834B2E-4784-41EF-89A7-4BD9AF5F8B71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -179,6 +195,9 @@ Global
 		{24FAA14F-3877-48AF-9C34-F6F125CA96FB} = {CBFF9B23-59F5-4117-9AC6-6A5D496BDD72}
 		{633A28CC-5A14-48C6-8DC3-D4A0B993F237} = {83650EA7-03B1-41E0-B052-083310FB1FC4}
 		{7C61941A-A278-489D-A234-087982188916} = {9164AB74-9390-4531-BB35-A7A78141B393}
+		{807B60C0-B77B-4D11-97FF-867DACA3EA51} = {4B060D42-9CBB-451B-905D-2A3F096489A6}
+		{6B06CE26-A9E8-439C-9C5D-1E1AC748E4B1} = {807B60C0-B77B-4D11-97FF-867DACA3EA51}
+		{D0834B2E-4784-41EF-89A7-4BD9AF5F8B71} = {CD657082-621C-4259-BFBB-86719BE0EE27}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC98CF49-1486-4252-A157-DA1293256158}
