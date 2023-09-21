@@ -71,6 +71,8 @@ public class LinkEntity : MongoEntityBase
 
     public Guid CreatedByUserId { get; set; }
 
+    private LinkEntity() { }
+
     public LinkEntity(string id, string url, string title) : this(Guid.Parse(id), url, title) { }
 
     public LinkEntity(Guid id, string url, string title)
@@ -108,9 +110,14 @@ public class LinkEntity : MongoEntityBase
     /// <param name="url">The url to the page</param>
     /// <param name="title">The title of the page</param>
     /// <param name="createdById">The id of the user who submitted the link</param>
+    /// <param name="tags">The optional tags that are associated with the link</param>
     /// <returns></returns>
-    public LinkEntity Create(string url, string title, Guid createdById)
+    public static LinkEntity Create(string url, string title, Guid createdById, string[]? tags)
     {
-        return new LinkEntity(Guid.NewGuid(), url, title) { };
+        return new LinkEntity()
+        {
+
+            Tags = tags?.Select(x => new TagEntity(x)).ToList() ?? new List<TagEntity>(),
+        };
     }
 }

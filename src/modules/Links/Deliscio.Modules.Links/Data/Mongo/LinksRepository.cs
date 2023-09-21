@@ -22,6 +22,14 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
     #endregion
 
     #region - Links
+
+    public async Task<LinkEntity?> GetByUrlAsync(string url, CancellationToken token = default)
+    {
+        Guard.Against.NullOrEmpty(url);
+
+        return await FirstOrDefault(x => x.Url == url, token);
+    }
+
     public async Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> GetByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         Guard.Against.NullOrEmpty(domain);

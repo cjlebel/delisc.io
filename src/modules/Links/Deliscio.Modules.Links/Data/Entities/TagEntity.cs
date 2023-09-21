@@ -17,7 +17,7 @@ public class TagEntity : MongoEntityBase
         Weight = weight;
     }
 
-    public TagEntity Create(string name)
+    public static TagEntity Create(string name)
     {
         return new TagEntity(name);
     }

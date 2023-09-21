@@ -19,4 +19,8 @@
 	  <ProjectReference Include="..\..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Responses\" />
+	</ItemGroup>
+
 </Project>

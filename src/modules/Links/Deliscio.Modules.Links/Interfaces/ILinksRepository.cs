@@ -11,6 +11,8 @@ public interface ILinksRepository : IRepository<LinkEntity>
 
     Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> GetByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
 
+    Task<LinkEntity?> GetByUrlAsync(string url, CancellationToken token = default);
+
     #endregion
 
     #region - Tags -

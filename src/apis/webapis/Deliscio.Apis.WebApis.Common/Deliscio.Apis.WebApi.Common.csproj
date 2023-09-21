@@ -20,10 +20,7 @@
 	<ItemGroup>
 		<Folder Include="APIs\" />
 		<Folder Include="Models\" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\..\..\modules\SubmittedLinks\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
+		<Folder Include="Requests\" />
 	</ItemGroup>
 
 </Project>

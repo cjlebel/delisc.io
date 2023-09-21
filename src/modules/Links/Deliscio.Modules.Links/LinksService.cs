@@ -4,6 +4,7 @@ using Deliscio.Modules.Links.Data.Entities;
 using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Modules.Links.Mappers;
 using Deliscio.Modules.Links.Models;
+using Deliscio.Modules.Links.Requests;
 using Microsoft.Extensions.Logging;
 
 namespace Deliscio.Modules.Links;
@@ -13,13 +14,19 @@ public class LinksService : ILinksService
     private readonly ILogger<LinksService> _logger;
     private readonly ILinksRepository _linksRepository;
 
-    public LinksService(ILinksRepository linksRepository,
-        ILogger<LinksService> logger)
+    public LinksService(ILinksRepository linksRepository, ILogger<LinksService> logger)
     {
         _logger = logger;
         _linksRepository = linksRepository;
     }
 
+
+    /// <summary>
+    /// Gets a single link by its id from the central link repository
+    /// </summary>
+    /// <param name="id">The id of the link to retrieve</param>
+    /// <param name="token"></param>
+    /// <returns></returns>
     public async Task<Link?> GetAsync(string id, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(id);
@@ -31,11 +38,27 @@ public class LinksService : ILinksService
         return link;
     }
 
+    /// <summary>
+    /// Gets a collection of links from the central link repository.
+    /// </summary>
+    /// <param name="pageNo">The number of the page of results to be returned</param>
+    /// <param name="pageSize">The number of results per page</param>
+    /// <param name="token"></param>
+    /// <returns></returns>
     public Task<(IEnumerable<Link> Results, int TotalPages, int TotalCount)> GetAsync(int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         return Find(_ => true, pageNo, pageSize, token);
     }
 
+    /// <summary>
+    /// Gets a collection of links from the central link repository by their domain name
+    /// </summary>
+    /// <param name="domain">Gets a collection of links by their domain name (eg: github.com)</param>
+    /// <param name="pageNo">The number of the page of results to be returned</param>
+    /// <param name="pageSize">The number of results per page</param>
+    /// <param name="token"></param>
+    /// /// <exception cref="ArgumentNullException">If the domain is null or empty</exception>
+    /// <returns></returns>
     public async Task<(IEnumerable<Link> Results, int TotalPages, int TotalCount)> GetByDomain(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(domain);
@@ -47,6 +70,15 @@ public class LinksService : ILinksService
         return (links, results.TotalPages, results.TotalCount);
     }
 
+    /// <summary>
+    /// Gets a collection of links from the central link repository that contain all of the specified tags, 
+    /// </summary>
+    /// <param name="tags">A collection of tags for which each result that is returned must contain</param>
+    /// <param name="pageNo">The number of the page of results to be returned</param>
+    /// <param name="pageSize">The number of results per page</param>
+    /// <param name="token"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
     public Task<(IEnumerable<Link> Results, int TotalPages, int TotalCount)> GetByTags(IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         throw new NotImplementedException();
@@ -74,5 +106,44 @@ public class LinksService : ILinksService
         var links = Mapper.Map(results.Results);
 
         return (links, results.TotalPages, results.TotalCount);
+    }
+
+    public async ValueTask<bool> SubmitLinkAsync(SubmitLinkRequest request, CancellationToken token = default)
+    {
+        var link = await _linksRepository.GetByUrlAsync(request.Url, token);
+
+        var userTags = request.UsersTags.Any() ? request.UsersTags.Select(t => TagEntity.Create(t)).ToArray() : Array.Empty<TagEntity>();
+
+        if (link == null)
+        {
+            link = LinkEntity.C
+        }
+
+
+        if (!link.Tags.Any())
+        {
+            link.Tags.AddRange(userTags);
+        }
+        else
+        {
+            foreach (var tag in link.Tags)
+            {
+                var linkTag = link.Tags.Find(t => t.Name == tag.Name);
+
+                if (linkTag != null)
+                {
+                    linkTag.Count++;
+                }
+                else
+                {
+                    link.Tags.Add(tag);
+                }
+            }
+        }
+
+        // Associate link with user
+
+
+        return new ValueTask<bool>(true);
     }
 }

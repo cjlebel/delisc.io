@@ -1,13 +1,15 @@
+using System.Linq;
 using System.Net;
+using Ardalis.GuardClauses;
 using Deliscio.Apis.WebApi.Common.Responses;
 using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Modules.Links.Models;
+using Deliscio.Modules.Links.Requests;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace Deliscio.Apis.WebApi.Common.APIs;
 
@@ -37,6 +39,25 @@ public class LinksApiEndpoints : BaseApiEndpoints
 
     private void MapGetLink(IEndpointRouteBuilder endpoints)
     {
+        endpoints.MapPost("v1/links/",
+            async ([FromBody] SubmitLinkRequest? request) =>
+            {
+                if (request is null)
+                    return Results.BadRequest("Request cannot be null");
+
+                var isValid = request.IsValid();
+
+                if (!isValid.Value)
+                    return Results.BadRequest($"Submit Link Failed:{Environment.NewLine}{string.Join(Environment.NewLine, isValid.Errors.Select(e => e.ErrorMessage).ToArray())}");
+
+                var isSubmitted = await _linksService.SubmitLinkAsync(request);
+
+                return Results.Ok(isSubmitted);
+            })
+            .ProducesProblem((int)HttpStatusCode.OK)
+            .ProducesProblem((int)HttpStatusCode.BadRequest)
+            .WithDisplayName("SubmitLink");
+
         // Id is required, so this will never be hit if id is empty (it will go to the next endpoint that has an optional pageNo and pageSize)
         endpoints.MapGet("v1/links/{id}",
                 async ([FromRoute] string id, CancellationToken cancellationToken) =>
