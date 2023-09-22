@@ -15,6 +15,8 @@ public interface ILinksService
 
     Task<PagedResults<Link>> GetByTags(IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
 
+    ValueTask<Guid> SubmitLinkAsync(string url, Guid submittedByUserId, string[]? tags = default, CancellationToken token = default);
+
     ///// <summary>
     ///// Lets a user submit a link. If the link is valid and doesn't already exist, it will be added to the central link repository.
     ///// Once it exists, an association will be made between the user and the link.

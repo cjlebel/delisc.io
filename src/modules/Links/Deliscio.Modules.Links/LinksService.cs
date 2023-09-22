@@ -134,6 +134,49 @@ public class LinksService : ServiceBase, ILinksService
         return (links, results.TotalPages, results.TotalCount);
     }
 
+    public async ValueTask<Guid> SubmitLinkAsync(string url, Guid submittedByUserId, string[]? tags = default, CancellationToken token = default)
+    {
+        Guard.Against.NullOrWhiteSpace(url);
+        Guard.Against.NullOrEmpty(submittedByUserId);
+
+
+
+        var link = await _linksRepository.GetByUrlAsync(url, token);
+
+        // If the link already exists in the central link repository, then we just need to add/update the tags for it
+        // Then assign to the user who submitted it
+        if (link != null)
+        {
+            if (tags is { Length: > 0 })
+            {
+                tags = tags.Distinct().ToArray();
+
+                var linkTagNames = link.Tags.Select(t => t.Name).ToArray();
+
+                var existingTagNames = tags.Where(t => linkTagNames.Contains(t)).ToArray();
+                var nonExistingTagNames = tags.Where(t => !linkTagNames.Contains(t)).ToArray();
+
+                foreach (var existingTagName in existingTagNames)
+                {
+                    var t = link.Tags.First(t => t.Name == existingTagName);
+                    t.Count++;
+                }
+
+                link.Tags.AddRange(nonExistingTagNames.Select(t => TagEntity.Create(t)));
+
+                await _linksRepository.UpdateAsync(link, token);
+
+                return link.Id;
+            }
+        }
+
+        //await _linksRepository.AddAsync(link, token);
+
+        //return link.Id;
+
+        return Guid.Empty;
+    }
+
     public async ValueTask<bool> SubmitLinkAsync(SubmitLinkRequest request, CancellationToken token = default)
     {
         var link = await _linksRepository.GetByUrlAsync(request.Url, token);

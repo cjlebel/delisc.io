@@ -1,6 +1,7 @@
 using Deliscio.Core.Models;
+using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
-using Deliscio.Modules.Links.Common.Queries;
+using Deliscio.Modules.Links.MediatR.Queries;
 using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Handlers;
@@ -10,16 +11,16 @@ namespace Deliscio.Modules.Links.MediatR.Handlers;
 /// </summary>
 public class GetLinkByTagsQueryHandler : IRequestHandler<GetLinksByTagsQuery, PagedResults<Link>>
 {
-    private readonly LinksService _linksService;
+    private readonly ILinksService _linksService;
 
-    public GetLinkByTagsQueryHandler(LinksService linksService)
+    public GetLinkByTagsQueryHandler(ILinksService linksService)
     {
         _linksService = linksService;
     }
 
-    public async Task<PagedResults<Link>> Handle(GetLinksByTagsQuery request, CancellationToken cancellationToken)
+    public async Task<PagedResults<Link>> Handle(GetLinksByTagsQuery command, CancellationToken cancellationToken)
     {
-        var results = await _linksService.GetByTags(request.Tags, request.PageNo, request.PageSize, token: cancellationToken);
+        var results = await _linksService.GetByTags(command.Tags, command.PageNo, command.PageSize, token: cancellationToken);
 
         return results;
     }

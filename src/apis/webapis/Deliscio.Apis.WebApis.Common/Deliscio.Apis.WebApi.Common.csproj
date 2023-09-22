@@ -7,6 +7,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Models\**" />
+	  <EmbeddedResource Remove="Models\**" />
+	  <None Remove="Models\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Carter" Version="7.2.0" />
 		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.10.0.77988">
 			<PrivateAssets>all</PrivateAssets>
@@ -19,9 +25,6 @@
 
 	<ItemGroup>
 		<Folder Include="APIs\" />
-		<Folder Include="Models\" />
-		<Folder Include="Requests\" />
-		<Folder Include="Responses\" />
 	</ItemGroup>
 
 	<ItemGroup>

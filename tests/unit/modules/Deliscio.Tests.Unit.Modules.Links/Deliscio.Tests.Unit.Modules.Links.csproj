@@ -25,4 +25,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
+  </ItemGroup>
+
 </Project>

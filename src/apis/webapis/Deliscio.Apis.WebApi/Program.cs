@@ -4,14 +4,20 @@ using Deliscio.Core.Configuration;
 using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links;
+using Deliscio.Modules.Links.Common.Commands;
 using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
-using Deliscio.Modules.Links.Common.Queries;
 using Deliscio.Modules.Links.Data.Mongo;
 using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Modules.Links.MediatR.Handlers;
+using Deliscio.Modules.Links.MediatR.Queries;
+using Deliscio.Modules.QueuedLinks.Common.Models;
+using Deliscio.Modules.QueuedLinks.MediatR.Commands;
+using Deliscio.Modules.QueuedLinks.MediatR.Handlers;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Structurizr.Annotations;
 
@@ -23,7 +29,7 @@ public class Program
 {
     private const string API_VERSION = "v1";
 
-    public Program() { }
+    //public Program() { }
 
     public static void Main(string[] args)
     {
@@ -31,7 +37,7 @@ public class Program
 
         var config = ConfigSettingsManager.GetConfigs();
         builder.Services.Configure<MongoDbOptions>(config.GetSection(MongoDbOptions.SectionName));
-
+        builder.Services.Configure<LinksQueueOptions>(config.GetSection(LinksQueueOptions.SectionName));
         // Add services to the container.
         builder.Services.AddAuthorization();
 
@@ -57,11 +63,25 @@ public class Program
         //    options.ReportApiVersions = true;
         //});
 
+        builder.Services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                var options = context.GetRequiredService<IOptions<LinksQueueOptions>>().Value;
+
+                cfg.Host(options.Host);
+                // More options ...
+            });
+        });
+
         builder.Services.AddSingleton<IRequestHandler<GetLinkByIdQuery, Link?>, GetLinkByIdQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetLinkByUrlQuery, Link?>, GetLinkByUrlQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinksByDomainQuery, PagedResults<Link>>, GetLinkByDomainQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinksByTagsQuery, PagedResults<Link>>, GetLinkByTagsQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<SubmitLinkCommand, Guid>, SubmitLinkCommandHandler>();
 
 
+        builder.Services.AddSingleton<IRequestHandler<AddNewLinkQueueCommand, bool>, AddNewLinkQueueCommandHandler>();
 
         builder.Services.AddSingleton<ILinksRepository, LinksRepository>();
 

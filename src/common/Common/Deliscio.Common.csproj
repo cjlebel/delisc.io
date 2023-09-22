@@ -17,10 +17,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="MassTransit\" />
-    <Folder Include="MediatR\Links\" />
-    <Folder Include="MediatR\Requests\" />
-  </ItemGroup>
-
 </Project>

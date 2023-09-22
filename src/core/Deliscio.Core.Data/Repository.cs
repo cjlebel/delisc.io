@@ -37,6 +37,8 @@ public abstract class BaseRepositoryWithTypedId<T, TId> : IRepositoryWithTypedId
     public abstract Task AddRangeAsync(IEnumerable<T> entities, CancellationToken token = default);
     public abstract Task<(IEnumerable<T> Results, int TotalPages, int TotalCount)> FindAsync(Expression<Func<T, bool>> predicate, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
 
+    public abstract Task<T?> FirstOrDefault(Expression<Func<T, bool>> predicate, CancellationToken token = default);
+
     public abstract T? Get(TId id);
 
     public abstract IEnumerable<T> Get(IEnumerable<TId> ids);

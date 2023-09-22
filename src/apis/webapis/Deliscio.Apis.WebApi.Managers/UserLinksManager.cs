@@ -1,6 +1,6 @@
 using Deliscio.Apis.WebApi.Api.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
-using Deliscio.Modules.UserLinks.Models;
+using Deliscio.Modules.UserLinks.Common.Models;
 
 namespace Deliscio.Apis.WebApi.Managers;
 
