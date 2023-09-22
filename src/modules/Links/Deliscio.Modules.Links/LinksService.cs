@@ -145,30 +145,31 @@ public class LinksService : ServiceBase, ILinksService
 
         // If the link already exists in the central link repository, then we just need to add/update the tags for it
         // Then assign to the user who submitted it
-        if (link != null)
+        if (link == null)
+            return Guid.Empty;
+
+        if (tags is { Length: > 0 })
         {
-            if (tags is { Length: > 0 })
+            tags = tags.Distinct().ToArray();
+
+            var linkTagNames = link.Tags.Select(t => t.Name).ToArray();
+
+            var existingTagNames = tags.Where(t => linkTagNames.Contains(t)).ToArray();
+            var nonExistingTagNames = tags.Where(t => !linkTagNames.Contains(t)).ToArray();
+
+            foreach (var existingTagName in existingTagNames)
             {
-                tags = tags.Distinct().ToArray();
-
-                var linkTagNames = link.Tags.Select(t => t.Name).ToArray();
-
-                var existingTagNames = tags.Where(t => linkTagNames.Contains(t)).ToArray();
-                var nonExistingTagNames = tags.Where(t => !linkTagNames.Contains(t)).ToArray();
-
-                foreach (var existingTagName in existingTagNames)
-                {
-                    var t = link.Tags.First(t => t.Name == existingTagName);
-                    t.Count++;
-                }
-
-                link.Tags.AddRange(nonExistingTagNames.Select(t => TagEntity.Create(t)));
-
-                await _linksRepository.UpdateAsync(link, token);
-
-                return link.Id;
+                var t = link.Tags.First(t => t.Name == existingTagName);
+                t.Count++;
             }
+
+            link.Tags.AddRange(nonExistingTagNames.Select(t => LinkTagEntity.Create(t)));
+
+            await _linksRepository.UpdateAsync(link, token);
+
+            return link.Id;
         }
+
 
         //await _linksRepository.AddAsync(link, token);
 
@@ -181,7 +182,7 @@ public class LinksService : ServiceBase, ILinksService
     {
         var link = await _linksRepository.GetByUrlAsync(request.Url, token);
 
-        var userTags = request.UsersTags.Any() ? request.UsersTags.Select(t => TagEntity.Create(t)).ToArray() : Array.Empty<TagEntity>();
+        var userTags = request.UsersTags.Any() ? request.UsersTags.Select(t => LinkTagEntity.Create(t)).ToArray() : Array.Empty<LinkTagEntity>();
 
         if (link == null)
         {

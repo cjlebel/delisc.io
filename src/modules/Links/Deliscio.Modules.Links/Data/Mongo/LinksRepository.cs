@@ -65,7 +65,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
 
     }
 
-    public async Task<IEnumerable<TagEntity>> GetTags(Guid id, CancellationToken token)
+    public async Task<IEnumerable<LinkTagEntity>> GetTags(Guid id, CancellationToken token)
     {
         //var filter = Builders<LinkEntity>.Filter.Eq("_id", id);
 
@@ -78,7 +78,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
 
         //return new rslt.Ta.;
 
-        return Enumerable.Empty<TagEntity>();
+        return Enumerable.Empty<LinkTagEntity>();
     }
 
     /// <summary>

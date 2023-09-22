@@ -2,7 +2,7 @@ using Deliscio.Core.Data.Mongo;
 
 namespace Deliscio.Modules.Links.Data.Entities;
 
-public class TagEntity : MongoEntityBase
+public class LinkTagEntity : MongoEntityBase
 {
     public string Name { get; set; }
 
@@ -10,15 +10,15 @@ public class TagEntity : MongoEntityBase
 
     public decimal Weight { get; set; }
 
-    public TagEntity(string name, int count = 1, decimal weight = 0)
+    public LinkTagEntity(string name, int count = 1, decimal weight = 0)
     {
         Name = name;
         Count = count;
         Weight = weight;
     }
 
-    public static TagEntity Create(string name)
+    public static LinkTagEntity Create(string name)
     {
-        return new TagEntity(name);
+        return new LinkTagEntity(name);
     }
 }

@@ -7,6 +7,12 @@ public class LinkTag
 
     public decimal Weight { get; set; }
 
+    public LinkTag(string name, int count)
+    {
+        Name = name;
+        Count = count;
+    }
+
     public LinkTag(string name, int count, decimal weight)
     {
         Name = name;
