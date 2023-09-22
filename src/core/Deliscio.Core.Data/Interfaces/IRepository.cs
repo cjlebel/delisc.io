@@ -3,26 +3,6 @@ using System.Linq.Expressions;
 namespace Deliscio.Core.Data.Interfaces;
 public interface IRepositoryWithTypedId<T, TId> where T : IEntityWithTypedId<TId>
 {
-    /// <summary>
-    /// Adds a single entity of type T to the repository.
-    /// </summary>
-    /// <param name="entity">The entity to be saved.</param>
-    void Add(T entity);
-
-    /// <summary>
-    /// Adds a single entity of type T to the repository - asynchronously.
-    /// </summary>
-    /// <param name="entity">The entity to be saved.</param>
-    Task AddAsync(T entity, CancellationToken token = default);
-
-    /// <summary>
-    /// Adds a collection of entities of type T to the repository.
-    /// </summary>
-    /// <param name="entities">The entity.</param>
-    void AddRange(IEnumerable<T> entities, CancellationToken token = default);
-
-    Task AddRangeAsync(IEnumerable<T> entities, CancellationToken token = default);
-
     Task<(IEnumerable<T> Results, int TotalPages, int TotalCount)> FindAsync(Expression<Func<T, bool>> predicate, int pageNo = 1, int pageSize = 25,
         CancellationToken token = default);
 
@@ -58,6 +38,30 @@ public interface IRepositoryWithTypedId<T, TId> where T : IEntityWithTypedId<TId
 
     Task<(IEnumerable<T> Results, int TotalPages, int TotalCount)> GetAsync(int pageNo, int pageSize, CancellationToken token = default);
 
+    Task<T?> FirstOrDefault(Expression<Func<T, bool>> predicate, CancellationToken token = default);
+
+
+    #region - CRUD -
+    /// <summary>
+    /// Adds a single entity of type T to the repository.
+    /// </summary>
+    /// <param name="entity">The entity to be saved.</param>
+    void Add(T entity);
+
+    /// <summary>
+    /// Adds a single entity of type T to the repository - asynchronously.
+    /// </summary>
+    /// <param name="entity">The entity to be saved.</param>
+    Task AddAsync(T entity, CancellationToken token = default);
+
+    /// <summary>
+    /// Adds a collection of entities of type T to the repository.
+    /// </summary>
+    /// <param name="entities">The entity.</param>
+    void AddRange(IEnumerable<T> entities, CancellationToken token = default);
+
+    Task AddRangeAsync(IEnumerable<T> entities, CancellationToken token = default);
+
     void Remove(TId id, CancellationToken token = default);
 
     /// <summary>
@@ -86,6 +90,9 @@ public interface IRepositoryWithTypedId<T, TId> where T : IEntityWithTypedId<TId
     void Update(T entity, CancellationToken token = default);
 
     Task UpdateAsync(T entity, CancellationToken token = default);
+    #endregion
+
+
 }
 
 public interface IRepository<T> : IRepositoryWithTypedId<T, Guid> where T : IEntityWithTypedId<Guid>

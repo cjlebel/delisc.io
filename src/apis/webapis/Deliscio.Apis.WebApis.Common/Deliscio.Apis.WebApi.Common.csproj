@@ -7,7 +7,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Carter" Version="7.1.0" />
+	  <Compile Remove="Models\**" />
+	  <EmbeddedResource Remove="Models\**" />
+	  <None Remove="Models\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Carter" Version="7.2.0" />
 		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.10.0.77988">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -19,11 +25,10 @@
 
 	<ItemGroup>
 		<Folder Include="APIs\" />
-		<Folder Include="Models\" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\modules\SubmittedLinks\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
+	  <ProjectReference Include="..\..\..\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
 	</ItemGroup>
 
 </Project>

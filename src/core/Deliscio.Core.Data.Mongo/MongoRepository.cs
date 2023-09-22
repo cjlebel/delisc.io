@@ -1,4 +1,3 @@
-using System;
 using System.Linq.Expressions;
 using Ardalis.GuardClauses;
 using Deliscio.Core.Data.Interfaces;
@@ -38,32 +37,6 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
         PopulateCollection();
     }
     #endregion
-
-    protected async Task<(IEnumerable<TDocument> Results, int TotalPages, int TotalCount)> FindAsync(FilterDefinition<TDocument> filter, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
-    {
-        Guard.Against.Null(filter);
-        Guard.Against.NegativeOrZero(pageNo);
-        Guard.Against.NegativeOrZero(pageSize);
-
-        var skip = (pageNo - 1) * pageSize;
-
-        var totalCount = await Collection.CountDocumentsAsync(filter, null, token);
-
-        if (totalCount == 0)
-            return (Enumerable.Empty<TDocument>(), 0, 0);
-
-        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-
-        var cursor = Collection.Find(filter)
-            .Skip(skip)
-            .Limit(pageSize)
-            .Sort(Builders<TDocument>.Sort.Ascending(doc => doc.Id));
-
-        var results = await cursor.ToListAsync(token);
-
-        return (results, totalPages, (int)totalCount);
-    }
-
 
     public void Add(TDocument entity)
     {
@@ -127,6 +100,31 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
         var filter = Builders<TDocument>.Filter.Where(predicate);
 
         return await FindAsync(filter, pageNo, pageSize, token);
+    }
+
+    protected async Task<(IEnumerable<TDocument> Results, int TotalPages, int TotalCount)> FindAsync(FilterDefinition<TDocument> filter, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    {
+        Guard.Against.Null(filter);
+        Guard.Against.NegativeOrZero(pageNo);
+        Guard.Against.NegativeOrZero(pageSize);
+
+        var skip = (pageNo - 1) * pageSize;
+
+        var totalCount = await Collection.CountDocumentsAsync(filter, null, token);
+
+        if (totalCount == 0)
+            return (Enumerable.Empty<TDocument>(), 0, 0);
+
+        var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+        var cursor = Collection.Find(filter)
+            .Skip(skip)
+            .Limit(pageSize)
+            .Sort(Builders<TDocument>.Sort.Ascending(doc => doc.Id));
+
+        var results = await cursor.ToListAsync(token);
+
+        return (results, totalPages, (int)totalCount);
     }
 
     /// <summary>
@@ -206,6 +204,17 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
         return await FindAsync(_ => true, pageNo, pageSize, token);
     }
 
+    public async Task<TDocument?> FirstOrDefault(Expression<Func<TDocument, bool>> predicate, CancellationToken token = default)
+    {
+        var filter = Builders<TDocument>.Filter.Where(predicate);
+
+        var cursor = Collection.Find(filter)
+            .FirstOrDefaultAsync(cancellationToken: token);
+        //.Sort(Builders<TDocument>.Sort.Ascending(doc => doc.Id));
+
+        return await cursor;
+    }
+
     public void Remove(Guid id, CancellationToken token = default)
     {
         Collection.DeleteOne(d => d.Id == id, cancellationToken: token);
@@ -275,13 +284,13 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     public void Update(TDocument entity, CancellationToken token = default)
     {
         entity.DateUpdated = DateTimeOffset.UtcNow;
-        Collection.ReplaceOne(d => d.Id == entity.Id, entity);
+        Collection.ReplaceOne(d => d.Id == entity.Id, entity, cancellationToken: token);
     }
 
     public async Task UpdateAsync(TDocument entity, CancellationToken token = default)
     {
         entity.DateUpdated = DateTime.UtcNow;
-        await Collection.ReplaceOneAsync(d => d.Id == entity.Id, entity);
+        await Collection.ReplaceOneAsync(d => d.Id == entity.Id, entity, cancellationToken: token);
     }
 
     #region - Privates -

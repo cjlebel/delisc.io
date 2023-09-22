@@ -1,6 +1,6 @@
 using System.Net;
 using Deliscio.Apis.WebApi;
-using Deliscio.Modules.Links.Models;
+using Deliscio.Modules.Links.Common.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Deliscio.Tests.Functional.Apis.WebApis.WebApi;
