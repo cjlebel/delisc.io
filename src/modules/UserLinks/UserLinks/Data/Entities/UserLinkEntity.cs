@@ -30,7 +30,7 @@ public class UserLinkEntity : MongoEntityBase
     /// <value>
     /// The tags.
     /// </value>
-    public TagEntity[] Tags { get; set; } = Array.Empty<TagEntity>();
+    public UserLinkTagEntity[] Tags { get; set; } = Array.Empty<UserLinkTagEntity>();
 
     /// <summary>
     /// The title of the page, from the page itself, that the link points to.
@@ -44,7 +44,7 @@ public class UserLinkEntity : MongoEntityBase
 
     private UserLinkEntity() { }
 
-    public UserLinkEntity(Guid id, Guid userId, Guid linkId, string url = "", string title = "", string description = "", TagEntity[]? tags = default, bool isPrivate = default) : this()
+    public UserLinkEntity(Guid id, Guid userId, Guid linkId, string url = "", string title = "", string description = "", UserLinkTagEntity[]? tags = default, bool isPrivate = default) : this()
     {
         //Id = Guid.NewGuid();
 

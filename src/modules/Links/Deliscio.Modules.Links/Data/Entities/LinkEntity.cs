@@ -62,18 +62,18 @@ public class LinkEntity : MongoEntityBase
     /// <value>
     /// The tags.
     /// </value>
-    public List<TagEntity> Tags { get; set; } = new List<TagEntity>();
+    public List<LinkTagEntity> Tags { get; set; } = new List<LinkTagEntity>();
 
     /// <summary>
     /// The URL of the link to go to the page
     /// </summary>
     public string Url { get; set; }
 
-    public Guid CreatedByUserId { get; set; }
+    public Guid SubmittedByUserId { get; set; }
 
     private LinkEntity() { }
 
-    public LinkEntity(string id, string url, string title) : this(Guid.Parse(id), url, title) { }
+    //public LinkEntity(string id, string url, string title) : this(Guid.Parse(id), url, title) { }
 
     public LinkEntity(Guid id, string url, string title)
     {
@@ -81,7 +81,7 @@ public class LinkEntity : MongoEntityBase
         Title = title;
         Url = url;
 
-        Tags = new List<TagEntity>();
+        Tags = new List<LinkTagEntity>();
 
         LikesCount = 0;
         SavesCount = 0;
@@ -117,7 +117,7 @@ public class LinkEntity : MongoEntityBase
         return new LinkEntity()
         {
 
-            Tags = tags?.Select(x => new TagEntity(x)).ToList() ?? new List<TagEntity>(),
+            Tags = tags?.Select(x => new LinkTagEntity(x)).ToList() ?? new List<LinkTagEntity>(),
         };
     }
 }

@@ -16,7 +16,7 @@ public class Link
     /// <value>
     /// The image.
     /// </value>
-    public string? Image { get; set; }
+    public string? ImageUrl { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether this Link is excluded from results.
@@ -34,32 +34,34 @@ public class Link
     /// </value>
     public bool IsFlagged { get; set; } = false;
 
+    public string ScreenShot { get; set; } = string.Empty;
+
     public ReadOnlyCollection<LinkTag> Tags { get; set; }
 
     public string Title { get; set; }
 
     public string Url { get; set; }
 
-    public string? CreatedById { get; set; }
+    public string? SubmittedById { get; set; }
 
     public DateTimeOffset DateCreated { get; set; }
     public DateTimeOffset DateUpdated { get; set; }
 
-    public Link(string id, string url, string createdById)
+    public Link(string id, string url, string submittedById)
     {
         Id = id;
         Title = string.Empty;
         Url = url;
-        CreatedById = createdById;
+        SubmittedById = submittedById;
         Tags = new ReadOnlyCollection<LinkTag>(new List<LinkTag>());
     }
 
-    public Link(Guid id, string url, Guid createdById)
+    public Link(Guid id, string url, Guid submittedById)
     {
         Id = id.ToString();
         Title = string.Empty;
         Url = url;
-        CreatedById = createdById.ToString();
+        SubmittedById = submittedById.ToString();
         Tags = new ReadOnlyCollection<LinkTag>(new List<LinkTag>());
     }
 

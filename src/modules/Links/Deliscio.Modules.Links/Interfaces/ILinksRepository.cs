@@ -32,7 +32,7 @@ public interface ILinksRepository : IRepository<LinkEntity>
     /// <param name="id">The id of the Link to retrieve the tags from.</param>
     /// <param name="token">The token.</param>
     /// <returns></returns>
-    Task<IEnumerable<TagEntity>> GetTags(Guid id, CancellationToken token);
+    Task<IEnumerable<LinkTagEntity>> GetTags(Guid id, CancellationToken token);
 
     /// <summary>
     /// Removes an occurrence of the tag from the Tag collection that belongs to Link with the id.<br />
