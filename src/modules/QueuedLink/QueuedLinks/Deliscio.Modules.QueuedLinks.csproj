@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
     <ProjectReference Include="..\Common\Deliscio.Modules.QueuedLinks.Common.csproj" />
+    <ProjectReference Include="..\Verifier\Deliscio.Modules.QueuedLinks.Verifier.csproj" />
   </ItemGroup>
 
 </Project>

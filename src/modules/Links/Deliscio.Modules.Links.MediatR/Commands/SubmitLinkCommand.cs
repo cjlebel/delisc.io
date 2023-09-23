@@ -1,8 +1,11 @@
 using Ardalis.GuardClauses;
 using MediatR;
 
-namespace Deliscio.Modules.Links.Common.Commands;
+namespace Deliscio.Modules.Links.MediatR.Commands;
 
+/// <summary>
+/// Represents a command to submit a link for verification, before attempting to add to the central repository
+/// </summary>
 public sealed record SubmitLinkCommand : IRequest<Guid>
 {
     public string[] Tags { get; }

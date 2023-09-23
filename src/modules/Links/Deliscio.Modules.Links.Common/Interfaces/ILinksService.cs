@@ -5,6 +5,8 @@ namespace Deliscio.Modules.Links.Common.Interfaces;
 
 public interface ILinksService
 {
+    Task<Guid> Add(string url, string title, Guid submittedById, string[]? tags = default, CancellationToken token = default);
+
     Task<Link?> GetAsync(string id, CancellationToken token = default);
 
     Task<Link?> GetAsync(Guid id, CancellationToken token = default);

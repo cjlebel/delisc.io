@@ -1,11 +1,11 @@
+using System.Diagnostics;
 using Ardalis.GuardClauses;
-using Deliscio.Apis.WebApi.Api.Common.Interfaces;
+using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Modules.QueuedLinks.Common.Models;
 using Deliscio.Modules.QueuedLinks.MassTransit.Commands;
-using Deliscio.Modules.QueuedLinks.MediatR.Commands;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -26,6 +26,8 @@ public sealed class LinksManager : ILinksManager
         _bus = bus;
         _logger = logger;
         _mediator = mediator;
+
+
     }
 
     /// <summary>
@@ -68,11 +70,40 @@ public sealed class LinksManager : ILinksManager
         Guard.Against.NullOrWhiteSpace(url);
         Guard.Against.NullOrEmpty(submittedByUserId);
 
+        //if (token == default)
+        //   token = new CancellationTokenSource(TimeSpan.FromSeconds(30)).Token;
+
         var tagsToAdd = tags ?? Array.Empty<string>();
 
-        var newLink = new QueuedLink(url, submittedByUserId, usersTitle, usersDescription, tagsToAdd);
 
-        await _bus.Publish(new AddNewQueuedLinkCommand(newLink), token);
+
+        try
+        {
+            var newLink = new QueuedLink(url, submittedByUserId, usersTitle, usersDescription, tagsToAdd);
+            await _bus.Publish(new AddNewQueuedLinkCommand(newLink), token);
+        }
+        catch (UriFormatException e)
+        {
+            _logger.LogError(e, e.Message);
+            throw;
+        }
+        catch (OperationCanceledException e)
+        {
+            _logger.LogError(e, "Operation was cancelled");
+            throw;
+        }
+        catch (UnreachableException e)
+        {
+            _logger.LogError(e, "Could not reach the Queue");
+            throw;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "An error occurred while trying to submit a new link");
+            throw;
+        }
+
+
 
         return string.Empty;
     }

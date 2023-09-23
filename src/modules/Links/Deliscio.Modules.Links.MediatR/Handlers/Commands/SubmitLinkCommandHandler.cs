@@ -1,9 +1,12 @@
-using Deliscio.Modules.Links.Common.Commands;
 using Deliscio.Modules.Links.Common.Interfaces;
+using Deliscio.Modules.Links.MediatR.Commands;
 using MediatR;
 
-namespace Deliscio.Modules.Links.MediatR.Handlers;
+namespace Deliscio.Modules.Links.MediatR.Handlers.Commands;
 
+/// <summary>
+/// Represents a MediatR command handler that submits a link for verification.
+/// </summary>
 public class SubmitLinkCommandHandler : IRequestHandler<SubmitLinkCommand, Guid>
 {
     private readonly ILinksService _linksService;

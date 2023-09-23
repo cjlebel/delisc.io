@@ -1,4 +1,4 @@
-﻿namespace Deliscio.Apis.WebApi.Api.Common.Interfaces;
+namespace Deliscio.Apis.WebApi.Common.Interfaces;
 
 public interface IHomeManager
 {

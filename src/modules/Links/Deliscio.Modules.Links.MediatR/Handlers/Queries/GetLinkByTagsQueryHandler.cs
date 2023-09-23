@@ -4,7 +4,7 @@ using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.MediatR.Queries;
 using MediatR;
 
-namespace Deliscio.Modules.Links.MediatR.Handlers;
+namespace Deliscio.Modules.Links.MediatR.Handlers.Queries;
 
 /// <summary>
 /// Handles getting a page of links from the central repository where each link contains all of the tags

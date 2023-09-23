@@ -1,6 +1,6 @@
 namespace Deliscio.Modules.QueuedLinks.Common.Models;
 
-public sealed class LinksQueueOptions
+public sealed class XXXLinksQueueSettingsOptions
 {
     /// <summary>
     /// The name of the section in the config file that contains the MongoDb settings.
@@ -9,7 +9,7 @@ public sealed class LinksQueueOptions
 
     public string Host { get; set; } = string.Empty;
 
-    public string QueueName { get; set; } = string.Empty;
+    public string QueueName { get; set; } = "links-queue";
 
     public int MaxConcurrentCalls { get; set; } = 1;
 

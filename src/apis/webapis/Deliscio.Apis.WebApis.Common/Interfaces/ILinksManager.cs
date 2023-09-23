@@ -1,7 +1,7 @@
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
 
-namespace Deliscio.Apis.WebApi.Api.Common.Interfaces;
+namespace Deliscio.Apis.WebApi.Common.Interfaces;
 
 public interface ILinksManager
 {

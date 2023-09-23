@@ -2,22 +2,34 @@ using Deliscio.Modules.QueuedLinks.Common.Enums;
 
 namespace Deliscio.Modules.QueuedLinks.Common.Models;
 
-public record QueuedLink
+public class QueuedLink
 {
-    public string Url { get; } = default!;
-    public Guid SubmittedById { get; }
+    public string Url { get; set; }
+
+    public Guid SubmittedById { get; set; }
+
+    public string Description { get; set; } = "";
+
     public string[]? Tags { get; }
-    public string UsersTitle { get; } = default!;
-    public string UsersDescription { get; } = default!;
-    public QueueStates State { get; } = QueueStates.New;
+
+    public string Title { get; set; } = "";
+
+    public string UsersTitle { get; }
+
+    public string UsersDescription { get; }
+
+    public QueuedStates.State State { get; set; } = QueuedStates.New;
+
+    //NOTE: This () is needed for deserialization :(
+    public QueuedLink() { }
 
     public QueuedLink(string url, string submittedById, string usersTitle = "", string usersDescription = "",
-        string[]? tags = default) : this(url, new Guid(submittedById), usersTitle, usersDescription, tags) { }
+        string[]? tags = default) : this(new Uri(url), new Guid(submittedById), usersTitle, usersDescription, tags) { }
 
-    public QueuedLink(string url, Guid submittedById, string usersTitle = "", string usersDescription = "",
+    public QueuedLink(Uri url, Guid submittedById, string usersTitle = "", string usersDescription = "",
         string[]? tags = default)
     {
-        Url = url;
+        Url = url.OriginalString;
         SubmittedById = submittedById;
         Tags = tags;
         UsersTitle = usersTitle;

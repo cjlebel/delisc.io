@@ -1,5 +1,5 @@
 using System.Net;
-using Deliscio.Apis.WebApi.Api.Common.Interfaces;
+using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Requests;
@@ -104,12 +104,15 @@ public class LinksApiEndpoints : BaseApiEndpoints
                 if (request is null)
                     return Results.BadRequest("Request cannot be null");
 
+                // Temporarily hardcoding this until we get authentication working
+                request.SubmittedById = "48263056-61ad-b4a3-05e0-712025051842";
+
                 var isValid = request.IsValid();
 
                 if (!isValid.Value)
                     return Results.BadRequest($"Submit Link Failed:{Environment.NewLine}{string.Join(Environment.NewLine, isValid.Errors.Select(e => e.ErrorMessage).ToArray())}");
 
-                var isSubmitted = false; //await _linksService.SubmitLinkAsync(request);
+                var isSubmitted = await _manager.SubmitLinkAsync(request.Url, request.SubmittedById, tags: request.UsersTags);
 
                 return Results.Ok(isSubmitted);
             })

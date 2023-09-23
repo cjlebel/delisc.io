@@ -16,7 +16,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="MassTransit" Version="8.1.0" />
-		<PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
 		<PackageReference Include="MassTransit.RabbitMQ" Version="8.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.11" />
@@ -33,7 +32,9 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\modules\Links\Deliscio.Modules.Links.MediatR\Deliscio.Modules.Links.MediatR.csproj" />
+		<ProjectReference Include="..\..\..\modules\QueuedLink\MassTransit\Deliscio.Modules.QueuedLinks.MassTransit.csproj" />
 		<ProjectReference Include="..\..\..\modules\QueuedLink\MediatR\Deliscio.Modules.QueuedLinks.MediatR.csproj" />
+		<ProjectReference Include="..\Deliscio.Apis.WebApi.Managers\Deliscio.Apis.WebApi.Managers.csproj" />
 		<ProjectReference Include="..\Deliscio.Apis.WebApis.Common\Deliscio.Apis.WebApi.Common.csproj" />
 	</ItemGroup>
 
