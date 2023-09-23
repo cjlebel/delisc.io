@@ -287,7 +287,7 @@ public class LinksServiceTests
     private void CompareEntityToModel(LinkEntity entity, Link link)
     {
         Assert.Equal(entity.Id.ToString(), link.Id);
-        Assert.Equal(entity.SubmittedByUserId.ToString(), link.SubmittedById);
+        Assert.Equal(entity.SubmittedById.ToString(), link.SubmittedById);
 
         Assert.Equal(entity.Description, link.Description);
         Assert.Equal(entity.ImageUrl, link.ImageUrl);

@@ -94,8 +94,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.UserLinks.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.UserLinks.MediatR", "src\modules\UserLinks\MediatR\Deliscio.Modules.UserLinks.MediatR.csproj", "{60CA6767-315E-4FE5-A60D-E5F747DB3B63}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProcessLinks", "ProcessLinks", "{B890A39B-5D36-4D59-BCA7-DB8881150D6A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.QueuedLinks", "src\modules\QueuedLink\QueuedLinks\Deliscio.Modules.QueuedLinks.csproj", "{F7F3A25D-921C-48EB-B5DD-536D257630E1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.QueuedLinks.Common", "src\modules\QueuedLink\Common\Deliscio.Modules.QueuedLinks.Common.csproj", "{F86281CA-A201-45F4-82D4-A4BD203F7F99}"
@@ -105,6 +103,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.QueuedLinks.MassTransit", "src\modules\QueuedLink\MassTransit\Deliscio.Modules.QueuedLinks.MassTransit.csproj", "{81CD3E8C-2A67-4AFB-AA35-BFB8B5262D69}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Tests.Unit.Modules", "tests\unit\modules\Deliscio.Tests.Unit.Modules\Deliscio.Tests.Unit.Modules.csproj", "{BFF75DFF-EBBD-49D5-A0BE-DF7251F39829}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.QueuedLinks.Verifier", "src\modules\QueuedLink\Verifier\Deliscio.Modules.QueuedLinks.Verifier.csproj", "{235DEF65-E9CE-4A4B-92CA-4CD57078F786}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -200,6 +200,10 @@ Global
 		{BFF75DFF-EBBD-49D5-A0BE-DF7251F39829}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFF75DFF-EBBD-49D5-A0BE-DF7251F39829}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFF75DFF-EBBD-49D5-A0BE-DF7251F39829}.Release|Any CPU.Build.0 = Release|Any CPU
+		{235DEF65-E9CE-4A4B-92CA-4CD57078F786}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{235DEF65-E9CE-4A4B-92CA-4CD57078F786}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{235DEF65-E9CE-4A4B-92CA-4CD57078F786}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{235DEF65-E9CE-4A4B-92CA-4CD57078F786}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -237,12 +241,12 @@ Global
 		{A8321F1A-CA91-463E-93A1-224A1DB1C73B} = {9164AB74-9390-4531-BB35-A7A78141B393}
 		{A59C2A25-663D-45C4-B18C-1F8F80D98D4C} = {9164AB74-9390-4531-BB35-A7A78141B393}
 		{60CA6767-315E-4FE5-A60D-E5F747DB3B63} = {9164AB74-9390-4531-BB35-A7A78141B393}
-		{B890A39B-5D36-4D59-BCA7-DB8881150D6A} = {2A3D1CD1-9B6F-4B54-B65A-8D49F486EDB9}
 		{F7F3A25D-921C-48EB-B5DD-536D257630E1} = {83650EA7-03B1-41E0-B052-083310FB1FC4}
 		{F86281CA-A201-45F4-82D4-A4BD203F7F99} = {83650EA7-03B1-41E0-B052-083310FB1FC4}
 		{352D8FC9-C6F1-4128-B8D7-3112C9D0A51E} = {83650EA7-03B1-41E0-B052-083310FB1FC4}
 		{81CD3E8C-2A67-4AFB-AA35-BFB8B5262D69} = {83650EA7-03B1-41E0-B052-083310FB1FC4}
 		{BFF75DFF-EBBD-49D5-A0BE-DF7251F39829} = {999FC850-B0BF-4661-B7A8-7509F3DC8683}
+		{235DEF65-E9CE-4A4B-92CA-4CD57078F786} = {83650EA7-03B1-41E0-B052-083310FB1FC4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC98CF49-1486-4252-A157-DA1293256158}

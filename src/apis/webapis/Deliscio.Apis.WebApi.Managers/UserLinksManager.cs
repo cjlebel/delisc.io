@@ -1,4 +1,4 @@
-using Deliscio.Apis.WebApi.Api.Common.Interfaces;
+using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.UserLinks.Common.Models;
 

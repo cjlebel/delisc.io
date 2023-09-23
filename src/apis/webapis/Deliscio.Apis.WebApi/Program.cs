@@ -1,19 +1,26 @@
-
+using System.Reflection;
 using Deliscio.Apis.WebApi.Common.APIs;
+using Deliscio.Apis.WebApi.Common.Interfaces;
+using Deliscio.Apis.WebApi.Managers;
 using Deliscio.Core.Configuration;
 using Deliscio.Core.Data.Mongo;
+using Deliscio.Core.Interfaces;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links;
-using Deliscio.Modules.Links.Common.Commands;
 using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Data.Mongo;
 using Deliscio.Modules.Links.Interfaces;
-using Deliscio.Modules.Links.MediatR.Handlers;
+using Deliscio.Modules.Links.MediatR.Commands;
+using Deliscio.Modules.Links.MediatR.Handlers.Commands;
+using Deliscio.Modules.Links.MediatR.Handlers.Queries;
 using Deliscio.Modules.Links.MediatR.Queries;
-using Deliscio.Modules.QueuedLinks.Common.Models;
+using Deliscio.Modules.QueuedLinks;
+using Deliscio.Modules.QueuedLinks.Interfaces;
+using Deliscio.Modules.QueuedLinks.MassTransit.Models;
 using Deliscio.Modules.QueuedLinks.MediatR.Commands;
 using Deliscio.Modules.QueuedLinks.MediatR.Handlers;
+using Deliscio.Modules.QueuedLinks.Verifier;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +44,8 @@ public class Program
 
         var config = ConfigSettingsManager.GetConfigs();
         builder.Services.Configure<MongoDbOptions>(config.GetSection(MongoDbOptions.SectionName));
-        builder.Services.Configure<LinksQueueOptions>(config.GetSection(LinksQueueOptions.SectionName));
+        builder.Services.Configure<LinksQueueSettingsOptions>(config.GetSection(LinksQueueSettingsOptions.SectionName));
+
         // Add services to the container.
         builder.Services.AddAuthorization();
 
@@ -63,16 +71,27 @@ public class Program
         //    options.ReportApiVersions = true;
         //});
 
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
         builder.Services.AddMassTransit(x =>
         {
             x.UsingRabbitMq((context, cfg) =>
             {
-                var options = context.GetRequiredService<IOptions<LinksQueueOptions>>().Value;
+                var options = context.GetRequiredService<IOptions<LinksQueueSettingsOptions>>().Value;
 
-                cfg.Host(options.Host);
+                cfg.Host(new Uri(options.Host), hostConfig =>
+                {
+                    hostConfig.Username(options.Username);
+                    hostConfig.Password(options.Password);
+                });
+
+                cfg.ConfigureEndpoints(context);
                 // More options ...
             });
         });
+
+        builder.Services.AddSingleton<ILinksManager, LinksManager>();
+        builder.Services.AddSingleton<ILinksService, LinksService>();
+        builder.Services.AddSingleton<ILinksRepository, LinksRepository>();
 
         builder.Services.AddSingleton<IRequestHandler<GetLinkByIdQuery, Link?>, GetLinkByIdQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinkByUrlQuery, Link?>, GetLinkByUrlQueryHandler>();
@@ -80,12 +99,13 @@ public class Program
         builder.Services.AddSingleton<IRequestHandler<GetLinksByTagsQuery, PagedResults<Link>>, GetLinkByTagsQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<SubmitLinkCommand, Guid>, SubmitLinkCommandHandler>();
 
+        // This is weird, I should not need to add these here?!?!?
+        builder.Services.AddSingleton<IQueuedLinksService, QueuedLinksService>();
+        builder.Services.AddSingleton<IVerifyProcessor, VerifyProcessor>();
 
         builder.Services.AddSingleton<IRequestHandler<AddNewLinkQueueCommand, bool>, AddNewLinkQueueCommandHandler>();
 
-        builder.Services.AddSingleton<ILinksRepository, LinksRepository>();
 
-        builder.Services.AddSingleton<ILinksService, LinksService>();
 
         builder.Services.AddSingleton<LinksApiEndpoints>();
 

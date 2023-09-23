@@ -1,11 +1,10 @@
 using Ardalis.GuardClauses;
-using Deliscio.Apis.WebApi.Api.Common.Interfaces;
+using Deliscio.Apis.WebApi.Common.Abstracts;
+using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Modules.QueuedLinks.Common.Models;
-using Deliscio.Modules.QueuedLinks.MassTransit.Commands;
-using Deliscio.Modules.QueuedLinks.MediatR.Commands;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -15,15 +14,13 @@ namespace Deliscio.Apis.WebApi.Managers;
 
 [CodeElement("LinksManager", Description = "Facilitates dealing with the centrally saved Links")]
 [UsedByContainer("Web API")]
-public sealed class LinksManager : ILinksManager
+public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
 {
-    private readonly IBusControl _bus;
     private readonly ILogger<LinksManager> _logger;
     private readonly IMediator _mediator;
 
-    public LinksManager(IMediator mediator, IBusControl bus, ILogger<LinksManager> logger)
+    public LinksManager(IMediator mediator, IBusControl bus, ILogger<LinksManager> logger) : base(bus, logger)
     {
-        _bus = bus;
         _logger = logger;
         _mediator = mediator;
     }
@@ -68,11 +65,27 @@ public sealed class LinksManager : ILinksManager
         Guard.Against.NullOrWhiteSpace(url);
         Guard.Against.NullOrEmpty(submittedByUserId);
 
+        //if (token == default)
+        //   token = new CancellationTokenSource(TimeSpan.FromSeconds(30)).Token;
+
         var tagsToAdd = tags ?? Array.Empty<string>();
 
-        var newLink = new QueuedLink(url, submittedByUserId, usersTitle, usersDescription, tagsToAdd);
+        try
+        {
+            var newLink = new QueuedLink(url, submittedByUserId, usersTitle, usersDescription, tagsToAdd);
 
-        await _bus.Publish(new AddNewQueuedLinkCommand(newLink), token);
+            await Publish(newLink, token);
+        }
+        catch (UriFormatException e)
+        {
+            _logger.LogError(e, e.Message);
+            throw;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
 
         return string.Empty;
     }

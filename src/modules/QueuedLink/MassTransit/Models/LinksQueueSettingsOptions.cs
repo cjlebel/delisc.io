@@ -7,9 +7,27 @@ namespace Deliscio.Modules.QueuedLinks.MassTransit.Models;
 /// </summary>
 public sealed class LinksQueueSettingsOptions : RabbitMqSettingsOptions
 {
-    public LinksQueueSettingsOptions() : base("LinksQueueOptions")
+    public static string SectionName = "LinksQueueSettings";
+
+    public override string Host { get; set; } = string.Empty;
+
+    public override string QueueName { get; set; }
+
+    public override int MaxConcurrentCalls { get; set; }
+
+    public override int MaxDequeueCount { get; set; }
+
+    public override int MaxRetryCount { get; set; }
+
+    public override int VisibilityTimeout { get; set; }
+
+    public override string Username { get; set; } = string.Empty;
+
+    public override string Password { get; set; } = string.Empty;
+
+    public LinksQueueSettingsOptions()
     {
-        QueueName = "links-queue";
+        QueueName = "submitted-links";
         MaxConcurrentCalls = 1;
         MaxDequeueCount = 5;
         MaxRetryCount = 5;

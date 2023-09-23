@@ -19,21 +19,46 @@ public static class ConfigSettingsManager
 
     public static string AspNetCoreEnvironmentVariableKey => "ASPNETCORE_ENVIRONMENT";
 
+    public static string DotNetEnvironmentVariableKey => "DOTNET_ENVIRONMENT";
+
     public static string EnvironmentName
     {
         get
         {
+            // Via AspNetCoreEnvironmentVariableKey
             var environmentName =
                 Environment.GetEnvironmentVariable(AspNetCoreEnvironmentVariableKey, EnvironmentVariableTarget.Machine);
+
             if (string.IsNullOrWhiteSpace(environmentName))
             {
                 environmentName = Environment.GetEnvironmentVariable(AspNetCoreEnvironmentVariableKey,
                     EnvironmentVariableTarget.User);
+
                 if (string.IsNullOrWhiteSpace(environmentName))
                 {
                     environmentName = Environment.GetEnvironmentVariable(AspNetCoreEnvironmentVariableKey,
                         EnvironmentVariableTarget.Process);
                 }
+            }
+
+            // Via DotNetEnvironmentVariableKey (Worker Services don't recognize the AspNetCoreEnvironmentVariableKey)
+            if (string.IsNullOrWhiteSpace(environmentName))
+            {
+                environmentName =
+                    Environment.GetEnvironmentVariable(DotNetEnvironmentVariableKey, EnvironmentVariableTarget.Machine);
+
+                if (string.IsNullOrWhiteSpace(environmentName))
+                {
+                    environmentName = Environment.GetEnvironmentVariable(DotNetEnvironmentVariableKey,
+                        EnvironmentVariableTarget.User);
+
+                    if (string.IsNullOrWhiteSpace(environmentName))
+                    {
+                        environmentName = Environment.GetEnvironmentVariable(DotNetEnvironmentVariableKey,
+                            EnvironmentVariableTarget.Process);
+                    }
+                }
+
             }
 
             return environmentName;
@@ -57,7 +82,7 @@ public static class ConfigSettingsManager
 
         return _config;
     }
-    
+
     public static IConfigurationSection GetSection(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -65,7 +90,7 @@ public static class ConfigSettingsManager
 
         return Configs.GetSection(name);
     }
-    
+
     /// <summary>
     /// Gets the section banes on the nameof() the type.
     /// </summary>

@@ -69,9 +69,12 @@ public class LinkEntity : MongoEntityBase
     /// </summary>
     public string Url { get; set; }
 
-    public Guid SubmittedByUserId { get; set; }
+    public Guid SubmittedById { get; set; }
 
-    private LinkEntity() { }
+    private LinkEntity()
+    {
+
+    }
 
     //public LinkEntity(string id, string url, string title) : this(Guid.Parse(id), url, title) { }
 
@@ -112,12 +115,19 @@ public class LinkEntity : MongoEntityBase
     /// <param name="createdById">The id of the user who submitted the link</param>
     /// <param name="tags">The optional tags that are associated with the link</param>
     /// <returns></returns>
-    public static LinkEntity Create(string url, string title, Guid createdById, string[]? tags)
+    public static LinkEntity Create(string url, string title, Guid submittedById, string[]? tags)
     {
-        return new LinkEntity()
-        {
+        var now = DateTimeOffset.UtcNow;
 
+        return new LinkEntity
+        {
+            SubmittedById = submittedById,
             Tags = tags?.Select(x => new LinkTagEntity(x)).ToList() ?? new List<LinkTagEntity>(),
+            Title = title,
+            Url = url,
+
+            DateCreated = now,
+            DateUpdated = now
         };
     }
 }

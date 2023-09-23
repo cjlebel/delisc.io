@@ -6,9 +6,9 @@ public class Link
 {
     public string Id { get; set; }
 
-    public string? Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
-    public string? Domain { get; set; }
+    public string Domain { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the image for the site/page that the link belongs to.
@@ -16,7 +16,7 @@ public class Link
     /// <value>
     /// The image.
     /// </value>
-    public string? ImageUrl { get; set; }
+    public string ImageUrl { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets a value indicating whether this Link is excluded from results.
@@ -42,7 +42,7 @@ public class Link
 
     public string Url { get; set; }
 
-    public string? SubmittedById { get; set; }
+    public string SubmittedById { get; set; } = Guid.Empty.ToString();
 
     public DateTimeOffset DateCreated { get; set; }
     public DateTimeOffset DateUpdated { get; set; }

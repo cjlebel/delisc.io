@@ -1,4 +1,4 @@
-using Deliscio.Apis.WebApi.Api.Common.Interfaces;
+using Deliscio.Apis.WebApi.Common.Interfaces;
 using Structurizr.Annotations;
 namespace Deliscio.Apis.WebApi.Managers;
 
