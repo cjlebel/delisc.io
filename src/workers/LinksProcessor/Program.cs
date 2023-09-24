@@ -29,6 +29,8 @@ public class Program
 
                 services.Configure<LinksQueueSettingsOptions>(config.GetSection(LinksQueueSettingsOptions.SectionName));
 
+                services.AddSingleton<HttpClient>();
+                
                 services.AddSingleton<ILinksService, LinksService>();
                 services.AddSingleton<ILinksRepository, LinksRepository>();
 

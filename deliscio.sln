@@ -106,6 +106,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Tests.Unit.Modules
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.QueuedLinks.Verifier", "src\modules\QueuedLink\Verifier\Deliscio.Modules.QueuedLinks.Verifier.csproj", "{235DEF65-E9CE-4A4B-92CA-4CD57078F786}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deliscio.Modules.QueuedLinks.Harvester", "src\modules\QueuedLink\Harvester\Deliscio.Modules.QueuedLinks.Harvester.csproj", "{146006D2-7EC2-47CD-9E0B-34FAE0AEB12D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -204,6 +206,10 @@ Global
 		{235DEF65-E9CE-4A4B-92CA-4CD57078F786}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{235DEF65-E9CE-4A4B-92CA-4CD57078F786}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{235DEF65-E9CE-4A4B-92CA-4CD57078F786}.Release|Any CPU.Build.0 = Release|Any CPU
+		{146006D2-7EC2-47CD-9E0B-34FAE0AEB12D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{146006D2-7EC2-47CD-9E0B-34FAE0AEB12D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{146006D2-7EC2-47CD-9E0B-34FAE0AEB12D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{146006D2-7EC2-47CD-9E0B-34FAE0AEB12D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -247,6 +253,7 @@ Global
 		{81CD3E8C-2A67-4AFB-AA35-BFB8B5262D69} = {83650EA7-03B1-41E0-B052-083310FB1FC4}
 		{BFF75DFF-EBBD-49D5-A0BE-DF7251F39829} = {999FC850-B0BF-4661-B7A8-7509F3DC8683}
 		{235DEF65-E9CE-4A4B-92CA-4CD57078F786} = {83650EA7-03B1-41E0-B052-083310FB1FC4}
+		{146006D2-7EC2-47CD-9E0B-34FAE0AEB12D} = {83650EA7-03B1-41E0-B052-083310FB1FC4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC98CF49-1486-4252-A157-DA1293256158}
