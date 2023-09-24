@@ -2,7 +2,7 @@ using Deliscio.Modules.QueuedLinks.Common.Enums;
 
 namespace Deliscio.Modules.QueuedLinks.Common.Models;
 
-public class QueuedLink
+public record QueuedLink
 {
     public string Url { get; set; }
 

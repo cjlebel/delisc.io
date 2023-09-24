@@ -42,7 +42,7 @@ public class AddNewQueuedLinkConsumer : IConsumer<AddNewQueuedLinkCommand>
         if (queuedLink.State == QueuedStates.Finished || queuedLink.State == QueuedStates.Exists)
         {
             var existingLinkId = queuedLink.State == QueuedStates.Exists ? new Guid(result.Message) : Guid.Empty;
-            Link? existingLink = null;
+            Link? existingLink;
 
             if (queuedLink.State == QueuedStates.Finished)
             {
