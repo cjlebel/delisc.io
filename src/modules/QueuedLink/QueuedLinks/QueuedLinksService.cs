@@ -32,17 +32,25 @@ public class QueuedLinksService : ServiceBase, IQueuedLinksService
         _logger = logger;
     }
 
-    public async ValueTask<(bool IsSuccess, string Message)> ProcessNewLinkAsync(QueuedLink link, CancellationToken token = default)
+    public async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> ProcessNewLinkAsync(QueuedLink link, CancellationToken token = default)
     {
-        Guard.Against.Null(link);
-        Guard.Against.NullOrWhiteSpace(link.Url);
+        if (link == null!)
+            return (false, "Link is null", new QueuedLink());
+
+        if (string.IsNullOrWhiteSpace(link.Url))
+            return (false, "Link is missing a URL", new QueuedLink());
+
+        //Guard.Against.Null(link);
+        //Guard.Against.NullOrWhiteSpace(link.Url);
+
+        QueuedLink updatedLink;
 
         if (link.State.Id != QueuedStates.New.Id)
         {
             _logger.LogWarning(PROCESSOR_ERROR_IMPROPER_STATE, link.State.Name);
-            link.State = QueuedStates.Error;
+            updatedLink = link with { State = QueuedStates.Error };
 
-            return (false, $"Improper State - Expected {QueuedStates.New.Name}");
+            return (false, $"Improper State - Expected {QueuedStates.New.Name}", updatedLink);
         }
 
         var verifyResult = await VerifyLinkAsync(link, token);
@@ -52,19 +60,24 @@ public class QueuedLinksService : ServiceBase, IQueuedLinksService
             return verifyResult;
         }
 
-        //var harvestResult = await HarvestLinkAsync(link, token);
+        updatedLink = verifyResult.Link;
 
-        //if (!harvestResult.IsSuccess)
-        //{
-        //    return harvestResult;
-        //}
+        var harvestResult = await HarvestLinkAsync(updatedLink, token);
 
-        return verifyResult;
+        if (!harvestResult.IsSuccess)
+        {
+            return harvestResult;
+        }
+
+        updatedLink = harvestResult.Link;
+
+
+        return (true, "Link processed successfully", updatedLink);
     }
 
-    private async ValueTask<(bool IsSuccess, string Message)> VerifyLinkAsync(QueuedLink link, CancellationToken token = default)
+    private async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> VerifyLinkAsync(QueuedLink link, CancellationToken token = default)
     {
-        (bool IsSuccess, string Message) result = (false, "Could not verify the link");
+        (bool IsSuccess, string Message, QueuedLink? Link) result = (false, "Could not verify the link", null);
 
         try
         {
@@ -73,7 +86,9 @@ public class QueuedLinksService : ServiceBase, IQueuedLinksService
         // Probably should create a custom exception, to differentiate between different cases so that they can be handle appropriately
         catch (ArgumentNullException ex)
         {
-            return (false, ex.Message);
+            result.Message = ex.Message;
+
+            return result;
         }
 
         // Redundant.
@@ -86,32 +101,31 @@ public class QueuedLinksService : ServiceBase, IQueuedLinksService
 
         if (link.State == QueuedStates.VerifyingCompleted || link.State == QueuedStates.Exists)
         {
+            // Log
             return result;
         }
 
         return result;
     }
 
-    private async ValueTask<(bool IsSuccess, string Message, HarvestedLink Link)> HarvestLinkAsync(QueuedLink link, CancellationToken token = default)
+    private async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> HarvestLinkAsync(QueuedLink link, CancellationToken token = default)
     {
-        var harvestedLink = (HarvestedLink)link;
+        (bool IsSuccess, string Message, QueuedLink Link) result;
 
         try
         {
-            var result = await _harvester.ExecuteAsync(harvestedLink, token);
+            result = await _harvester.ExecuteAsync(link, token);
 
-            if (result.IsSuccess)
+            if (!result.IsSuccess)
             {
-                harvestedLink.State = QueuedStates.FetchingMetaCompleted;
-                return (true, "Successfully harvested the link", harvestedLink);
+                return result;
             }
+
+            return result;
         }
         catch (Exception ex)
         {
-            return (false, ex.Message, new HarvestedLink());
+            return (false, ex.Message, link);
         }
-
-        return (false, "Could not harvest the link", new HarvestedLink());
-
     }
 }

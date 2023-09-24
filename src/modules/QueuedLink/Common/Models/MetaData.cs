@@ -1,14 +1,4 @@
-using Deliscio.Modules.QueuedLinks.Common.Models;
-
-namespace Deliscio.Modules.QueuedLinks.Harvester;
-
-/// <summary>
-/// Extension of the QueuedLink model to include the harvested meta data
-/// </summary>
-public record HarvestedLink : QueuedLink
-{
-    public MetaData Meta { get; set; }
-}
+namespace Deliscio.Modules.QueuedLinks.Common.Models;
 
 public record MetaData
 {

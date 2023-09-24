@@ -19,7 +19,7 @@ public class GetLinkByUrlQueryHandler : IRequestHandler<GetLinkByUrlQuery, Link?
 
     public async Task<Link?> Handle(GetLinkByUrlQuery command, CancellationToken cancellationToken)
     {
-        var link = await _linksService.GetAsync(command.Url, cancellationToken);
+        var link = await _linksService.GetByUrlAsync(command.Url, cancellationToken);
 
         return link;
     }

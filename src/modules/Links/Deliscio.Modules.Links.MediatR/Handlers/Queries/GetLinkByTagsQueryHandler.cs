@@ -20,7 +20,7 @@ public class GetLinkByTagsQueryHandler : IRequestHandler<GetLinksByTagsQuery, Pa
 
     public async Task<PagedResults<Link>> Handle(GetLinksByTagsQuery command, CancellationToken cancellationToken)
     {
-        var results = await _linksService.GetByTags(command.Tags, command.PageNo, command.PageSize, token: cancellationToken);
+        var results = await _linksService.GetByTagsAsync(command.Tags, command.PageNo, command.PageSize, token: cancellationToken);
 
         return results;
     }

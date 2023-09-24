@@ -32,7 +32,7 @@ public class LinksService : ServiceBase, ILinksService
     /// <param name="tags"></param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public async Task<Guid> Add(string url, string title, Guid submittedById, string[]? tags = default, CancellationToken token = default)
+    public async Task<Guid> AddAsync(string url, string title, Guid submittedById, string[]? tags = default, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(url);
         Guard.Against.NullOrWhiteSpace(title);
@@ -98,7 +98,7 @@ public class LinksService : ServiceBase, ILinksService
     /// <param name="token"></param>
     /// /// <exception cref="ArgumentNullException">If the domain is null or empty</exception>
     /// <returns></returns>
-    public async Task<PagedResults<Link>> GetByDomain(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async Task<PagedResults<Link>> GetByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(domain);
 
@@ -118,7 +118,7 @@ public class LinksService : ServiceBase, ILinksService
     /// <param name="token"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public async Task<PagedResults<Link>> GetByTags(IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async Task<PagedResults<Link>> GetByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         var array = tags as string[] ?? Array.Empty<string>();
 
@@ -129,6 +129,15 @@ public class LinksService : ServiceBase, ILinksService
         var links = Mapper.Map(rslts.Results);
 
         return GetPageOfResults(links, pageNo, pageSize, rslts.TotalCount);
+    }
+
+    public async Task<Link?> GetByUrlAsync(string url, CancellationToken token = default)
+    {
+        Guard.Against.NullOrWhiteSpace(url);
+
+        var result = await _linksRepository.GetByUrlAsync(url, token);
+
+        return result is null ? null : Mapper.Map(result);
     }
 
     /// <summary>

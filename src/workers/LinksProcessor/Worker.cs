@@ -9,7 +9,7 @@ public class Worker : BackgroundService
 {
     private readonly IBusControl _busControl;
     private readonly ILogger<Worker> _logger;
-    private readonly IOptions<LinksQueueSettingsOptions> _options;
+
     private readonly string _queueName;
 
     private const string COULD_NOT_GET_OPTIONS = "Could not retrieve the options";
@@ -25,12 +25,12 @@ public class Worker : BackgroundService
         _queueName = options.Value.QueueName;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken = default)
+    public override async Task StartAsync(CancellationToken cancellationToken = default)
     {
         await _busControl.StartAsync(cancellationToken);
 
         // Subscribe to the message queue with a handler for Command messages
-        await _busControl.Publish<AddNewQueuedLinkCommand>(_queueName, cancellationToken);
+        //await _busControl.Publish<AddNewQueuedLinkCommand>(_queueName, cancellationToken);
 
         _logger.LogInformation("Submitted Links Worker started.");
     }
@@ -47,7 +47,7 @@ public class Worker : BackgroundService
         }
     }
 
-    public async Task StopAsync(CancellationToken cancellationToken)
+    public override async Task StopAsync(CancellationToken cancellationToken)
     {
         await _busControl.StopAsync(cancellationToken);
 

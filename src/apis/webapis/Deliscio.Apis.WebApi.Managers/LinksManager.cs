@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Ardalis.GuardClauses;
 using Deliscio.Apis.WebApi.Common.Abstracts;
 using Deliscio.Apis.WebApi.Common.Interfaces;
@@ -5,6 +6,7 @@ using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Modules.QueuedLinks.Common.Models;
+using Deliscio.Modules.QueuedLinks.Interfaces;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -16,13 +18,17 @@ namespace Deliscio.Apis.WebApi.Managers;
 [UsedByContainer("Web API")]
 public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
 {
+    private readonly IBusControl _bus;
     private readonly ILogger<LinksManager> _logger;
     private readonly IMediator _mediator;
+    private readonly IQueuedLinksService _queueService;
 
-    public LinksManager(IMediator mediator, IBusControl bus, ILogger<LinksManager> logger) : base(bus, logger)
+    public LinksManager(IMediator mediator, IBusControl bus, IQueuedLinksService queueService, ILogger<LinksManager> logger) : base(bus, logger)
     {
-        _logger = logger;
+        _bus = bus;
         _mediator = mediator;
+        _queueService = queueService;
+        _logger = logger;
     }
 
     /// <summary>
@@ -72,9 +78,38 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
 
         try
         {
-            var newLink = new QueuedLink(url, submittedByUserId, usersTitle, usersDescription, tagsToAdd);
+            var newLink = QueuedLink.Create(new Uri(url), submittedByUserId, UsersData.Create(usersDescription, usersTitle, tagsToAdd));
 
-            await Publish(newLink, token);
+            //await Publish(newLink, token);
+            try
+            {
+                //_mediator.Send(newLink, token);
+                //await _bus.Publish(newLink, token);
+
+                // Short circuiting the queue for now, as it's not working.
+                // This will allow me to test the rest of the system.
+                var result = await _queueService.ProcessNewLinkAsync(newLink, token);
+
+                return result.Message;
+            }
+            // Token ran out of time
+            catch (OperationCanceledException e)
+            {
+                _logger.LogError(e, "Operation was cancelled");
+                throw;
+            }
+            // Couldn't reach the queue's endpoint
+            catch (UnreachableException e)
+            {
+                _logger.LogError(e, "Could not reach the Queue");
+                throw;
+            }
+            // Everything else
+            catch (Exception e)
+            {
+                _logger.LogError(e, "An error occurred while trying to submit a new link");
+                throw;
+            }
         }
         catch (UriFormatException e)
         {
@@ -83,7 +118,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            _logger.LogError(e, e.Message);
             throw;
         }
 

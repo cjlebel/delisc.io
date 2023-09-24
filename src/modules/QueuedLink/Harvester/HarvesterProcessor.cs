@@ -14,33 +14,29 @@ public class HarvesterProcessor : IHarvesterProcessor
 
     private const string HARVESTER_ERROR_HTTPCLIENT = "{time}: Harvesting Error for: {url}\nMessage: {message}";
 
-    protected HarvesterProcessor(IMediator mediator, HttpClient httpClient, ILogger<HarvesterProcessor> logger)
+    public HarvesterProcessor(IMediator mediator, HttpClient httpClient, ILogger<HarvesterProcessor> logger)
     {
         _httpClient = httpClient;
         _logger = logger;
         _mediator = mediator;
     }
 
-    public async ValueTask<(bool IsSuccess, string Message)> ExecuteAsync(HarvestedLink link,
+    public async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> ExecuteAsync(QueuedLink link,
         CancellationToken token = default)
     {
-        var result = (false, "Could not harvest the link");
+        var updatedLink = link with { State = QueuedStates.FetchingMeta };
 
-        link.State = QueuedStates.FetchingMeta;
+        var metaData = await Fetch(link.Url, token);
 
-        var data = await Fetch(link.Url, token);
-
-        if (!data.IsSuccess)
+        if (!metaData.IsSuccess)
         {
-            link.State = QueuedStates.Error;
-            return result;
+            updatedLink = updatedLink with { State = QueuedStates.Error };
+            return (false, $"Could not fetch the URL's page:\nError: {metaData.Message}", updatedLink);
         }
 
-        link = link with { Meta = data.Result };
+        //updatedLink = link with { MetaData = metaData.Result, State = QueuedStates.FetchingMetaCompleted };
 
-        link.State = QueuedStates.FetchingMetaCompleted;
-
-        return (true, "Harvesting Completed");
+        return (true, "Harvesting Completed", updatedLink);
     }
 
     /// <summary>

@@ -106,7 +106,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Tests.Unit.Modules
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.QueuedLinks.Verifier", "src\modules\QueuedLink\Verifier\Deliscio.Modules.QueuedLinks.Verifier.csproj", "{235DEF65-E9CE-4A4B-92CA-4CD57078F786}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deliscio.Modules.QueuedLinks.Harvester", "src\modules\QueuedLink\Harvester\Deliscio.Modules.QueuedLinks.Harvester.csproj", "{146006D2-7EC2-47CD-9E0B-34FAE0AEB12D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.QueuedLinks.Harvester", "src\modules\QueuedLink\Harvester\Deliscio.Modules.QueuedLinks.Harvester.csproj", "{146006D2-7EC2-47CD-9E0B-34FAE0AEB12D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

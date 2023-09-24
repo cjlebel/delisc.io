@@ -20,7 +20,7 @@ public class GetLinkByDomainQueryHandler : IRequestHandler<GetLinksByDomainQuery
 
     public async Task<PagedResults<Link>> Handle(GetLinksByDomainQuery command, CancellationToken cancellationToken)
     {
-        var results = await _linksService.GetByDomain(command.Domain, command.PageNo, command.PageSize, token: cancellationToken);
+        var results = await _linksService.GetByDomainAsync(command.Domain, command.PageNo, command.PageSize, token: cancellationToken);
 
         return results;
     }

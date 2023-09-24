@@ -5,5 +5,5 @@ namespace Deliscio.Modules.QueuedLinks.Verifier;
 
 public interface IVerifyProcessor : IProcessor
 {
-    ValueTask<(bool IsSuccess, string Message)> ExecuteAsync(QueuedLink link, CancellationToken token = default);
+    ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> ExecuteAsync(QueuedLink link, CancellationToken token = default);
 }

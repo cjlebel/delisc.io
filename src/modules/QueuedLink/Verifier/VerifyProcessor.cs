@@ -17,8 +17,8 @@ public class VerifyProcessor : IVerifyProcessor
     private const string VERIFYING_COMPLETED_MESSAGE = "{time}: Verifying Completed for: {url}";
     private const string VERIFYING_ERROR_MESSAGE = "{time}: Verifying Error for: {url}\nMessage: {message}";
     private const string VERIFYING_LINK_ALREADY_EXISTS_MESSAGE = "{time}: Link already exists for: {url}";
-    
-    
+
+
     // Simple list of invalid domains. Should be read from somewhere, where that list can be updated.
     private readonly string[] _invalidDomains = { "127.0.0.1", "192.168.", "localhost", "mail." };
 
@@ -39,12 +39,14 @@ public class VerifyProcessor : IVerifyProcessor
     /// <param name="link">The link object to be verified</param>
     /// <param name="token">The cancellation token to end the request</param>
     /// <returns></returns>
-    public async ValueTask<(bool IsSuccess, string Message)> ExecuteAsync(QueuedLink link, CancellationToken token = default)
+    public async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> ExecuteAsync(QueuedLink link, CancellationToken token = default)
     {
+        _logger.LogInformation(VERIFYING_STARTED_MESSAGE, DateTimeOffset.Now, link.Url);
+
         Guard.Against.Null(link);
         Guard.Against.NullOrWhiteSpace(link.Url);
 
-        _logger.LogInformation(VERIFYING_STARTED_MESSAGE, DateTimeOffset.Now, link.Url);
+        QueuedLink updatedLink;
 
         link.State = QueuedStates.Verifying;
 
@@ -54,34 +56,33 @@ public class VerifyProcessor : IVerifyProcessor
         if (existingLink is not null)
         {
             _logger.LogInformation(VERIFYING_LINK_ALREADY_EXISTS_MESSAGE, DateTimeOffset.Now, link.Url);
-            link.State = QueuedStates.Exists;
+            updatedLink = link with { LinkId = new Guid(existingLink.Id), State = QueuedStates.Exists };
 
-            // Hacky way of returning the existing link id. Should be refactored.
-            return (true, existingLink.Id);
+            return (true, "Link already exists", updatedLink);
         }
 
         // Verify that the domain is valid
         if (_invalidDomains.Any(x => link.Url.Contains(x, StringComparison.InvariantCultureIgnoreCase)))
         {
             _logger.LogInformation(VERIFYING_ERROR_MESSAGE, DateTimeOffset.Now, link.Url, "Invalid domain");
-            link.State = QueuedStates.Rejected;
+            updatedLink = link with { State = QueuedStates.Rejected };
 
-            return (false, "Invalid domain");
+            return (false, "Invalid domain", updatedLink);
         }
 
         // Verify that the protocol is valid
         if (!_validProtocols.Any(x => link.Url.StartsWith(x, StringComparison.InvariantCultureIgnoreCase)))
         {
             _logger.LogInformation(VERIFYING_ERROR_MESSAGE, DateTimeOffset.Now, link.Url, "Invalid protocol");
-            link.State = QueuedStates.Rejected;
+            updatedLink = link with { State = QueuedStates.Rejected };
 
-            return (false, "Invalid protocol");
+            return (false, "Invalid protocol", updatedLink);
         }
-        
-        link.State = QueuedStates.VerifyingCompleted;
+
+        updatedLink = link with { State = QueuedStates.VerifyingCompleted };
 
         _logger.LogInformation(VERIFYING_COMPLETED_MESSAGE, DateTimeOffset.Now, link.Url);
 
-        return (true, "Verifying Complete");
+        return (true, "Verifying Complete", updatedLink);
     }
 }
