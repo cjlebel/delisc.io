@@ -1,3 +1,4 @@
+using System.Net;
 using Deliscio.Modules.QueuedLinks.Common.Enums;
 using Deliscio.Modules.QueuedLinks.Common.Models;
 using HtmlAgilityPack;
@@ -12,31 +13,34 @@ public class HarvesterProcessor : IHarvesterProcessor
     private readonly ILogger<HarvesterProcessor> _logger;
     private readonly IMediator _mediator;
 
-    private const string HARVESTER_ERROR_HTTPCLIENT = "{time}: Harvesting Error for: {url}\nMessage: {message}";
+    private const string HARVESTER_ERROR_HTTPCLIENT = "{time}: Harvesting Error for: {url} {newLine}Message: {message}";
 
     public HarvesterProcessor(IMediator mediator, HttpClient httpClient, ILogger<HarvesterProcessor> logger)
     {
         _httpClient = httpClient;
         _logger = logger;
         _mediator = mediator;
+
+        _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.0.0 Safari/537.36");
+        _httpClient.Timeout = TimeSpan.FromSeconds(10);
     }
 
     public async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> ExecuteAsync(QueuedLink link,
         CancellationToken token = default)
     {
-        var updatedLink = link with { State = QueuedStates.FetchingMeta };
+        link = link with { State = QueuedStates.FetchingData };
 
         var metaData = await Fetch(link.Url, token);
 
         if (!metaData.IsSuccess)
         {
-            updatedLink = updatedLink with { State = QueuedStates.Error };
-            return (false, $"Could not fetch the URL's page:\nError: {metaData.Message}", updatedLink);
+            link = link with { State = QueuedStates.Error };
+            return (false, $"Could not fetch the URL's page:\nError: {metaData.Message}", link);
         }
 
-        //updatedLink = link with { MetaData = metaData.Result, State = QueuedStates.FetchingMetaCompleted };
+        link = link with { Title = metaData.Result.Title ?? "", Description = metaData.Result.Description, MetaData = metaData.Result, State = QueuedStates.FetchingDataCompleted };
 
-        return (true, "Harvesting Completed", updatedLink);
+        return (true, "Harvesting Completed", link);
     }
 
     /// <summary>
@@ -50,10 +54,13 @@ public class HarvesterProcessor : IHarvesterProcessor
         (bool, string, MetaData) result;
 
         var htmlDocument = new HtmlDocument();
+        HttpResponseMessage response = null;
 
         try
         {
-            var response = await _httpClient.GetAsync(url, token);
+
+
+            response = await _httpClient.GetAsync(url, token);
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync(token);
@@ -62,31 +69,55 @@ public class HarvesterProcessor : IHarvesterProcessor
         }
         catch (Exception e)
         {
-            _logger.LogError(HARVESTER_ERROR_HTTPCLIENT, DateTimeOffset.Now, url, e.Message);
-            return (false, "Could not harvest the link", new MetaData());
+            _logger.LogError(HARVESTER_ERROR_HTTPCLIENT, DateTimeOffset.Now, url, e.Message, Environment.NewLine);
+            var statusCode = response?.StatusCode ?? HttpStatusCode.BadRequest;
+
+            return (false, $"Could not harvest the link\nStatus: {statusCode}", new MetaData());
+        }
+
+        var ogTitle = WebUtility.HtmlDecode(htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:title']")
+            ?.Attributes["content"]
+            ?.Value ?? string.Empty);
+
+        var title = WebUtility.HtmlDecode(htmlDocument.DocumentNode.SelectSingleNode("//title")?.InnerText ??
+                                          string.Empty);
+
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            if (!string.IsNullOrWhiteSpace(ogTitle))
+                title = ogTitle;
+            else
+                title = url;
+        }
+
+        var description =
+            htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='description']")?.Attributes["content"]?.Value;
+
+        var ogDescription =
+            WebUtility.HtmlDecode(htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:description']")
+                ?.Attributes["content"]
+                ?.Value ?? string.Empty);
+
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            if (!string.IsNullOrWhiteSpace(ogDescription))
+                description = ogDescription;
+            else
+                description = string.Empty;
         }
 
         var meta = new MetaData
         {
+            Title = title,
+            OgTitle = ogTitle,
+            Description = description,
+            OgDescription = ogDescription,
+
             Author = htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='author']")?.Attributes["content"]?.Value,
-            CanonicalUrl =
-                htmlDocument.DocumentNode.SelectSingleNode("//link[@rel='canonical']")?.Attributes["href"]?.Value,
-            Description =
-                htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='description']")?.Attributes["content"]?.Value,
-            Keywords =
-                htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='keywords']")?.Attributes["content"]?.Value,
-            LastUpdate =
-                htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='last-modified']")?.Attributes["content"]
-                    ?.Value,
-            OgImage = htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:image']")?.Attributes["content"]
-                    ?.Value,
-            OgTitle =
-                htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:title']")?.Attributes["content"]
-                    ?.Value,
-            OgDescription =
-                htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:description']")?.Attributes["content"]
-                    ?.Value,
-            Title = htmlDocument.DocumentNode.SelectSingleNode("//title")?.InnerText,
+            CanonicalUrl = htmlDocument.DocumentNode.SelectSingleNode("//link[@rel='canonical']")?.Attributes["href"]?.Value,
+            Keywords = htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='keywords']")?.Attributes["content"]?.Value,
+            LastUpdate = htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='last-modified']")?.Attributes["content"]?.Value,
+            OgImage = htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:image']")?.Attributes["content"]?.Value
         };
 
         result = (true, "Harvesting Complete", meta);

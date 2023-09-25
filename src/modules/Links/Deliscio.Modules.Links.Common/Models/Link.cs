@@ -18,23 +18,7 @@ public class Link
     /// </value>
     public string ImageUrl { get; set; } = string.Empty;
 
-    /// <summary>
-    /// Gets or sets a value indicating whether this Link is excluded from results.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is excluded; otherwise, <c>false</c>.
-    /// </value>
-    public bool IsExcluded { get; set; } = false;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether this Link is flagged.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is flagged; otherwise, <c>false</c>.
-    /// </value>
-    public bool IsFlagged { get; set; } = false;
-
-    public string ScreenShot { get; set; } = string.Empty;
+    public string[] Keywords { get; set; } = Array.Empty<string>();
 
     public ReadOnlyCollection<LinkTag> Tags { get; set; }
 
@@ -76,12 +60,12 @@ public class Link
         Title = title;
         Description = description;
         Url = url;
-        Tags = new ReadOnlyCollection<LinkTag>((IList<LinkTag>)(tags ?? Enumerable.Empty<LinkTag>()));
+        Tags = new ReadOnlyCollection<LinkTag>((tags?.ToList() ?? new List<LinkTag>()));
     }
 
-    public Link Create(string url)
+    public static Link Create(string url, string submittedById)
     {
-        return Create(url, string.Empty, string.Empty, Enumerable.Empty<string>());
+        return Create(url, submittedById, string.Empty, string.Empty, Enumerable.Empty<string>());
     }
 
     /// <summary>
@@ -99,7 +83,7 @@ public class Link
     /// or
     /// tags
     /// </exception>
-    public Link Create(string url, string title, string description, IEnumerable<string>? tags = null)
+    public static Link Create(string url, string submittedById, string title, string description, IEnumerable<string>? tags = null)
     {
         if (string.IsNullOrWhiteSpace(url))
             throw new ArgumentNullException(nameof(url));
@@ -108,6 +92,7 @@ public class Link
 
         return new Link(Guid.Empty, url, title, description, (arrTags.Select(LinkTag.Create)))
         {
+            SubmittedById = submittedById,
             DateCreated = DateTimeOffset.UtcNow,
             DateUpdated = DateTimeOffset.UtcNow,
         };

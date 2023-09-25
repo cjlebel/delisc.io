@@ -1,10 +1,9 @@
-using Ardalis.GuardClauses;
 using Deliscio.Core.Abstracts;
-using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.QueuedLinks.Common.Enums;
 using Deliscio.Modules.QueuedLinks.Common.Models;
 using Deliscio.Modules.QueuedLinks.Harvester;
 using Deliscio.Modules.QueuedLinks.Interfaces;
+using Deliscio.Modules.QueuedLinks.Tagger;
 using Deliscio.Modules.QueuedLinks.Verifier;
 using Microsoft.Extensions.Logging;
 
@@ -19,14 +18,16 @@ namespace Deliscio.Modules.QueuedLinks;
 public class QueuedLinksService : ServiceBase, IQueuedLinksService
 {
     private readonly IHarvesterProcessor _harvester;
+    private readonly ITaggerProcessor _tagger;
     private readonly IVerifyProcessor _verifier;
     private readonly ILogger<QueuedLinksService> _logger;
 
     // Best practice is to use a constant for the message format string. This way it will be reused, instead of recreated for each message
     private const string PROCESSOR_ERROR_IMPROPER_STATE = "Link is not in the correct state to be processed: {name}";
-    public QueuedLinksService(IVerifyProcessor verifier, IHarvesterProcessor harvester, ILogger<QueuedLinksService> logger)
+    public QueuedLinksService(IVerifyProcessor verifier, IHarvesterProcessor harvester, ITaggerProcessor tagger, ILogger<QueuedLinksService> logger)
     {
         _harvester = harvester;
+        _tagger = tagger;
         _verifier = verifier;
 
         _logger = logger;
@@ -43,14 +44,12 @@ public class QueuedLinksService : ServiceBase, IQueuedLinksService
         //Guard.Against.Null(link);
         //Guard.Against.NullOrWhiteSpace(link.Url);
 
-        QueuedLink updatedLink;
-
         if (link.State.Id != QueuedStates.New.Id)
         {
             _logger.LogWarning(PROCESSOR_ERROR_IMPROPER_STATE, link.State.Name);
-            updatedLink = link with { State = QueuedStates.Error };
+            link = link with { State = QueuedStates.Error };
 
-            return (false, $"Improper State - Expected {QueuedStates.New.Name}", updatedLink);
+            return (false, $"Improper State - Expected {QueuedStates.New.Name}", link);
         }
 
         var verifyResult = await VerifyLinkAsync(link, token);
@@ -60,19 +59,39 @@ public class QueuedLinksService : ServiceBase, IQueuedLinksService
             return verifyResult;
         }
 
-        updatedLink = verifyResult.Link;
+        // If it exists, but was fetched recently, then don't fetch it again
+        if (verifyResult.Link.State == QueuedStates.Exists &&
+            verifyResult.Link.DateLastFetched < DateTimeOffset.Now.AddDays(-5))
+        {
+            return verifyResult;
+        }
 
-        var harvestResult = await HarvestLinkAsync(updatedLink, token);
+        link = verifyResult.Link;
+
+
+        var harvestResult = await HarvestLinkAsync(link, token);
 
         if (!harvestResult.IsSuccess)
         {
             return harvestResult;
         }
 
-        updatedLink = harvestResult.Link;
+        link = harvestResult.Link;
+
+        var taggingResult = await TagLinkAsync(link, token);
+
+        if (!taggingResult.IsSuccess)
+        {
+            return taggingResult;
+        }
+
+        link = taggingResult.Link;
 
 
-        return (true, "Link processed successfully", updatedLink);
+
+        link = link with { State = QueuedStates.Finished };
+
+        return (true, "Link processed successfully", link);
     }
 
     private async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> VerifyLinkAsync(QueuedLink link, CancellationToken token = default)
@@ -127,5 +146,12 @@ public class QueuedLinksService : ServiceBase, IQueuedLinksService
         {
             return (false, ex.Message, link);
         }
+    }
+
+    private async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> TagLinkAsync(QueuedLink link, CancellationToken token = default)
+    {
+        var result = await _tagger.ExecuteAsync(link, token);
+
+        return result;
     }
 }

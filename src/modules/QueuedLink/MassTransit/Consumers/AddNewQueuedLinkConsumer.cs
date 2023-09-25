@@ -28,6 +28,8 @@ public class AddNewQueuedLinkConsumer : IConsumer<AddNewQueuedLinkCommand>
     //NOTE: Must be public.
     public async Task Consume(ConsumeContext<AddNewQueuedLinkCommand> context)
     {
+        throw new NotImplementedException("MAssTransit/RabbitMQ aren't working at the moment");
+
         var command = context.Message;
 
         if (command.Link != null!)
@@ -45,33 +47,27 @@ public class AddNewQueuedLinkConsumer : IConsumer<AddNewQueuedLinkCommand>
 
                 if (queuedLink.State == QueuedStates.Finished || queuedLink.State == QueuedStates.Exists)
                 {
-                    var existingLinkId = queuedLink.State == QueuedStates.Exists ? new Guid(result.Message) : Guid.Empty;
-                    Link? existingLink;
+                    var existingLinkId = queuedLink.State == QueuedStates.Exists ? queuedLink.LinkId : Guid.Empty;
+                    Link? link;
 
                     if (queuedLink.State == QueuedStates.Finished)
                     {
-                        var queryAdd = new AddLinkCommand(queuedLink.Url, queuedLink.Title, queuedLink.SubmittedById,
-                            queuedLink.Tags);
+                        link = Link.Create(queuedLink.Url, queuedLink.SubmittedById.ToString(), queuedLink.Title, queuedLink.MetaData?.Description ?? string.Empty, queuedLink.Tags);
+                        link.Keywords = queuedLink.MetaData?.Keywords?.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+
+                        var queryAdd = new AddLinkCommand(link);
                         existingLinkId = await _mediator.Send(queryAdd);
-
-                        if (existingLinkId != Guid.Empty)
-                        {
-                            var queryGet = new GetLinkByIdQuery(existingLinkId);
-                            existingLink = await _mediator.Send(queryGet);
-
-                            if (existingLink != null)
-                            {
-                                // Update with the rest of the details
-                            }
-                        }
                     }
+                    // If link already existed, then get it to associate it with the user
                     else if (queuedLink.State == QueuedStates.Exists)
                     {
                         var queryGet = new GetLinkByIdQuery(existingLinkId);
-                        existingLink = await _mediator.Send(queryGet);
+                        link = await _mediator.Send(queryGet);
                     }
 
                     // It must now exist, so associate the link with the user
+
+                    //var associateCommand = new AssociateLinkWithUserCommand(existingLinkId, queuedLink.SubmittedById.ToString());
                 }
             }
         }

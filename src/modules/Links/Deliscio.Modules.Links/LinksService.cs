@@ -23,6 +23,25 @@ public class LinksService : ServiceBase, ILinksService
         _linksRepository = linksRepository;
     }
 
+    public async Task<Guid> AddAsync(Link link, CancellationToken token = default)
+    {
+        Guard.Against.Null(link);
+        Guard.Against.NullOrWhiteSpace(link.Url);
+        Guard.Against.NullOrWhiteSpace(link.Title);
+        Guard.Against.NullOrEmpty(link.SubmittedById);
+
+        var entity = Mapper.Map(link);
+
+        if (entity != null)
+        {
+            await _linksRepository.AddAsync(entity, token);
+
+            return entity.Id;
+        }
+
+        return Guid.Empty;
+    }
+
     /// <summary>
     /// Simplest way to add a link to the central link repository.
     /// </summary>

@@ -18,7 +18,7 @@ public class AddLinkCommandHandler : IRequestHandler<AddLinkCommand, Guid>
 
     public async Task<Guid> Handle(AddLinkCommand command, CancellationToken cancellationToken)
     {
-        var linkId = await _linksService.AddAsync(command.Url, command.Title, command.SubmittedById, command.Tags, cancellationToken);
+        var linkId = await _linksService.AddAsync(command.Link, cancellationToken);
 
         return linkId;
     }

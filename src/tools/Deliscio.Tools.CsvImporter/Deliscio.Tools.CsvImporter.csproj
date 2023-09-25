@@ -18,6 +18,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\modules\BacklogLinks\Deliscio.Modules.Backlog\Deliscio.Modules.Backlog.csproj" />
+	  <ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
 	</ItemGroup>
 
 </Project>

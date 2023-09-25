@@ -9,19 +9,22 @@ public record QueuedLink
     public Guid SubmittedById { get; set; }
 
     public string Title { get; set; }
-    public string Description { get; }
+
+    public string Description { get; set; }
+
+    public string Domain { get; set; }
 
     public Guid LinkId { get; set; } = Guid.NewGuid();
 
     public string[]? Tags { get; set; }
 
-    //public MetaData? MetaData { get; set; }
+    public MetaData? MetaData { get; set; }
 
-    //public UsersData? UsersData { get; set; }
+    public UsersData? UsersData { get; set; }
 
     public QueuedStates.State State { get; set; } = QueuedStates.New;
 
-
+    public DateTimeOffset? DateLastFetched { get; set; }
 
     //NOTE: This () is needed for deserialization :(
     public QueuedLink() { }
@@ -52,7 +55,7 @@ public record QueuedLink
         {
             Url = url.OriginalString,
             SubmittedById = new Guid(submittedById),
-            //UsersData = usersData ?? new UsersData()
+            UsersData = usersData ?? new UsersData()
         };
 
         return link;

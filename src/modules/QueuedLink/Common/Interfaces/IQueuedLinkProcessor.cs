@@ -1,6 +1,6 @@
 namespace Deliscio.Modules.QueuedLinks.Common.Interfaces;
 
-public interface IProcessor
+public interface IQueuedLinkProcessor
 {
     //ValueTask<(bool IsSuccess, string Message)> ExecuteAsync(CancellationToken token = default);
 }

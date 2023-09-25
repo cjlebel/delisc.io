@@ -20,6 +20,7 @@ using Deliscio.Modules.QueuedLinks.Interfaces;
 using Deliscio.Modules.QueuedLinks.MassTransit.Models;
 using Deliscio.Modules.QueuedLinks.MediatR.Commands;
 using Deliscio.Modules.QueuedLinks.MediatR.Handlers;
+using Deliscio.Modules.QueuedLinks.Tagger;
 using Deliscio.Modules.QueuedLinks.Verifier;
 using MassTransit;
 using MediatR;
@@ -105,10 +106,11 @@ public class Program
         builder.Services.AddSingleton<IQueuedLinksService, QueuedLinksService>();
         builder.Services.AddSingleton<IVerifyProcessor, VerifyProcessor>();
         builder.Services.AddSingleton<IHarvesterProcessor, HarvesterProcessor>();
+        builder.Services.AddSingleton<ITaggerProcessor, TaggerProcessor>();
         // This is weird, I should not need to add these here?!?!?
 
         builder.Services.AddSingleton<IRequestHandler<AddNewLinkQueueCommand, bool>, AddNewLinkQueueCommandHandler>();
-
+        builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkCommandHandler>();
 
 
         builder.Services.AddSingleton<LinksApiEndpoints>();

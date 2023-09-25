@@ -20,10 +20,10 @@ public class VerifyProcessor : IVerifyProcessor
 
 
     // Simple list of invalid domains. Should be read from somewhere, where that list can be updated.
-    private readonly string[] _invalidDomains = { "127.0.0.1", "192.168.", "localhost", "mail." };
+    private readonly string[] _invalidDomains = { "127.0.0.1", "192.168.", "localhost", "mail.", "calendar.", "okcupid.com", "pof.com" };
 
     // Simple list of valid protocols. Should be read from somewhere, where that list can be updated.
-    private readonly string[] _validProtocols = { "http://", "https://" };
+    private readonly string[] _validProtocols = { "http:", "https:", "chrome:" };
     public VerifyProcessor(IMediator mediator, ILogger<VerifyProcessor> logger)
     {
         _logger = logger;
@@ -46,9 +46,7 @@ public class VerifyProcessor : IVerifyProcessor
         Guard.Against.Null(link);
         Guard.Against.NullOrWhiteSpace(link.Url);
 
-        QueuedLink updatedLink;
-
-        link.State = QueuedStates.Verifying;
+        link = link with { State = QueuedStates.Verifying };
 
         var query = new GetLinkByUrlQuery(link.Url);
         var existingLink = await _mediator.Send(query, token);
@@ -56,33 +54,62 @@ public class VerifyProcessor : IVerifyProcessor
         if (existingLink is not null)
         {
             _logger.LogInformation(VERIFYING_LINK_ALREADY_EXISTS_MESSAGE, DateTimeOffset.Now, link.Url);
-            updatedLink = link with { LinkId = new Guid(existingLink.Id), State = QueuedStates.Exists };
+            link = link with { LinkId = new Guid(existingLink.Id), DateLastFetched = existingLink.DateUpdated, State = QueuedStates.Exists };
 
-            return (true, "Link already exists", updatedLink);
+            return (true, "Link already exists", link);
         }
+
+        var domain = ParseDomainFromUrl(link.Url);
 
         // Verify that the domain is valid
-        if (_invalidDomains.Any(x => link.Url.Contains(x, StringComparison.InvariantCultureIgnoreCase)))
+        if (_invalidDomains.Any(x => domain.Contains(x, StringComparison.InvariantCultureIgnoreCase)))
         {
             _logger.LogInformation(VERIFYING_ERROR_MESSAGE, DateTimeOffset.Now, link.Url, "Invalid domain");
-            updatedLink = link with { State = QueuedStates.Rejected };
+            link = link with { State = QueuedStates.Rejected };
 
-            return (false, "Invalid domain", updatedLink);
+            return (false, "Invalid domain", link);
         }
+
+        link = link with { Domain = domain };
 
         // Verify that the protocol is valid
         if (!_validProtocols.Any(x => link.Url.StartsWith(x, StringComparison.InvariantCultureIgnoreCase)))
         {
             _logger.LogInformation(VERIFYING_ERROR_MESSAGE, DateTimeOffset.Now, link.Url, "Invalid protocol");
-            updatedLink = link with { State = QueuedStates.Rejected };
+            link = link with { State = QueuedStates.Rejected };
 
-            return (false, "Invalid protocol", updatedLink);
+            return (false, "Invalid protocol", link);
         }
 
-        updatedLink = link with { State = QueuedStates.VerifyingCompleted };
+        link = link with { State = QueuedStates.VerifyingCompleted };
 
         _logger.LogInformation(VERIFYING_COMPLETED_MESSAGE, DateTimeOffset.Now, link.Url);
 
-        return (true, "Verifying Complete", updatedLink);
+        return (true, "Verifying Complete", link);
+    }
+
+    private static string ParseDomainFromUrl(string url)
+    {
+        var commonSubdomains = new List<string>
+        {
+            "www",
+            "mail",
+            "ftp"
+        };
+
+        if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
+        {
+            string host = uri.Host.ToLower();
+
+            var matchingSubdomain = commonSubdomains.FirstOrDefault(subdomain => host.StartsWith(subdomain + "."));
+            if (matchingSubdomain != null)
+            {
+                host = host.Substring(matchingSubdomain.Length + 1); // Remove the subdomain and the following dot
+            }
+
+            return host;
+        }
+
+        return string.Empty;
     }
 }
