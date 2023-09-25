@@ -32,20 +32,20 @@ public sealed class QueuedStates
     /// <summary>
     /// The state when a link is being checked to see if it already exists, or if it's valid
     /// </summary>
-    public static readonly State Verifying = new(3, "Checking If Exists", 2);
-    public static readonly State VerifyingCompleted = new(4, "Checking If Exists", 3);
+    public static readonly State Verifying = new(3, "Verifying Exists", 2);
+    public static readonly State VerifyingCompleted = new(4, "Verifying Completed", 3);
 
     /// <summary>
     /// The state when a link is being scraped for meta data
     /// </summary>
-    public static readonly State FetchingMeta = new(5, "Checking If Exists", 5);
-    public static readonly State FetchingMetaCompleted = new(6, "Checking If Exists", 6);
+    public static readonly State FetchingData = new(5, "Fetching Site Data", 5);
+    public static readonly State FetchingDataCompleted = new(6, "Fetching Site Data Completed", 6);
 
     /// <summary>
     /// The state when a link is being tagged based on it's meta
     /// </summary>
-    public static readonly State Tagging = new(7, "Checking If Exists", 7);
-    public static readonly State TaggingCompleted = new(8, "Checking If Exists", 8);
+    public static readonly State Tagging = new(7, "Tagging", 7);
+    public static readonly State TaggingCompleted = new(8, "Tagging Completed", 8);
 
     /// <summary>
     /// The state when a link has been found to already exist
@@ -67,8 +67,8 @@ public sealed class QueuedStates
     /// </summary>
     public static readonly State Finished = new(999, "Finished", 999);
 
-    private readonly State[] _newStates = { New, Verifying, VerifyingCompleted, FetchingMeta, FetchingMetaCompleted, Tagging, TaggingCompleted, Rejected, Finished };
-    private readonly State[] _updateStates = { Update, FetchingMeta, FetchingMetaCompleted, Tagging, TaggingCompleted, Rejected, Finished };
+    private readonly State[] _newStates = { New, Verifying, VerifyingCompleted, FetchingData, FetchingDataCompleted, Tagging, TaggingCompleted, Rejected, Finished };
+    private readonly State[] _updateStates = { Update, FetchingData, FetchingDataCompleted, Tagging, TaggingCompleted, Rejected, Finished };
 
     /// <summary>
     /// List of all states related to when a new link is submitted

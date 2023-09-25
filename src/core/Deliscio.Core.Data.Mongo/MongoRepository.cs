@@ -208,11 +208,11 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     {
         var filter = Builders<TDocument>.Filter.Where(predicate);
 
-        var cursor = Collection.Find(filter)
+        var cursor = await Collection.Find(filter)
             .FirstOrDefaultAsync(cancellationToken: token);
         //.Sort(Builders<TDocument>.Sort.Ascending(doc => doc.Id));
 
-        return await cursor;
+        return cursor;
     }
 
     public void Remove(Guid id, CancellationToken token = default)

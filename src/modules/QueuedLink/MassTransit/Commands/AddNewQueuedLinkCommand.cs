@@ -2,4 +2,12 @@ using Deliscio.Modules.QueuedLinks.Common.Models;
 
 namespace Deliscio.Modules.QueuedLinks.MassTransit.Commands;
 
-public sealed record AddNewQueuedLinkCommand(QueuedLink Link);
+public class AddNewQueuedLinkCommand
+{
+    public QueuedLink Link { get; set; }
+
+    public AddNewQueuedLinkCommand()
+    {
+        Link = new QueuedLink();
+    }
+}

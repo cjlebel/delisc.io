@@ -99,7 +99,7 @@ public class LinksApiEndpoints : BaseApiEndpoints
     private void MapSubmitLink(IEndpointRouteBuilder endpoints)
     {
         endpoints.MapPost("v1/links/",
-            async ([FromBody] SubmitLinkRequest? request) =>
+            async (SubmitLinkRequest? request) =>
             {
                 if (request is null)
                     return Results.BadRequest("Request cannot be null");

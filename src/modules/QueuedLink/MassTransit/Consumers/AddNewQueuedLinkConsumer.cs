@@ -28,46 +28,50 @@ public class AddNewQueuedLinkConsumer : IConsumer<AddNewQueuedLinkCommand>
     //NOTE: Must be public.
     public async Task Consume(ConsumeContext<AddNewQueuedLinkCommand> context)
     {
+        throw new NotImplementedException("MAssTransit/RabbitMQ aren't working at the moment");
+
         var command = context.Message;
 
-        var queuedLink = command.Link;
-
-        var result = await _queuedLinksService.ProcessNewLinkAsync(queuedLink);
-
-        if (!result.IsSuccess)
+        if (command.Link != null!)
         {
-            _logger.LogWarning(ERROR_COULD_NOT_APPROVE, DateTimeOffset.Now, queuedLink.Url);
-        }
-
-        if (queuedLink.State == QueuedStates.Finished || queuedLink.State == QueuedStates.Exists)
-        {
-            var existingLinkId = queuedLink.State == QueuedStates.Exists ? new Guid(result.Message) : Guid.Empty;
-            Link? existingLink;
-
-            if (queuedLink.State == QueuedStates.Finished)
+            if (command.Link != null!)
             {
-                var queryAdd = new AddLinkCommand(queuedLink.Url, queuedLink.Title, queuedLink.SubmittedById, queuedLink.Tags);
-                existingLinkId = await _mediator.Send(queryAdd);
+                var queuedLink = command.Link;
 
-                if (existingLinkId != Guid.Empty)
+                var result = await _queuedLinksService.ProcessNewLinkAsync(queuedLink);
+
+                if (!result.IsSuccess)
                 {
-                    var queryGet = new GetLinkByIdQuery(existingLinkId);
-                    existingLink = await _mediator.Send(queryGet);
+                    _logger.LogWarning(ERROR_COULD_NOT_APPROVE, DateTimeOffset.Now, queuedLink.Url);
+                }
 
-                    if (existingLink != null)
+                if (queuedLink.State == QueuedStates.Finished || queuedLink.State == QueuedStates.Exists)
+                {
+                    var existingLinkId = queuedLink.State == QueuedStates.Exists ? queuedLink.LinkId : Guid.Empty;
+                    Link? link;
+
+                    if (queuedLink.State == QueuedStates.Finished)
                     {
-                        // Update with the rest of the details
+                        link = Link.Create(queuedLink.Url, queuedLink.SubmittedById.ToString(), queuedLink.Title, queuedLink.MetaData?.Description ?? string.Empty, queuedLink.Tags);
+                        link.Keywords = queuedLink.MetaData?.Keywords?.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+
+                        var queryAdd = new AddLinkCommand(link);
+                        existingLinkId = await _mediator.Send(queryAdd);
                     }
+                    // If link already existed, then get it to associate it with the user
+                    else if (queuedLink.State == QueuedStates.Exists)
+                    {
+                        var queryGet = new GetLinkByIdQuery(existingLinkId);
+                        link = await _mediator.Send(queryGet);
+                    }
+
+                    // It must now exist, so associate the link with the user
+
+                    //var associateCommand = new AssociateLinkWithUserCommand(existingLinkId, queuedLink.SubmittedById.ToString());
                 }
             }
-            else if (queuedLink.State == QueuedStates.Exists)
-            {
-                var queryGet = new GetLinkByIdQuery(existingLinkId);
-                existingLink = await _mediator.Send(queryGet);
-            }
-
-            // It must now exist, so associate the link with the user
         }
+
 
 
         // Optional: Acknowledge the message to remove it from the queue

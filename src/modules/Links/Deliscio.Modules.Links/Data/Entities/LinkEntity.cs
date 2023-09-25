@@ -40,21 +40,21 @@ public class LinkEntity : MongoEntityBase
     /// </summary>
     public string ImageUrl { get; set; } = string.Empty;
 
-    public bool IsActive { get; set; } = false;
+    public string[] Keywords { get; set; } = Array.Empty<string>();
+
+    public bool IsActive { get; set; }
 
     public bool IsFlagged { get; set; } = false;
-
-    public bool IsProcessed { get; set; } = false;
 
     /// <summary>
     /// The number of times this link has been saved.
     /// </summary>
-    public int SavesCount { get; set; } = 0;
+    public int SavesCount { get; set; }
 
     /// <summary>
     /// The number of times this link has been liked.
     /// </summary>
-    public int LikesCount { get; set; } = 0;
+    public int LikesCount { get; set; }
 
     /// <summary>
     /// Represents all of the tags that are associated with this link, as well as the number of times they've been used.
@@ -62,7 +62,7 @@ public class LinkEntity : MongoEntityBase
     /// <value>
     /// The tags.
     /// </value>
-    public List<LinkTagEntity> Tags { get; set; } = new List<LinkTagEntity>();
+    public List<LinkTagEntity> Tags { get; set; } = new();
 
     /// <summary>
     /// The URL of the link to go to the page
@@ -75,8 +75,6 @@ public class LinkEntity : MongoEntityBase
     {
 
     }
-
-    //public LinkEntity(string id, string url, string title) : this(Guid.Parse(id), url, title) { }
 
     public LinkEntity(Guid id, string url, string title)
     {
@@ -92,27 +90,12 @@ public class LinkEntity : MongoEntityBase
         DateUpdated = DateTimeOffset.UtcNow;
     }
 
-    public LinkEntity(string url, string title, string description, string domain, bool hasScreenshot, string imageUrl, int savesCount, int likesCount, bool isProcessed, DateTimeOffset dateCreated, DateTimeOffset dateUpdated)
-    {
-        Title = title;
-        Description = description;
-        Domain = domain;
-        HasScreenshot = hasScreenshot;
-        ImageUrl = imageUrl;
-        SavesCount = savesCount;
-        LikesCount = likesCount;
-        //Tags = tags;
-        Url = url;
-        DateCreated = dateCreated;
-        DateUpdated = dateUpdated;
-    }
-
     /// <summary>
     /// Creates a NEW LinkEntity (one that doesn't already exist)
     /// </summary>
     /// <param name="url">The url to the page</param>
     /// <param name="title">The title of the page</param>
-    /// <param name="createdById">The id of the user who submitted the link</param>
+    /// <param name="submittedById">The id of the user who submitted the link</param>
     /// <param name="tags">The optional tags that are associated with the link</param>
     /// <returns></returns>
     public static LinkEntity Create(string url, string title, Guid submittedById, string[]? tags)
@@ -121,6 +104,7 @@ public class LinkEntity : MongoEntityBase
 
         return new LinkEntity
         {
+            IsActive = true,
             SubmittedById = submittedById,
             Tags = tags?.Select(x => new LinkTagEntity(x)).ToList() ?? new List<LinkTagEntity>(),
             Title = title,

@@ -1,10 +1,13 @@
 using AutoFixture;
+
 using Deliscio.Modules.Links;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Data.Entities;
 using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Modules.Links.Requests;
+
 using Microsoft.Extensions.Logging;
+
 using Moq;
 
 namespace Deliscio.Tests.Unit.Modules;
@@ -156,7 +159,7 @@ public class LinksServiceTests
         //_linksRepository.Setup(mock => mock.GetByDomainAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(new (IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)());
 
         // Act
-        var result = await _testClass.GetByDomain(domain, pageNo, pageSize, token);
+        var result = await _testClass.GetByDomainAsync(domain, pageNo, pageSize, token);
 
         // Assert
         _linksRepository.Verify(mock => mock.GetByDomainAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()));
@@ -170,7 +173,7 @@ public class LinksServiceTests
     [InlineData("   ")]
     public async Task Cannot_Call_GetByDomain_WithInvalid_DomainAsync(string value)
     {
-        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetByDomain(value, 1995334241, 501827622, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetByDomainAsync(value, 1995334241, 501827622, CancellationToken.None));
     }
 
     [Fact]
@@ -183,7 +186,7 @@ public class LinksServiceTests
         var token = CancellationToken.None;
 
         // Act
-        var result = await _testClass.GetByDomain(domain, pageNo, pageSize, token);
+        var result = await _testClass.GetByDomainAsync(domain, pageNo, pageSize, token);
 
         // Assert
         Assert.Equal(pageSize, result.PageSize);
@@ -201,7 +204,7 @@ public class LinksServiceTests
         //_linksRepository.Setup(mock => mock.GetByTagsAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(new (IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)());
 
         // Act
-        var result = await _testClass.GetByTags(tags, pageNo, pageSize, token);
+        var result = await _testClass.GetByTagsAsync(tags, pageNo, pageSize, token);
 
         // Assert
         _linksRepository.Verify(mock => mock.GetByTagsAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()));
@@ -212,7 +215,7 @@ public class LinksServiceTests
     [Fact]
     public async Task Cannot_Call_GetByTags_WithNull_TagsAsync()
     {
-        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetByTags(default(IEnumerable<string>), 283271778, 1594713334, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetByTagsAsync(default(IEnumerable<string>), 283271778, 1594713334, CancellationToken.None));
     }
 
     [Fact]
@@ -225,7 +228,7 @@ public class LinksServiceTests
         var token = CancellationToken.None;
 
         // Act
-        var result = await _testClass.GetByTags(tags, pageNo, pageSize, token);
+        var result = await _testClass.GetByTagsAsync(tags, pageNo, pageSize, token);
 
         // Assert
         Assert.Equal(pageSize, result.PageSize);

@@ -16,11 +16,13 @@ public static class Mapper
             Description = link.Description,
             Domain = link.Domain,
             ImageUrl = link.ImageUrl,
+            Keywords = link.Keywords ?? Array.Empty<string>(),
             //IsExcluded = link.IsExcluded,
-            IsFlagged = link.IsFlagged,
+            //IsFlagged = link.IsFlagged,
             Tags = Map(link.Tags).ToList(),
             Title = link.Title,
 
+            SubmittedById = new Guid(link.SubmittedById),
             DateCreated = link.DateCreated,
             DateUpdated = link.DateUpdated
         };
@@ -40,7 +42,7 @@ public static class Mapper
             Domain = entity.Domain,
             ImageUrl = entity.ImageUrl,
             //IsExcluded = entity.IsExcluded,
-            IsFlagged = entity.IsFlagged,
+            //IsFlagged = entity.IsFlagged,
             Tags = new ReadOnlyCollection<LinkTag>(Map(entity.Tags).ToList()),
             Title = entity.Title,
 
@@ -97,7 +99,7 @@ public static class Mapper
         if (tags == null)
             return Enumerable.Empty<LinkTagEntity>();
 
-        tags = tags as LinkTag[] ?? Array.Empty<LinkTag>();
+        tags = tags.ToArray();
 
         if (!tags.Any())
             return Enumerable.Empty<LinkTagEntity>();

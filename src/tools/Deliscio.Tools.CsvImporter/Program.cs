@@ -1,9 +1,11 @@
+using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Deliscio.Modules.BackLog;
 using Deliscio.Modules.BackLog.Models;
+using Deliscio.Modules.Links.Requests;
 
 namespace Deliscio.Tools.CsvImporter;
 
@@ -64,10 +66,41 @@ internal partial class Program
 
                 try
                 {
-                    var rslts = await service.AddBacklogItemsAsync(backlinks, CancellationToken.None);
+                    //var rslts = await service.AddBacklogItemsAsync(backlinks, CancellationToken.None);
+
+                    Thread.Sleep(5_000);
+
+                    var counter = 0;
+                    using (HttpClient client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri("http://localhost:31178");
+                        foreach (var backlink in backlinks)
+                        {
+                            var request = new SubmitLinkRequest(backlink.Url, backlink.CreatedById);
+
+                            try
+                            {
+                                var submitlink = JsonSerializer.Serialize(request);
+                                var response = await client.PostAsJsonAsync("v1/links", backlink);
+                                response.EnsureSuccessStatusCode();
+
+                                counter++;
+                            }
+                            catch (HttpRequestException e)
+                            {
+                                Console.WriteLine($"Could not post {backlink.Url}");
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine($"Could not post {backlink.Url}");
+                            }
+
+                            Thread.Sleep(500);
+                        }
+                    }
 
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"Successfully imported {rslts.Success} out of {backlinks.Count} backlinks from {file}");
+                    Console.WriteLine($"Successfully imported {counter} links from {file}");
                 }
                 catch (Exception e)
                 {

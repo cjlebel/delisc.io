@@ -1,3 +1,4 @@
+using Deliscio.Modules.Links.Common.Models;
 using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Commands;
@@ -7,16 +8,10 @@ namespace Deliscio.Modules.Links.MediatR.Commands;
 /// </summary>
 public sealed record AddLinkCommand : IRequest<Guid>
 {
-    public string Url { get; }
-    public string Title { get; }
-    public Guid SubmittedById { get; }
-    public string[] Tags { get; }
+    public Link Link { get; set; }
 
-    public AddLinkCommand(string url, string title, Guid submittedById, string[]? tags = default)
+    public AddLinkCommand(Link link)
     {
-        Url = url;
-        Title = title;
-        SubmittedById = submittedById;
-        Tags = tags ?? Array.Empty<string>();
+        Link = link;
     }
 }

@@ -8,6 +8,7 @@ using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Modules.Links.MediatR.Handlers.Queries;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Modules.QueuedLinks;
+using Deliscio.Modules.QueuedLinks.Harvester;
 using Deliscio.Modules.QueuedLinks.Interfaces;
 using Deliscio.Modules.QueuedLinks.MassTransit.Consumers;
 using Deliscio.Modules.QueuedLinks.MassTransit.Models;
@@ -30,12 +31,13 @@ public class Program
                 services.Configure<LinksQueueSettingsOptions>(config.GetSection(LinksQueueSettingsOptions.SectionName));
 
                 services.AddSingleton<HttpClient>();
-                
+
                 services.AddSingleton<ILinksService, LinksService>();
                 services.AddSingleton<ILinksRepository, LinksRepository>();
 
                 services.AddSingleton<IQueuedLinksService, QueuedLinksService>();
                 services.AddSingleton<IVerifyProcessor, VerifyProcessor>();
+                services.AddSingleton<IHarvesterProcessor, HarvesterProcessor>();
 
                 //services.AddScoped<AddNewQueuedLinkConsumer>();
 
@@ -46,8 +48,6 @@ public class Program
                 services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
                 services.AddMassTransit(x =>
                 {
-                    //var entryAssembly = Assembly.GetExecutingAssembly();
-                    //x.AddConsumer<AddNewQueuedLinkConsumer>();
                     x.AddConsumer<AddNewQueuedLinkConsumer>();
 
                     x.UsingRabbitMq((context, cfg) =>
@@ -62,18 +62,24 @@ public class Program
 
                         //// More options ...
 
+                        //cfg.ConfigureEndpoints(context);
+
                         cfg.ReceiveEndpoint(options.QueueName, e =>
                         {
                             e.ConfigureConsumer<AddNewQueuedLinkConsumer>(context);
                         });
 
-                        ////cfg.ConfigureEndpoints(context);
+                        //cfg.ConfigureEndpoints(context);
 
                         ////cfg.ReceiveEndpoint(options.QueueName, e =>
                         ////{
                         ////    e.Consumer<AddNewQueuedLinkConsumer>(context);
                         ////});
+
+
                     });
+
+                    //x.RemoveMassTransitHostedService();
                 });
 
 

@@ -79,9 +79,9 @@ public sealed class BacklogItem
     /// <param name="url">The url of the link</param>
     /// <param name="createdById">The id of the user who is creating the link</param>
     /// <returns>A an instance of a New backlog item</returns>
-    public static BacklogItem Create(string title, string url, string createdById)
+    public static BacklogItem Create(string url, string title, string createdById)
     {
-        return Create(title, url, Guid.Parse(createdById));
+        return Create(url, title, Guid.Parse(createdById));
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ public sealed class BacklogItem
     /// <param name="url">The url of the link</param>
     /// <param name="createdById">The id of the user who is creating the link</param>
     /// <returns>A an instance of a New backlog item</returns>
-    public static BacklogItem Create(string title, string url, Guid createdById)
+    public static BacklogItem Create(string url, string title, Guid createdById)
     {
         return new BacklogItem(Guid.Empty, url, title, createdById, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, false);
     }

@@ -4,7 +4,6 @@ using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Apis.WebApi.Managers;
 using Deliscio.Core.Configuration;
 using Deliscio.Core.Data.Mongo;
-using Deliscio.Core.Interfaces;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links;
 using Deliscio.Modules.Links.Common.Interfaces;
@@ -16,10 +15,12 @@ using Deliscio.Modules.Links.MediatR.Handlers.Commands;
 using Deliscio.Modules.Links.MediatR.Handlers.Queries;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Modules.QueuedLinks;
+using Deliscio.Modules.QueuedLinks.Harvester;
 using Deliscio.Modules.QueuedLinks.Interfaces;
 using Deliscio.Modules.QueuedLinks.MassTransit.Models;
 using Deliscio.Modules.QueuedLinks.MediatR.Commands;
 using Deliscio.Modules.QueuedLinks.MediatR.Handlers;
+using Deliscio.Modules.QueuedLinks.Tagger;
 using Deliscio.Modules.QueuedLinks.Verifier;
 using MassTransit;
 using MediatR;
@@ -46,7 +47,7 @@ public class Program
         builder.Services.Configure<MongoDbOptions>(config.GetSection(MongoDbOptions.SectionName));
         builder.Services.Configure<LinksQueueSettingsOptions>(config.GetSection(LinksQueueSettingsOptions.SectionName));
 
-        // Add services to the container.
+        // AddAsync services to the container.
         builder.Services.AddAuthorization();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -70,6 +71,8 @@ public class Program
         //    options.AssumeDefaultVersionWhenUnspecified = true;
         //    options.ReportApiVersions = true;
         //});
+
+        builder.Services.AddSingleton<HttpClient>();
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
         builder.Services.AddMassTransit(x =>
@@ -102,9 +105,12 @@ public class Program
         // This is weird, I should not need to add these here?!?!?
         builder.Services.AddSingleton<IQueuedLinksService, QueuedLinksService>();
         builder.Services.AddSingleton<IVerifyProcessor, VerifyProcessor>();
+        builder.Services.AddSingleton<IHarvesterProcessor, HarvesterProcessor>();
+        builder.Services.AddSingleton<ITaggerProcessor, TaggerProcessor>();
+        // This is weird, I should not need to add these here?!?!?
 
         builder.Services.AddSingleton<IRequestHandler<AddNewLinkQueueCommand, bool>, AddNewLinkQueueCommandHandler>();
-
+        builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkCommandHandler>();
 
 
         builder.Services.AddSingleton<LinksApiEndpoints>();
