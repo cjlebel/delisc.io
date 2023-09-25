@@ -4,9 +4,9 @@ using Deliscio.Modules.Links.Data.Entities;
 
 namespace Deliscio.Modules.Links.Mappers;
 
-public static class Mapper
+internal static class Mapper
 {
-    public static LinkEntity? Map(Link? link)
+    internal static LinkEntity? Map(Link? link)
     {
         if (link is null)
             return null;
@@ -31,7 +31,7 @@ public static class Mapper
     }
 
 
-    public static Link? Map(LinkEntity? entity)
+    internal static Link? Map(LinkEntity? entity)
     {
         if (entity == null)
             return null;
@@ -59,21 +59,19 @@ public static class Mapper
     /// </summary>
     /// <param name="entities"></param>
     /// <returns>IEnumerable of non-nullable Link</returns>
-    public static IEnumerable<Link> Map(IEnumerable<LinkEntity>? entities)
+    internal static IEnumerable<Link> Map(IEnumerable<LinkEntity>? entities)
     {
         if (entities == null)
             return Enumerable.Empty<Link>();
 
-        entities = entities as LinkEntity[] ?? Array.Empty<LinkEntity>();
+        var entitiesArr = entities.ToArray();
 
-        if (!entities.Any())
+        if (!entitiesArr.Any())
             return Enumerable.Empty<Link>();
-
-        //var rslts = entities.Select(entity => Map(entity)).Where(link => link != null).ToList();
 
         var rslts = new List<Link>();
 
-        foreach (var entity in entities)
+        foreach (var entity in entitiesArr)
         {
             var link = Map(entity);
 
@@ -84,7 +82,7 @@ public static class Mapper
         return rslts;
     }
 
-    public static LinkTagEntity? Map(LinkTag? tag)
+    internal static LinkTagEntity? Map(LinkTag? tag)
     {
         if (tag is null)
             return null;
@@ -99,14 +97,14 @@ public static class Mapper
         if (tags == null)
             return Enumerable.Empty<LinkTagEntity>();
 
-        tags = tags.ToArray();
+        var tagsArr = tags.ToArray();
 
-        if (!tags.Any())
+        if (!tagsArr.Any())
             return Enumerable.Empty<LinkTagEntity>();
 
         var rslts = new List<LinkTagEntity>();
 
-        foreach (var tag in tags)
+        foreach (var tag in tagsArr)
         {
             var entity = Map(tag);
 
@@ -117,7 +115,7 @@ public static class Mapper
         return rslts;
     }
 
-    public static LinkTag? Map(LinkTagEntity? entity)
+    internal static LinkTag? Map(LinkTagEntity? entity)
     {
         if (entity == null)
             return null;
@@ -127,12 +125,20 @@ public static class Mapper
         return model;
     }
 
-    public static IEnumerable<LinkTag> Map(IEnumerable<LinkTagEntity>? entities)
+    /// <summary>
+    /// Maps a collection of Link Tag Entities to a collection of Link Tag Models
+    /// </summary>
+    /// <param name="entities">The entities to be mapped from</param>
+    /// <returns>
+    /// If entities is null or empty, then an empty IEnumerable of LinkTag is returned.
+    /// Else a collection of Link Tags
+    /// </returns>
+    internal static IEnumerable<LinkTag> Map(IEnumerable<LinkTagEntity>? entities)
     {
         if (entities == null)
             return Enumerable.Empty<LinkTag>();
 
-        entities = entities as LinkTagEntity[] ?? Array.Empty<LinkTagEntity>();
+        entities = entities.ToList();
 
         if (!entities.Any())
             return Enumerable.Empty<LinkTag>();

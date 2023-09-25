@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+
 using Deliscio.Modules.BackLog;
 using Deliscio.Modules.BackLog.Models;
 using Deliscio.Modules.Links.Requests;
@@ -138,7 +139,7 @@ internal partial class Program
 
         Console.ForegroundColor = ConsoleColor.Green;
 
-        Console.WriteLine($"Successfully deleted all Backlink Items");
+        Console.WriteLine($"Successfully deleted all Backlink Results");
 
         Console.ResetColor();
     }

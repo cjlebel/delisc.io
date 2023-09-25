@@ -1,8 +1,10 @@
 using System.Net;
+
 using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Requests;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -81,7 +83,7 @@ public class LinksApiEndpoints : BaseApiEndpoints
 
                 var results = await _manager.GetLinksAsync(newPageNo, newPageSize, cancellationToken);
 
-                if (!results.Items.Any())
+                if (!results.Results.Any())
                     return Results.NotFound(string.Format(LINKS_COULD_NOT_BE_FOUND, pageNo));
 
                 return Results.Ok(results);

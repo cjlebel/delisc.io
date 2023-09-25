@@ -1,5 +1,7 @@
 using System.Linq.Expressions;
+
 using Ardalis.GuardClauses;
+
 using Deliscio.Core.Abstracts;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Interfaces;
@@ -8,6 +10,7 @@ using Deliscio.Modules.Links.Data.Entities;
 using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Modules.Links.Mappers;
 using Deliscio.Modules.Links.Requests;
+
 using Microsoft.Extensions.Logging;
 
 namespace Deliscio.Modules.Links;
@@ -19,8 +22,11 @@ public class LinksService : ServiceBase, ILinksService
 
     public LinksService(ILinksRepository linksRepository, ILogger<LinksService> logger)
     {
-        _logger = logger;
+        Guard.Against.Null(linksRepository);
+        Guard.Against.Null(logger);
+
         _linksRepository = linksRepository;
+        _logger = logger;
     }
 
     public async Task<Guid> AddAsync(Link link, CancellationToken token = default)
@@ -139,9 +145,9 @@ public class LinksService : ServiceBase, ILinksService
     /// <exception cref="NotImplementedException"></exception>
     public async Task<PagedResults<Link>> GetByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
-        var array = tags as string[] ?? Array.Empty<string>();
+        var array = tags?.ToArray() ?? Array.Empty<string>();
 
-        Guard.Against.NullOrEmpty(array);
+        Guard.Against.NullOrEmpty(array, message: $"{nameof(tags)} cannot be null or empty");
 
         var rslts = await _linksRepository.GetByTagsAsync(array, pageNo, pageSize, token);
 
