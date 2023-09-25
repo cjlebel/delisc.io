@@ -3,14 +3,14 @@ using Deliscio.Modules.BackLog.Models;
 
 namespace Deliscio.Modules.Backlog.Mappers;
 
-public static class Mappers
+internal static class Mappers
 {
     /// <summary>
     /// Maps a single model to its entity version.
     /// </summary>
     /// <param name="model">The model.</param>
     /// <returns></returns>
-    public static BacklogItemEntity? Map(BacklogItem? model)
+    internal static BacklogItemEntity? Map(BacklogItem? model)
     {
         if (model == null)
             return null;
@@ -29,7 +29,7 @@ public static class Mappers
     /// </summary>
     /// <param name="models">The models to map to the entity representation.</param>
     /// <returns></returns>
-    public static IEnumerable<BacklogItemEntity> Map(IEnumerable<BacklogItem>? models)
+    internal static IEnumerable<BacklogItemEntity> Map(IEnumerable<BacklogItem>? models)
     {
         if (models == null)
             return Enumerable.Empty<BacklogItemEntity>();
@@ -43,13 +43,13 @@ public static class Mappers
     /// <param name="entity">The entity.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException">entity</exception>
-    public static BacklogItem? Map(BacklogItemEntity? entity)
+    internal static BacklogItem? Map(BacklogItemEntity? entity)
     {
         if (entity == null)
             return null;
 
         var model = new BacklogItem(entity.Id, entity.Title, entity.Url, entity.CreatedById, entity.DateCreated, entity.DateUpdated, entity.IsProcessed);
-        
+
         return model;
     }
 
@@ -58,7 +58,7 @@ public static class Mappers
     /// </summary>
     /// <param name="entities">The entities to map to the model representation.</param>
     /// <returns></returns>
-    public static IEnumerable<BacklogItem> Map(IEnumerable<BacklogItemEntity>? entities)
+    internal static IEnumerable<BacklogItem> Map(IEnumerable<BacklogItemEntity>? entities)
     {
         if (entities == null)
             return Enumerable.Empty<BacklogItem>();

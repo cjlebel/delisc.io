@@ -146,27 +146,6 @@ public sealed class BacklogRepository : MongoRepository<BacklogItemEntity>, IBac
         return entity?.Id ?? Guid.Empty;
     }
 
-    //public (IEnumerable<BacklogItemEntity> Items, int TotalCount) Get(int page, int size, bool? isProcessed = false)
-    //{
-    //    throw new NotImplementedException();
-    //    //if (page <= 0)
-    //    //    throw new ArgumentOutOfRangeException(nameof(page), "Value must be greater than zero.");
-
-    //    //if (size <= 0)
-    //    //    throw new ArgumentOutOfRangeException(nameof(size), "Value must be greater than zero.");
-
-    //    //return DbSet
-    //    //    .Where(o => isProcessed == null || o.IsProcessed == isProcessed)
-    //    //    .Skip((page - 1) * size)
-    //    //    .Take(size)
-    //    //    .AsEnumerable();
-    //}
-
-    //public Task<IEnumerable<BackLinkEntity>> GetAsync(IEnumerable<string> ids)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
 
     public async ValueTask<(IEnumerable<BacklogItemEntity> Items, int TotalCount)> GetAsync(int page, int size,
         bool? isProcessed = false)

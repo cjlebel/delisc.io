@@ -1,5 +1,6 @@
 using AutoFixture;
 
+using Deliscio.Core.Models;
 using Deliscio.Modules.Links;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Data.Entities;
@@ -49,7 +50,7 @@ public class LinksServiceTests
     }
 
     [Fact]
-    public async Task Can_Call_GetAsync_With_StringId_And_CancellationTokenAsync()
+    public async Task GetAsync_CanCall_With_StringId_And_CancellationToken()
     {
         // Arrange
         var token = CancellationToken.None;
@@ -63,175 +64,163 @@ public class LinksServiceTests
 
         // Assert
         Assert.NotNull(actual);
-        CompareEntityToModel(linkEntity, actual);
+        AssertEntityToModel(linkEntity, actual);
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public async Task Cannot_Call_GetAsyncWithStringAndCancellationToken_WithInvalid_IdAsync(string value)
+    public async Task GetAsync_CannotCall_With_Invalid_StringId_And_CancellationToken(string value)
     {
-        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetAsync(value, CancellationToken.None));
+        // GetAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
+        Assert.Multiple(() =>
+        {
+            Assert.ThrowsAsync<ArgumentException>(() =>
+                _testClass.GetAsync(value, CancellationToken.None));
+            Assert.ThrowsAsync<ArgumentNullException>(() =>
+                _testClass.GetAsync(value, CancellationToken.None));
+        });
     }
 
     [Fact]
-    public async Task GetAsyncWithStringAndCancellationToken_PerformsMappingAsync()
-    {
-        // Arrange
-        var id = "TestValue138292954";
-        var token = CancellationToken.None;
-
-        // Act
-        var result = await _testClass.GetAsync(id, token);
-
-        // Assert
-        Assert.Same(id, result.Id);
-    }
-
-    [Fact]
-    public async Task Can_Call_GetAsyncWithGuidAndCancellationTokenAsync()
+    public async Task GetAsync_CanCall_With_StringId()
     {
         // Arrange
-        var id = new Guid("8ef3f69e-8a82-42ac-b967-f18fc8455dbc");
-        var token = CancellationToken.None;
+        var linkEntity = _fixture.Create<LinkEntity>();
+        var id = linkEntity.Id;
+
+        _linksRepository.Setup(repo => repo.GetAsync(linkEntity.Id, It.IsAny<CancellationToken>())).ReturnsAsync(linkEntity);
 
         // Act
-        var result = await _testClass.GetAsync(id, token);
+        var actual = await _testClass.GetAsync(id.ToString());
 
         // Assert
-        throw new NotImplementedException("Create or modify test");
+        Assert.NotNull(actual);
+        AssertEntityToModel(linkEntity, actual);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void GetAsync_CannotCall_With_Invalid_StringId(string value)
+    {
+        // GetAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
+        Assert.Multiple(() =>
+        {
+            Assert.ThrowsAsync<ArgumentException>(() =>
+                _testClass.GetAsync(value));
+            Assert.ThrowsAsync<ArgumentNullException>(() =>
+                 _testClass.GetAsync(value));
+        });
     }
 
     [Fact]
-    public async Task GetAsyncWithGuidAndCancellationToken_PerformsMappingAsync()
+    public async Task GetAsync_CanCall_With_GuidId_And_CancellationToken()
     {
         // Arrange
-        var id = new Guid("8f0afc88-4603-4741-b716-d57c899e7954");
         var token = CancellationToken.None;
+        var linkEntity = _fixture.Create<LinkEntity>();
+        var id = linkEntity.Id;
+
+        _linksRepository.Setup(repo => repo.GetAsync(linkEntity.Id, It.IsAny<CancellationToken>())).ReturnsAsync(linkEntity);
 
         // Act
-        var result = await _testClass.GetAsync(id, token);
+        var actual = await _testClass.GetAsync(id, token);
 
         // Assert
-        Assert.Same(id, result.Id);
+        Assert.NotNull(actual);
+        AssertEntityToModel(linkEntity, actual);
     }
 
     [Fact]
-    public async Task Can_Call_GetAsyncWithPageNoAndPageSizeAndTokenAsync()
+    public async Task GetAsync_Can_Call_With_PageNo_And_PageSize_And_CancellationToken()
     {
         // Arrange
         var pageNo = 1303834936;
         var pageSize = 639612657;
+        var totalPages = 34652;
+        var totalResults = 3452345;
+
         var token = CancellationToken.None;
+        var linkEntities = _fixture.Create<IEnumerable<LinkEntity>>();
+
+        _linksRepository.Setup(repo => repo.FindAsync(_ => true, pageNo, pageSize, It.IsAny<CancellationToken>())).ReturnsAsync((linkEntities, totalPages, totalResults));
 
         // Act
-        var result = await _testClass.GetAsync(pageNo, pageSize, token);
+        var actuals = await _testClass.GetAsync(pageNo, pageSize, token);
 
         // Assert
-        throw new NotImplementedException("Create or modify test");
+        AssertPageResults(linkEntities, actuals, pageNo, pageSize, totalResults);
     }
 
     [Fact]
-    public async Task GetAsyncWithPageNoAndPageSizeAndToken_PerformsMappingAsync()
-    {
-        // Arrange
-        var pageNo = 499458953;
-        var pageSize = 58751778;
-        var token = CancellationToken.None;
-
-        // Act
-        var result = await _testClass.GetAsync(pageNo, pageSize, token);
-
-        // Assert
-        Assert.Equal(pageSize, result.PageSize);
-    }
-
-    [Fact]
-    public async Task Can_Call_GetByDomainAsync()
+    public async Task GetByDomainAsync_Can_Call()
     {
         // Arrange
         var domain = "TestValue111279897";
-        var pageNo = 567586492;
-        var pageSize = 1390309897;
-        var token = CancellationToken.None;
+        var pageNo = 1303834936;
+        var pageSize = 639612657;
+        var totalPages = 34652;
+        var totalResults = 3452345;
 
-        //_linksRepository.Setup(mock => mock.GetByDomainAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(new (IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)());
+        var token = CancellationToken.None;
+        var linkEntities = _fixture.Create<IEnumerable<LinkEntity>>();
+
+        _linksRepository.Setup(repo => repo.GetByDomainAsync(domain, pageNo, pageSize, It.IsAny<CancellationToken>())).ReturnsAsync((linkEntities, totalPages, totalResults));
 
         // Act
-        var result = await _testClass.GetByDomainAsync(domain, pageNo, pageSize, token);
+        var actuals = await _testClass.GetByDomainAsync(domain, pageNo, pageSize, token);
 
         // Assert
-        _linksRepository.Verify(mock => mock.GetByDomainAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()));
-
-        throw new NotImplementedException("Create or modify test");
+        AssertPageResults(linkEntities, actuals, pageNo, pageSize, totalResults);
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public async Task Cannot_Call_GetByDomain_WithInvalid_DomainAsync(string value)
+    public void GetByDomain_Cannot_Call_WithInvalid_DomainAsync(string value)
     {
-        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetByDomainAsync(value, 1995334241, 501827622, CancellationToken.None));
+        // GetByDomainAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
+        Assert.Multiple(() =>
+        {
+            Assert.ThrowsAsync<ArgumentException>(() =>
+                _testClass.GetByDomainAsync(value, 1995334241, 501827622, CancellationToken.None));
+            Assert.ThrowsAsync<ArgumentNullException>(() =>
+                _testClass.GetByDomainAsync(value, 1995334241, 501827622, CancellationToken.None));
+        });
     }
 
     [Fact]
-    public async Task GetByDomain_PerformsMappingAsync()
-    {
-        // Arrange
-        var domain = "TestValue13672750";
-        var pageNo = 1213946541;
-        var pageSize = 1823502591;
-        var token = CancellationToken.None;
-
-        // Act
-        var result = await _testClass.GetByDomainAsync(domain, pageNo, pageSize, token);
-
-        // Assert
-        Assert.Equal(pageSize, result.PageSize);
-    }
-
-    [Fact]
-    public async Task Can_Call_GetByTagsAsync()
+    public async Task GetByTagsAsync_Can_Call()
     {
         // Arrange
         var tags = new[] { "TestValue275093999", "TestValue1977799120", "TestValue752175942" };
-        var pageNo = 766041297;
-        var pageSize = 532585192;
-        var token = CancellationToken.None;
+        var pageNo = 1303834936;
+        var pageSize = 639612657;
+        var totalPages = 34652;
+        var totalResults = 3452345;
 
-        //_linksRepository.Setup(mock => mock.GetByTagsAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(new (IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)());
+        var token = CancellationToken.None;
+        var linkEntities = _fixture.Create<IEnumerable<LinkEntity>>();
+
+        _linksRepository.Setup(repo => repo.GetByTagsAsync(tags, pageNo, pageSize, It.IsAny<CancellationToken>())).ReturnsAsync((linkEntities, totalPages, totalResults));
 
         // Act
-        var result = await _testClass.GetByTagsAsync(tags, pageNo, pageSize, token);
+        var actuals = await _testClass.GetByTagsAsync(tags, pageNo, pageSize, token);
 
         // Assert
         _linksRepository.Verify(mock => mock.GetByTagsAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()));
 
-        throw new NotImplementedException("Create or modify test");
+        AssertPageResults(linkEntities, actuals, pageNo, pageSize, totalResults);
     }
 
     [Fact]
-    public async Task Cannot_Call_GetByTags_WithNull_TagsAsync()
+    public async Task GetByTagsAsync_Cannot_Call_WithNull_Tags()
     {
-        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetByTagsAsync(default(IEnumerable<string>), 283271778, 1594713334, CancellationToken.None));
-    }
-
-    [Fact]
-    public async Task GetByTags_PerformsMappingAsync()
-    {
-        // Arrange
-        var tags = new[] { "TestValue1176806255", "TestValue1842352881", "TestValue586457334" };
-        var pageNo = 83420035;
-        var pageSize = 180700701;
-        var token = CancellationToken.None;
-
-        // Act
-        var result = await _testClass.GetByTagsAsync(tags, pageNo, pageSize, token);
-
-        // Assert
-        Assert.Equal(pageSize, result.PageSize);
+        await Assert.ThrowsAsync<ArgumentException>(() => _testClass.GetByTagsAsync(default, 283271778, 1594713334, CancellationToken.None));
     }
 
     [Fact]
@@ -287,7 +276,35 @@ public class LinksServiceTests
         //await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync(default(SubmitLinkRequest), CancellationToken.None));
     }
 
-    private void CompareEntityToModel(LinkEntity entity, Link link)
+    private void AssertPageResults(IEnumerable<LinkEntity>? expecteds, PagedResults<Link> actuals, int expectedPageNo, int expectedPageSize, int expectedTotalResults)
+    {
+        Assert.NotNull(actuals);
+        Assert.NotNull(actuals.Results);
+        Assert.Equal(expectedPageNo, actuals.PageNumber);
+        Assert.Equal(expectedPageSize, actuals.PageSize);
+
+        var expectedPages = (int)Math.Ceiling((double)expectedTotalResults / expectedPageSize);
+        Assert.Equal(expectedPages, actuals.TotalPages);
+        Assert.Equal(expectedTotalResults, actuals.TotalResults);
+
+        AssertEntitiesToModels(expecteds, actuals.Results);
+    }
+
+    private void AssertEntitiesToModels(IEnumerable<LinkEntity> entities, IEnumerable<Link> links)
+    {
+        Assert.NotNull(links);
+
+        foreach (var link in links)
+        {
+            var entity = entities.FirstOrDefault(x => x.Id == new Guid(link.Id));
+
+            Assert.NotNull(entity);
+
+            AssertEntityToModel(entity, link);
+        }
+    }
+
+    private void AssertEntityToModel(LinkEntity entity, Link link)
     {
         Assert.Equal(entity.Id.ToString(), link.Id);
         Assert.Equal(entity.SubmittedById.ToString(), link.SubmittedById);

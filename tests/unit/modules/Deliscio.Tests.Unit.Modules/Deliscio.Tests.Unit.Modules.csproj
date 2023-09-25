@@ -10,6 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Links\**" />
+    <EmbeddedResource Remove="Links\**" />
+    <None Remove="Links\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.18.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
     <PackageReference Include="Moq" Version="4.20.69" />
@@ -31,10 +37,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\src\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Links\" />
   </ItemGroup>
 
 </Project>
