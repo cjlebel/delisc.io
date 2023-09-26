@@ -5,7 +5,6 @@ using Deliscio.Modules.Links;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Data.Entities;
 using Deliscio.Modules.Links.Interfaces;
-using Deliscio.Modules.Links.Requests;
 
 using Microsoft.Extensions.Logging;
 
@@ -15,10 +14,10 @@ namespace Deliscio.Tests.Unit.Modules.Links;
 
 public class LinksServiceTests
 {
-    private readonly Fixture _fixture = new Fixture();
-    private LinksService _testClass;
-    private Mock<ILinksRepository> _linksRepository;
-    private Mock<ILogger<LinksService>> _logger;
+    private readonly Fixture _fixture = new();
+    private readonly LinksService _testClass;
+    private readonly Mock<ILinksRepository> _linksRepository;
+    private readonly Mock<ILogger<LinksService>> _logger;
 
     public LinksServiceTests()
     {
@@ -71,7 +70,7 @@ public class LinksServiceTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public async Task GetAsync_CannotCall_With_Invalid_StringId_And_CancellationToken(string value)
+    public void GetAsync_CannotCall_With_Invalid_StringId_And_CancellationToken(string value)
     {
         // GetAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
         Assert.Multiple(() =>

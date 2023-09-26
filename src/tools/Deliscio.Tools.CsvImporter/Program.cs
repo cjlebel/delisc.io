@@ -98,36 +98,33 @@ internal partial class Program
                     Thread.Sleep(5_000);
 
                     var counter = 0;
-                    using (var client = new HttpClient())
+                    using var client = new HttpClient();
+                    client.BaseAddress = new Uri("http://localhost:31178");
+
+                    foreach (var backlink in backlinks)
                     {
-                        client.BaseAddress = new Uri("http://localhost:31178");
-                        foreach (var backlink in backlinks)
+                        var request = new SubmitLinkRequest(backlink.Url, backlink.CreatedById);
+
+                        try
                         {
-                            var request = new SubmitLinkRequest(backlink.Url, backlink.CreatedById);
+                            var response = await client.PostAsJsonAsync("v1/links", request);
+                            response.EnsureSuccessStatusCode();
 
-                            try
-                            {
-                                var response = await client.PostAsJsonAsync("v1/links", request);
-                                response.EnsureSuccessStatusCode();
-
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine($"Successfully submitted {backlink.Url}");
-                                counter++;
-                            }
-                            catch (HttpRequestException e)
-                            {
-                                Console.WriteLine($"Could not post {backlink.Url}");
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine($"Could not post {backlink.Url}");
-                            }
-
-                            Thread.Sleep(500);
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"Successfully submitted {backlink.Url}");
+                            counter++;
                         }
+                        catch (HttpRequestException e)
+                        {
+                            Console.WriteLine($"Could not post {backlink.Url}");
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"Could not post {backlink.Url}");
+                        }
+
+                        Thread.Sleep(500);
                     }
-
-
                 }
                 catch (Exception e)
                 {
@@ -233,30 +230,6 @@ internal partial class Program
         }
 
         return string.Empty;
-    }
-
-    private static bool IsAcceptableHost(string url)
-    {
-        var filter = new List<string>
-        {
-            "localhost",
-            "gmail",
-            "127.0.0.1",
-            "192.168.",
-            "mail."
-        };
-
-        if (!string.IsNullOrWhiteSpace(url))
-        {
-            if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
-            {
-                string host = uri.Host.ToLower();
-
-                return !filter.Exists(f => f.ToLower().Contains(host));
-            }
-        }
-
-        return false;
     }
 
     [GeneratedRegex(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)")]

@@ -238,7 +238,7 @@ public class LinksApiEndpoints : BaseApiEndpoints
                 if (!isValid.Value)
                     return Results.BadRequest($"Submit Link Failed:{Environment.NewLine}{string.Join(Environment.NewLine, isValid.Errors.Select(e => e.ErrorMessage).ToArray())}");
 
-                var isSubmitted = await _manager.SubmitLinkAsync(request.Url, request.SubmittedById, tags: request.UsersTags);
+                var isSubmitted = await _manager.SubmitLinkAsync(request.Url, request.SubmittedById, request.Title, tags: request.Tags);
 
                 return Results.Ok(isSubmitted);
             })

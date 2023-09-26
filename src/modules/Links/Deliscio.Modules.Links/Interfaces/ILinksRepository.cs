@@ -24,7 +24,7 @@ public interface ILinksRepository : IRepository<LinkEntity>
     /// <param name="tag">The tag in which its count will be incremented.</param>
     /// <param name="token">The token.</param>
     /// <returns>Task</returns>
-    Task AddTagAsync(Guid id, string tag, CancellationToken token);
+    Task AddTagAsync(Guid linkId, string tag, CancellationToken token);
 
     /// <summary>
     /// Gets the tags that are associated with the Submitted link with the id.
@@ -32,7 +32,7 @@ public interface ILinksRepository : IRepository<LinkEntity>
     /// <param name="id">The id of the Link to retrieve the tags from.</param>
     /// <param name="token">The token.</param>
     /// <returns></returns>
-    Task<IEnumerable<LinkTagEntity>> GetTagsAsync(Guid id, CancellationToken token);
+    Task<IEnumerable<LinkTagEntity>> GetTagsAsync(Guid linkId, CancellationToken token);
 
     Task<IEnumerable<LinkTagEntity>> GetRelatedTagsAsync(string[] tags, int? count = default, CancellationToken token = default);
 
@@ -43,7 +43,7 @@ public interface ILinksRepository : IRepository<LinkEntity>
     /// <param name="tag">The tag in which its count will be incremented.</param>
     /// <param name="token">The token.</param>
     /// <returns>Task</returns>
-    Task RemoveTagAsync(Guid id, string tag, CancellationToken token);
+    Task RemoveTagAsync(Guid linkId, string tag, CancellationToken token);
     #endregion
 
 }

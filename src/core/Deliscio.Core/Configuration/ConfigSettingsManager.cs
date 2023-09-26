@@ -7,10 +7,6 @@ namespace Deliscio.Core.Configuration;
 /// </summary>
 public static class ConfigSettingsManager
 {
-    private static IConfiguration _config;
-
-    private static readonly IConfigurationSection _section;
-
     /// <summary>
     /// Due to SetBasePath - This property currently used mostly for tests and console type apps (not web apps and api)
     /// </summary>
