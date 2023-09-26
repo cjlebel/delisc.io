@@ -110,6 +110,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.QueuedLink
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.QueuedLinks.Tagger", "src\modules\QueuedLink\Tagger\Deliscio.Modules.QueuedLinks.Tagger.csproj", "{DD08E98A-9394-4576-B5B5-510D2339911A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApi", "WebApi", "{88D6FD7E-1AE9-44A6-8283-EA80A75717CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deliscio.Tests.Unit.WebApi", "tests\unit\webapi\Deliscio.Tests.Unit.WebApi\Deliscio.Tests.Unit.WebApi.csproj", "{2D1D2659-5DBA-47E2-8F03-5D95ABA306C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -216,6 +220,10 @@ Global
 		{DD08E98A-9394-4576-B5B5-510D2339911A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD08E98A-9394-4576-B5B5-510D2339911A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD08E98A-9394-4576-B5B5-510D2339911A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D1D2659-5DBA-47E2-8F03-5D95ABA306C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D1D2659-5DBA-47E2-8F03-5D95ABA306C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D1D2659-5DBA-47E2-8F03-5D95ABA306C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D1D2659-5DBA-47E2-8F03-5D95ABA306C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -261,6 +269,8 @@ Global
 		{235DEF65-E9CE-4A4B-92CA-4CD57078F786} = {83650EA7-03B1-41E0-B052-083310FB1FC4}
 		{146006D2-7EC2-47CD-9E0B-34FAE0AEB12D} = {83650EA7-03B1-41E0-B052-083310FB1FC4}
 		{DD08E98A-9394-4576-B5B5-510D2339911A} = {83650EA7-03B1-41E0-B052-083310FB1FC4}
+		{88D6FD7E-1AE9-44A6-8283-EA80A75717CE} = {7AFB3B2D-331A-47B3-A010-0C9F45FBC488}
+		{2D1D2659-5DBA-47E2-8F03-5D95ABA306C9} = {88D6FD7E-1AE9-44A6-8283-EA80A75717CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC98CF49-1486-4252-A157-DA1293256158}

@@ -194,8 +194,6 @@ public class LinksService : ServiceBase, ILinksService
         Guard.Against.NullOrWhiteSpace(url);
         Guard.Against.NullOrEmpty(submittedByUserId);
 
-
-
         var link = await _linksRepository.GetByUrlAsync(url, token);
 
         // If the link already exists in the central link repository, then we just need to add/update the tags for it

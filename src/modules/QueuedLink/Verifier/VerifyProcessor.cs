@@ -26,6 +26,9 @@ public class VerifyProcessor : IVerifyProcessor
     private readonly string[] _validProtocols = { "http:", "https:", "chrome:" };
     public VerifyProcessor(IMediator mediator, ILogger<VerifyProcessor> logger)
     {
+        Guard.Against.Null(mediator);
+        Guard.Against.Null(logger);
+
         _logger = logger;
         _mediator = mediator;
     }

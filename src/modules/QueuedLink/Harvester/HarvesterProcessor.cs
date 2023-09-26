@@ -1,4 +1,5 @@
 using System.Net;
+using Ardalis.GuardClauses;
 using Deliscio.Modules.QueuedLinks.Common.Enums;
 using Deliscio.Modules.QueuedLinks.Common.Models;
 using HtmlAgilityPack;
@@ -17,6 +18,10 @@ public class HarvesterProcessor : IHarvesterProcessor
 
     public HarvesterProcessor(IMediator mediator, HttpClient httpClient, ILogger<HarvesterProcessor> logger)
     {
+        Guard.Against.Null(mediator, nameof(mediator));
+        Guard.Against.Null(httpClient, nameof(httpClient));
+        Guard.Against.Null(logger, nameof(logger));
+
         _httpClient = httpClient;
         _logger = logger;
         _mediator = mediator;

@@ -53,6 +53,9 @@ public class TaggerProcessor : ITaggerProcessor
 
     public TaggerProcessor(IMediator mediator, ILogger<TaggerProcessor> logger)
     {
+        Guard.Against.Null(mediator);
+        Guard.Against.Null(logger);
+
         _logger = logger;
         _mediator = mediator;
     }

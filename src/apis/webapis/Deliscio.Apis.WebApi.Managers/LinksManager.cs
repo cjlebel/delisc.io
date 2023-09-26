@@ -29,6 +29,11 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
 
     public LinksManager(IMediator mediator, IBusControl bus, IQueuedLinksService queueService, ILogger<LinksManager> logger) : base(bus, logger)
     {
+        Guard.Against.Null(mediator);
+        Guard.Against.Null(bus);
+        Guard.Against.Null(queueService);
+        Guard.Against.Null(logger);
+
         _bus = bus;
         _mediator = mediator;
         _queueService = queueService;
@@ -48,7 +53,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
     {
         Guard.Against.NullOrWhiteSpace(id);
 
-        var query = new GetLinkByIdQuery(id);
+        var query = new GetLinkByIdQuery(new Guid(id));
 
         return _mediator.Send(query, token);
     }
@@ -65,6 +70,9 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
     /// </remarks>
     public Task<PagedResults<Link>> GetLinksAsync(int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
+        Guard.Against.NegativeOrZero(pageNo);
+        Guard.Against.NegativeOrZero(pageSize);
+
         var query = new GetLinksQuery(pageNo, pageSize);
 
         return _mediator.Send(query, token);
