@@ -89,6 +89,15 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         return _mediator.Send(query, token);
     }
 
+    public Task<LinkTag[]> GetRelatedTagsAsync(string[] tags, int? count = default, CancellationToken token = default)
+    {
+        Guard.Against.NullOrEmpty(tags);
+
+        var query = new GetLinksRelatedTagsQuery(tags, count);
+
+        return _mediator.Send(query, token);
+    }
+
     public async Task<string> SubmitLinkAsync(string url, string submittedByUserId, string usersTitle = "", string usersDescription = "", string[]? tags = default, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(url);

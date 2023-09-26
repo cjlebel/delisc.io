@@ -19,6 +19,7 @@ public class LinksApiFunctionalTests : IClassFixture<WebApplicationFactory<Progr
     private const string GET_LINKS_WITH_PAGENO_ENDPOINT = "/{0}/links/{1}";
     private const string GET_LINKS_WITH_PAGENO_PAGESIZE_ENDPOINT = "/{0}/links/{1}/{2}";
     private const string GET_LINKS_WITH_TAGS_ENDPOINT = "/{0}/links/{1}";
+    private const string GET_LINKS_RELATED_TAGS_ENDPOINT = "/{0}/links/tags/{1}";
 
     private const int DEFAULT_PAGE_NO = 1;
     private const int DEFAULT_PAGE_SIZE = 25;
@@ -30,7 +31,7 @@ public class LinksApiFunctionalTests : IClassFixture<WebApplicationFactory<Progr
     }
 
     [Fact]
-    public async Task WebApi_GetLinkById_ValidId_Ok()
+    public async Task WebApi_GetLinkById_ValidId_OkResult()
     {
         // Arrange
         var id = new Guid("fa431c01-992b-4773-a504-05b9b672a3b2");
@@ -59,7 +60,7 @@ public class LinksApiFunctionalTests : IClassFixture<WebApplicationFactory<Progr
     [InlineData(" ")]
     [InlineData("00000000-0000-0000-0000-000000000000")]
     [InlineData("fa431c01-992b-4773-a504-05b9b672a3b9")]
-    public async Task WebApi_GetLinkById_NotFound(string invalidId)
+    public async Task WebApi_GetLinkById_NotFoundResult(string invalidId)
     {
         // Act
         var response = await _client.GetAsync(string.Format(GET_LINK_ENDPOINT, API_VERSION, invalidId)); // Replace with your endpoint URL
@@ -69,7 +70,7 @@ public class LinksApiFunctionalTests : IClassFixture<WebApplicationFactory<Progr
     }
 
     [Fact]
-    public async Task WebApi_GetLinkById_InvalidId_BadRequest()
+    public async Task WebApi_GetLinkById_InvalidId_BadRequestResult()
     {
         // Arrange
         //var client = _factory.CreateClient();
@@ -85,7 +86,7 @@ public class LinksApiFunctionalTests : IClassFixture<WebApplicationFactory<Progr
     [InlineData(null, null)]
     [InlineData(1, 10)]
     [InlineData(2, 16)]
-    public async Task WebApi_GetLinks(int? pageNo, int? pageSize)
+    public async Task WebApi_GetLinks_OkResult(int? pageNo, int? pageSize)
     {
         // Arrange
         var url = pageNo != null && pageSize != null ? string.Format(GET_LINKS_WITH_PAGENO_PAGESIZE_ENDPOINT, API_VERSION, pageNo, pageSize) :
@@ -115,7 +116,7 @@ public class LinksApiFunctionalTests : IClassFixture<WebApplicationFactory<Progr
     [Theory]
     [InlineData("nick chapsas")]
     [InlineData("github, react")]
-    public async Task WebApi_GetLinksByTags(string values)
+    public async Task WebApi_GetLinksByTags_OkResult(string values)
     {
         // Arrange
         var tags = string.Join(',', values.Split(',').Select(x => x.Trim()).ToList());
@@ -147,5 +148,59 @@ public class LinksApiFunctionalTests : IClassFixture<WebApplicationFactory<Progr
                 Assert.Contains(expectedTag, linkTags);
             }
         }
+    }
+
+    [Theory]
+    [InlineData(".net, c#", 16)]
+    [InlineData("github, react", 23)]
+    [InlineData("csharp", null)]
+    public async Task WebApi_GetRelatedTags_OkResult(string values, int? count)
+    {
+        // Arrange
+        var tags = string.Join(',', values.Split(',').Select(x => x.Trim()).ToList());
+
+        // Act
+        var response = await _client.GetAsync(string.Format(GET_LINKS_RELATED_TAGS_ENDPOINT, API_VERSION, tags));
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+        var actuals = JsonSerializer.Deserialize<LinkTag[]>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        Assert.NotNull(actuals);
+        Assert.NotEmpty(actuals);
+
+        decimal totalWeight = 0m;
+
+        foreach (var actual in actuals)
+        {
+            Assert.True(actual.Count > decimal.Zero);
+
+            Assert.True(actual.Weight > decimal.Zero);
+
+            totalWeight += actual.Weight;
+        }
+
+        var delta = 0.00001m;
+        Assert.True(decimal.One - totalWeight <= delta);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData(",")]
+    public async Task WebApi_GetLinksByTags_With_InvalidTags_OkResult(string values)
+    {
+        // Arrange
+        var tags = string.Join(',', values.Split(',').Select(x => x.Trim()).ToList());
+
+        // Act
+        var response = await _client.GetAsync(string.Format(GET_LINKS_WITH_TAGS_ENDPOINT, API_VERSION, tags));
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        response.EnsureSuccessStatusCode();
     }
 }

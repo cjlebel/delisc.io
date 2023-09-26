@@ -20,6 +20,8 @@ public interface ILinksService
 
     Task<Link?> GetByUrlAsync(string url, CancellationToken token = default);
 
+    Task<LinkTag[]> GetRelatedTagsAsync(string[] tags, int? count = default, CancellationToken token = default);
+
     ValueTask<Guid> SubmitLinkAsync(string url, Guid submittedByUserId, string[]? tags = default, CancellationToken token = default);
 
     ///// <summary>

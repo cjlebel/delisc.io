@@ -23,9 +23,12 @@ public class LinksApiEndpoints : BaseApiEndpoints
     private const string LINKS_COULD_NOT_BE_FOUND = "The Links for Page {0} could not be found";
     private const string PAGE_NO_CANNOT_BE_LESS_THAN_ONE = "PageNo cannot be less than 1";
     private const string PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE = "PageSize cannot be less than 1";
+    private const string TAGS_CANNOT_BE_NULL_OR_EMPTY = "Tags cannot be null or empty";
+    private const string TAGS_COUNT_CANNOT_BE_LESS_THAN_ONE = "TagsCount cannot be less than 1";
 
     private const int DEFAULT_PAGE_NO = 1;
     private const int DEFAULT_PAGE_SIZE = 25;
+    private const int DEFAULT_TAG_COUNT = 50;
 
     public LinksApiEndpoints(ILinksManager manager, ILogger<LinksApiEndpoints> logger)
     {
@@ -39,6 +42,7 @@ public class LinksApiEndpoints : BaseApiEndpoints
         MapGetLinksAsPager(endpoints);
         //MapGetLinksAsPagerWithPageNoPageSize(endpoints);
         MapGetLinksByTagsAsPager(endpoints);
+        MapGetRelatedTagsAsPager(endpoints);
         MapSubmitLink(endpoints);
     }
 
@@ -180,6 +184,38 @@ public class LinksApiEndpoints : BaseApiEndpoints
             .WithDisplayName("GetLinks")
             .WithSummary("Get paginated collection of links")
             .WithDescription("This endpoint retrieves paginated links based on pageNo and pageSize. If either pageNo or pageSize is less than 1, a BadRequest is returned");
+    }
+
+    /// <summary>
+    /// Maps the endpoints that gets a collection of Tags that are related to the provided tags, using the Links to get the results.
+    /// </summary>
+    /// <param name="endpoints"></param>
+    private void MapGetRelatedTagsAsPager(IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapGet("v1/links/tags/{tags}/{count:int?}",
+                async ([FromRoute] string tags, [FromRoute] int? count, CancellationToken cancellationToken) =>
+                {
+                    if (string.IsNullOrWhiteSpace(tags))
+                        return Results.BadRequest(TAGS_CANNOT_BE_NULL_OR_EMPTY);
+
+                    var newCount = count ?? DEFAULT_TAG_COUNT;
+
+                    if (newCount < 1)
+                        return Results.BadRequest(TAGS_COUNT_CANNOT_BE_LESS_THAN_ONE);
+
+                    var tagsList = tags.Split(",").ToArray();
+
+                    var results = await _manager.GetRelatedTagsAsync(tagsList, newCount, cancellationToken);
+
+                    return Results.Ok(results);
+                })
+            .Produces<LinkTag[]>()
+            .ProducesProblem((int)HttpStatusCode.OK)
+            .ProducesProblem((int)HttpStatusCode.NotFound)
+            .ProducesProblem((int)HttpStatusCode.BadRequest)
+            .WithDisplayName("GetRelatedTags")
+            .WithSummary("Get a collection of tags that are related to the tags provided")
+            .WithDescription("");
     }
 
     /// <summary>

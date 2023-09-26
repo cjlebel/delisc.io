@@ -40,7 +40,7 @@ internal partial class Program
 
             foreach (var file in files)
             {
-                var lines = File.ReadAllLines(file);
+                var lines = await File.ReadAllLinesAsync(file);
 
                 foreach (var line in lines)
                 {
@@ -69,20 +69,11 @@ internal partial class Program
                                     Console.WriteLine($"There was an error while attempting to import {url}\n{e}");
                                 }
                             }
-                            else
-                            {
-                                var x = false;
-                            }
+
                         }
-                        else
-                        {
-                            var x = false;
-                        }
+
                     }
-                    else
-                    {
-                        var x = false;
-                    }
+
                 }
 
 

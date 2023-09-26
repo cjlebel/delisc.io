@@ -144,7 +144,7 @@ public class LinksService : ServiceBase, ILinksService
     /// <exception cref="NotImplementedException"></exception>
     public async Task<PagedResults<Link>> GetByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
-        var array = tags?.ToArray() ?? Array.Empty<string>();
+        var array = tags.ToArray();
 
         Guard.Against.NullOrEmpty(array, message: $"{nameof(tags)} cannot be null or empty");
 
@@ -155,6 +155,13 @@ public class LinksService : ServiceBase, ILinksService
         return GetPageOfResults(links, pageNo, pageSize, rslts.TotalCount);
     }
 
+    /// <summary>
+    /// Gets a link by its Url.
+    /// This is useful when you want to check if a link has already been submitted but you don't know its Id.
+    /// </summary>
+    /// <param name="url">The url to use to perform the search</param>
+    /// <param name="token">The cancellation token</param>
+    /// <returns></returns>
     public async Task<Link?> GetByUrlAsync(string url, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(url);
@@ -162,6 +169,21 @@ public class LinksService : ServiceBase, ILinksService
         var result = await _linksRepository.GetByUrlAsync(url, token);
 
         return result is null ? null : Mapper.Map(result);
+    }
+
+    /// <summary>
+    /// Gets a collection of tags that are related to the provided tags
+    /// </summary>
+    /// <param name="tags">The tags to use as the bait to lure out the related tags</param>
+    /// <param name="token"></param>
+    /// <returns></returns>
+    public async Task<LinkTag[]> GetRelatedTagsAsync(string[] tags, int? count = default, CancellationToken token = default)
+    {
+        Guard.Against.NullOrEmpty(tags);
+
+        var result = await _linksRepository.GetRelatedTagsAsync(tags, count, token);
+
+        return Mapper.Map(result).ToArray();
     }
 
     /// <summary>
