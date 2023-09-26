@@ -20,7 +20,7 @@ public class VerifyProcessor : IVerifyProcessor
 
 
     // Simple list of invalid domains. Should be read from somewhere, where that list can be updated.
-    private readonly string[] _invalidDomains = { "127.0.0.1", "192.168.", "localhost", "mail.", "calendar.", "okcupid.com", "pof.com" };
+    private readonly string[] _invalidDomains = { "127.0.0.1", "192.168.", "localhost", "mail.", "calendar." };
 
     // Simple list of valid protocols. Should be read from somewhere, where that list can be updated.
     private readonly string[] _validProtocols = { "http:", "https:", "chrome:" };
