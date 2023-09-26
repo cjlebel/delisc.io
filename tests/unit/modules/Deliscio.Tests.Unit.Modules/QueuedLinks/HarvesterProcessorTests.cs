@@ -55,7 +55,7 @@ public class HarvesterProcessorTests
     }
 
     [Fact]
-    public async Task Can_Call_ExecuteAsync()
+    public async Task ExecuteAsync_Can_Call()
     {
         // Arrange
         var link = new QueuedLink();

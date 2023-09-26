@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Deliscio.Modules.QueuedLinks.Common.Enums;
 using Deliscio.Modules.QueuedLinks.Common.Models;
 using Deliscio.Modules.QueuedLinks.Verifier;
 using MediatR;
@@ -60,8 +61,22 @@ public class VerifyProcessorTests
     }
 
     [Fact]
-    public async Task Cannot_Call_ExecuteAsync_WithNull_LinkAsync()
+    public async Task Cannot_Call_ExecuteAsync_WithNull_Link()
     {
         //await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.ExecuteAsync(default(QueuedLink), CancellationToken.None));
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
+    public async Task ExecuteAsync_Cannot_Call_With_Invalid_Url(string url)
+    {
+        var link = new QueuedLink { Url = url };
+
+        var actual = await _testClass.ExecuteAsync(link, CancellationToken.None);
+
+        Assert.False(actual.IsSuccess);
+        Assert.Equal(QueuedStates.Error, actual.Link.State);
     }
 }
