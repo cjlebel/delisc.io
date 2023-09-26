@@ -42,11 +42,14 @@ public class VerifyProcessor : IVerifyProcessor
     /// <param name="link">The link object to be verified</param>
     /// <param name="token">The cancellation token to end the request</param>
     /// <returns></returns>
-    public async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> ExecuteAsync(QueuedLink link, CancellationToken token = default)
+    public async ValueTask<(bool IsSuccess, string Message, QueuedLink? Link)> ExecuteAsync(QueuedLink link, CancellationToken token = default)
     {
-        _logger.LogInformation(VERIFYING_STARTED_MESSAGE, DateTimeOffset.Now, link.Url);
+        if (link == null)
+        {
+            return (false, "The link cannot be null", link);
+        }
 
-        Guard.Against.Null(link);
+        _logger.LogInformation(VERIFYING_STARTED_MESSAGE, DateTimeOffset.Now, link.Url);
 
         if (string.IsNullOrWhiteSpace(link.Url))
         {

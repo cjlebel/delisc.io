@@ -286,21 +286,44 @@ public class LinksServiceTests
     }
 
     [Fact]
-    public async Task Can_Call_SubmitLinkAsyncWithRequestAndTokenAsync()
+    public async Task SubmitLinkAsync_CanCall_With_GuidId_And_Url_Expected_NewGuid()
     {
         // Arrange
-        var request = new SubmitLinkRequest("TestValue769920427", "TestValue1564293322");
-        var token = CancellationToken.None;
+        var userId = Guid.NewGuid();
+        var url = "http://www.fakesite.com";
 
-        _linksRepository.Setup(mock => mock.GetByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new LinkEntity(Guid.NewGuid(), "TestValue761697808", "TestValue1774356627"));
+        var expectedId = Guid.NewGuid();
+        var expected = new LinkEntity(expectedId, "TestValue761697808", "TestValue1774356627");
+
+        _linksRepository.Setup(mock => mock.GetByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(expected);
 
         // Act
-        var result = await _testClass.SubmitLinkAsync(request, token);
+        var actual = await _testClass.SubmitLinkAsync(url, userId);
 
         // Assert
         _linksRepository.Verify(mock => mock.GetByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()));
 
-        throw new NotImplementedException("Create or modify test");
+        Assert.Equal(expectedId, actual);
+    }
+
+    [Fact]
+    public async Task SubmitLinkAsync_CanCall_With_GuidId_And_Url_Expected_EmptyGuid()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var url = "http://www.fakesite.com";
+
+        var expectedId = Guid.Empty;
+
+        _linksRepository.Setup(mock => mock.GetByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(default(LinkEntity));
+
+        // Act
+        var actual = await _testClass.SubmitLinkAsync(url, userId);
+
+        // Assert
+        _linksRepository.Verify(mock => mock.GetByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()));
+
+        Assert.Equal(expectedId, actual);
     }
 
     [Fact]

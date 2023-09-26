@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.QueuedLinks.Common.Enums;
 using Deliscio.Modules.QueuedLinks.Common.Models;
 using Deliscio.Modules.QueuedLinks.Verifier;
@@ -63,7 +64,15 @@ public class VerifyProcessorTests
     [Fact]
     public async Task Cannot_Call_ExecuteAsync_WithNull_Link()
     {
-        //await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.ExecuteAsync(default(QueuedLink), CancellationToken.None));
+        // Arrange
+        Link? link = null;
+
+        // Act
+        var actual = await _testClass.ExecuteAsync(default);
+
+        // Assert
+        Assert.False(actual.IsSuccess);
+        Assert.True(actual.Message.Contains("cannot be null"));
     }
 
     [Theory]

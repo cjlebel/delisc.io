@@ -6,7 +6,7 @@ namespace Deliscio.Tests.Unit.Modules.QueuedLinks.Handlers
     using Deliscio.Modules.QueuedLinks.Common.Models;
     using Deliscio.Modules.QueuedLinks.Interfaces;
     using Deliscio.Modules.QueuedLinks.MediatR.Commands;
-    using Deliscio.Modules.QueuedLinks.MediatR.Handlers;
+    using Deliscio.Modules.QueuedLinks.MediatR.Commands.Handlers;
     using Moq;
     using Xunit;
 

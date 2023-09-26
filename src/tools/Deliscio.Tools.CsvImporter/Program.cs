@@ -36,35 +36,70 @@ internal partial class Program
 
         if (files.Length > 0)
         {
+            var backlinks = new List<BacklogItem>();
+
             foreach (var file in files)
             {
-                var backlinks = new List<BacklogItem>();
                 var lines = File.ReadAllLines(file);
 
                 foreach (var line in lines)
                 {
-                    var parts = SplitLineRegEx().Split(line);
-                    var title = parts[0].Trim('"');
-                    var url = parts[1].Trim('"');
-
-                    // First row of each file _MAY_ contain the header. If so, skip it.
-                    if (title.ToLower() != "title" && url.ToLower() != "url" && !backlinks.Exists(x => x.Url == url))
+                    if (!string.IsNullOrWhiteSpace(line))
                     {
-                        //if (IsAcceptableHost(url))
-                        //{
-                        try
-                        {
-                            var backlink = BacklogItem.Create(url, title, userId);
+                        var parts = SplitLineRegEx().Split(line);
 
-                            backlinks.Add(backlink);
-                        }
-                        catch (Exception e)
+                        if (parts.Length == 2)
                         {
-                            Console.WriteLine($"There was an error while attempting to import {url}\n{e}");
+                            var title = parts[0]?.Trim('"') ?? string.Empty;
+                            var url = parts[1]?.Trim('"') ?? string.Empty;
+
+                            // First row of each file _MAY_ contain the header. If so, skip it.
+                            if (!string.IsNullOrWhiteSpace(title) && !string.IsNullOrWhiteSpace(url) && title.ToLower() != "title" && url.ToLower() != "url" && !backlinks.Exists(x => x.Url == url))
+                            {
+                                //if (IsAcceptableHost(url))
+                                //{
+                                try
+                                {
+                                    var backlink = BacklogItem.Create(url, title, userId);
+
+                                    backlinks.Add(backlink);
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine($"There was an error while attempting to import {url}\n{e}");
+                                }
+                            }
+                            else
+                            {
+                                var x = false;
+                            }
                         }
+                        else
+                        {
+                            var x = false;
+                        }
+                    }
+                    else
+                    {
+                        var x = false;
                     }
                 }
 
+
+
+                //#if DEBUG
+                //                // Save backlinks to a file
+                //                var json = JsonSerializer.Serialize(backlinks.Select(l => new { l.Url, l.Title }).ToList());
+
+                //                if (!Directory.Exists(outputDir))
+                //                    Directory.CreateDirectory(outputDir);
+
+                //                File.WriteAllText($"{outputDir}\\backlinks_{DateTime.Now.Ticks}.json", json);
+                //#endif
+            }
+
+            if (backlinks != null && backlinks.Any())
+            {
                 try
                 {
                     //var rslts = await service.AddBacklogItemsAsync(backlinks, CancellationToken.None);
@@ -72,7 +107,7 @@ internal partial class Program
                     Thread.Sleep(5_000);
 
                     var counter = 0;
-                    using (HttpClient client = new HttpClient())
+                    using (var client = new HttpClient())
                     {
                         client.BaseAddress = new Uri("http://localhost:31178");
                         foreach (var backlink in backlinks)
@@ -81,10 +116,11 @@ internal partial class Program
 
                             try
                             {
-                                var submitlink = JsonSerializer.Serialize(request);
-                                var response = await client.PostAsJsonAsync("v1/links", backlink);
+                                var response = await client.PostAsJsonAsync("v1/links", request);
                                 response.EnsureSuccessStatusCode();
 
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine($"Successfully submitted {backlink.Url}");
                                 counter++;
                             }
                             catch (HttpRequestException e)
@@ -100,8 +136,7 @@ internal partial class Program
                         }
                     }
 
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"Successfully imported {counter} links from {file}");
+
                 }
                 catch (Exception e)
                 {
@@ -118,17 +153,11 @@ internal partial class Program
                     throw;
                 }
 
+                Console.ForegroundColor = ConsoleColor.Green;
 
+                Console.WriteLine($"Successfully imported {backlinks.Count} Backlink Results");
 
-#if DEBUG
-                // Save backlinks to a file
-                var json = JsonSerializer.Serialize(backlinks.Select(l => new { l.Url, l.Title }).ToList());
-
-                if (!Directory.Exists(outputDir))
-                    Directory.CreateDirectory(outputDir);
-
-                File.WriteAllText($"{outputDir}\\backlinks_{DateTime.Now.Ticks}.json", json);
-#endif
+                Console.ResetColor();
             }
         }
     }
