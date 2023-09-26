@@ -42,12 +42,21 @@ public class VerifyProcessor : IVerifyProcessor
     /// <param name="link">The link object to be verified</param>
     /// <param name="token">The cancellation token to end the request</param>
     /// <returns></returns>
-    public async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> ExecuteAsync(QueuedLink link, CancellationToken token = default)
+    public async ValueTask<(bool IsSuccess, string Message, QueuedLink? Link)> ExecuteAsync(QueuedLink link, CancellationToken token = default)
     {
+        if (link == null)
+        {
+            return (false, "The link cannot be null", link);
+        }
+
         _logger.LogInformation(VERIFYING_STARTED_MESSAGE, DateTimeOffset.Now, link.Url);
 
-        Guard.Against.Null(link);
-        Guard.Against.NullOrWhiteSpace(link.Url);
+        if (string.IsNullOrWhiteSpace(link.Url))
+        {
+            link = link with { State = QueuedStates.Error };
+
+            return (false, "THe link's URL cannot be null or empty", link);
+        }
 
         link = link with { State = QueuedStates.Verifying };
 
@@ -104,10 +113,12 @@ public class VerifyProcessor : IVerifyProcessor
         {
             string host = uri.Host.ToLower();
 
-            var matchingSubdomain = commonSubdomains.FirstOrDefault(subdomain => host.StartsWith(subdomain + "."));
-            if (matchingSubdomain != null)
+            var matchingSubdomain = commonSubdomains.Find(subdomain => host.StartsWith(subdomain + "."));
+            if (!string.IsNullOrWhiteSpace(matchingSubdomain))
             {
-                host = host.Substring(matchingSubdomain.Length + 1); // Remove the subdomain and the following dot
+                // Remove the subdomain and the following dot.
+                // This will leave intact any domain which has a custom subdomain (e.g. "mycustomsubdomain.example.com")
+                host = host.Substring(matchingSubdomain.Length + 1);
             }
 
             return host;

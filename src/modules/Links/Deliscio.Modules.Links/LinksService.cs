@@ -216,57 +216,56 @@ public class LinksService : ServiceBase, ILinksService
                 t.Count++;
             }
 
-            link.Tags.AddRange(nonExistingTagNames.Select(t => LinkTagEntity.Create(t)));
+            link.Tags.AddRange(nonExistingTagNames.Select(LinkTagEntity.Create));
 
             await _linksRepository.UpdateAsync(link, token);
 
-            return link.Id;
-        }
 
+        }
 
         //await _linksRepository.AddAsync(link, token);
 
         //return link.Id;
 
-        return Guid.Empty;
+        return link.Id;
     }
 
-    public async ValueTask<bool> SubmitLinkAsync(SubmitLinkRequest request, CancellationToken token = default)
-    {
-        var link = await _linksRepository.GetByUrlAsync(request.Url, token);
+    //public async ValueTask<bool> SubmitLinkAsync(SubmitLinkRequest request, CancellationToken token = default)
+    //{
+    //    var link = await _linksRepository.GetByUrlAsync(request.Url, token);
 
-        var userTags = request.UsersTags.Any() ? request.UsersTags.Select(t => LinkTagEntity.Create(t)).ToArray() : Array.Empty<LinkTagEntity>();
+    //    var userTags = request.UsersTags.Any() ? request.UsersTags.Select(t => LinkTagEntity.Create(t)).ToArray() : Array.Empty<LinkTagEntity>();
 
-        if (link == null)
-        {
-            //link = LinkEntity.C
-        }
-
-
-        if (!link.Tags.Any())
-        {
-            link.Tags.AddRange(userTags);
-        }
-        else
-        {
-            foreach (var tag in link.Tags)
-            {
-                var linkTag = link.Tags.Find(t => t.Name == tag.Name);
-
-                if (linkTag != null)
-                {
-                    linkTag.Count++;
-                }
-                else
-                {
-                    link.Tags.Add(tag);
-                }
-            }
-        }
-
-        // Associate link with user
+    //    if (link == null)
+    //    {
+    //        //link = LinkEntity.C
+    //    }
 
 
-        return true;
-    }
+    //    if (!link.Tags.Any())
+    //    {
+    //        link.Tags.AddRange(userTags);
+    //    }
+    //    else
+    //    {
+    //        foreach (var tag in link.Tags)
+    //        {
+    //            var linkTag = link.Tags.Find(t => t.Name == tag.Name);
+
+    //            if (linkTag != null)
+    //            {
+    //                linkTag.Count++;
+    //            }
+    //            else
+    //            {
+    //                link.Tags.Add(tag);
+    //            }
+    //        }
+    //    }
+
+    //    // Associate link with user
+
+
+    //    return true;
+    //}
 }

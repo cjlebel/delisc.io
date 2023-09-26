@@ -3,7 +3,7 @@ using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.MediatR.Queries;
 using MediatR;
 
-namespace Deliscio.Modules.Links.MediatR.Handlers.Queries;
+namespace Deliscio.Modules.Links.MediatR.Queries.Handlers;
 
 /// <summary>
 /// Handles getting a single link from the central repository, by the link's exact url

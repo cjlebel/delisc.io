@@ -1,9 +1,8 @@
 using Ardalis.GuardClauses;
 using Deliscio.Modules.QueuedLinks.Interfaces;
-using Deliscio.Modules.QueuedLinks.MediatR.Commands;
 using MediatR;
 
-namespace Deliscio.Modules.QueuedLinks.MediatR.Handlers;
+namespace Deliscio.Modules.QueuedLinks.MediatR.Commands.Handlers;
 
 /// <summary>
 /// Adds a link to the processing queue, marked as "new"

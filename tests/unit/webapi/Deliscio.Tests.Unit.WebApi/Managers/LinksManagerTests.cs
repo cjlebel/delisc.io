@@ -61,7 +61,7 @@ public class LinksManagerTests
     }
 
     [Fact]
-    public async Task Can_Call_GetLinkAsync()
+    public async Task GetLinkAsync_Can_Call()
     {
         // Arrange
         var id = Guid.NewGuid().ToString();
@@ -78,7 +78,7 @@ public class LinksManagerTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public async Task Cannot_Call_GetLinkAsync_WithInvalid_IdAsync(string value)
+    public async Task GetLinkAsync_Cannot_Call_WithInvalid_IdAsync(string value)
     {
         // GetAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
         Assert.Multiple(() =>
@@ -91,7 +91,7 @@ public class LinksManagerTests
     }
 
     [Fact]
-    public async Task Can_Call_GetLinksAsync()
+    public async Task GetLinksAsync_Can_Call()
     {
         // Arrange
         var pageNo = 84210672;

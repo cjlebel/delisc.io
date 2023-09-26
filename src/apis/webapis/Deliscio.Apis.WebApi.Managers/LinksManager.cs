@@ -84,7 +84,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         Guard.Against.NullOrEmpty(submittedByUserId);
 
         // Placing this here so that I can have access to it in the exception block
-        (bool IsSuccess, string Message, QueuedLink Link) result = (false, "", null);
+        (bool IsSuccess, string Message, QueuedLink? Link) result = (false, string.Empty, null);
 
         var tagsToAdd = tags ?? Array.Empty<string>();
 

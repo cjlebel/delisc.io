@@ -30,8 +30,7 @@ public class HarvesterProcessor : IHarvesterProcessor
         _httpClient.Timeout = TimeSpan.FromSeconds(10);
     }
 
-    public async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> ExecuteAsync(QueuedLink link,
-        CancellationToken token = default)
+    public async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> ExecuteAsync(QueuedLink link, CancellationToken token = default)
     {
         link = link with { State = QueuedStates.FetchingData };
 
