@@ -31,10 +31,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\src\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Links\" />
+    <ProjectReference Include="..\..\..\..\src\modules\QueuedLink\MediatR\Deliscio.Modules.QueuedLinks.MediatR.csproj" />
+    <ProjectReference Include="..\..\..\..\src\modules\QueuedLink\QueuedLinks\Deliscio.Modules.QueuedLinks.csproj" />
   </ItemGroup>
 
 </Project>

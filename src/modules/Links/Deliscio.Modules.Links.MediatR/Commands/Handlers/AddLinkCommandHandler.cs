@@ -2,7 +2,7 @@ using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.MediatR.Commands;
 using MediatR;
 
-namespace Deliscio.Modules.Links.MediatR.Handlers.Commands;
+namespace Deliscio.Modules.Links.MediatR.Commands.Handlers;
 
 /// <summary>
 /// Represents a MediatR command handler that adds a new link to the central repository.

@@ -1,8 +1,8 @@
+using Ardalis.GuardClauses;
 using Deliscio.Modules.QueuedLinks.Interfaces;
-using Deliscio.Modules.QueuedLinks.MediatR.Commands;
 using MediatR;
 
-namespace Deliscio.Modules.QueuedLinks.MediatR.Handlers;
+namespace Deliscio.Modules.QueuedLinks.MediatR.Commands.Handlers;
 
 /// <summary>
 /// Adds a link to the processing queue, marked as "new"
@@ -13,11 +13,15 @@ public class AddNewLinkQueueCommandHandler : IRequestHandler<AddNewLinkQueueComm
 
     public AddNewLinkQueueCommandHandler(IQueuedLinksService queueService)
     {
+        Guard.Against.Null(queueService);
+
         _queueService = queueService;
     }
 
     public async Task<bool> Handle(AddNewLinkQueueCommand command, CancellationToken cancellationToken)
     {
+        Guard.Against.Null(command);
+
         //await _queueService.AddLinkAsync(command.Url, command.SubmittedById, command.UsersTitle, command.UsersDescription, command.Tags, cancellationToken);
 
         return true;

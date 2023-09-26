@@ -1,8 +1,10 @@
 using System.Net;
+
 using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Requests;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +37,10 @@ public class LinksApiEndpoints : BaseApiEndpoints
         MapSubmitLink(endpoints);
     }
 
+    /// <summary>
+    /// Maps the endpoints that gets a single Link by its Id.
+    /// </summary>
+    /// <param name="endpoints"></param>
     private void MapGetLink(IEndpointRouteBuilder endpoints)
     {
         // Id is required, so this will never be hit if id is empty (it will go to the next endpoint that has an optional pageNo and pageSize)
@@ -63,6 +69,10 @@ public class LinksApiEndpoints : BaseApiEndpoints
             .WithMetadata("Meta data for /links/{id}");
     }
 
+    /// <summary>
+    /// Maps the endpoints that gets a collection of Links as a page of results.
+    /// </summary>
+    /// <param name="endpoints"></param>
     private void MapGetLinksAsPager(IEndpointRouteBuilder endpoints)
     {
         // This is also the same as /v1/links where no id, pageNo, or pageSize is provided
@@ -81,7 +91,7 @@ public class LinksApiEndpoints : BaseApiEndpoints
 
                 var results = await _manager.GetLinksAsync(newPageNo, newPageSize, cancellationToken);
 
-                if (!results.Items.Any())
+                if (!results.Results.Any())
                     return Results.NotFound(string.Format(LINKS_COULD_NOT_BE_FOUND, pageNo));
 
                 return Results.Ok(results);
@@ -96,6 +106,10 @@ public class LinksApiEndpoints : BaseApiEndpoints
         //.WithGroupName("Links");
     }
 
+    /// <summary>
+    /// Maps the endpoints that submits a new Link.
+    /// </summary>
+    /// <param name="endpoints"></param>
     private void MapSubmitLink(IEndpointRouteBuilder endpoints)
     {
         endpoints.MapPost("v1/links/",
@@ -104,7 +118,7 @@ public class LinksApiEndpoints : BaseApiEndpoints
                 if (request is null)
                     return Results.BadRequest("Request cannot be null");
 
-                // Temporarily hardcoding this until we get authentication working
+                // Temporarily hard coding this until we get authentication working
                 request.SubmittedById = "48263056-61ad-b4a3-05e0-712025051842";
 
                 var isValid = request.IsValid();

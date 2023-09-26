@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using Deliscio.Core.Abstracts;
 using Deliscio.Modules.QueuedLinks.Common.Enums;
 using Deliscio.Modules.QueuedLinks.Common.Models;
@@ -26,6 +27,11 @@ public class QueuedLinksService : ServiceBase, IQueuedLinksService
     private const string PROCESSOR_ERROR_IMPROPER_STATE = "Link is not in the correct state to be processed: {name}";
     public QueuedLinksService(IVerifyProcessor verifier, IHarvesterProcessor harvester, ITaggerProcessor tagger, ILogger<QueuedLinksService> logger)
     {
+        Guard.Against.Null(harvester);
+        Guard.Against.Null(tagger);
+        Guard.Against.Null(verifier);
+        Guard.Against.Null(logger);
+
         _harvester = harvester;
         _tagger = tagger;
         _verifier = verifier;

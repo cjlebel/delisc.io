@@ -1,5 +1,7 @@
 using System.Linq.Expressions;
+
 using Ardalis.GuardClauses;
+
 using Deliscio.Core.Abstracts;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Interfaces;
@@ -8,6 +10,7 @@ using Deliscio.Modules.Links.Data.Entities;
 using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Modules.Links.Mappers;
 using Deliscio.Modules.Links.Requests;
+
 using Microsoft.Extensions.Logging;
 
 namespace Deliscio.Modules.Links;
@@ -19,8 +22,11 @@ public class LinksService : ServiceBase, ILinksService
 
     public LinksService(ILinksRepository linksRepository, ILogger<LinksService> logger)
     {
-        _logger = logger;
+        Guard.Against.Null(linksRepository);
+        Guard.Against.Null(logger);
+
         _linksRepository = linksRepository;
+        _logger = logger;
     }
 
     public async Task<Guid> AddAsync(Link link, CancellationToken token = default)
@@ -139,9 +145,9 @@ public class LinksService : ServiceBase, ILinksService
     /// <exception cref="NotImplementedException"></exception>
     public async Task<PagedResults<Link>> GetByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
-        var array = tags as string[] ?? Array.Empty<string>();
+        var array = tags?.ToArray() ?? Array.Empty<string>();
 
-        Guard.Against.NullOrEmpty(array);
+        Guard.Against.NullOrEmpty(array, message: $"{nameof(tags)} cannot be null or empty");
 
         var rslts = await _linksRepository.GetByTagsAsync(array, pageNo, pageSize, token);
 
@@ -188,8 +194,6 @@ public class LinksService : ServiceBase, ILinksService
         Guard.Against.NullOrWhiteSpace(url);
         Guard.Against.NullOrEmpty(submittedByUserId);
 
-
-
         var link = await _linksRepository.GetByUrlAsync(url, token);
 
         // If the link already exists in the central link repository, then we just need to add/update the tags for it
@@ -212,57 +216,56 @@ public class LinksService : ServiceBase, ILinksService
                 t.Count++;
             }
 
-            link.Tags.AddRange(nonExistingTagNames.Select(t => LinkTagEntity.Create(t)));
+            link.Tags.AddRange(nonExistingTagNames.Select(LinkTagEntity.Create));
 
             await _linksRepository.UpdateAsync(link, token);
 
-            return link.Id;
-        }
 
+        }
 
         //await _linksRepository.AddAsync(link, token);
 
         //return link.Id;
 
-        return Guid.Empty;
+        return link.Id;
     }
 
-    public async ValueTask<bool> SubmitLinkAsync(SubmitLinkRequest request, CancellationToken token = default)
-    {
-        var link = await _linksRepository.GetByUrlAsync(request.Url, token);
+    //public async ValueTask<bool> SubmitLinkAsync(SubmitLinkRequest request, CancellationToken token = default)
+    //{
+    //    var link = await _linksRepository.GetByUrlAsync(request.Url, token);
 
-        var userTags = request.UsersTags.Any() ? request.UsersTags.Select(t => LinkTagEntity.Create(t)).ToArray() : Array.Empty<LinkTagEntity>();
+    //    var userTags = request.UsersTags.Any() ? request.UsersTags.Select(t => LinkTagEntity.Create(t)).ToArray() : Array.Empty<LinkTagEntity>();
 
-        if (link == null)
-        {
-            //link = LinkEntity.C
-        }
-
-
-        if (!link.Tags.Any())
-        {
-            link.Tags.AddRange(userTags);
-        }
-        else
-        {
-            foreach (var tag in link.Tags)
-            {
-                var linkTag = link.Tags.Find(t => t.Name == tag.Name);
-
-                if (linkTag != null)
-                {
-                    linkTag.Count++;
-                }
-                else
-                {
-                    link.Tags.Add(tag);
-                }
-            }
-        }
-
-        // Associate link with user
+    //    if (link == null)
+    //    {
+    //        //link = LinkEntity.C
+    //    }
 
 
-        return true;
-    }
+    //    if (!link.Tags.Any())
+    //    {
+    //        link.Tags.AddRange(userTags);
+    //    }
+    //    else
+    //    {
+    //        foreach (var tag in link.Tags)
+    //        {
+    //            var linkTag = link.Tags.Find(t => t.Name == tag.Name);
+
+    //            if (linkTag != null)
+    //            {
+    //                linkTag.Count++;
+    //            }
+    //            else
+    //            {
+    //                link.Tags.Add(tag);
+    //            }
+    //        }
+    //    }
+
+    //    // Associate link with user
+
+
+    //    return true;
+    //}
 }

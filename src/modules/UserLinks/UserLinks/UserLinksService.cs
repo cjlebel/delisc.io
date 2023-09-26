@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using Deliscio.Core.Abstracts;
 using Deliscio.Modules.UserLinks.Common.Interfaces;
 using Deliscio.Modules.UserLinks.Common.Models;
@@ -13,6 +14,9 @@ public class UserLinksService : ServiceBase, IUserLinksService
 
     public UserLinksService(IUserLinksRepository linksRepository, ILogger<UserLinksService> logger)
     {
+        Guard.Against.Null(linksRepository);
+        Guard.Against.Null(logger);
+
         _logger = logger;
         _linksRepository = linksRepository;
     }

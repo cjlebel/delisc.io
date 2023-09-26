@@ -1,4 +1,5 @@
 using Ardalis.GuardClauses;
+
 using Deliscio.Core.Models;
 
 namespace Deliscio.Core.Abstracts;
@@ -16,7 +17,7 @@ public abstract class ServiceBase
     /// <returns></returns>
     public static PagedResults<T> GetPageOfResults<T>(IEnumerable<T> items, int pageNo, int pageSize, int totalCount)
     {
-        var array = items as T[] ?? Array.Empty<T>();
+        var array = items.ToArray();
 
         Guard.Against.NullOrEmpty(array);
 
