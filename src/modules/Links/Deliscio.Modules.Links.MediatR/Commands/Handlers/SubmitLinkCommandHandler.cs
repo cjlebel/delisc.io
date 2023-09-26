@@ -1,5 +1,4 @@
 using Deliscio.Modules.Links.Common.Interfaces;
-using Deliscio.Modules.Links.MediatR.Commands;
 using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Commands.Handlers;

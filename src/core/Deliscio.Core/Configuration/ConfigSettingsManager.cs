@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 
 namespace Deliscio.Core.Configuration;
 
@@ -25,6 +24,10 @@ public static class ConfigSettingsManager
     {
         get
         {
+            //var x = Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Machine);
+            //var y = Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Process);
+            //var z = Environment.GetEnvironmentVariables(EnvironmentVariableTarget.User);
+
             // Via AspNetCoreEnvironmentVariableKey
             var environmentName =
                 Environment.GetEnvironmentVariable(AspNetCoreEnvironmentVariableKey, EnvironmentVariableTarget.Machine);

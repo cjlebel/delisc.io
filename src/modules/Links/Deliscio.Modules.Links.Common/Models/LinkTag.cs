@@ -7,6 +7,9 @@ public class LinkTag
 
     public decimal Weight { get; set; }
 
+    // Needed for deserialization
+    public LinkTag() { }
+
     public LinkTag(string name, int count)
     {
         Name = name;

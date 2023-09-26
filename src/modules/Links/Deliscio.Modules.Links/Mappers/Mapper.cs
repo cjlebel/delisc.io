@@ -43,7 +43,7 @@ internal static class Mapper
             ImageUrl = entity.ImageUrl,
             //IsExcluded = entity.IsExcluded,
             //IsFlagged = entity.IsFlagged,
-            Tags = new ReadOnlyCollection<LinkTag>(Map(entity.Tags).ToList()),
+            Tags = Map(entity.Tags).ToList(),
             Title = entity.Title,
 
             DateCreated = entity.DateCreated,
@@ -120,7 +120,7 @@ internal static class Mapper
         if (entity == null)
             return null;
 
-        var model = new LinkTag(entity.Name, entity.Count);
+        var model = new LinkTag(entity.Name, entity.Count, entity.Weight);
 
         return model;
     }
