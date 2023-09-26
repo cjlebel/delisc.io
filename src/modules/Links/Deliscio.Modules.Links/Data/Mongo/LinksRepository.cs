@@ -123,9 +123,9 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
 
     #region - Tags -
 
-    public async Task AddTagAsync(Guid id, string tag, CancellationToken token)
+    public async Task AddTagAsync(Guid linkId, string tag, CancellationToken token)
     {
-        var filter = Builders<LinkEntity>.Filter.Eq("_id", id);
+        var filter = Builders<LinkEntity>.Filter.Eq("_id", linkId);
         var update = Builders<LinkEntity>.Update.Inc($"Tags.{tag}", 1);
 
         var updateResult = await Collection.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true }, cancellationToken: token);
@@ -134,7 +134,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
 
     }
 
-    public async Task<IEnumerable<LinkTagEntity>> GetTagsAsync(Guid id, CancellationToken token)
+    public async Task<IEnumerable<LinkTagEntity>> GetTagsAsync(Guid linkId, CancellationToken token)
     {
         //var filter = Builders<LinkEntity>.Filter.Eq("_id", id);
 
@@ -154,18 +154,19 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
     /// Removes an occurrence of the tag from the Tag collection that belongs to Link with the id.<br />
     /// If the tag's count becomes zero, then it will be removed from the collection.
     /// </summary>
-    /// <param name="id">The id of the Link to update.</param>
+    /// <param name="linkId">The id of the Link to update.</param>
     /// <param name="tag">The tag in which its count will be incremented.</param>
     /// <param name="token">The token.</param>
-    public async Task RemoveTagAsync(Guid id, string tag, CancellationToken token)
+    public async Task RemoveTagAsync(Guid linkId, string tag, CancellationToken token)
     {
-        var filter = Builders<LinkEntity>.Filter.Eq("_id", id);
+        var filter = Builders<LinkEntity>.Filter.Eq("_id", linkId);
         var update = Builders<LinkEntity>.Update.Combine(
             Builders<LinkEntity>.Update.Inc($"Tags.{tag}", -1), // Decrease the count of the specified tag
             Builders<LinkEntity>.Update.PullFilter("Tags",
                 Builders<BsonDocument>.Filter.Eq(tag, 0)) // Remove the tag if its count becomes zero
         );
 
+        await Collection.UpdateOneAsync(filter, update, cancellationToken: token);
     }
 
     #endregion

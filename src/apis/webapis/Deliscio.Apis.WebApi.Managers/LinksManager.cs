@@ -98,7 +98,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         return _mediator.Send(query, token);
     }
 
-    public async Task<string> SubmitLinkAsync(string url, string submittedByUserId, string usersTitle = "", string usersDescription = "", string[]? tags = default, CancellationToken token = default)
+    public async Task<string> SubmitLinkAsync(string url, string submittedByUserId, string usersTitle = "", string[]? tags = default, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(url);
         Guard.Against.NullOrEmpty(submittedByUserId);
@@ -110,7 +110,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
 
         try
         {
-            var newLink = QueuedLink.Create(new Uri(url), submittedByUserId, UsersData.Create(usersDescription, usersTitle, tagsToAdd));
+            var newLink = QueuedLink.Create(new Uri(url), submittedByUserId, UsersData.Create(usersTitle, string.Empty, tagsToAdd));
 
             //await Publish(newLink, token);
             try

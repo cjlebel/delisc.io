@@ -10,7 +10,7 @@ public sealed record UsersData
 
     public static UsersData Create(string title = "", string description = "", string[]? tags = default)
     {
-        var rslt = new UsersData()
+        var rslt = new UsersData
         {
             Description = description,
             Tags = tags ?? Array.Empty<string>(),

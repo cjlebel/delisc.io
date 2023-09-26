@@ -15,7 +15,7 @@ public class TaggerProcessor : ITaggerProcessor
     private const string TAGGER_COMPLETED_MESSAGE = "{time}: Tagging Completed for: {url}";
     private const string TAGGER_ERROR_MESSAGE = "{time}: Tagging Error for: {url}\nMessage: {message}";
 
-    private readonly Dictionary<string, string[]> _tagSuggestions = new Dictionary<string, string[]>
+    private readonly Dictionary<string, string[]> _tagSuggestions = new()
     {
         { "agile", new [] { "agile", "scrum", "project management" } },
         { "apis", new [] { "api", "web services", "integration" } },
@@ -60,7 +60,7 @@ public class TaggerProcessor : ITaggerProcessor
         _mediator = mediator;
     }
 
-    public async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> ExecuteAsync(QueuedLink link, CancellationToken token = default)
+    public async ValueTask<(bool IsSuccess, string Message, QueuedLink? Link)> ExecuteAsync(QueuedLink link, CancellationToken token = default)
     {
         _logger.LogInformation(TAGGER_STARTED_MESSAGE, DateTimeOffset.Now, link.Url);
 

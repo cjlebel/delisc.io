@@ -143,7 +143,7 @@ public class LinksManagerTests
         _queueService.Setup(mock => mock.ProcessNewLinkAsync(It.IsAny<QueuedLink>(), It.IsAny<CancellationToken>())).Returns(new ValueTask<(bool IsSuccess, string Message, QueuedLink Link)>());
 
         // Act
-        var result = await _testClass.SubmitLinkAsync(url, submittedByUserId, usersTitle, usersDescription, tags, token);
+        var result = await _testClass.SubmitLinkAsync(url, submittedByUserId, usersTitle, tags, token);
 
         // Assert
         _queueService.Verify(mock => mock.ProcessNewLinkAsync(It.IsAny<QueuedLink>(), It.IsAny<CancellationToken>()));
@@ -157,7 +157,7 @@ public class LinksManagerTests
     [InlineData("   ")]
     public async Task Cannot_Call_SubmitLinkAsync_WithInvalid_UrlAsync(string value)
     {
-        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync(value, "TestValue324332177", "TestValue932041627", "TestValue1462936722", new[] { "TestValue1550313992", "TestValue2081488401", "TestValue741571745" }, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync(value, "TestValue324332177", "TestValue1462936722", new[] { "TestValue1550313992", "TestValue2081488401", "TestValue741571745" }, CancellationToken.None));
     }
 
     [Theory]
@@ -166,7 +166,7 @@ public class LinksManagerTests
     [InlineData("   ")]
     public async Task Cannot_Call_SubmitLinkAsync_WithInvalid_SubmittedByUserIdAsync(string value)
     {
-        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync("TestValue17814585", value, "TestValue1143163502", "TestValue1317416754", new[] { "TestValue1569180359", "TestValue1765644044", "TestValue1590741572" }, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync("TestValue17814585", value, "TestValue1143163502", new[] { "TestValue1569180359", "TestValue1765644044", "TestValue1590741572" }, CancellationToken.None));
     }
 
     [Theory]
@@ -175,7 +175,7 @@ public class LinksManagerTests
     [InlineData("   ")]
     public async Task Cannot_Call_SubmitLinkAsync_WithInvalid_UsersTitleAsync(string value)
     {
-        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync("TestValue9617144", "TestValue374577968", value, "TestValue43246622", new[] { "TestValue1329053182", "TestValue1059139476", "TestValue1733123712" }, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync("TestValue9617144", "TestValue374577968", value, new[] { "TestValue1329053182", "TestValue1059139476", "TestValue1733123712" }, CancellationToken.None));
     }
 
     [Theory]
@@ -184,6 +184,6 @@ public class LinksManagerTests
     [InlineData("   ")]
     public async Task Cannot_Call_SubmitLinkAsync_WithInvalid_UsersDescriptionAsync(string value)
     {
-        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync("TestValue1361125351", "TestValue50538018", "TestValue763252262", value, new[] { "TestValue568751364", "TestValue151885363", "TestValue1414406010" }, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync("TestValue1361125351", "TestValue50538018", "TestValue763252262", new[] { "TestValue568751364", "TestValue151885363", "TestValue1414406010" }, CancellationToken.None));
     }
 }
