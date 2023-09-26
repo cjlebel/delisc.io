@@ -20,7 +20,7 @@ public class Link
 
     public string[] Keywords { get; set; } = Array.Empty<string>();
 
-    public ReadOnlyCollection<LinkTag> Tags { get; set; }
+    public List<LinkTag> Tags { get; set; } = new List<LinkTag>();
 
     public string Title { get; set; }
 
@@ -31,13 +31,15 @@ public class Link
     public DateTimeOffset DateCreated { get; set; }
     public DateTimeOffset DateUpdated { get; set; }
 
+    // Needed for deserialization
+    public Link() { }
+
     public Link(string id, string url, string submittedById)
     {
         Id = id;
         Title = string.Empty;
         Url = url;
         SubmittedById = submittedById;
-        Tags = new ReadOnlyCollection<LinkTag>(new List<LinkTag>());
     }
 
     public Link(Guid id, string url, Guid submittedById)
@@ -46,7 +48,6 @@ public class Link
         Title = string.Empty;
         Url = url;
         SubmittedById = submittedById.ToString();
-        Tags = new ReadOnlyCollection<LinkTag>(new List<LinkTag>());
     }
 
     public Link(Guid id, string url, string title, string description, IEnumerable<LinkTag>? tags)
@@ -60,7 +61,7 @@ public class Link
         Title = title;
         Description = description;
         Url = url;
-        Tags = new ReadOnlyCollection<LinkTag>((tags?.ToList() ?? new List<LinkTag>()));
+        Tags = tags?.ToList() ?? new List<LinkTag>();
     }
 
     public static Link Create(string url, string submittedById)

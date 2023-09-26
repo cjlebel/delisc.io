@@ -9,7 +9,6 @@ using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Data.Entities;
 using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Modules.Links.Mappers;
-using Deliscio.Modules.Links.Requests;
 
 using Microsoft.Extensions.Logging;
 

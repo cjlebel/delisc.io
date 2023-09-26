@@ -109,6 +109,9 @@ public class Program
         builder.Services.AddSingleton<ITaggerProcessor, TaggerProcessor>();
         // This is weird, I should not need to add these here?!?!?
 
+        // General Site Queries
+        builder.Services.AddSingleton<IRequestHandler<GetLinksQuery, PagedResults<Link>>, GetLinksQueryHandler>();
+
         builder.Services.AddSingleton<IRequestHandler<AddNewLinkQueueCommand, bool>, AddNewLinkQueueCommandHandler>();
         builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkCommandHandler>();
 

@@ -78,6 +78,17 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         return _mediator.Send(query, token);
     }
 
+    public Task<PagedResults<Link>> GetLinksByTagsAsync(string[] tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    {
+        Guard.Against.NullOrEmpty(tags);
+        Guard.Against.NegativeOrZero(pageNo);
+        Guard.Against.NegativeOrZero(pageSize);
+
+        var query = new GetLinksByTagsQuery(tags, pageNo, pageSize);
+
+        return _mediator.Send(query, token);
+    }
+
     public async Task<string> SubmitLinkAsync(string url, string submittedByUserId, string usersTitle = "", string usersDescription = "", string[]? tags = default, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(url);

@@ -45,7 +45,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
             return (Enumerable.Empty<LinkEntity>(), 0, 0);
 
         var filter =
-            Builders<LinkEntity>.Filter.All(bookmark => bookmark.Tags.Select(tag => tag.Name), arrTags); // & Builders<LinkEntity>.Filter.Eq(bookmark => bookmark.IsActive, true);
+            Builders<LinkEntity>.Filter.All(link => link.Tags.Select(tag => tag.Name), arrTags); // & Builders<LinkEntity>.Filter.Eq(bookmark => bookmark.IsActive, true);
 
         return await FindAsync(filter, pageNo, pageSize, token);
     }
