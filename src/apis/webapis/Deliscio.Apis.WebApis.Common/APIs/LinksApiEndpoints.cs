@@ -106,6 +106,11 @@ public class LinksApiEndpoints : BaseApiEndpoints
         //.WithGroupName("Links");
     }
 
+    private void MapGetLinksByTagsAsPager(IEndpointRouteBuilder endpoints)
+    {
+
+    }
+
     /// <summary>
     /// Maps the endpoints that submits a new Link.
     /// </summary>
