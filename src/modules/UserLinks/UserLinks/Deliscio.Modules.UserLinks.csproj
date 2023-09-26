@@ -7,9 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Mappers\" />
-    <Folder Include="Responses\" />
-    <Folder Include="Requests\" />
+    <Compile Remove="Mappers\**" />
+    <Compile Remove="Requests\**" />
+    <Compile Remove="Responses\**" />
+    <EmbeddedResource Remove="Mappers\**" />
+    <EmbeddedResource Remove="Requests\**" />
+    <EmbeddedResource Remove="Responses\**" />
+    <None Remove="Mappers\**" />
+    <None Remove="Requests\**" />
+    <None Remove="Responses\**" />
   </ItemGroup>
 
   <ItemGroup>

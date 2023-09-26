@@ -14,11 +14,4 @@ public sealed record GetLinkByIdQuery : IRequest<Link?>
 
         Id = id;
     }
-
-    public GetLinkByIdQuery(string id)
-    {
-        Guard.Against.NullOrWhiteSpace(id);
-
-        Id = Guid.Parse(id);
-    }
 }

@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 using Moq;
 
-namespace Deliscio.Tests.Unit.Modules;
+namespace Deliscio.Tests.Unit.Modules.Links;
 
 public class LinksServiceTests
 {
@@ -181,7 +181,7 @@ public class LinksServiceTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void GetByDomain_Cannot_Call_WithInvalid_DomainAsync(string value)
+    public void GetByDomain_CannotCall_WithInvalid_Domain(string value)
     {
         // GetByDomainAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
         Assert.Multiple(() =>
@@ -194,7 +194,7 @@ public class LinksServiceTests
     }
 
     [Fact]
-    public async Task GetByTagsAsync_Can_Call()
+    public async Task GetByTagsAsync_CanCall()
     {
         // Arrange
         var tags = new[] { "TestValue275093999", "TestValue1977799120", "TestValue752175942" };
@@ -218,13 +218,46 @@ public class LinksServiceTests
     }
 
     [Fact]
-    public async Task GetByTagsAsync_Cannot_Call_WithNull_Tags()
+    public async Task GetByTagsAsync_CannotCall_WithNull_Tags()
     {
         await Assert.ThrowsAsync<ArgumentException>(() => _testClass.GetByTagsAsync(default, 283271778, 1594713334, CancellationToken.None));
     }
 
     [Fact]
-    public async Task Can_Call_SubmitLinkAsyncWithUrlAndSubmittedByUserIdAndTagsAndTokenAsync()
+    public async Task GetByUrlAsync_CanCall_With_Url()
+    {
+        // Arrange
+        var linkEntity = _fixture.Create<LinkEntity>();
+        var url = linkEntity.Url;
+
+        _linksRepository.Setup(repo => repo.GetByUrlAsync(url, It.IsAny<CancellationToken>())).ReturnsAsync(linkEntity);
+
+        // Act
+        var actual = await _testClass.GetByUrlAsync(url);
+
+        // Assert
+        Assert.NotNull(actual);
+        AssertEntityToModel(linkEntity, actual);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void GetByUrlAsync_Cannot_Call_WithInvalid_Url(string value)
+    {
+        // GetByDomainAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
+        Assert.Multiple(() =>
+        {
+            Assert.ThrowsAsync<ArgumentException>(() =>
+                _testClass.GetByUrlAsync(value));
+            Assert.ThrowsAsync<ArgumentNullException>(() =>
+                _testClass.GetByUrlAsync(value));
+        });
+    }
+
+    [Fact]
+    public async Task SubmitLinkAsync_Can_Call_WithUrl_And_SubmittedByUserId_And_Tags_And_Token()
     {
         // Arrange
         var url = "TestValue615648565";
@@ -247,7 +280,7 @@ public class LinksServiceTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public async Task Cannot_Call_SubmitLinkAsyncWithUrlAndSubmittedByUserIdAndTagsAndToken_WithInvalid_UrlAsync(string value)
+    public async Task SubmitLinkAsync_Cannot_Call_WithUrl_And_SubmittedByUserId_And_Tags_And_Token_WithInvalid_Url(string value)
     {
         //await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync(value, new Guid("ef747e5f-8c9b-4762-a1da-4316cb57c82e"), new[] { "TestValue1208235640", "TestValue1534039209", "TestValue945325384" }, CancellationToken.None));
     }
