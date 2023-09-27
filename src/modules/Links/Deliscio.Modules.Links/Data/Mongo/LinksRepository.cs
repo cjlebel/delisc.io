@@ -111,12 +111,9 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
         foreach (var relatedTag in relatedTags)
         {
             relatedTag.Weight = totalCounts > 0m ? (relatedTag.Count / (decimal)totalCounts) : 0m;
-
-            if (relatedTag.Weight == decimal.Zero)
-                continue;
         }
 
-        return relatedTags;
+        return relatedTags.OrderByDescending(t=>t.Count);
     }
 
     #endregion
