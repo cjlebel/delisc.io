@@ -19,6 +19,7 @@
 		<ProjectReference Include="..\..\..\modules\QueuedLink\MassTransit\Deliscio.Modules.QueuedLinks.MassTransit.csproj" />
 		<ProjectReference Include="..\..\..\modules\QueuedLink\MediatR\Deliscio.Modules.QueuedLinks.MediatR.csproj" />
 		<ProjectReference Include="..\..\..\modules\UserLinks\Common\Deliscio.Modules.UserLinks.Common.csproj" />
+		<ProjectReference Include="..\..\..\modules\UserLinks\MediatR\Deliscio.Modules.UserLinks.MediatR.csproj" />
 		<ProjectReference Include="..\Deliscio.Apis.WebApis.Common\Deliscio.Apis.WebApi.Common.csproj" />
 	</ItemGroup>
 

@@ -27,4 +27,8 @@
 	  <ProjectReference Include="..\Deliscio.Modules.Links.Common\Deliscio.Modules.Links.Common.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Requests\" />
+	</ItemGroup>
+
 </Project>

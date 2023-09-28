@@ -1,6 +1,10 @@
 using Deliscio.Apis.WebApi.Managers;
+using Deliscio.Modules.Links;
 using Deliscio.Modules.Links.Common.Models;
+using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Modules.UserLinks.Common.Models;
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace Deliscio.Tests.Unit.WebApi.Managers;
 
@@ -9,9 +13,10 @@ public class UserLinksManagerTests
 {
     private UserLinksManager _testClass;
 
+
     public UserLinksManagerTests()
     {
-        _testClass = new UserLinksManager();
+        //_testClass = new UserLinksManager();
     }
 
     [Fact]

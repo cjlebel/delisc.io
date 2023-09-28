@@ -37,14 +37,15 @@ public class LinksService : ServiceBase, ILinksService
 
         var entity = Mapper.Map(link);
 
-        if (entity != null)
+        if (entity == null)
         {
-            await _linksRepository.AddAsync(entity, token);
-
-            return entity.Id;
+            _logger.LogError("Unable to map link to entity");
+            return Guid.Empty;
         }
 
-        return Guid.Empty;
+        await _linksRepository.AddAsync(entity, token);
+
+        return entity.Id;
     }
 
     /// <summary>

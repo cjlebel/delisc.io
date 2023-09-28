@@ -7,13 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Mappers\**" />
     <Compile Remove="Requests\**" />
     <Compile Remove="Responses\**" />
-    <EmbeddedResource Remove="Mappers\**" />
     <EmbeddedResource Remove="Requests\**" />
     <EmbeddedResource Remove="Responses\**" />
-    <None Remove="Mappers\**" />
     <None Remove="Requests\**" />
     <None Remove="Responses\**" />
   </ItemGroup>
@@ -21,6 +18,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
     <ProjectReference Include="..\Common\Deliscio.Modules.UserLinks.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Mappers\" />
   </ItemGroup>
 
 </Project>

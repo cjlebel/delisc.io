@@ -5,6 +5,7 @@ namespace Deliscio.Core.Data;
 public class EntityBase : IEntityWithTypedId<Guid>
 {
     public Guid Id { get; }
+
     public bool IsDeleted { get; set; }
 
     public DateTimeOffset DateCreated { get; set; }
