@@ -9,11 +9,11 @@ namespace Deliscio.Modules.Links.MediatR.Queries.Handlers;
 /// <summary>
 /// Handles getting a page of links from the central repository where the tags belong to the domain specified.
 /// </summary>
-public class GetLinkByDomainQueryHandler : IRequestHandler<GetLinksByDomainQuery, PagedResults<Link>>
+public class GetLinksByDomainQueryHandler : IRequestHandler<GetLinksByDomainQuery, PagedResults<Link>>
 {
     private readonly ILinksService _linksService;
 
-    public GetLinkByDomainQueryHandler(ILinksService linksService)
+    public GetLinksByDomainQueryHandler(ILinksService linksService)
     {
         _linksService = linksService;
     }

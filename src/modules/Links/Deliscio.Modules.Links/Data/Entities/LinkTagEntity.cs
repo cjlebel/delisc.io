@@ -2,9 +2,24 @@ using Deliscio.Core.Data.Mongo;
 
 namespace Deliscio.Modules.Links.Data.Entities;
 
+// Note: LinkTagEntity and UserLinkTagEntity are identical.
+//       Not sure how to share them nicely, while also keeping the domains separate.
+//       I could create a shared library, but, then things will be spread out more so than they are now.
 public class LinkTagEntity : MongoEntityBase
 {
-    public string Name { get; set; }
+    private string _name = string.Empty;
+
+    public string Name
+    {
+        get
+        {
+            return _name;
+        }
+        set
+        {
+            _name = value.ToLowerInvariant();
+        }
+    }
 
     public int Count { get; set; }
 

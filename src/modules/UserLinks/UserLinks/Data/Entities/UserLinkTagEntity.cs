@@ -4,7 +4,19 @@ namespace Deliscio.Modules.UserLinks.Data.Entities;
 
 public class UserLinkTagEntity : MongoEntityBase
 {
-    public string Name { get; set; }
+    private string _name = string.Empty;
+
+    public string Name
+    {
+        get
+        {
+            return _name;
+        }
+        set
+        {
+            _name = value.ToLowerInvariant();
+        }
+    }
 
     public int Count { get; set; }
 

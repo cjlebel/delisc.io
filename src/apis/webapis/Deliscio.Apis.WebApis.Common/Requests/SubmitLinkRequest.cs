@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Deliscio.Modules.Links.Requests;
+namespace Deliscio.Apis.WebApi.Common.Requests;
 
 public sealed record SubmitLinkRequest
 {

@@ -1,5 +1,4 @@
 using Deliscio.Modules.Links.Common.Interfaces;
-using Deliscio.Modules.Links.MediatR.Commands;
 using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Commands.Handlers;
@@ -9,16 +8,16 @@ namespace Deliscio.Modules.Links.MediatR.Commands.Handlers;
 /// </summary>
 public class AddLinkCommandHandler : IRequestHandler<AddLinkCommand, Guid>
 {
-    private readonly ILinksService _linksService;
+    private readonly ILinksService _service;
 
-    public AddLinkCommandHandler(ILinksService linksService)
+    public AddLinkCommandHandler(ILinksService service)
     {
-        _linksService = linksService;
+        _service = service;
     }
 
     public async Task<Guid> Handle(AddLinkCommand command, CancellationToken cancellationToken)
     {
-        var linkId = await _linksService.AddAsync(command.Link, cancellationToken);
+        var linkId = await _service.AddAsync(command.Link, cancellationToken);
 
         return linkId;
     }

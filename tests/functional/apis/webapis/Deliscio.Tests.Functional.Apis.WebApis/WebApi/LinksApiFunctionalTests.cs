@@ -8,12 +8,8 @@ using Microsoft.AspNetCore.Mvc.Testing;
 namespace Deliscio.Tests.Functional.Apis.WebApis.WebApi;
 
 // https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0
-public class LinksApiFunctionalTests : IClassFixture<WebApplicationFactory<Program>>
+public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<WebApplicationFactory<Program>>
 {
-    private readonly WebApplicationFactory<Program> _factory;
-    private readonly HttpClient _client;
-
-    private const string API_VERSION = "v1";
     private const string GET_LINK_ENDPOINT = "/{0}/link/{1}";
     private const string GET_LINKS_ENDPOINT = "/{0}/links";
     private const string GET_LINKS_WITH_PAGENO_ENDPOINT = "/{0}/links/{1}";
@@ -21,13 +17,8 @@ public class LinksApiFunctionalTests : IClassFixture<WebApplicationFactory<Progr
     private const string GET_LINKS_WITH_TAGS_ENDPOINT = "/{0}/links/{1}";
     private const string GET_LINKS_RELATED_TAGS_ENDPOINT = "/{0}/links/tags/{1}";
 
-    private const int DEFAULT_PAGE_NO = 1;
-    private const int DEFAULT_PAGE_SIZE = 25;
-
-    public LinksApiFunctionalTests(WebApplicationFactory<Program> factory)
+    public LinksApiFunctionalTests(WebApplicationFactory<Program> factory) : base(factory)
     {
-        _factory = factory;
-        _client = _factory.CreateClient();
     }
 
     [Fact]
@@ -36,12 +27,29 @@ public class LinksApiFunctionalTests : IClassFixture<WebApplicationFactory<Progr
         // Arrange
         var id = new Guid("fa431c01-992b-4773-a504-05b9b672a3b2");
         var expectedJson =
-            "{\"id\":\"fa431c01-992b-4773-a504-05b9b672a3b2\",\"description\":\"Offered by Duke University. Welcome to the second course in the Building Cloud Computing Solutions at Scale Specialization! In this course, ... Enroll for free.\",\"domain\":\"coursera.org\",\"imageUrl\":\"https://s3.amazonaws.com/coursera_assets/meta_images/generated/XDP/XDP~COURSE!~cloud-virtualization-containers-api-duke/XDP~COURSE!~cloud-virtualization-containers-api-duke.jpeg\",\"keywords\":[],\"tags\":[{\"name\":\"api\",\"count\":1,\"weight\":0},{\"name\":\"web services\",\"count\":1,\"weight\":0},{\"name\":\"integration\",\"count\":1,\"weight\":0},{\"name\":\"cloud computing\",\"count\":1,\"weight\":0},{\"name\":\"scalability\",\"count\":1,\"weight\":0},{\"name\":\"aws\",\"count\":1,\"weight\":0},{\"name\":\"azure\",\"count\":1,\"weight\":0}],\"title\":\"Cloud Virtualization, Containers and APIs | Coursera\",\"url\":\"https://www.coursera.org/learn/cloud-virtualization-containers-api-duke\",\"submittedById\":\"48263056-61ad-b4a3-05e0-712025051842\",\"dateCreated\":\"2023-09-26T01:24:45.185+00:00\",\"dateUpdated\":\"2023-09-26T01:24:45.185+00:00\"}";
+            "{\"id\":\"fa431c01-992b-4773-a504-05b9b672a3b2\"," +
+            "\"description\":\"Offered by Duke University. Welcome to the second course in the Building Cloud Computing Solutions at Scale Specialization! In this course, ... Enroll for free.\"," +
+            "\"domain\":\"coursera.org\"," +
+            "\"imageUrl\":\"https://s3.amazonaws.com/coursera_assets/meta_images/generated/XDP/XDP~COURSE!~cloud-virtualization-containers-api-duke/XDP~COURSE!~cloud-virtualization-containers-api-duke.jpeg\"," +
+            "\"keywords\":[]," +
+            "\"tags\":" +
+                "[{\"name\":\"api\",\"count\":1,\"weight\":0}," +
+                "{\"name\":\"web services\",\"count\":1,\"weight\":0}," +
+                "{\"name\":\"integration\",\"count\":1,\"weight\":0}," +
+                "{\"name\":\"cloud computing\",\"count\":1,\"weight\":0}," +
+                "{\"name\":\"scalability\",\"count\":1,\"weight\":0}," +
+                "{\"name\":\"aws\",\"count\":1,\"weight\":0}," +
+                "{\"name\":\"azure\",\"count\":1,\"weight\":0}]," +
+            "\"title\":\"Cloud Virtualization, Containers and APIs | Coursera\"," +
+            "\"url\":\"https://www.coursera.org/learn/cloud-virtualization-containers-api-duke\"," +
+            "\"submittedById\":\"48263056-61ad-b4a3-05e0-712025051842\"," +
+            "\"dateCreated\":\"2023-09-26T01:24:45.185+00:00\"," +
+            "\"dateUpdated\":\"2023-09-26T01:24:45.185+00:00\"}";
+
         var expectedLink = JsonSerializer.Deserialize<Link>(expectedJson)!;
 
-
         // Act
-        var response = await _client.GetAsync(string.Format(GET_LINK_ENDPOINT, API_VERSION, id));
+        var response = await HttpClient.GetAsync(string.Format(GET_LINK_ENDPOINT, API_VERSION, id));
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -63,7 +71,7 @@ public class LinksApiFunctionalTests : IClassFixture<WebApplicationFactory<Progr
     public async Task WebApi_GetLinkById_NotFoundResult(string invalidId)
     {
         // Act
-        var response = await _client.GetAsync(string.Format(GET_LINK_ENDPOINT, API_VERSION, invalidId)); // Replace with your endpoint URL
+        var response = await HttpClient.GetAsync(string.Format(GET_LINK_ENDPOINT, API_VERSION, invalidId)); // Replace with your endpoint URL
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -76,7 +84,7 @@ public class LinksApiFunctionalTests : IClassFixture<WebApplicationFactory<Progr
         //var client = _factory.CreateClient();
 
         // Act
-        var response = await _client.GetAsync(string.Format(GET_LINK_ENDPOINT, API_VERSION, string.Empty));
+        var response = await HttpClient.GetAsync(string.Format(GET_LINK_ENDPOINT, API_VERSION, string.Empty));
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -94,7 +102,7 @@ public class LinksApiFunctionalTests : IClassFixture<WebApplicationFactory<Progr
                 string.Format(GET_LINKS_ENDPOINT, API_VERSION);
 
         // Act
-        var response = await _client.GetAsync(url);
+        var response = await HttpClient.GetAsync(url);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -122,7 +130,7 @@ public class LinksApiFunctionalTests : IClassFixture<WebApplicationFactory<Progr
         var tags = string.Join(',', values.Split(',').Select(x => x.Trim()).ToList());
 
         // Act
-        var response = await _client.GetAsync(string.Format(GET_LINKS_WITH_TAGS_ENDPOINT, API_VERSION, tags));
+        var response = await HttpClient.GetAsync(string.Format(GET_LINKS_WITH_TAGS_ENDPOINT, API_VERSION, tags));
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -160,7 +168,7 @@ public class LinksApiFunctionalTests : IClassFixture<WebApplicationFactory<Progr
         var tags = string.Join(',', values.Split(',').Select(x => x.Trim()).ToList());
 
         // Act
-        var response = await _client.GetAsync(string.Format(GET_LINKS_RELATED_TAGS_ENDPOINT, API_VERSION, tags));
+        var response = await HttpClient.GetAsync(string.Format(GET_LINKS_RELATED_TAGS_ENDPOINT, API_VERSION, tags));
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -197,7 +205,7 @@ public class LinksApiFunctionalTests : IClassFixture<WebApplicationFactory<Progr
         var tags = string.Join(',', values.Split(',').Select(x => x.Trim()).ToList());
 
         // Act
-        var response = await _client.GetAsync(string.Format(GET_LINKS_WITH_TAGS_ENDPOINT, API_VERSION, tags));
+        var response = await HttpClient.GetAsync(string.Format(GET_LINKS_WITH_TAGS_ENDPOINT, API_VERSION, tags));
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
