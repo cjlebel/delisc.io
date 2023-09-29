@@ -1,5 +1,3 @@
-using System.Collections.ObjectModel;
-
 namespace Deliscio.Modules.Links.Common.Models;
 
 public class Link

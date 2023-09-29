@@ -156,17 +156,6 @@ internal partial class Program
         }
     }
 
-    private static async Task DeleteAllBacklogItems(BacklogService service)
-    {
-        await service.RemoveAll(CancellationToken.None);
-
-        Console.ForegroundColor = ConsoleColor.Green;
-
-        Console.WriteLine($"Successfully deleted all Backlink Results");
-
-        Console.ResetColor();
-    }
-
     //private static string[] GenerateTags(string title)
     //{
     //    var tagSuggestions = new Dictionary<string, string[]>
@@ -212,30 +201,6 @@ internal partial class Program
         byte[] data = MD5.HashData(Encoding.Default.GetBytes(username));
 
         return new Guid(data).ToString();
-    }
-
-    private static string ParseDomainFromUrl(string url)
-    {
-        var commonSubdomains = new List<string> { "www", "mail", "ftp" };
-
-        if (!string.IsNullOrWhiteSpace(url))
-        {
-            if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
-            {
-                string host = uri.Host.ToLower();
-
-                //                      commonSubdomains.FirstOrDefault(subdomain => host.StartsWith(subdomain + "."));
-                var matchingSubdomain = commonSubdomains.Find(subdomain => host.StartsWith(subdomain + "."));
-                if (!string.IsNullOrWhiteSpace(matchingSubdomain))
-                {
-                    host = host.Substring(matchingSubdomain.Length + 1); // Remove the subdomain and the following dot
-                }
-
-                return host;
-            }
-        }
-
-        return string.Empty;
     }
 
     [GeneratedRegex(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)")]

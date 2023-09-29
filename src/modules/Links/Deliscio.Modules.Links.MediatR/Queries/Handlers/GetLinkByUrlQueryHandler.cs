@@ -1,6 +1,5 @@
 using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
-using Deliscio.Modules.Links.MediatR.Queries;
 using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Queries.Handlers;

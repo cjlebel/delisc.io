@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using Deliscio.Apis.WebApi.Managers;
 using Deliscio.Modules.QueuedLinks.Common.Enums;
 using Deliscio.Modules.QueuedLinks.Common.Models;
@@ -7,17 +6,16 @@ using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Xunit.Sdk;
 
 namespace Deliscio.Tests.Unit.WebApi.Managers;
 
 public class LinksManagerTests
 {
-    private LinksManager _testClass;
-    private Mock<IMediator> _mediator;
-    private Mock<IBusControl> _bus;
-    private Mock<IQueuedLinksService> _queueService;
-    private Mock<ILogger<LinksManager>> _logger;
+    private readonly LinksManager _testClass;
+    private readonly Mock<IMediator> _mediator;
+    private readonly Mock<IBusControl> _bus;
+    private readonly Mock<IQueuedLinksService> _queueService;
+    private readonly Mock<ILogger<LinksManager>> _logger;
 
     public LinksManagerTests()
     {
@@ -41,25 +39,25 @@ public class LinksManagerTests
     [Fact]
     public void Cannot_Construct_WithNull_Mediator()
     {
-        Assert.Throws<ArgumentNullException>(() => new LinksManager(default(IMediator), _bus.Object, _queueService.Object, _logger.Object));
+        Assert.Throws<ArgumentNullException>(() => new LinksManager(default, _bus.Object, _queueService.Object, _logger.Object));
     }
 
     [Fact]
     public void Cannot_Construct_WithNull_Bus()
     {
-        Assert.Throws<ArgumentNullException>(() => new LinksManager(_mediator.Object, default(IBusControl), _queueService.Object, _logger.Object));
+        Assert.Throws<ArgumentNullException>(() => new LinksManager(_mediator.Object, default, _queueService.Object, _logger.Object));
     }
 
     [Fact]
     public void Cannot_Construct_WithNull_QueueService()
     {
-        Assert.Throws<ArgumentNullException>(() => new LinksManager(_mediator.Object, _bus.Object, default(IQueuedLinksService), _logger.Object));
+        Assert.Throws<ArgumentNullException>(() => new LinksManager(_mediator.Object, _bus.Object, default, _logger.Object));
     }
 
     [Fact]
     public void Cannot_Construct_WithNull_Logger()
     {
-        Assert.Throws<ArgumentNullException>(() => new LinksManager(_mediator.Object, _bus.Object, _queueService.Object, default(ILogger<LinksManager>)));
+        Assert.Throws<ArgumentNullException>(() => new LinksManager(_mediator.Object, _bus.Object, _queueService.Object, default));
     }
 
     [Fact]

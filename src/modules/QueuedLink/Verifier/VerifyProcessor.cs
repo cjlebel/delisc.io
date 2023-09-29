@@ -60,7 +60,7 @@ public class VerifyProcessor : IVerifyProcessor
 
         link = link with { State = QueuedStates.Verifying };
 
-        var query = new GetLinkByUrlQuery(link.Url);
+        var query = new GetLinkByUrlQuery(new Uri(link.Url));
         var existingLink = await _mediator.Send(query, token);
 
         if (existingLink is not null)
