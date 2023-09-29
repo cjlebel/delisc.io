@@ -37,14 +37,15 @@ public class LinksService : ServiceBase, ILinksService
 
         var entity = Mapper.Map(link);
 
-        if (entity != null)
+        if (entity == null)
         {
-            await _linksRepository.AddAsync(entity, token);
-
-            return entity.Id;
+            _logger.LogError("Unable to map link to entity");
+            return Guid.Empty;
         }
 
-        return Guid.Empty;
+        await _linksRepository.AddAsync(entity, token);
+
+        return entity.Id;
     }
 
     /// <summary>
@@ -111,6 +112,15 @@ public class LinksService : ServiceBase, ILinksService
         var rslts = await Find(_ => true, pageNo, pageSize, token);
 
         return GetPageOfResults(rslts.Results, pageNo, pageSize, rslts.TotalCount);
+    }
+
+    public async Task<IEnumerable<Link>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken token = default)
+    {
+        var rslts = await _linksRepository.GetAsync(ids, token);
+
+        var links = Mapper.Map(rslts);
+
+        return links;
     }
 
     /// <summary>

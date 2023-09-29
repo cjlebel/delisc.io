@@ -18,17 +18,17 @@ public class MongoDbContext<TDocument> : IMongoDbContext<TDocument>
     {
         if (string.IsNullOrWhiteSpace(connectionString))
             throw new ArgumentNullException(nameof(connectionString), COULD_NOT_GET_CONNSTRING);
-        
+
         if (string.IsNullOrWhiteSpace(databaseName))
             throw new ArgumentNullException(nameof(connectionString), COULD_NOT_GET_DBNAME);
-        
+
         var client = new MongoClient(connectionString);
         _db = client.GetDatabase(databaseName);
     }
 
     public MongoDbContext(IConfiguration config)
     {
-        Guard.Against.Null(config, nameof(config), COULD_NOT_GET_CONFIG);
+        Guard.Against.Null(config, message: COULD_NOT_GET_CONFIG);
 
         var connection = config["MongoDbSettings:ConnectionString"] ?? throw new ArgumentException(COULD_NOT_GET_CONNSTRING, nameof(config));
         var dbName = config["MongoDbSettings:DatabaseName"] ?? throw new ArgumentException(COULD_NOT_GET_DBNAME, nameof(config));
@@ -47,17 +47,17 @@ public class MongoDbContext<TDocument> : IMongoDbContext<TDocument>
 
         if (string.IsNullOrWhiteSpace(options.Value.DatabaseName))
             throw new ArgumentException(COULD_NOT_GET_DBNAME, nameof(options));
-        
+
         var optionValue = options.Value;
-        
-        
+
+
         var connection = optionValue.ConnectionString;
         var dbName = optionValue.DatabaseName;
 
         var client = new MongoClient(connection);
         _db = client.GetDatabase(dbName);
     }
-    
+
     public IMongoCollection<TDocument> Collection()
     {
         var collection = _db.GetCollection<TDocument>(GetCollectionName(typeof(TDocument)));
@@ -69,9 +69,9 @@ public class MongoDbContext<TDocument> : IMongoDbContext<TDocument>
     {
         var name = (documentType.GetCustomAttributes(typeof(BsonCollectionAttribute), true)
             .FirstOrDefault() as BsonCollectionAttribute)?
-            .CollectionName ?? 
+            .CollectionName ??
             string.Empty;
-        
+
         return name;
     }
 }

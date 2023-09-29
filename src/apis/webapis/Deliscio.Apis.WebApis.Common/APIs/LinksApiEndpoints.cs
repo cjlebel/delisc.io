@@ -3,13 +3,13 @@ using System.Net;
 using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
-using Deliscio.Modules.Links.Requests;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+using SubmitLinkRequest = Deliscio.Apis.WebApi.Common.Requests.SubmitLinkRequest;
 
 namespace Deliscio.Apis.WebApi.Common.APIs;
 
@@ -28,7 +28,7 @@ public class LinksApiEndpoints : BaseApiEndpoints
 
     private const int DEFAULT_PAGE_NO = 1;
     private const int DEFAULT_PAGE_SIZE = 25;
-    private const int DEFAULT_TAG_COUNT = 50;
+    private const int DEFAULT_TAG_COUNT = 25;
 
     public LinksApiEndpoints(ILinksManager manager, ILogger<LinksApiEndpoints> logger)
     {
@@ -54,20 +54,20 @@ public class LinksApiEndpoints : BaseApiEndpoints
     private void MapGetLink(IEndpointRouteBuilder endpoints)
     {
         // Id is required, so this will never be hit if id is empty (it will go to the next endpoint that has an optional pageNo and pageSize)
-        endpoints.MapGet("v1/link/{id}",
-                async ([FromRoute] string? id, CancellationToken cancellationToken) =>
+        endpoints.MapGet("v1/link/{linkId}",
+                async ([FromRoute] string? linkId, CancellationToken cancellationToken) =>
                 {
-                    if (string.IsNullOrWhiteSpace(id))
+                    if (string.IsNullOrWhiteSpace(linkId))
                         return Results.NotFound(ID_CANNOT_BE_NULL_OR_WHITESPACE);
 
-                    var guidId = Guid.Parse(id);
+                    var guidId = Guid.Parse(linkId);
                     if (guidId == Guid.Empty)
                         return Results.NotFound(ID_CANNOT_BE_NULL_OR_WHITESPACE);
 
-                    var result = await _manager.GetLinkAsync(id, cancellationToken);
+                    var result = await _manager.GetLinkAsync(linkId, cancellationToken);
 
                     if (result is null)
-                        return Results.NotFound(string.Format(LINK_COULD_NOT_BE_FOUND, id));
+                        return Results.NotFound(string.Format(LINK_COULD_NOT_BE_FOUND, linkId));
 
                     return Results.Ok(result);
                 })
@@ -238,9 +238,9 @@ public class LinksApiEndpoints : BaseApiEndpoints
                 if (!isValid.Value)
                     return Results.BadRequest($"Submit Link Failed:{Environment.NewLine}{string.Join(Environment.NewLine, isValid.Errors.Select(e => e.ErrorMessage).ToArray())}");
 
-                var isSubmitted = await _manager.SubmitLinkAsync(request.Url, request.SubmittedById, request.Title, tags: request.Tags);
+                var result = await _manager.SubmitLinkAsync(request.Url, request.SubmittedById, request.Title, tags: request.Tags);
 
-                return Results.Ok(isSubmitted);
+                return Results.Ok(result);
             })
             .ProducesProblem((int)HttpStatusCode.OK)
             .ProducesProblem((int)HttpStatusCode.BadRequest)

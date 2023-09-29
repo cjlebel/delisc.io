@@ -153,12 +153,16 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     /// <exception cref="System.ArgumentException">ids</exception>
     public IEnumerable<TDocument> Get(IEnumerable<Guid> ids)
     {
-        if (ids == null || !ids.Any())
-        {
-            throw new ArgumentException(EXCEPTION_ID_CANT_BE_EMPTY, nameof(ids));
-        }
+        var enumerable = ids?.ToArray() ?? Array.Empty<Guid>();
 
-        return Collection.Find(_ => true).ToList();
+        if (!enumerable.Any())
+            throw new ArgumentException(EXCEPTION_ID_CANT_BE_EMPTY, nameof(ids));
+
+        var filter = Builders<TDocument>.Filter.In("_id", enumerable);
+
+        var cursor = Collection.Find(filter, null);
+
+        return cursor.ToList() ?? Enumerable.Empty<TDocument>();
     }
 
 
@@ -190,11 +194,18 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     /// <exception cref="System.ArgumentException">ids</exception>
     public async Task<IEnumerable<TDocument>> GetAsync(IEnumerable<Guid> ids, CancellationToken token = default)
     {
-        var filter = Builders<TDocument>.Filter.In("_id", ids);
+        var enumerable = ids?.ToArray() ?? Array.Empty<Guid>();
+
+        if (!enumerable.Any())
+        {
+            return await Task.FromException<IEnumerable<TDocument>>(new ArgumentException(EXCEPTION_ID_CANT_BE_EMPTY, nameof(ids)));
+        }
+
+        var filter = Builders<TDocument>.Filter.In("_id", enumerable);
 
         var cursor = await Collection.FindAsync(filter, null, token);
 
-        return await cursor.ToListAsync(token);
+        return await cursor.ToListAsync(token) ?? Enumerable.Empty<TDocument>();
     }
 
 

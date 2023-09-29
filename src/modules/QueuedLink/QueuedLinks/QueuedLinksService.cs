@@ -39,7 +39,7 @@ public class QueuedLinksService : ServiceBase, IQueuedLinksService
         _logger = logger;
     }
 
-    public async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> ProcessNewLinkAsync(QueuedLink link, CancellationToken token = default)
+    public async ValueTask<(bool IsSuccess, string Message, QueuedLink? Link)> ProcessNewLinkAsync(QueuedLink link, CancellationToken token = default)
     {
         if (link == null!)
             return (false, "Link is null", new QueuedLink());
@@ -47,18 +47,20 @@ public class QueuedLinksService : ServiceBase, IQueuedLinksService
         if (string.IsNullOrWhiteSpace(link.Url))
             return (false, "Link is missing a URL", new QueuedLink());
 
+        QueuedLink? processedLink = link;
+
         //Guard.Against.Null(link);
         //Guard.Against.NullOrWhiteSpace(link.Url);
 
-        if (link.State.Id != QueuedStates.New.Id)
+        if (processedLink.State.Id != QueuedStates.New.Id)
         {
-            _logger.LogWarning(PROCESSOR_ERROR_IMPROPER_STATE, link.State.Name);
-            link = link with { State = QueuedStates.Error };
+            _logger.LogWarning(PROCESSOR_ERROR_IMPROPER_STATE, processedLink.State.Name);
+            processedLink = processedLink with { State = QueuedStates.Error };
 
-            return (false, $"Improper State - Expected {QueuedStates.New.Name}", link);
+            return (false, $"Improper State - Expected {QueuedStates.New.Name}", processedLink);
         }
 
-        var verifyResult = await VerifyLinkAsync(link, token);
+        var verifyResult = await VerifyLinkAsync(processedLink, token);
 
         if (!verifyResult.IsSuccess)
         {
@@ -69,38 +71,57 @@ public class QueuedLinksService : ServiceBase, IQueuedLinksService
         if (verifyResult.Link.State == QueuedStates.Exists &&
             verifyResult.Link.DateLastFetched < DateTimeOffset.Now.AddDays(-5))
         {
-            return verifyResult;
+            //
+            //return verifyResult;
         }
 
-        link = verifyResult.Link;
+        processedLink = verifyResult.Link;
 
-
-        var harvestResult = await HarvestLinkAsync(link, token);
-
-        if (!harvestResult.IsSuccess)
+        if (verifyResult.Link.State == QueuedStates.VerifyingCompleted)
         {
-            return harvestResult;
+            var harvestResult = await HarvestLinkAsync(processedLink, token);
+
+            if (!harvestResult.IsSuccess)
+            {
+                return harvestResult;
+            }
+
+            processedLink = harvestResult.Link;
         }
 
-        link = harvestResult.Link;
-
-        var taggingResult = await TagLinkAsync(link, token);
-
-        if (!taggingResult.IsSuccess)
+        if (verifyResult.Link.State == QueuedStates.FetchingDataCompleted || verifyResult.Link.State == QueuedStates.Exists)
         {
-            return taggingResult;
+            var previousState = processedLink.State;
+
+            processedLink = processedLink with { State = QueuedStates.Finished };
+
+            var taggingResult = await TagLinkAsync(processedLink, token);
+
+            if (!taggingResult.IsSuccess)
+            {
+                return taggingResult;
+            }
+
+            if (previousState == QueuedStates.Exists)
+            {
+                processedLink = taggingResult.Link with { State = QueuedStates.Exists };
+            }
+            else
+            {
+                processedLink = taggingResult.Link;
+            }
+
         }
 
-        link = taggingResult.Link;
+        if (processedLink != null && processedLink.State != QueuedStates.Exists)
+        {
+            processedLink = processedLink with { State = QueuedStates.Finished };
+        }
 
-
-
-        link = link with { State = QueuedStates.Finished };
-
-        return (true, "Link processed successfully", link);
+        return (true, "Link processed successfully", processedLink);
     }
 
-    private async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> VerifyLinkAsync(QueuedLink link, CancellationToken token = default)
+    private async ValueTask<(bool IsSuccess, string Message, QueuedLink? Link)> VerifyLinkAsync(QueuedLink link, CancellationToken token = default)
     {
         (bool IsSuccess, string Message, QueuedLink? Link) result = (false, "Could not verify the link", null);
 
@@ -133,7 +154,7 @@ public class QueuedLinksService : ServiceBase, IQueuedLinksService
         return result;
     }
 
-    private async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> HarvestLinkAsync(QueuedLink link, CancellationToken token = default)
+    private async ValueTask<(bool IsSuccess, string Message, QueuedLink? Link)> HarvestLinkAsync(QueuedLink link, CancellationToken token = default)
     {
         (bool IsSuccess, string Message, QueuedLink Link) result;
 
@@ -154,7 +175,7 @@ public class QueuedLinksService : ServiceBase, IQueuedLinksService
         }
     }
 
-    private async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> TagLinkAsync(QueuedLink link, CancellationToken token = default)
+    private async ValueTask<(bool IsSuccess, string Message, QueuedLink? Link)> TagLinkAsync(QueuedLink link, CancellationToken token = default)
     {
         var result = await _tagger.ExecuteAsync(link, token);
 

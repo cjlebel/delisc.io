@@ -78,17 +78,50 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         return _mediator.Send(query, token);
     }
 
-    public Task<PagedResults<Link>> GetLinksByTagsAsync(string[] tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async ValueTask<IEnumerable<Link>> GetLinksByIdsAsync(string[] ids, CancellationToken token = default)
     {
-        Guard.Against.NullOrEmpty(tags);
+        var enumerable = ids ?? Array.Empty<string>();
+
+        if (enumerable.Length == 0)
+            return Enumerable.Empty<Link>();
+
+        var query = new GetLinksByIdsQuery(enumerable);
+
+        return await _mediator.Send(query, token);
+    }
+
+    /// <summary>
+    /// Gets a page of links where each link contains all of the links that were given.
+    /// </summary>
+    /// <param name="tags">The collection of tags to use to get the links</param>
+    /// <param name="pageNo"></param>
+    /// <param name="pageSize"></param>
+    /// <param name="token"></param>
+    /// <returns>
+    /// A page of links where each link contains all of the links that were given.
+    /// </returns>
+    public async ValueTask<PagedResults<Link>> GetLinksByTagsAsync(string[] tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    {
+        var enumerable = tags ?? Array.Empty<string>();
+        if (enumerable.Length == 0)
+            return new PagedResults<Link>();
+
         Guard.Against.NegativeOrZero(pageNo);
         Guard.Against.NegativeOrZero(pageSize);
 
         var query = new GetLinksByTagsQuery(tags, pageNo, pageSize);
 
-        return _mediator.Send(query, token);
+        return await _mediator.Send(query, token);
     }
 
+    /// <summary>
+    /// Gets a collection of tags that are related to the given tags.
+    /// This is used to drill down into the links.
+    /// </summary>
+    /// <param name="tags"></param>
+    /// <param name="count">The number of tags to return</param>
+    /// <param name="token"></param>
+    /// <returns></returns>
     public Task<LinkTag[]> GetRelatedTagsAsync(string[] tags, int? count = default, CancellationToken token = default)
     {
         Guard.Against.NullOrEmpty(tags);
@@ -110,9 +143,11 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
 
         try
         {
+            url = url.Trim('"');
             var newLink = QueuedLink.Create(new Uri(url), submittedByUserId, UsersData.Create(usersTitle, string.Empty, tagsToAdd));
 
-            //await Publish(newLink, token);
+            // var addToQueueCommand = new AddNewLinkQueueCommand(newLink);
+            // await Publish(newLink, token);
             try
             {
                 //_mediator.Send(newLink, token);
@@ -123,37 +158,72 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
                 // This will allow me to test the rest of the system.
 
                 result = await _queueService.ProcessNewLinkAsync(newLink, token);
-                var queuedLink = result.Link;
 
-                if (!result.IsSuccess)
+                if (result.Link != null)
                 {
-                    _logger.LogWarning(ERROR_COULD_NOT_APPROVE, DateTimeOffset.Now, queuedLink.Url);
+                    var queuedLink = result.Link;
+
+                    if (!result.IsSuccess)
+                    {
+                        _logger.LogWarning(ERROR_COULD_NOT_APPROVE, DateTimeOffset.Now, queuedLink.Url);
+                    }
+
+                    // Success
+                    if (queuedLink.State == QueuedStates.Finished || queuedLink.State == QueuedStates.Exists)
+                    {
+                        // If state is Exists, then get the existing id.
+                        var existingLinkId = queuedLink.State == QueuedStates.Exists ? queuedLink.LinkId : Guid.Empty;
+
+                        if (queuedLink.State == QueuedStates.Finished)
+                        {
+                            link = Link.Create(queuedLink.Url, queuedLink.SubmittedById.ToString(), queuedLink.Title, queuedLink.MetaData?.Description ?? string.Empty, queuedLink.Tags);
+                            link.Domain = queuedLink.Domain;
+                            link.Keywords = queuedLink.MetaData?.Keywords?.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+                            link.ImageUrl = queuedLink.MetaData?.OgImage ?? string.Empty;
+
+                            // Add the link and get the id
+                            var queryAdd = new AddLinkCommand(link);
+                            existingLinkId = await _mediator.Send(queryAdd, token);
+                        }
+                        // If link already existed, then get it to associate it with the user
+                        else if (queuedLink.State == QueuedStates.Exists)
+                        {
+                            var queryGet = new GetLinkByIdQuery(existingLinkId);
+                            link = await _mediator.Send(queryGet, token);
+
+                            //if (link != null)
+                            //{
+                            //    var newKeywords = queuedLink.MetaData?.Keywords?.Split(',', StringSplitOptions.RemoveEmptyEntries)?.ToArray() ?? Array.Empty<string>();
+                            //    link.Keywords = (link.Keywords.Union(newKeywords)).Distinct().ToArray();
+
+                            //    link.ImageUrl = !string.IsNullOrWhiteSpace(queuedLink.MetaData?.OgImage) ?
+                            //        queuedLink.MetaData?.OgImage :
+                            //        link.ImageUrl;
+
+                            //    if (queuedLink.Tags != null && queuedLink.Tags.Any())
+                            //    {
+                            //        foreach (var tag in queuedLink.Tags)
+                            //        {
+                            //            if (!string.IsNullOrWhiteSpace(tag))
+                            //            {
+                            //                var existingTag = link.Tags.FirstOrDefault(t => t.Name.Equals(tag, StringComparison.OrdinalIgnoreCase));
+
+                            //                if (existingTag == null)
+                            //                {
+                            //                    link.Tags.Add(LinkTag.Create(tag));
+                            //                }
+                            //            }
+
+                            //        }
+                            //    }
+
+
+                            //}
+                        }
+                    }
                 }
 
-                // Success
-                if (queuedLink.State == QueuedStates.Finished || queuedLink.State == QueuedStates.Exists)
-                {
-                    // If state is Exists, then get the existing id.
-                    var existingLinkId = queuedLink.State == QueuedStates.Exists ? queuedLink.LinkId : Guid.Empty;
 
-                    if (queuedLink.State == QueuedStates.Finished)
-                    {
-                        link = Link.Create(queuedLink.Url, queuedLink.SubmittedById.ToString(), queuedLink.Title, queuedLink.MetaData?.Description ?? string.Empty, queuedLink.Tags);
-                        link.Domain = queuedLink.Domain;
-                        link.Keywords = queuedLink.MetaData?.Keywords?.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
-                        link.ImageUrl = queuedLink.MetaData?.OgImage ?? string.Empty;
-
-                        // Add the link and get the id
-                        var queryAdd = new AddLinkCommand(link);
-                        existingLinkId = await _mediator.Send(queryAdd, token);
-                    }
-                    // If link already existed, then get it to associate it with the user
-                    else if (queuedLink.State == QueuedStates.Exists)
-                    {
-                        var queryGet = new GetLinkByIdQuery(existingLinkId);
-                        link = await _mediator.Send(queryGet, token);
-                    }
-                }
 
                 // Check for null again after all is said and done. If it exists, then associate with the current user
                 if (link != null)

@@ -25,11 +25,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="APIs\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <ProjectReference Include="..\..\..\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
+	  <ProjectReference Include="..\..\..\modules\UserLinks\Common\Deliscio.Modules.UserLinks.Common.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Data.Entities;
 
@@ -92,7 +91,7 @@ internal static class Mapper
         return entity;
     }
 
-    public static IEnumerable<LinkTagEntity> Map(IEnumerable<LinkTag>? tags)
+    internal static IEnumerable<LinkTagEntity> Map(IEnumerable<LinkTag>? tags)
     {
         if (tags == null)
             return Enumerable.Empty<LinkTagEntity>();

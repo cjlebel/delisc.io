@@ -6,13 +6,15 @@ namespace Deliscio.Modules.Links.Common.Interfaces;
 public interface ILinksService
 {
     Task<Guid> AddAsync(Link link, CancellationToken token = default);
-    Task<Guid> AddAsync(string url, string title, Guid submittedById, string[]? tags = default, CancellationToken token = default);
+    //Task<Guid> AddAsync(string url, string title, Guid submittedById, string[]? tags = default, CancellationToken token = default);
 
-    Task<Link?> GetAsync(string id, CancellationToken token = default);
+    //Task<Link?> GetAsync(string id, CancellationToken token = default);
 
     Task<Link?> GetAsync(Guid id, CancellationToken token = default);
 
     Task<PagedResults<Link>> GetAsync(int pageNo = 1, int pageSize = 25, CancellationToken token = default);
+
+    Task<IEnumerable<Link>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken token = default);
 
     Task<PagedResults<Link>> GetByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
 
