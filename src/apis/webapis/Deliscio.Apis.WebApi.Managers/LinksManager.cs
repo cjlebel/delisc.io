@@ -78,17 +78,50 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         return _mediator.Send(query, token);
     }
 
-    public Task<PagedResults<Link>> GetLinksByTagsAsync(string[] tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async ValueTask<IEnumerable<Link>> GetLinksByIdsAsync(string[] ids, CancellationToken token = default)
     {
-        Guard.Against.NullOrEmpty(tags);
+        var enumerable = ids ?? Array.Empty<string>();
+
+        if (enumerable.Length == 0)
+            return Enumerable.Empty<Link>();
+
+        var query = new GetLinksByIdsQuery(enumerable);
+
+        return await _mediator.Send(query, token);
+    }
+
+    /// <summary>
+    /// Gets a page of links where each link contains all of the links that were given.
+    /// </summary>
+    /// <param name="tags">The collection of tags to use to get the links</param>
+    /// <param name="pageNo"></param>
+    /// <param name="pageSize"></param>
+    /// <param name="token"></param>
+    /// <returns>
+    /// A page of links where each link contains all of the links that were given.
+    /// </returns>
+    public async ValueTask<PagedResults<Link>> GetLinksByTagsAsync(string[] tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    {
+        var enumerable = tags ?? Array.Empty<string>();
+        if (enumerable.Length == 0)
+            return new PagedResults<Link>();
+
         Guard.Against.NegativeOrZero(pageNo);
         Guard.Against.NegativeOrZero(pageSize);
 
         var query = new GetLinksByTagsQuery(tags, pageNo, pageSize);
 
-        return _mediator.Send(query, token);
+        return await _mediator.Send(query, token);
     }
 
+    /// <summary>
+    /// Gets a collection of tags that are related to the given tags.
+    /// This is used to drill down into the links.
+    /// </summary>
+    /// <param name="tags"></param>
+    /// <param name="count">The number of tags to return</param>
+    /// <param name="token"></param>
+    /// <returns></returns>
     public Task<LinkTag[]> GetRelatedTagsAsync(string[] tags, int? count = default, CancellationToken token = default)
     {
         Guard.Against.NullOrEmpty(tags);

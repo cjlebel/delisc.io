@@ -1,11 +1,13 @@
 using System.Runtime.InteropServices;
 using Deliscio.Apis.WebApi.Managers;
+using Deliscio.Modules.QueuedLinks.Common.Enums;
 using Deliscio.Modules.QueuedLinks.Common.Models;
 using Deliscio.Modules.QueuedLinks.Interfaces;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Xunit.Sdk;
 
 namespace Deliscio.Tests.Unit.WebApi.Managers;
 
@@ -133,22 +135,36 @@ public class LinksManagerTests
     public async Task Can_Call_SubmitLinkAsync()
     {
         // Arrange
-        var url = "TestValue2034192875";
-        var submittedByUserId = "TestValue1704909426";
-        var usersTitle = "TestValue2122871760";
+        var now = DateTime.Now.Ticks;
+        var userId = Guid.NewGuid().ToString();
+
+        var url = $"http://www.test-site.com/{now}";
+        var submittedByUserId = userId;
+        var usersTitle = $"{now}";
         var usersDescription = "TestValue477213193";
         var tags = new[] { "TestValue2070647648", "TestValue1655817658", "TestValue1311775846" };
         var token = CancellationToken.None;
 
-        _queueService.Setup(mock => mock.ProcessNewLinkAsync(It.IsAny<QueuedLink>(), It.IsAny<CancellationToken>())).Returns(new ValueTask<(bool IsSuccess, string Message, QueuedLink Link)>());
+        (bool IsSuccess, string Message, QueuedLink Link) expected = (true, $"Success Message: {now}", new QueuedLink
+        {
+            Url = url,
+            SubmittedById = Guid.Parse(submittedByUserId),
+            Title = usersTitle,
+            Description = usersDescription,
+            Tags = tags,
+            State = QueuedStates.Finished,
+        });
+
+        _queueService.Setup(mock => mock.ProcessNewLinkAsync(It.IsAny<QueuedLink>(), It.IsAny<CancellationToken>())).ReturnsAsync(expected);
 
         // Act
-        var result = await _testClass.SubmitLinkAsync(url, submittedByUserId, usersTitle, tags, token);
+        var actual = await _testClass.SubmitLinkAsync(url, submittedByUserId, usersTitle, tags, token);
 
         // Assert
         _queueService.Verify(mock => mock.ProcessNewLinkAsync(It.IsAny<QueuedLink>(), It.IsAny<CancellationToken>()));
 
-        throw new NotImplementedException("Create or modify test");
+        Assert.NotNull(actual);
+        Assert.Equal(expected.Message, actual);
     }
 
     [Theory]

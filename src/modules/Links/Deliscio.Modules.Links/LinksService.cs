@@ -114,6 +114,15 @@ public class LinksService : ServiceBase, ILinksService
         return GetPageOfResults(rslts.Results, pageNo, pageSize, rslts.TotalCount);
     }
 
+    public async Task<IEnumerable<Link>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken token = default)
+    {
+        var rslts = await _linksRepository.GetAsync(ids, token);
+
+        var links = Mapper.Map(rslts);
+
+        return links;
+    }
+
     /// <summary>
     /// Gets a collection of links from the central link repository by their domain name
     /// </summary>

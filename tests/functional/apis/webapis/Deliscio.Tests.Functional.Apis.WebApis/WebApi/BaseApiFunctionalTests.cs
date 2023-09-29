@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using Deliscio.Apis.WebApi;
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -11,7 +13,6 @@ public class BaseApiFunctionalTests
     protected const int DEFAULT_PAGE_NO = 1;
     protected const int DEFAULT_PAGE_SIZE = 25;
     protected const int DEFAULT_TAG_COUNT = 50;
-    protected const string DEFAULT_USER_ID = "48263056-61ad-b4a3-05e0-712025051842";
 
     protected readonly HttpClient HttpClient;
 
@@ -19,5 +20,13 @@ public class BaseApiFunctionalTests
     {
         _factory = factory;
         HttpClient = _factory.CreateClient();
+    }
+
+    protected static string GetUserId(string username)
+    {
+        // Convert the input string to a byte array and compute the hash.
+        byte[] data = MD5.HashData(Encoding.Default.GetBytes(username));
+
+        return new Guid(data).ToString();
     }
 }

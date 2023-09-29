@@ -1,14 +1,20 @@
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using Deliscio.Apis.WebApi;
 using Deliscio.Apis.WebApi.Common.Requests;
+using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
+using Deliscio.Modules.UserLinks.Common.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Deliscio.Tests.Functional.Apis.WebApis.WebApi;
 
 public class UserLinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<WebApplicationFactory<Program>>
 {
+    private const string DEFAULT_USER_NAME = "jason";
+
     private const string GET_USERLINK_ENDPOINT = "/{0}/user/{1}/link/{2}";
     private const string GET_USERLINKS_ENDPOINT = "/{0}/users/{1}/links/";
     private const string GET_USERLINKS_WITH_PAGENO_ENDPOINT = "/{0}/users/links/{1}";
@@ -26,7 +32,7 @@ public class UserLinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture
     public UserLinksApiFunctionalTests(WebApplicationFactory<Program> factory) : base(factory) { }
 
     [Fact]
-    public async Task WebApi_GetUserLinkById_ValidId_OkResult()
+    public async Task WebApi_GetUserLink_With_UserName_And_LinkId_OkResult()
     {
         // Arrange
 
@@ -54,7 +60,7 @@ public class UserLinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture
         var expectedLink = JsonSerializer.Deserialize<Link>(expectedJson)!;
 
         // Act
-        var response = await GetUserLinkHttpResponseMessage(DEFAULT_USER_ID, linkId.ToString());
+        var response = await GetUserLinkHttpResponseMessage(DEFAULT_USER_NAME, linkId.ToString());
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -68,13 +74,13 @@ public class UserLinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture
     }
 
     [Fact]
-    public async Task WebApi_GetUserLinkById_NotFound()
+    public async Task WebApi_GetUserLink_With_UserName_And_LinkId_NotFoundResult()
     {
         // Arrange
         var linkId = new Guid("fa431c01-992b-4773-a504-05b9b672a3b0");
 
         // Act
-        var response = await HttpClient.GetAsync(string.Format(GET_USERLINK_ENDPOINT, API_VERSION, DEFAULT_USER_ID, linkId));
+        var response = await HttpClient.GetAsync(string.Format(GET_USERLINK_ENDPOINT, API_VERSION, DEFAULT_USER_NAME, linkId));
 
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -91,7 +97,18 @@ public class UserLinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture
             Title = $"Updated - {DateTimeOffset.UtcNow}"
         };
 
-        var response = await HttpClient.PostAsync(string.Format(POST_USERLINKS_ADD_LINK_ENDPOINT, API_VERSION, DEFAULT_USER_ID), new StringContent(string.Empty));
+        var response = await HttpClient.PostAsync(string.Format(POST_USERLINKS_ADD_LINK_ENDPOINT, API_VERSION, DEFAULT_USER_NAME), new StringContent(string.Empty));
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+        var actual = JsonSerializer.Deserialize<string>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        Assert.True(!string.IsNullOrWhiteSpace(actual));
+        var newLinkId = Guid.Parse(actual);
+        Assert.True(newLinkId != Guid.Empty);
     }
 
     private async Task<HttpResponseMessage> GetUserLinkHttpResponseMessage(string userId, string linkId)

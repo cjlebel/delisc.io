@@ -1,4 +1,6 @@
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Apis.WebApi.Common.Requests;
 using Deliscio.Modules.UserLinks.Common.Models;
@@ -52,14 +54,16 @@ public class UserLinksApiEndpoints : BaseApiEndpoints
     /// <remarks>/v1/link/fa431c01-992b-4773-a504-05b9b672a3b2</remarks>
     private void MapGetUsersLink(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("v1/users/{userId}/link/{linkId}",
-            async ([FromRoute] string userId, [FromRoute] string linkId, CancellationToken cancellationToken) =>
+        endpoints.MapGet("v1/users/{userName}/link/{linkId}",
+            async ([FromRoute] string userName, [FromRoute] string linkId, CancellationToken cancellationToken) =>
             {
-                if (string.IsNullOrWhiteSpace(userId))
+                if (string.IsNullOrWhiteSpace(userName))
                     return Results.BadRequest(USER_ID_CANNOT_BE_NULL_OR_WHITESPACE);
 
                 if (string.IsNullOrWhiteSpace(linkId))
                     return Results.BadRequest(USER_LINK_ID_CANNOT_BE_NULL_OR_WHITESPACE);
+
+                var userId = GetUserId(userName);
 
                 var result = await _manager.GetUserLinkAsync(userId, linkId, cancellationToken);
 
@@ -76,9 +80,12 @@ public class UserLinksApiEndpoints : BaseApiEndpoints
 
     private void MapGetUsersLinks(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("v1/users/{userId}/links/{pageNo:int?}/{pageSize:int?}",
-                async ([FromRoute] string userId, [FromRoute] int? pageNo, [FromRoute] int? pageSize, CancellationToken cancellationToken) =>
+        endpoints.MapGet("v1/users/{userName}/links/{pageNo:int?}/{pageSize:int?}",
+                async ([FromRoute] string userName, [FromRoute] int? pageNo, [FromRoute] int? pageSize, CancellationToken cancellationToken) =>
                 {
+                    if (string.IsNullOrWhiteSpace(userName))
+                        return Results.BadRequest(USER_ID_CANNOT_BE_NULL_OR_WHITESPACE);
+
                     var newPageNo = pageNo ?? DEFAULT_PAGE_NO;
                     var newPageSize = pageSize ?? DEFAULT_PAGE_SIZE;
 
@@ -87,6 +94,8 @@ public class UserLinksApiEndpoints : BaseApiEndpoints
 
                     if (newPageSize < 1)
                         return Results.BadRequest(PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
+
+                    var userId = GetUserId(userName);
 
                     var results = await _manager.GetUserLinksAsync(userId, newPageNo, newPageSize, cancellationToken);
 
@@ -107,12 +116,12 @@ public class UserLinksApiEndpoints : BaseApiEndpoints
     /// <param name="endpoints"></param>
     private void MapPostUserAddLink(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("v1/users/{userId}/links/add",
-            async ([FromRoute] string userId, AddUserLinkRequest request, CancellationToken cancellationToken) =>
+        endpoints.MapPost("v1/users/{userName}/links/add",
+            async ([FromRoute] string userName, AddUserLinkRequest request, CancellationToken cancellationToken) =>
             {
-                var newUserId = Guid.Parse(userId);
+                var userId = GetUserId(userName);
 
-                if (newUserId == Guid.Empty)
+                if (string.IsNullOrWhiteSpace(userId))
                     return Results.BadRequest(USER_ID_CANNOT_BE_NULL_OR_WHITESPACE);
 
                 if (request.LinkId == Guid.Empty.ToString())
@@ -129,5 +138,13 @@ public class UserLinksApiEndpoints : BaseApiEndpoints
     .ProducesProblem((int)HttpStatusCode.OK)
     .ProducesProblem((int)HttpStatusCode.NotFound)
     .ProducesProblem((int)HttpStatusCode.BadRequest);
+    }
+
+    private static string GetUserId(string username)
+    {
+        // Convert the input string to a byte array and compute the hash.
+        byte[] data = MD5.HashData(Encoding.Default.GetBytes(username));
+
+        return new Guid(data).ToString();
     }
 }
