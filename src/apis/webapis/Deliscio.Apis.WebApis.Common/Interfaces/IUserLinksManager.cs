@@ -5,6 +5,16 @@ namespace Deliscio.Apis.WebApi.Common.Interfaces;
 
 public interface IUserLinksManager
 {
+    /// <summary>
+    /// Associates an existing link with a user.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="linkId"></param>
+    /// <param name="title"></param>
+    /// <param name="tags"></param>
+    /// <param name="isPrivate"></param>
+    /// <param name="token"></param>
+    /// <returns>The id of the new user link as a string</returns>
     Task<string> AddLinkAsync(string userId, string linkId, string title = "", string[]? tags = default, bool isPrivate = false, CancellationToken token = default);
 
     /// <summary>

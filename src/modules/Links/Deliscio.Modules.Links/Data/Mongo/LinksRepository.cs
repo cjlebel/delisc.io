@@ -113,7 +113,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
             relatedTag.Weight = totalCounts > 0m ? (relatedTag.Count / (decimal)totalCounts) : 0m;
         }
 
-        return relatedTags.OrderByDescending(t=>t.Count);
+        return relatedTags.OrderByDescending(t => t.Count);
     }
 
     #endregion
@@ -167,4 +167,6 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
     }
 
     #endregion
+
+
 }

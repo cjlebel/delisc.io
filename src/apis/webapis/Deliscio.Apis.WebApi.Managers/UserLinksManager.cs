@@ -8,6 +8,7 @@ using Deliscio.Modules.UserLinks.Common.Models;
 using Deliscio.Modules.UserLinks.MediatR.Commands;
 using Deliscio.Modules.UserLinks.MediatR.Queries;
 using MassTransit;
+using MassTransit.Initializers;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -72,44 +73,66 @@ public sealed class UserLinksManager : ManagerBase<UserLinksManager>, IUserLinks
         return _mediator.Send(query, token);
     }
 
-    public Task<PagedResults<UserLink>> GetUserLinksAsync(string userId, int pageNo, int pageSize,
-        CancellationToken token)
+    public async Task<PagedResults<UserLink>> GetUserLinksAsync(string userId, int pageNo, int pageSize, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(userId);
 
-        var query = new GetUserLinksQuery(userId, pageNo, pageSize);
+        var queryUserLinks = new GetUserLinksQuery(userId, pageNo, pageSize);
+        var userLinks = await _mediator.Send(queryUserLinks, token);
 
-        // TODO: Get Links from central repo and merge their details with User's Links
-        // MergeLinks
+        if (!userLinks.Results.Any())
+            return new PagedResults<UserLink>(new List<UserLink>(), 0, 0, 0);
 
-        return _mediator.Send(query, token);
+        var linkIds = userLinks.Results.Select(l => l.LinkId).ToList();
+
+        var queryLinks = new GetLinksByIdsQuery(linkIds.Select(Guid.Parse).ToArray());
+        var links = await _mediator.Send(queryLinks, token);
+
+        var updatedUserLinks = MergeLinks(userLinks.Results, links).ToList();
+
+        userLinks.Results = updatedUserLinks;
+
+        return userLinks;
     }
 
     /// <summary>
     /// Merges the User's Links with the original links, using the User's version of it's details if they exist.
     /// </summary>
     /// <param name="userLinks">A collection of links that belong to the user</param>
-    /// <param name="links">A collection of the original links</param>
-    /// <returns></returns>
-    public IEnumerable<UserLink> MergeLinks(IEnumerable<UserLink> userLinks, IEnumerable<Link> links)
+    /// <param name="baseLinks">A collection of the original links</param>
+    /// <returns>The user's links that have been updated with the original link's information, where applicable</returns>
+    private IEnumerable<UserLink> MergeLinks(IEnumerable<UserLink> userLinks, IEnumerable<Link> baseLinks)
     {
         // I drew a blank here coming up with names for these.
-        var items1 = userLinks.ToList();
-        var items2 = links.ToList();
+        var userItems = userLinks.ToList();
+        var originalItems = baseLinks.ToList();
 
-        foreach (var item1 in items1)
+        Parallel.ForEach(userItems, new ParallelOptions { MaxDegreeOfParallelism = 5 },
+            item1 =>
         {
-            var item2 = items2.Find(l => l.Id == item1.Id);
+            var item2 = originalItems.Find(l => l.Id == item1.LinkId);
 
-            if (string.IsNullOrWhiteSpace(item2?.Title))
-                continue;
+            if (item2 != null)
+            {
+                // If the user's link has information, then use its version, if not, then use the original's
+                item1.Title = !string.IsNullOrWhiteSpace(item1.Title) ? item1.Title : item2.Title;
+            }
+        });
 
-            // If the user's link has information, then use its version, if not, then use the original's
-            item1.Title = !string.IsNullOrWhiteSpace(item1.Title) ? item1.Title : item2.Title;
-            //item1.Description = (!string.IsNullOrWhiteSpace(item1.Description) ? item1.Description : item2.Description) ?? string.Empty;
-        }
+        // Original version
+        //foreach (var item1 in items1)
+        //{
+        //    var item2 = items2.Find(l => l.Id == item1.Id);
 
-        return items1;
+        //    if (string.IsNullOrWhiteSpace(item2?.Title))
+        //        continue;
+
+        //    // If the user's link has information, then use its version, if not, then use the original's
+        //    item1.Title = !string.IsNullOrWhiteSpace(item1.Title) ? item1.Title : item2.Title;
+        //    //item1.Description = (!string.IsNullOrWhiteSpace(item1.Description) ? item1.Description : item2.Description) ?? string.Empty;
+        //}
+
+        return userItems;
     }
 
 

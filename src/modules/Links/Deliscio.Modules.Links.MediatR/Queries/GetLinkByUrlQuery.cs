@@ -7,8 +7,8 @@ public sealed record GetLinkByUrlQuery : IRequest<Link?>
 {
     public string Url { get; init; }
 
-    public GetLinkByUrlQuery(string url)
+    public GetLinkByUrlQuery(Uri url)
     {
-        Url = url;
+        Url = url.OriginalString;
     }
 }

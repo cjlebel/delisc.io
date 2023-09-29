@@ -80,7 +80,7 @@ public static class Mapper
 
         var tags = Map(entity.Tags)?.ToArray() ?? Array.Empty<UserLinkTag>();
 
-        var model = new UserLink(entity.Id.ToString(), entity.UserId.ToString(), entity.Title, entity.DateCreated, entity.DateUpdated, tags);
+        var model = new UserLink(entity.Id.ToString(), entity.LinkId.ToString(), entity.UserId.ToString(), entity.Title, entity.DateCreated, entity.DateUpdated, tags);
 
         return model;
     }

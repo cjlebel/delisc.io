@@ -1,12 +1,10 @@
 using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
-
+using Deliscio.Apis.WebApi.Common.Requests;
 using Deliscio.Modules.BackLog;
 using Deliscio.Modules.BackLog.Models;
-using Deliscio.Modules.Links.Requests;
 
 namespace Deliscio.Tools.CsvImporter;
 
@@ -14,7 +12,7 @@ internal partial class Program
 {
     static async Task Main(string[] args)
     {
-        var username = "jlebel";
+        var username = "deliscio";
         var userId = GetUserId(username);
 
         var connectionString = "mongodb://mongo:g%3F7%3CVd%3E9v4%3BZKk%3DJ@localhost:27018";
@@ -32,7 +30,7 @@ internal partial class Program
         const string dataDir = "C:\\Temp\\MyFavs\\Data";
         const string outputDir = "C:\\Temp\\MyFavs\\Data\\Output";
 
-        var files = Directory.GetFiles(dataDir, "*.csv");
+        var files = Directory.GetFiles(dataDir, "all-links.csv");
 
         if (files.Length > 0)
         {
@@ -48,13 +46,24 @@ internal partial class Program
                     {
                         var parts = SplitLineRegEx().Split(line);
 
-                        if (parts.Length == 2)
+                        var title = "";
+                        var url = "";
+
+                        if (parts.Length == 1)
                         {
-                            var title = parts[0]?.Trim('"') ?? string.Empty;
-                            var url = parts[1]?.Trim('"') ?? string.Empty;
+                            url = parts[0]?.Trim('"') ?? string.Empty;
+
+                            var backlink = BacklogItem.Create(url, title, userId);
+
+                            backlinks.Add(backlink);
+                        }
+                        else if (parts.Length == 2)
+                        {
+                            title = parts[0]?.Trim('"') ?? string.Empty;
+                            url = parts[1]?.Trim('"') ?? string.Empty;
 
                             // First row of each file _MAY_ contain the header. If so, skip it.
-                            if (!string.IsNullOrWhiteSpace(title) && !string.IsNullOrWhiteSpace(url) && title.ToLower() != "title" && url.ToLower() != "url" && !backlinks.Exists(x => x.Url == url))
+                            if (title.ToLower() != "title" && url.ToLower() != "url" && !string.IsNullOrWhiteSpace(url) && !backlinks.Exists(x => x.Url == url))
                             {
                                 //if (IsAcceptableHost(url))
                                 //{
@@ -69,11 +78,8 @@ internal partial class Program
                                     Console.WriteLine($"There was an error while attempting to import {url}\n{e}");
                                 }
                             }
-
                         }
-
                     }
-
                 }
 
 
@@ -150,17 +156,6 @@ internal partial class Program
         }
     }
 
-    private static async Task DeleteAllBacklogItems(BacklogService service)
-    {
-        await service.RemoveAll(CancellationToken.None);
-
-        Console.ForegroundColor = ConsoleColor.Green;
-
-        Console.WriteLine($"Successfully deleted all Backlink Results");
-
-        Console.ResetColor();
-    }
-
     //private static string[] GenerateTags(string title)
     //{
     //    var tagSuggestions = new Dictionary<string, string[]>
@@ -206,30 +201,6 @@ internal partial class Program
         byte[] data = MD5.HashData(Encoding.Default.GetBytes(username));
 
         return new Guid(data).ToString();
-    }
-
-    private static string ParseDomainFromUrl(string url)
-    {
-        var commonSubdomains = new List<string> { "www", "mail", "ftp" };
-
-        if (!string.IsNullOrWhiteSpace(url))
-        {
-            if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
-            {
-                string host = uri.Host.ToLower();
-
-                //                      commonSubdomains.FirstOrDefault(subdomain => host.StartsWith(subdomain + "."));
-                var matchingSubdomain = commonSubdomains.Find(subdomain => host.StartsWith(subdomain + "."));
-                if (!string.IsNullOrWhiteSpace(matchingSubdomain))
-                {
-                    host = host.Substring(matchingSubdomain.Length + 1); // Remove the subdomain and the following dot
-                }
-
-                return host;
-            }
-        }
-
-        return string.Empty;
     }
 
     [GeneratedRegex(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)")]

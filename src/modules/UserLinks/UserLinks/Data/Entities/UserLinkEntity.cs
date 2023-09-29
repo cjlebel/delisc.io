@@ -82,6 +82,7 @@ public class UserLinkEntity : MongoEntityBase
         return new UserLinkEntity
         {
             UserId = userId,
+            LinkId = linkId,
 
             IsPrivate = isPrivate,
             Tags = tags ?? Array.Empty<UserLinkTagEntity>(),
