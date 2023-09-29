@@ -4,14 +4,13 @@ using MediatR;
 namespace Deliscio.Modules.Links.MediatR.Commands.Handlers;
 
 /// <summary>
-/// Represents a MediatR command handler that adds a new link to the central repository.
-/// This differs from SubmitLink, as this saves the Link to the central repo, whereas Submit adds it to be verified prior to adding.
+/// Represents a MediatR command handler that updates an existing Link, based on the information from a Queued Link
 /// </summary>
-public class AddLinkCommandHandler : IRequestHandler<AddLinkCommand, Guid>
+public class UpdateLinkCommandHandler : IRequestHandler<AddLinkCommand, Guid>
 {
     private readonly ILinksService _service;
 
-    public AddLinkCommandHandler(ILinksService service)
+    public UpdateLinkCommandHandler(ILinksService service)
     {
         _service = service;
     }
