@@ -110,10 +110,12 @@ public class Program
         builder.Services.AddSingleton<IRequestHandler<GetLinkByUrlQuery, Link?>, GetLinkByUrlQueryHandler>();
 
         builder.Services.AddSingleton<IRequestHandler<GetLinksByIdsQuery, IEnumerable<Link>>, GetLinksByIdsQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetLinksQuery, PagedResults<Link>>, GetLinksQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinksByDomainQuery, PagedResults<Link>>, GetLinksByDomainQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinksByTagsQuery, PagedResults<Link>>, GetsLinksByTagsQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinksRelatedTagsQuery, LinkTag[]>, GetLinksRelatedTagsQueryHandler>();
 
+        builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkCommandHandler>();
         builder.Services.AddSingleton<IRequestHandler<SubmitLinkCommand, Guid>, SubmitLinkCommandHandler>();
 
         // User Links
@@ -125,19 +127,18 @@ public class Program
         builder.Services.AddSingleton<IRequestHandler<GetUserLinksQuery, PagedResults<UserLink>>, GetUserLinksQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<AddLinkToUserCommand, Guid>, AddLinkToUserCommandHandler>();
 
+        // Queue
+        builder.Services.AddSingleton<IQueuedLinksService, QueuedLinksService>();
+
+        // Adds a new link to the queue - currently masstransit/rabbitmq aren't co-operating
+        builder.Services.AddSingleton<IRequestHandler<AddNewLinkQueueCommand, bool>, AddNewLinkQueueCommandHandler>();
+
 
         // This is weird, I should not need to add these here?!?!?
-        builder.Services.AddSingleton<IQueuedLinksService, QueuedLinksService>();
         builder.Services.AddSingleton<IVerifyProcessor, VerifyProcessor>();
         builder.Services.AddSingleton<IHarvesterProcessor, HarvesterProcessor>();
         builder.Services.AddSingleton<ITaggerProcessor, TaggerProcessor>();
         // This is weird, I should not need to add these here?!?!?
-
-        // General Site Queries
-        builder.Services.AddSingleton<IRequestHandler<GetLinksQuery, PagedResults<Link>>, GetLinksQueryHandler>();
-
-        builder.Services.AddSingleton<IRequestHandler<AddNewLinkQueueCommand, bool>, AddNewLinkQueueCommandHandler>();
-        builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkCommandHandler>();
 
 
         builder.Services.AddSingleton<LinksApiEndpoints>();

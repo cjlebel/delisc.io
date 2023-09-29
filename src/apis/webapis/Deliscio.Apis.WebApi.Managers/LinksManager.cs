@@ -143,9 +143,11 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
 
         try
         {
+            url = url.Trim('"');
             var newLink = QueuedLink.Create(new Uri(url), submittedByUserId, UsersData.Create(usersTitle, string.Empty, tagsToAdd));
 
-            //await Publish(newLink, token);
+            // var addToQueueCommand = new AddNewLinkQueueCommand(newLink);
+            // await Publish(newLink, token);
             try
             {
                 //_mediator.Send(newLink, token);
@@ -156,37 +158,72 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
                 // This will allow me to test the rest of the system.
 
                 result = await _queueService.ProcessNewLinkAsync(newLink, token);
-                var queuedLink = result.Link;
 
-                if (!result.IsSuccess)
+                if (result.Link != null)
                 {
-                    _logger.LogWarning(ERROR_COULD_NOT_APPROVE, DateTimeOffset.Now, queuedLink.Url);
+                    var queuedLink = result.Link;
+
+                    if (!result.IsSuccess)
+                    {
+                        _logger.LogWarning(ERROR_COULD_NOT_APPROVE, DateTimeOffset.Now, queuedLink.Url);
+                    }
+
+                    // Success
+                    if (queuedLink.State == QueuedStates.Finished || queuedLink.State == QueuedStates.Exists)
+                    {
+                        // If state is Exists, then get the existing id.
+                        var existingLinkId = queuedLink.State == QueuedStates.Exists ? queuedLink.LinkId : Guid.Empty;
+
+                        if (queuedLink.State == QueuedStates.Finished)
+                        {
+                            link = Link.Create(queuedLink.Url, queuedLink.SubmittedById.ToString(), queuedLink.Title, queuedLink.MetaData?.Description ?? string.Empty, queuedLink.Tags);
+                            link.Domain = queuedLink.Domain;
+                            link.Keywords = queuedLink.MetaData?.Keywords?.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+                            link.ImageUrl = queuedLink.MetaData?.OgImage ?? string.Empty;
+
+                            // Add the link and get the id
+                            var queryAdd = new AddLinkCommand(link);
+                            existingLinkId = await _mediator.Send(queryAdd, token);
+                        }
+                        // If link already existed, then get it to associate it with the user
+                        else if (queuedLink.State == QueuedStates.Exists)
+                        {
+                            var queryGet = new GetLinkByIdQuery(existingLinkId);
+                            link = await _mediator.Send(queryGet, token);
+
+                            //if (link != null)
+                            //{
+                            //    var newKeywords = queuedLink.MetaData?.Keywords?.Split(',', StringSplitOptions.RemoveEmptyEntries)?.ToArray() ?? Array.Empty<string>();
+                            //    link.Keywords = (link.Keywords.Union(newKeywords)).Distinct().ToArray();
+
+                            //    link.ImageUrl = !string.IsNullOrWhiteSpace(queuedLink.MetaData?.OgImage) ?
+                            //        queuedLink.MetaData?.OgImage :
+                            //        link.ImageUrl;
+
+                            //    if (queuedLink.Tags != null && queuedLink.Tags.Any())
+                            //    {
+                            //        foreach (var tag in queuedLink.Tags)
+                            //        {
+                            //            if (!string.IsNullOrWhiteSpace(tag))
+                            //            {
+                            //                var existingTag = link.Tags.FirstOrDefault(t => t.Name.Equals(tag, StringComparison.OrdinalIgnoreCase));
+
+                            //                if (existingTag == null)
+                            //                {
+                            //                    link.Tags.Add(LinkTag.Create(tag));
+                            //                }
+                            //            }
+
+                            //        }
+                            //    }
+
+
+                            //}
+                        }
+                    }
                 }
 
-                // Success
-                if (queuedLink.State == QueuedStates.Finished || queuedLink.State == QueuedStates.Exists)
-                {
-                    // If state is Exists, then get the existing id.
-                    var existingLinkId = queuedLink.State == QueuedStates.Exists ? queuedLink.LinkId : Guid.Empty;
 
-                    if (queuedLink.State == QueuedStates.Finished)
-                    {
-                        link = Link.Create(queuedLink.Url, queuedLink.SubmittedById.ToString(), queuedLink.Title, queuedLink.MetaData?.Description ?? string.Empty, queuedLink.Tags);
-                        link.Domain = queuedLink.Domain;
-                        link.Keywords = queuedLink.MetaData?.Keywords?.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
-                        link.ImageUrl = queuedLink.MetaData?.OgImage ?? string.Empty;
-
-                        // Add the link and get the id
-                        var queryAdd = new AddLinkCommand(link);
-                        existingLinkId = await _mediator.Send(queryAdd, token);
-                    }
-                    // If link already existed, then get it to associate it with the user
-                    else if (queuedLink.State == QueuedStates.Exists)
-                    {
-                        var queryGet = new GetLinkByIdQuery(existingLinkId);
-                        link = await _mediator.Send(queryGet, token);
-                    }
-                }
 
                 // Check for null again after all is said and done. If it exists, then associate with the current user
                 if (link != null)
