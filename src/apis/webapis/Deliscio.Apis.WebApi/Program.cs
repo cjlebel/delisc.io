@@ -33,7 +33,6 @@ using Deliscio.Modules.UserLinks.MediatR.Queries.Handlers;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Structurizr.Annotations;
@@ -57,6 +56,7 @@ public class Program
         builder.Services.Configure<LinksQueueSettingsOptions>(config.GetSection(LinksQueueSettingsOptions.SectionName));
 
         // AddAsync services to the container.
+        builder.Services.AddCors();
         builder.Services.AddAuthorization();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -152,13 +152,21 @@ public class Program
         var userLinksApiEndpoints = app.Services.GetRequiredService<UserLinksApiEndpoints>();
         userLinksApiEndpoints.MapEndpoints(app);
 
-        app.UseHttpsRedirection();
+        // Disabling for now to get Next working
+        //app.UseHttpsRedirection();
+
 
         app.UseAuthorization();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
+            // DO not use AllowAnyOrigin in production
+            app.UseCors(options =>
+            {
+                options.AllowAnyOrigin();
+            });
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

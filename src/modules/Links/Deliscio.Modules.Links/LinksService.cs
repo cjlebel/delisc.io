@@ -185,13 +185,16 @@ public class LinksService : ServiceBase, ILinksService
     /// Gets a collection of tags that are related to the provided tags
     /// </summary>
     /// <param name="tags">The tags to use as the bait to lure out the related tags</param>
+    /// <param name="count">The number of related tags to return</param>
     /// <param name="token"></param>
     /// <returns></returns>
     public async Task<LinkTag[]> GetRelatedTagsAsync(string[] tags, int? count = default, CancellationToken token = default)
     {
-        Guard.Against.NullOrEmpty(tags);
+        var newCount = count ?? 10;
 
-        var result = await _linksRepository.GetRelatedTagsAsync(tags, count, token);
+        Guard.Against.NegativeOrZero(newCount);
+
+        var result = await _linksRepository.GetRelatedTagsAsync(tags, newCount, token);
 
         return Mapper.Map(result).ToArray();
     }
