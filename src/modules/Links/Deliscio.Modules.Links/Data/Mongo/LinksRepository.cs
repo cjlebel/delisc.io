@@ -67,7 +67,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
 
         // If tags.Length is 0, get all tags. Else, get only those that are related to the specified tags
         BsonDocument match = tags.Length == 0 ? new BsonDocument("$match", new BsonDocument()) :
-            new BsonDocument("$match", new BsonDocument("Tags.Name", new BsonDocument("$in", new BsonArray(tags))));
+            new BsonDocument("$match", new BsonDocument("Tags.Name", new BsonDocument("$all", new BsonArray(tags))));
 
         var pipeline = new BsonDocument[]
         {

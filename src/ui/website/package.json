@@ -12,6 +12,8 @@
       "coupling-graph": "npx madge --extensions js,jsx,ts,tsx,css,md,mdx ./ --exclude '.next|tailwind.config.js|reset.d.ts|prettier.config.js|postcss.config.js|playwright.config.ts|next.config.js|next-env.d.ts|instrumentation.ts|e2e/|README.md|.storybook/|.eslintrc.js' --image graph.svg"
    },
    "dependencies": {
+      "dotenv": "^16.3.1",
+      "dotenv-extended": "^2.9.0",
       "next": "latest",
       "react": "latest",
       "react-dom": "latest",

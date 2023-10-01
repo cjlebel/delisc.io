@@ -4,6 +4,7 @@
    "tabWidth": 3,
    "useTabs": false,
    "insertPragma": false,
+   "printWidth": 100,
    "jsxBracketSameLine": true,
    "jsxSingleQuote": true,
    "tsxBracketSameLine": true,

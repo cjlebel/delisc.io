@@ -1,3 +1,3 @@
-import PopularTagsCard from './PopularTagsCard';
+import TagsCard from './TagsCard';
 
-export default PopularTagsCard;
+export default TagsCard;

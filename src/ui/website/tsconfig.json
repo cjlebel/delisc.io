@@ -26,7 +26,7 @@
          "@/src/apis/*": ["apis/*"],
          "@/src/types/*": ["types/*"],
          "@/src/styles/*": ["styles/*"],
-         "@/utils/*": ["core/utils/*"]
+         "@/src/utils/*": ["utils/*"]
       }
    },
    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
