@@ -7,7 +7,7 @@ import { API_URL } from '@/utils/Configs';
 
 import { ResultsPage } from '@/types/ResultsPage';
 import { LinkResult } from '@/types/links';
-import { Tag } from '@/types/tags';
+import { TagResult } from '@/types/tags';
 import { LinkCards } from '@/components/elements/links';
 import TagsCard from '@/components/elements/tags';
 
@@ -36,7 +36,7 @@ export default async function LinksTagsPage({ params }: { params: LinksTagsPageP
    const tagsArr = tagsStr ? decodeURIComponent(tagsStr).split(',') : [];
 
    const linksData: ResultsPage<LinkResult> = await getTaggedLinks(params.tags, 1, 50);
-   const tagsData: Tag[] = await getRelatedTags(params.tags, 50);
+   const tagsData: TagResult[] = await getRelatedTags(params.tags, 50);
 
    const tags = tagsArr.map((tag: string) => {
       return <span key={tag}>{tag} </span>;

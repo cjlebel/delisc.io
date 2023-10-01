@@ -6,7 +6,7 @@ import { API_URL } from '@/utils/Configs';
 
 import { ResultsPage } from '@/types/ResultsPage';
 import { LinkResult } from '@/types/links';
-import { Tag } from '@/types/tags';
+import { TagResult } from '@/types/tags';
 
 import LinkCards from '@/components/elements/links/LinkCards';
 import PopularTagsCard from '@/components/elements/tags';
@@ -29,7 +29,7 @@ const getTopTags = async (size: number) => {
 
 export default async function Home() {
    var linksData: ResultsPage<LinkResult> = await getLinks(1, 50);
-   var tagsData: Tag[] = await getTopTags(50);
+   var tagsData: TagResult[] = await getTopTags(50);
 
    return (
       <>
