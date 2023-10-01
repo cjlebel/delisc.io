@@ -10,9 +10,11 @@ type LinkCardsProps = {
 export default function LinkCards({ items }: LinkCardsProps) {
    return (
       <>
-         {items.map((link: any) => {
-            return <LinkCard key={link.id} {...link} />;
-         })}
+         <div className='links-list d-flex flex-wrap' style={{ gap: '10px' }}>
+            {items.map((link: any) => {
+               return <LinkCard key={link.id} {...link} />;
+            })}
+         </div>
       </>
    );
 }

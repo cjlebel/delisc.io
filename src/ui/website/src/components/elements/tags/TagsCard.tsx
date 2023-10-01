@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-import { Tag } from '@/types/tags';
+import { TagResult } from '@/types/tags';
 
 /**
  * @param {string} title - The title of the card
@@ -12,7 +12,7 @@ import { Tag } from '@/types/tags';
 type PopularTagsCardProps = {
    preexisting?: string;
    title: string;
-   tags: Tag[];
+   tags: TagResult[];
 };
 
 function TagsCard({ title, tags, preexisting }: PopularTagsCardProps) {
