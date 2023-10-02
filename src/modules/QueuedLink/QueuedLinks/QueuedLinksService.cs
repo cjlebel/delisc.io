@@ -68,8 +68,7 @@ public class QueuedLinksService : ServiceBase, IQueuedLinksService
         }
 
         // If it exists, but was fetched recently, then don't fetch it again
-        if (verifyResult.Link.State == QueuedStates.Exists &&
-            verifyResult.Link.DateLastFetched < DateTimeOffset.Now.AddDays(-5))
+        if (verifyResult.Link.State == QueuedStates.Exists) // && verifyResult.Link.DateLastFetched < DateTimeOffset.Now.AddDays(-5))
         {
             //
             //return verifyResult;
@@ -77,7 +76,7 @@ public class QueuedLinksService : ServiceBase, IQueuedLinksService
 
         processedLink = verifyResult.Link;
 
-        if (verifyResult.Link.State == QueuedStates.VerifyingCompleted)
+        if (processedLink.State == QueuedStates.VerifyingCompleted)
         {
             var harvestResult = await HarvestLinkAsync(processedLink, token);
 
@@ -89,7 +88,7 @@ public class QueuedLinksService : ServiceBase, IQueuedLinksService
             processedLink = harvestResult.Link;
         }
 
-        if (verifyResult.Link.State == QueuedStates.FetchingDataCompleted || verifyResult.Link.State == QueuedStates.Exists)
+        if (processedLink.State == QueuedStates.FetchingDataCompleted || processedLink.State == QueuedStates.Exists)
         {
             var previousState = processedLink.State;
 

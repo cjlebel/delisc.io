@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
@@ -36,10 +37,17 @@ internal partial class Program
 
     private static async Task AddBacklogItems(BacklogService service, string userId)
     {
+        using var client = new HttpClient();
+        client.BaseAddress = new Uri("http://localhost:31178");
+
         const string dataDir = "C:\\Temp\\MyFavs\\Data";
         const string outputDir = "C:\\Temp\\MyFavs\\Data\\Output";
 
-        var files = Directory.GetFiles(dataDir, "all-links.csv");
+        //var files1 = Directory.GetFiles(dataDir, "all-links.csv");
+        var files2 = Directory.GetFiles(dataDir, "phone-tablet-links.txt");
+
+        // var files = files1.Concat(files2).ToArray();
+        var files = files2;
 
         if (files.Length > 0)
         {
@@ -47,17 +55,30 @@ internal partial class Program
 
             foreach (var file in files)
             {
+                var isFile2 = file.Contains("phone-tablet-links.txt");
+
                 var lines = await File.ReadAllLinesAsync(file);
+
+                if (isFile2)
+                {
+                    var x = true;
+                }
 
                 foreach (var line in lines)
                 {
-                    if (!string.IsNullOrWhiteSpace(line) && !line.Equals("title,url", StringComparison.InvariantCultureIgnoreCase))
+                    if (!string.IsNullOrWhiteSpace(line) &&
+                        !line.Equals("title,url", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        var parts = SplitLineRegEx().Split(line);
+                        string[] parts = !isFile2 ? SplitLineRegEx().Split(line) : line.Split(". ");
 
-                        if (parts[0].ToLower() != "title" && parts[0].ToLower() != "url")// || parts[0].ToLower() != "url" || (parts.Length > 1 || parts[1].ToLower() != "title" || parts[1].ToLower() != "url"))
+                        //var parts = SplitLineRegEx().Split(line);
+
+                        if (parts[0].ToLower() != "title" && parts[0].ToLower() != "url")
+                        // || parts[0].ToLower() != "url" || (parts.Length > 1 || parts[1].ToLower() != "title" || parts[1].ToLower() != "url"))
                         {
-                            if (Uri.TryCreate(parts[0].Trim('"').Trim(), UriKind.Absolute, out Uri? tmpUri))
+                            Uri? tmpUri = null;
+
+                            if (!isFile2 && Uri.TryCreate(parts[0].Trim('"').Trim(), UriKind.Absolute, out tmpUri))
                                 continue;
 
                             if (parts.Length == 2 && !Uri.TryCreate(parts[1].Trim('"').Trim(), UriKind.RelativeOrAbsolute, out tmpUri))
@@ -111,72 +132,90 @@ internal partial class Program
                 {
 #if DEBUG
                     // Save backlinks to a file
-                    var json = JsonSerializer.Serialize(backlinks.Select(l => new { l.Url, l.Title }).ToList());
+                    var json = JsonSerializer.Serialize(
+                        backlinks.OrderBy(l => l.Url.Trim('#')).Select(l => $"{l.Url}").ToList(),
+                        new JsonSerializerOptions() { AllowTrailingCommas = false });
 
                     if (!Directory.Exists(outputDir))
                         Directory.CreateDirectory(outputDir);
 
-                    await File.WriteAllTextAsync($"{outputDir}\\backlinks_all_filtered_{DateTime.Now.Ticks}.json", json);
+                    await File.WriteAllTextAsync($"{outputDir}\\backlinks_all_filtered_{DateTime.Now.Ticks}.json",
+                        json);
 #endif
 
-                    try
-                    {
-                        var counter = 0;
-                        using var client = new HttpClient();
-                        client.BaseAddress = new Uri("http://localhost:31178");
+                    var sw = new Stopwatch();
+                    sw.Start();
 
-                        foreach (var backlink in backlinks)
-                        {
-                            var request = new SubmitLinkRequest(backlink.Url, backlink.CreatedById);
-
-                            try
+                    await Parallel.ForEachAsync(backlinks, new ParallelOptions { MaxDegreeOfParallelism = 3 },
+                            async (backlink, token) =>
                             {
-                                var response = await client.PostAsJsonAsync("v1/links", request);
-                                response.EnsureSuccessStatusCode();
+                                await CallApi(client, backlink);
+                            });
 
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine($"Successfully submitted {backlink.Url}");
-                                counter++;
-                            }
-                            catch (HttpRequestException e)
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine($"Could not post {backlink.Url}{Environment.NewLine}Message:{e.Message}");
-                                Console.ResetColor();
-                            }
-                            catch (Exception e)
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine($"Could not post {backlink.Url}{Environment.NewLine}Message:{e.Message}");
-                                Console.ResetColor();
-                            }
-
-                            Thread.Sleep(500);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-
-                        Console.WriteLine($"An Exception occurred while trying to save the Back Links to the Db");
-
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-
-                        Console.WriteLine($"Message:{Environment.NewLine}{e.Message}");
-                        Console.WriteLine($"Inner:{Environment.NewLine}{e.InnerException}");
-                        Console.ResetColor();
-
-                        throw;
-                    }
-
+                    sw.Stop();
                     Console.ForegroundColor = ConsoleColor.Green;
 
-                    Console.WriteLine($"Successfully imported {backlinks.Count} Backlink Results");
+                    Console.WriteLine($"Successfully imported {backlinks.Count} Backlink Results in {sw.Elapsed.Seconds} seconds");
 
                     Console.ResetColor();
                 }
             }
         }
+    }
+
+    private static async Task<bool> CallApi(HttpClient client, BacklogItem backlink)
+    {
+        try
+        {
+            var counter = 0;
+
+
+            //foreach (var backlink in backlinks)
+            //{
+            var request = new SubmitLinkRequest(backlink.Url, backlink.CreatedById);
+
+            try
+            {
+                var response = await client.PostAsJsonAsync("v1/links", request);
+                response.EnsureSuccessStatusCode();
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"Successfully submitted {backlink.Url}");
+                Console.ResetColor();
+                counter++;
+            }
+            catch (HttpRequestException e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Could not post {backlink.Url}{Environment.NewLine}Message:{e.Message}");
+                Console.ResetColor();
+            }
+            catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Could not post {backlink.Url}{Environment.NewLine}Message:{e.Message}");
+                Console.ResetColor();
+            }
+
+            //Thread.Sleep(500);
+            //}
+        }
+        catch (Exception e)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+
+            Console.WriteLine($"An Exception occurred while trying to save the Back Links to the Db");
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
+            Console.WriteLine($"Message:{Environment.NewLine}{e.Message}");
+            Console.WriteLine($"Inner:{Environment.NewLine}{e.InnerException}");
+            Console.ResetColor();
+
+            //throw;
+        }
+
+        return true;
     }
 
     /// <summary>

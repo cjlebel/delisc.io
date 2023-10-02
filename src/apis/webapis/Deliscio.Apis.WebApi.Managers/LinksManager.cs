@@ -124,8 +124,6 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
     /// <returns></returns>
     public Task<LinkTag[]> GetRelatedTagsAsync(string[] tags, int? count = default, CancellationToken token = default)
     {
-        Guard.Against.NullOrEmpty(tags);
-
         var query = new GetLinksRelatedTagsQuery(tags, count);
 
         return _mediator.Send(query, token);

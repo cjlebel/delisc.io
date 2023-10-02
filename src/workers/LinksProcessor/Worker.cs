@@ -1,5 +1,4 @@
 using Deliscio.Modules.QueuedLinks.MassTransit.Commands;
-using Deliscio.Modules.QueuedLinks.MassTransit.Models;
 using MassTransit;
 using Microsoft.Extensions.Options;
 

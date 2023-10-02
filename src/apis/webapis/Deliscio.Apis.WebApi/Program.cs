@@ -15,9 +15,9 @@ using Deliscio.Modules.Links.MediatR.Commands.Handlers;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Modules.Links.MediatR.Queries.Handlers;
 using Deliscio.Modules.QueuedLinks;
+using Deliscio.Modules.QueuedLinks.Common.Models;
 using Deliscio.Modules.QueuedLinks.Harvester;
 using Deliscio.Modules.QueuedLinks.Interfaces;
-using Deliscio.Modules.QueuedLinks.MassTransit.Models;
 using Deliscio.Modules.QueuedLinks.MediatR.Commands;
 using Deliscio.Modules.QueuedLinks.MediatR.Commands.Handlers;
 using Deliscio.Modules.QueuedLinks.Tagger;
@@ -33,7 +33,6 @@ using Deliscio.Modules.UserLinks.MediatR.Queries.Handlers;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Structurizr.Annotations;
@@ -54,9 +53,10 @@ public class Program
 
         var config = ConfigSettingsManager.GetConfigs();
         builder.Services.Configure<MongoDbOptions>(config.GetSection(MongoDbOptions.SectionName));
-        builder.Services.Configure<LinksQueueSettingsOptions>(config.GetSection(LinksQueueSettingsOptions.SectionName));
+        builder.Services.Configure<QueuedLinksSettingsOptions>(config.GetSection(QueuedLinksSettingsOptions.SectionName));
 
         // AddAsync services to the container.
+        builder.Services.AddCors();
         builder.Services.AddAuthorization();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -88,7 +88,7 @@ public class Program
         {
             x.UsingRabbitMq((context, cfg) =>
             {
-                var options = context.GetRequiredService<IOptions<LinksQueueSettingsOptions>>().Value;
+                var options = context.GetRequiredService<IOptions<QueuedLinksSettingsOptions>>().Value;
 
                 cfg.Host(new Uri(options.Host), hostConfig =>
                 {
@@ -152,13 +152,21 @@ public class Program
         var userLinksApiEndpoints = app.Services.GetRequiredService<UserLinksApiEndpoints>();
         userLinksApiEndpoints.MapEndpoints(app);
 
-        app.UseHttpsRedirection();
+        // Disabling for now to get Next working
+        //app.UseHttpsRedirection();
+
 
         app.UseAuthorization();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
+            // DO not use AllowAnyOrigin in production
+            app.UseCors(options =>
+            {
+                options.AllowAnyOrigin();
+            });
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

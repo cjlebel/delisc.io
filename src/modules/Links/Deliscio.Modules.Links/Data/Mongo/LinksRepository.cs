@@ -60,23 +60,18 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
     /// <param name="count">The max number of tags to return</param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public async Task<IEnumerable<LinkTagEntity>> GetRelatedTagsAsync(string[] tags, int? count = default, CancellationToken token = default)
+    public async Task<IEnumerable<LinkTagEntity>> GetRelatedTagsAsync(string[] tags, int count, CancellationToken token = default)
     {
-        if (!tags.Any())
+        if (count < 1)
             return Enumerable.Empty<LinkTagEntity>();
 
-        var newCount = count ?? 50;
+        // If tags.Length is 0, get all tags. Else, get only those that are related to the specified tags
+        BsonDocument match = tags.Length == 0 ? new BsonDocument("$match", new BsonDocument()) :
+            new BsonDocument("$match", new BsonDocument("Tags.Name", new BsonDocument("$all", new BsonArray(tags))));
 
-        if (newCount < 1)
-            return Enumerable.Empty<LinkTagEntity>();
-
-        // Create aggregation pipeline to filter bookmarks and extract distinct tags
         var pipeline = new BsonDocument[]
         {
-            // Match bookmarks that have at least one of the specified tags
-            new BsonDocument("$match",
-                new BsonDocument("Tags.Name", new BsonDocument("$in", new BsonArray(tags)))
-            ),
+            match,
             // Unwind the tags array to create a separate document for each tag
             new BsonDocument("$unwind", "$Tags"),
             // Group the tags and count the occurrences of each tag
@@ -101,7 +96,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
         // Execute the aggregation pipeline
         var cursor = await Collection.AggregateAsync<BsonDocument>(pipeline, cancellationToken: token);
 
-        var relatedTags = cursor?.ToList(token).OrderByDescending(t => t.Count()).Take(newCount).Select(x => new LinkTagEntity(x["TagName"].AsString, x["Count"].AsInt32)).ToArray() ?? Array.Empty<LinkTagEntity>();
+        var relatedTags = cursor?.ToList(token).OrderByDescending(t => t.Count()).Take(count).Select(x => new LinkTagEntity(x["TagName"].AsString, x["Count"].AsInt32)).ToArray() ?? Array.Empty<LinkTagEntity>();
 
         if (!relatedTags.Any())
             return Enumerable.Empty<LinkTagEntity>();

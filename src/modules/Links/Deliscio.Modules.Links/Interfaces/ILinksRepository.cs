@@ -34,7 +34,7 @@ public interface ILinksRepository : IRepository<LinkEntity>
     /// <returns></returns>
     Task<IEnumerable<LinkTagEntity>> GetTagsAsync(Guid linkId, CancellationToken token);
 
-    Task<IEnumerable<LinkTagEntity>> GetRelatedTagsAsync(string[] tags, int? count = default, CancellationToken token = default);
+    Task<IEnumerable<LinkTagEntity>> GetRelatedTagsAsync(string[] tags, int count, CancellationToken token = default);
 
     /// <summary>
     /// Removes an occurrence of the tag from the Tag collection that belongs to Link with the id.<br />

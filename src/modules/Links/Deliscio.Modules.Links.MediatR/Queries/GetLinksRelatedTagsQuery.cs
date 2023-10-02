@@ -1,4 +1,3 @@
-using Ardalis.GuardClauses;
 using Deliscio.Modules.Links.Common.Models;
 using MediatR;
 
@@ -11,8 +10,6 @@ public record GetLinksRelatedTagsQuery : IRequest<LinkTag[]>
 
     public GetLinksRelatedTagsQuery(string[] tags, int? count = default)
     {
-        Guard.Against.NullOrEmpty(tags);
-
         Count = count;
         Tags = tags;
     }

@@ -40,9 +40,9 @@ public class LinksApiEndpoints : BaseApiEndpoints
     {
         MapGetLink(endpoints);
         MapGetLinksAsPager(endpoints);
-        //MapGetLinksAsPagerWithPageNoPageSize(endpoints);
         MapGetLinksByTagsAsPager(endpoints);
-        MapGetRelatedTagsAsPager(endpoints);
+        MapGetRelatedTags(endpoints);
+        MapGetTopTags(endpoints);
         MapSubmitLink(endpoints);
     }
 
@@ -83,31 +83,6 @@ public class LinksApiEndpoints : BaseApiEndpoints
             .WithMetadata("Meta data for /links/{id}");
     }
 
-    //private void MapGetLinksAsPager(IEndpointRouteBuilder endpoints)
-    //{
-    //    // Id is required, so this will never be hit if id is empty (it will go to the next endpoint that has an optional pageNo and pageSize)
-    //    endpoints.MapGet("v1/links",
-    //            async (CancellationToken cancellationToken) =>
-    //            {
-    //                var results = await _manager.GetLinksAsync(DEFAULT_PAGE_NO, DEFAULT_PAGE_SIZE, token: cancellationToken);
-
-    //                if (!results.Results.Any())
-    //                    return Results.NotFound(string.Format(LINKS_COULD_NOT_BE_FOUND, DEFAULT_PAGE_NO));
-
-    //                return Results.Ok(results);
-    //            })
-    //        .Produces<Link>()
-    //        .ProducesProblem((int)HttpStatusCode.OK)
-    //        .ProducesProblem((int)HttpStatusCode.NotFound)
-    //        .ProducesProblem((int)HttpStatusCode.BadRequest)
-    //        .WithDisplayName("GetLinksAsPage")
-    //        .WithSummary("Gets a collection of links")
-    //        .WithDescription("This endpoint is the default for returning a page of links")
-    //        .WithName("GetLink")
-    //        //https://stackoverflow.com/questions/70800034/add-swagger-description-to-minimal-net-6-apis
-    //        .WithMetadata("Meta data for /links/{id}");
-    //}
-
     /// <summary>
     /// Maps the endpoints that gets a collection of Links as a page of results.
     /// </summary>
@@ -145,7 +120,6 @@ public class LinksApiEndpoints : BaseApiEndpoints
             .WithDisplayName("GetLinks")
             .WithSummary("Get paginated collection of links")
             .WithDescription("This endpoint retrieves paginated links based on pageNo and pageSize. If either pageNo or pageSize is less than 1, a BadRequest is returned");
-        //.WithGroupName("Links");
     }
 
     /// <summary>
@@ -168,7 +142,7 @@ public class LinksApiEndpoints : BaseApiEndpoints
                     if (newPageSize < 1)
                         return Results.BadRequest(PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
 
-                    var tagsList = tags.Split(",").ToArray();
+                    var tagsList = WebUtility.UrlDecode(tags).Split(",").ToArray();
 
                     var results = await _manager.GetLinksByTagsAsync(tagsList, newPageNo, newPageSize, cancellationToken);
 
@@ -181,7 +155,7 @@ public class LinksApiEndpoints : BaseApiEndpoints
             .ProducesProblem((int)HttpStatusCode.OK)
             .ProducesProblem((int)HttpStatusCode.NotFound)
             .ProducesProblem((int)HttpStatusCode.BadRequest)
-            .WithDisplayName("GetLinks")
+            .WithDisplayName("GetLinksByTags")
             .WithSummary("Get paginated collection of links")
             .WithDescription("This endpoint retrieves paginated links based on pageNo and pageSize. If either pageNo or pageSize is less than 1, a BadRequest is returned");
     }
@@ -190,7 +164,7 @@ public class LinksApiEndpoints : BaseApiEndpoints
     /// Maps the endpoints that gets a collection of Tags that are related to the provided tags, using the Links to get the results.
     /// </summary>
     /// <param name="endpoints"></param>
-    private void MapGetRelatedTagsAsPager(IEndpointRouteBuilder endpoints)
+    private void MapGetRelatedTags(IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("v1/links/tags/{tags}/{count:int?}",
                 async ([FromRoute] string tags, [FromRoute] int? count, CancellationToken cancellationToken) =>
@@ -217,6 +191,32 @@ public class LinksApiEndpoints : BaseApiEndpoints
             .WithSummary("Get a collection of tags that are related to the tags provided")
             .WithDescription("");
     }
+
+    private void MapGetTopTags(IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapGet("v1/links/tags/top/{count:int?}",
+                async ([FromRoute] int? count, CancellationToken cancellationToken) =>
+                {
+                    var newCount = count ?? DEFAULT_TAG_COUNT;
+
+                    if (newCount < 1)
+                        return Results.BadRequest(TAGS_COUNT_CANNOT_BE_LESS_THAN_ONE);
+
+                    var tagsList = Array.Empty<string>();
+
+                    var results = await _manager.GetRelatedTagsAsync(tagsList, newCount, cancellationToken);
+
+                    return Results.Ok(results);
+                })
+            .Produces<LinkTag[]>()
+            .ProducesProblem((int)HttpStatusCode.OK)
+            .ProducesProblem((int)HttpStatusCode.NotFound)
+            .ProducesProblem((int)HttpStatusCode.BadRequest)
+            .WithDisplayName("GetTopTags")
+            .WithSummary("Get a collection of the top tags")
+            .WithDescription("");
+    }
+
 
     /// <summary>
     /// Maps the endpoints that submits a new Link.
