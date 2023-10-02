@@ -10,6 +10,7 @@ import { TagResult } from '@/types/tags';
 
 import LinkCards from '@/components/elements/links/LinkCards';
 import TagsCard from '@/components/elements/tags';
+import { Pager } from '@/components/elements/pager';
 
 const getLinks = async (pageNo: number, size: number) => {
    var data = await fetch(`${API_URL}/links/${pageNo}/${size}`);
@@ -20,7 +21,7 @@ const getLinks = async (pageNo: number, size: number) => {
 };
 
 const getTopTags = async (size: number) => {
-   var data = await fetch(`${API_URL}/links/tags/top/${size}`, { next: { revalidate: 10 } });
+   var data = await fetch(`${API_URL}/links/tags/top/${size}`, { next: { revalidate: 1 } });
 
    if (data.ok) {
       return await data.json();
@@ -28,8 +29,8 @@ const getTopTags = async (size: number) => {
 };
 
 export default async function Home() {
-   var linksData: ResultsPage<LinkResult> = await getLinks(1, 500);
-   var tagsData: TagResult[] = await getTopTags(100);
+   const linksData: ResultsPage<LinkResult> = await getLinks(1, 50);
+   const tagsData: TagResult[] = await getTopTags(50);
 
    return (
       <>
@@ -37,10 +38,11 @@ export default async function Home() {
             <Suspense fallback={<>Loading...</>}>
                <LinkCards items={linksData.results} />
             </Suspense>
-            <div>
-               Page {linksData.pageNumber} of {linksData.totalPages} ({linksData.totalResults}{' '}
-               Results) | tagsData.length: {tagsData.length}
-            </div>
+            <Pager
+               currentPage={linksData.pageNumber}
+               totalPages={linksData.totalPages}
+               totalResults={linksData.totalResults}
+            />
          </section>
          <aside className={`sidebar ${styles.sidebar}`}>
             <Suspense fallback={<>Loading...</>}>

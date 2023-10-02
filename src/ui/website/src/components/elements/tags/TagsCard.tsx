@@ -32,7 +32,7 @@ const options = [
 ];
 
 function TagsCard({ title, tags, preexisting }: TagsCardProps) {
-   if (!tags) return <>No Tags???</>;
+   if (!tags) return <></>;
 
    // If there's an existing list of tags
    const newTags = preexisting
@@ -47,13 +47,15 @@ function TagsCard({ title, tags, preexisting }: TagsCardProps) {
 
       // preexisting tags is a comma-separated list of tags. Need to replace , with /
       const sanitizedTag = preexisting
-         ? `${preexisting.replace(',', '/').replace(/ /g, '+')}/${tag.name.replace(/ /g, '+')}`
-         : `${tag.name.replace(/ /g, '+')}`;
+         ? // This mess is due to me having a tag with a / in it (which I will need to prevent)
+           `${preexisting.replace(',', '/').replace(/ /g, '+')}/${tag.name
+              .replace('/', '%2F')
+              .replace(/ /g, '+')}`
+         : `${tag.name.replace('/', '%2F').replace(/ /g, '+')}`;
 
       const href = `/links/tags/${sanitizedTag}`;
 
       return (
-         //  <li key={tag.name} className='d-inline'>
          <li
             key={tag.name}
             style={{ display: 'inline-block', marginRight: '10px', marginBottom: '10px' }}>

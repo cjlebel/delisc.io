@@ -1,5 +1,4 @@
 import React, { Suspense } from 'react';
-
 import styles from './page.module.scss';
 
 import { API_URL } from '@/utils/Configs';
@@ -9,9 +8,11 @@ import { LinkResult } from '@/types/links';
 import { TagResult } from '@/types/tags';
 import { LinkCards } from '@/components/elements/links';
 import TagsCard from '@/components/elements/tags';
+import { Pager } from '@/components/elements/pager';
 
 type LinksTagsPageProps = {
    tags: string;
+   pageNo?: number | 1;
 };
 
 const getTaggedLinks = async (tags: string, pageNo: number, size: number) => {
@@ -30,32 +31,42 @@ const getRelatedTags = async (tags: string, size: number) => {
    }
 };
 
-export default async function LinksTagsPage({ params }: { params: LinksTagsPageProps }) {
+export default async function LinksTagsPage({
+   params,
+   searchParams,
+}: {
+   params: LinksTagsPageProps;
+   searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+   //    const searchParams = useSearchParams();
+   const pageNo = searchParams?.page ? parseInt(searchParams.page as string) : 1;
+
    const tagsStr = params.tags ? decodeURIComponent(params.tags).replace('+', ' ') : '';
 
-   const linksData: ResultsPage<LinkResult> = await getTaggedLinks(tagsStr, 1, 50);
+   const linksData: ResultsPage<LinkResult> = await getTaggedLinks(params.tags, pageNo, 50);
    const tagsData: TagResult[] = await getRelatedTags(params.tags, 50);
 
    if (!linksData) {
-      return `Error: 😢`;
+      return <div>Links not found</div>;
    }
+
    return (
       <>
-         <Suspense fallback={<>Loading...</>}>
-            <section className={styles.content}>
+         <section className={styles.content}>
+            <Suspense fallback={<>Loading...</>}>
                <LinkCards items={linksData.results} />
-
-               <div>
-                  Page {linksData.pageNumber} of {linksData.totalPages} ({linksData.totalResults}{' '}
-                  Results)
-               </div>
-            </section>
-         </Suspense>
-         <Suspense fallback={<>Loading...</>}>
-            <aside className={styles.sidebar}>
+            </Suspense>
+            <Pager
+               currentPage={linksData.pageNumber}
+               totalPages={linksData.totalPages}
+               totalResults={linksData.totalResults}
+            />
+         </section>
+         <aside className={`sidebar ${styles.sidebar}`}>
+            <Suspense fallback={<>Loading...</>}>
                <TagsCard preexisting={tagsStr} title='Related Tags' tags={tagsData} />
-            </aside>
-         </Suspense>
+            </Suspense>
+         </aside>
       </>
    );
 }

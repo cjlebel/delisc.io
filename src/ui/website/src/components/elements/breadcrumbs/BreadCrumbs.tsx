@@ -24,7 +24,7 @@ export default function BreadCrumbs({}: BreadCrumbsProps) {
    const breadcrumbs = parts.map((part, index) => {
       path += index == 1 ? `${part}` : `/${part}`;
 
-      const part2 = part.replace('+', ' ');
+      const part2 = decodeURIComponent(part).replace('+', ' ');
       foreColor = index == parts.length - 1 ? 'deliscio' : 'text-primary';
       if (index < parts.length - 1) {
          return (

@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-
+using System.Net;
 using Ardalis.GuardClauses;
 
 using Deliscio.Core.Abstracts;
@@ -158,6 +158,8 @@ public class LinksService : ServiceBase, ILinksService
 
         Guard.Against.NullOrEmpty(array, message: $"{nameof(tags)} cannot be null or empty");
 
+        array = array.Select(t => WebUtility.UrlDecode(t).ToLowerInvariant()).ToArray();
+
         var rslts = await _linksRepository.GetByTagsAsync(array, pageNo, pageSize, token);
 
         var links = Mapper.Map(rslts.Results);
@@ -193,6 +195,8 @@ public class LinksService : ServiceBase, ILinksService
         var newCount = count ?? 10;
 
         Guard.Against.NegativeOrZero(newCount);
+
+        tags = tags.Select(t => WebUtility.UrlDecode(t).ToLowerInvariant()).ToArray();
 
         var result = await _linksRepository.GetRelatedTagsAsync(tags, newCount, token);
 
