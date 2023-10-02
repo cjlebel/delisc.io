@@ -7,8 +7,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Requests\**" />
 	  <Compile Remove="Responses\**" />
+	  <EmbeddedResource Remove="Requests\**" />
 	  <EmbeddedResource Remove="Responses\**" />
+	  <None Remove="Requests\**" />
 	  <None Remove="Responses\**" />
 	</ItemGroup>
 
@@ -25,10 +28,6 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
 	  <ProjectReference Include="..\Deliscio.Modules.Links.Common\Deliscio.Modules.Links.Common.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Requests\" />
 	</ItemGroup>
 
 </Project>
