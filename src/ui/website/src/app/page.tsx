@@ -1,4 +1,4 @@
-import { Suspense, cache } from 'react';
+import { Suspense } from 'react';
 
 import styles from './page.module.scss';
 
@@ -9,7 +9,7 @@ import { LinkResult } from '@/types/links';
 import { TagResult } from '@/types/tags';
 
 import LinkCards from '@/components/elements/links/LinkCards';
-import PopularTagsCard from '@/components/elements/tags';
+import TagsCard from '@/components/elements/tags';
 
 const getLinks = async (pageNo: number, size: number) => {
    var data = await fetch(`${API_URL}/links/${pageNo}/${size}`);
@@ -28,8 +28,8 @@ const getTopTags = async (size: number) => {
 };
 
 export default async function Home() {
-   var linksData: ResultsPage<LinkResult> = await getLinks(1, 50);
-   var tagsData: TagResult[] = await getTopTags(50);
+   var linksData: ResultsPage<LinkResult> = await getLinks(1, 500);
+   var tagsData: TagResult[] = await getTopTags(100);
 
    return (
       <>
@@ -39,12 +39,12 @@ export default async function Home() {
             </Suspense>
             <div>
                Page {linksData.pageNumber} of {linksData.totalPages} ({linksData.totalResults}{' '}
-               Results)
+               Results) | tagsData.length: {tagsData.length}
             </div>
          </section>
-         <aside className={styles.sidebar}>
+         <aside className={`sidebar ${styles.sidebar}`}>
             <Suspense fallback={<>Loading...</>}>
-               <PopularTagsCard title='Popular Tags' tags={tagsData} />
+               <TagsCard title='Popular Tags' tags={tagsData} />
             </Suspense>
          </aside>
       </>

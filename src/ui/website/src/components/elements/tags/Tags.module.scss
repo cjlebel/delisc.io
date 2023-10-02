@@ -1,0 +1,19 @@
+.card {
+   background-color: transparent;
+   //    background-color: #2d333b;
+   border: 1px solid #444c56;
+}
+
+.card-header {
+   background-color: #2d333b;
+   border: 0px;
+   color: #adbac7;
+   text-transform: uppercase;
+   text-align: center;
+}
+
+.tag-pills {
+   span:not(:first-of-type) {
+      margin-left: 0.5rem;
+   }
+}

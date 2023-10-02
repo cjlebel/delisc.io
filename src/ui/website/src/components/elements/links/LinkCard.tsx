@@ -1,41 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import styles from './LinkCard.module.scss';
 import { LinkItemResult } from '@/types/links';
-import { TagResult } from '@/types/tags';
+import TagPills from '../tags/TagPills';
 
 export default function LinkCard(item: LinkItemResult) {
+   //const [src, setSrc] = useState('https://i.imgur.com/gf3TZMr.jpeg');
+
    const imgUrl = item.imageUrl
       ? item.imageUrl
-      : 'https://dummyimage.com/300x200/ff0000?text=Placeholder';
+      : item.url.indexOf('duckduckgo') >= 0
+      ? '/duckduckgo-logo.jpg'
+      : item.url.indexOf('google') >= 0
+      ? '/google-logo.jpg'
+      : item.url.indexOf('reddit') >= 0
+      ? '/reddit-logo.jpg'
+      : 'https://dummyimage.com/300x200/1C2128?text=:(';
 
    const title = item.title.length > 50 ? item.title.slice(0, 47) + '...' : item.title;
    const description =
       item.description.length > 100 ? item.description.slice(0, 97) + '...' : item.description;
 
-   const tagItems = item.tags
-      ? item.tags.map((tag: TagResult) => {
-           return (
-              <span key={tag.name} className={styles.tag}>
-                 {/* <Link href={`/links/tags/${tag.name.replace(/ /g, '+')}`}>{tag.name}</Link> */}
-                 {tag.name}
-              </span>
-           );
-        })
-      : [];
+   var tagPills = item.tags ? <TagPills tags={item.tags} /> : null;
 
-   const tagFooter =
-      tagItems?.length > 0 ? (
-         <div
-            className={`card-footer ${styles.tags}`}
-            style={{ width: '100%', minHeight: '42.5px' }}>
-            {tagItems}
-         </div>
-      ) : (
-         <div></div>
-      );
+   const tagFooter = tagPills ? (
+      <div
+         className={`card-footer ${styles['footer-tags']}`}
+         style={{ width: '100%', minHeight: '42.5px' }}>
+         {tagPills}
+      </div>
+   ) : (
+      <div></div>
+   );
 
    return (
       <div className={`${styles['link-item']} card`}>
@@ -48,6 +46,7 @@ export default function LinkCard(item: LinkItemResult) {
                height={0}
                sizes='100vw'
                style={{ width: '100%', height: 'auto' }}
+               //    onError={() => setSrc('https://dummyimage.com/300x200/ff0000?text=Placeholder')}
             />
             <div className={`card-body ${styles['body']}`}>
                <h5 className={`card-title ${styles.title}`}>{title}</h5>

@@ -35,11 +35,29 @@ internal static class Mapper
         if (entity == null)
             return null;
 
+        if (entity.ImageUrl.Contains("FIXME") || entity.ImageUrl.Contains("//images/nomad-hydra.png"))
+        {
+            var x = true;
+        }
+
+        Uri.TryCreate(entity.ImageUrl, UriKind.Absolute, out var imgUri);
+        var imgUrl = imgUri?.OriginalString ?? string.Empty;
+
+        if (!string.IsNullOrWhiteSpace(imgUrl))
+        {
+            if (imgUrl.Contains("//images/nomad-hydra.png"))
+            {
+                imgUrl = imgUrl.Replace("//images/", "/images/");
+            }
+            var x = true;
+
+        }
+
         var model = new Link(entity.Id, entity.Url, entity.SubmittedById)
         {
             Description = entity.Description,
             Domain = entity.Domain,
-            ImageUrl = entity.ImageUrl,
+            ImageUrl = imgUrl, //entity.ImageUrl,
             //IsExcluded = entity.IsExcluded,
             //IsFlagged = entity.IsFlagged,
             Tags = Map(entity.Tags).ToList(),

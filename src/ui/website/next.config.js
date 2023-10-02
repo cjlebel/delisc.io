@@ -15,7 +15,7 @@ module.exports = withBundleAnalyzer({
    //    localeDetection: false,
    // },
    images: {
-      domains: ['dummyimage.com'],
+      domains: ['dummyimage.com', 'rozenmd-cards.netlify.app'],
       // This isn't advised. Need a "media" server to pass the images through.
       remotePatterns: [
          {

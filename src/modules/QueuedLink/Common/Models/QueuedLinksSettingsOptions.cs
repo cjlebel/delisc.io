@@ -1,11 +1,11 @@
 using Deliscio.Core.SettingsOptions;
 
-namespace Deliscio.Modules.QueuedLinks.MassTransit.Models;
+namespace Deliscio.Modules.QueuedLinks.Common.Models;
 
 /// <summary>
 /// RabbitMQ settings that are specific to the Links Queue.
 /// </summary>
-public sealed class LinksQueueSettingsOptions : RabbitMqSettingsOptions
+public sealed class QueuedLinksSettingsOptions : RabbitMqSettingsOptions
 {
     public static string SectionName = "LinksQueueSettings";
 
@@ -25,9 +25,14 @@ public sealed class LinksQueueSettingsOptions : RabbitMqSettingsOptions
 
     public override string Password { get; set; } = string.Empty;
 
-    public string[] BannedSites { get; set; } = Array.Empty<string>();
+    /// <summary>
+    /// An array of domains to exclude when submitting the links.
+    /// The domains can be partial, such as "mail." or "google" (no wildcard * is needed).
+    /// "192.160." works as well.
+    /// </summary>
+    public string[] BannedHosts { get; set; } = Array.Empty<string>();
 
-    public LinksQueueSettingsOptions()
+    public QueuedLinksSettingsOptions()
     {
         QueueName = "submitted-links";
         MaxConcurrentCalls = 1;

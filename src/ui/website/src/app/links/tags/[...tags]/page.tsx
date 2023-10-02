@@ -1,5 +1,4 @@
 import React, { Suspense } from 'react';
-import Link from 'next/link';
 
 import styles from './page.module.scss';
 
@@ -33,37 +32,30 @@ const getRelatedTags = async (tags: string, size: number) => {
 
 export default async function LinksTagsPage({ params }: { params: LinksTagsPageProps }) {
    const tagsStr = params.tags ? decodeURIComponent(params.tags).replace('+', ' ') : '';
-   const tagsArr = tagsStr ? decodeURIComponent(tagsStr).split(',') : [];
 
-   const linksData: ResultsPage<LinkResult> = await getTaggedLinks(params.tags, 1, 50);
+   const linksData: ResultsPage<LinkResult> = await getTaggedLinks(tagsStr, 1, 50);
    const tagsData: TagResult[] = await getRelatedTags(params.tags, 50);
 
-   const tags = tagsArr.map((tag: string) => {
-      return <span key={tag}>{tag} </span>;
-   });
-
+   if (!linksData) {
+      return `Error: 😢`;
+   }
    return (
       <>
-         <div>
-            <Link href='/' title='Home'>
-               Home
-            </Link>{' '}
-            / {tags}
-         </div>
-         <section className={styles.content}>
-            <Suspense fallback={<>Loading...</>}>
+         <Suspense fallback={<>Loading...</>}>
+            <section className={styles.content}>
                <LinkCards items={linksData.results} />
-            </Suspense>
-            <div>
-               Page {linksData.pageNumber} of {linksData.totalPages} ({linksData.totalResults}{' '}
-               Results)
-            </div>
-         </section>
-         <aside className={styles.sidebar}>
-            <Suspense fallback={<>Loading...</>}>
+
+               <div>
+                  Page {linksData.pageNumber} of {linksData.totalPages} ({linksData.totalResults}{' '}
+                  Results)
+               </div>
+            </section>
+         </Suspense>
+         <Suspense fallback={<>Loading...</>}>
+            <aside className={styles.sidebar}>
                <TagsCard preexisting={tagsStr} title='Related Tags' tags={tagsData} />
-            </Suspense>
-         </aside>
+            </aside>
+         </Suspense>
       </>
    );
 }

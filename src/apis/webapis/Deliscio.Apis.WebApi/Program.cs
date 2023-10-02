@@ -15,9 +15,9 @@ using Deliscio.Modules.Links.MediatR.Commands.Handlers;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Modules.Links.MediatR.Queries.Handlers;
 using Deliscio.Modules.QueuedLinks;
+using Deliscio.Modules.QueuedLinks.Common.Models;
 using Deliscio.Modules.QueuedLinks.Harvester;
 using Deliscio.Modules.QueuedLinks.Interfaces;
-using Deliscio.Modules.QueuedLinks.MassTransit.Models;
 using Deliscio.Modules.QueuedLinks.MediatR.Commands;
 using Deliscio.Modules.QueuedLinks.MediatR.Commands.Handlers;
 using Deliscio.Modules.QueuedLinks.Tagger;
@@ -53,7 +53,7 @@ public class Program
 
         var config = ConfigSettingsManager.GetConfigs();
         builder.Services.Configure<MongoDbOptions>(config.GetSection(MongoDbOptions.SectionName));
-        builder.Services.Configure<LinksQueueSettingsOptions>(config.GetSection(LinksQueueSettingsOptions.SectionName));
+        builder.Services.Configure<QueuedLinksSettingsOptions>(config.GetSection(QueuedLinksSettingsOptions.SectionName));
 
         // AddAsync services to the container.
         builder.Services.AddCors();
@@ -88,7 +88,7 @@ public class Program
         {
             x.UsingRabbitMq((context, cfg) =>
             {
-                var options = context.GetRequiredService<IOptions<LinksQueueSettingsOptions>>().Value;
+                var options = context.GetRequiredService<IOptions<QueuedLinksSettingsOptions>>().Value;
 
                 cfg.Host(new Uri(options.Host), hostConfig =>
                 {
