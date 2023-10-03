@@ -1,8 +1,9 @@
 'use client';
-import { usePathname } from 'next/navigation';
-
 import Link from 'next/link';
 import React from 'react';
+import { usePathname } from 'next/navigation';
+
+import styles from './Pager.module.scss';
 
 type PagerProps = {
    currentPage: number;
@@ -15,9 +16,34 @@ export default function Pager(props: PagerProps) {
 
    let parts = pathName.split('/');
 
+   const firstPage =
+      props.currentPage > 1 ? (
+         <li className='first' style={{}}>
+            <Link
+               className='page-link'
+               href={`/`}
+               tabIndex={-1}
+               aria-disabled='false'
+               style={{ borderRadius: '1rem' }}>
+               First
+            </Link>
+         </li>
+      ) : (
+         <li className='first disabled' style={{}}>
+            <Link
+               className='page-link'
+               href={`/`}
+               tabIndex={-1}
+               style={{ borderRadius: '1rem' }}
+               aria-disabled='true'>
+               First
+            </Link>
+         </li>
+      );
+
    const prevPage =
       props.currentPage > 1 ? (
-         <li className='previous'>
+         <li className='previous' style={{}}>
             <Link
                className='page-link'
                href={`${pathName}?page=${props.currentPage - 1}`}
@@ -28,7 +54,7 @@ export default function Pager(props: PagerProps) {
             </Link>
          </li>
       ) : (
-         <li className='previous disabled'>
+         <li className='previous disabled' style={{}}>
             <Link
                className='page-link'
                href={`/`}
@@ -42,7 +68,7 @@ export default function Pager(props: PagerProps) {
 
    const nextPage =
       props.currentPage < props.totalPages ? (
-         <li className='next'>
+         <li className='next' style={{}}>
             <Link
                className='page-link'
                href={`${pathName}?page=${props.currentPage + 1}`}
@@ -52,13 +78,36 @@ export default function Pager(props: PagerProps) {
             </Link>
          </li>
       ) : (
-         <li className='next disabled'>
+         <li className='next disabled' style={{}}>
             <Link
                className='page-link'
                href={`/`}
                aria-disabled='true'
                style={{ borderRadius: '1rem' }}>
                Next
+            </Link>
+         </li>
+      );
+
+   const lastPage =
+      props.currentPage < props.totalPages ? (
+         <li className='last' style={{}}>
+            <Link
+               className='page-link'
+               href={`${pathName}?page=${props.totalPages}`}
+               style={{ borderRadius: '1rem' }}
+               aria-disabled='false'>
+               Last
+            </Link>
+         </li>
+      ) : (
+         <li className='last disabled' style={{}}>
+            <Link
+               className='page-link'
+               href={`/`}
+               aria-disabled='true'
+               style={{ borderRadius: '1rem' }}>
+               Last
             </Link>
          </li>
       );
@@ -70,11 +119,9 @@ export default function Pager(props: PagerProps) {
    );
 
    return (
-      <nav aria-label='Page navigation' className='d-flex flex-row' style={{ width: '100%' }}>
-         <ul className='pagination justify-content-center'>
-            {prevPage}
-            {totalResults}
-            {nextPage}
+      <nav className={styles.pager} aria-label='Page navigation'>
+         <ul className='pagination justify-content-center' style={{ width: '100%' }}>
+            {firstPage} {prevPage} {totalResults} {nextPage} {lastPage}
          </ul>
       </nav>
    );

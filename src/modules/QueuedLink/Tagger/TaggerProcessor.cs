@@ -221,6 +221,7 @@ public class TaggerProcessor : ITaggerProcessor
         { "delish", new [] { "recipes", "delish"}},
         { "epicurious", new [] { "recipes", "epicurious"}},
         { "foodnetwork", new [] { "recipes", "foodnetwork"}},
+        {"grilling", new []{"grilling", "bbqing", "bbq"}},
         {"hot ones", new []{"hot ones", "youtube", "spicy", "hot sauce", "first we feast"}},
         { "intstapot", new [] { "intstapot","slow cooker" }},
         { "one pot", new []{"one pot", "recipes"}},
@@ -266,10 +267,11 @@ public class TaggerProcessor : ITaggerProcessor
         {"yoga", new [] { "yoga", "fitness"}},
         {"zwift", new [] { "cycling", "indoorcycling", "zwift"}},
         
-        // Movies
-        {"dc", new []{ "dc", "movies", "comics"}},
+        // Movies & Entertainment
         {"marvel", new []{ "marvel", "movies", "comics"}},
-        
+        {"starcraft", new []{"starcraft", "blizzard", "games", "strategy"}},
+        {"warcraft", new []{ "warcraft", "blizzard", "games", "mmorpg"}},
+
         // Misc
         {"toronto", new [] { "toronto", "ontario", "canada"}},
         {"vancouver", new [] { "vancouver", "british columbia","canada"}},

@@ -9,7 +9,7 @@ import { LinkResult } from '@/types/links';
 import { TagResult } from '@/types/tags';
 
 import LinkCards from '@/components/elements/links/LinkCards';
-import TagsCard from '@/components/elements/tags';
+import { TagsCard } from '@/components/elements/tags';
 
 const getLinks = async (pageNo: number, size: number) => {
    var data = await fetch(`${API_URL}/links/${pageNo}/${size}`);
@@ -27,8 +27,12 @@ const getTopTags = async (size: number) => {
    }
 };
 
-export default async function Home() {
-   var linksData: ResultsPage<LinkResult> = await getLinks(1, 50);
+export default async function LinksPage({
+   searchParams,
+}: {
+   searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+   var linksData: ResultsPage<LinkResult> = await getLinks(1, 27);
    var tagsData: TagResult[] = await getTopTags(100);
 
    return (
