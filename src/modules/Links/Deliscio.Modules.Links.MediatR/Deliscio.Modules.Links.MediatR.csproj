@@ -8,11 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="Ardalis.GuardClauses" Version="4.1.1" />
+    <PackageReference Include="MediatR" Version="12.1.1" />
     <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
+    <ProjectReference Include="..\..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
+    <ProjectReference Include="..\Deliscio.Modules.Links.Common\Deliscio.Modules.Links.Common.csproj" />
   </ItemGroup>
 
 </Project>

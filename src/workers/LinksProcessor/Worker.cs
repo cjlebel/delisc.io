@@ -1,4 +1,4 @@
-using Deliscio.Modules.QueuedLinks.MassTransit.Commands;
+using Deliscio.Modules.QueuedLinks.Common.Models;
 using MassTransit;
 using Microsoft.Extensions.Options;
 
@@ -13,7 +13,7 @@ public class Worker : BackgroundService
 
     private const string COULD_NOT_GET_OPTIONS = "Could not retrieve the options";
 
-    public Worker(IOptions<LinksQueueSettingsOptions> options, IBusControl busControl, ILogger<Worker> logger)
+    public Worker(IOptions<QueuedLinksSettingsOptions> options, IBusControl busControl, ILogger<Worker> logger)
     {
         _busControl = busControl;
         _logger = logger;

@@ -14,8 +14,4 @@
     <PackageReference Include="Structurizr.Annotations" Version="0.9.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Deliscio.Core\Deliscio.Core.csproj" />
-  </ItemGroup>
-
 </Project>

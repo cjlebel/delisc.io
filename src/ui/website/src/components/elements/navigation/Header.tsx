@@ -4,7 +4,7 @@ type HeaderProps = {};
 
 const Header = (props: HeaderProps) => {
    return (
-      <header className={styles.header}>
+      <header className={`${styles.header} container`}>
          <nav>
             <ul>
                <li>
