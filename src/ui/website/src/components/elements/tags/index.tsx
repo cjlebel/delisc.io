@@ -1,3 +1,4 @@
+import PopularRecentTags from './PopularRecentTags';
 import TagsCard from './TagsCard';
 
-export default TagsCard;
+export { PopularRecentTags, TagsCard };

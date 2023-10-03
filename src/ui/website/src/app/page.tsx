@@ -9,7 +9,7 @@ import { LinkResult } from '@/types/links';
 import { TagResult } from '@/types/tags';
 
 import LinkCards from '@/components/elements/links/LinkCards';
-import TagsCard from '@/components/elements/tags';
+import { PopularRecentTags } from '@/components/elements/tags';
 import { Pager } from '@/components/elements/pager';
 
 const getLinks = async (pageNo: number, size: number) => {
@@ -20,17 +20,14 @@ const getLinks = async (pageNo: number, size: number) => {
    }
 };
 
-const getTopTags = async (size: number) => {
-   var data = await fetch(`${API_URL}/links/tags/top/${size}`, { next: { revalidate: 1 } });
+export default async function Home({
+   searchParams,
+}: {
+   searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+   const pageNo = searchParams?.page ? parseInt(searchParams.page as string) : 1;
 
-   if (data.ok) {
-      return await data.json();
-   }
-};
-
-export default async function Home() {
-   const linksData: ResultsPage<LinkResult> = await getLinks(1, 50);
-   const tagsData: TagResult[] = await getTopTags(50);
+   const linksData: ResultsPage<LinkResult> = await getLinks(pageNo, 27);
 
    return (
       <>
@@ -46,7 +43,7 @@ export default async function Home() {
          </section>
          <aside className={`sidebar ${styles.sidebar}`}>
             <Suspense fallback={<>Loading...</>}>
-               <TagsCard title='Popular Tags' tags={tagsData} />
+               <PopularRecentTags baseApi={API_URL} count={200} />
             </Suspense>
          </aside>
       </>

@@ -7,13 +7,8 @@ import { ResultsPage } from '@/types/ResultsPage';
 import { LinkResult } from '@/types/links';
 import { TagResult } from '@/types/tags';
 import { LinkCards } from '@/components/elements/links';
-import TagsCard from '@/components/elements/tags';
+import { PopularRecentTags } from '@/components/elements/tags';
 import { Pager } from '@/components/elements/pager';
-
-type LinksTagsPageProps = {
-   tags: string;
-   pageNo?: number | 1;
-};
 
 const getTaggedLinks = async (tags: string, pageNo: number, size: number) => {
    var data = await fetch(`${API_URL}/links/${tags}/${pageNo}/${size}`);
@@ -38,35 +33,41 @@ export default async function LinksTagsPage({
    params: LinksTagsPageProps;
    searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-   //    const searchParams = useSearchParams();
    const pageNo = searchParams?.page ? parseInt(searchParams.page as string) : 1;
+   const tagsStr = params.tags
+      ? decodeURIComponent(params.tags.join(',')).replaceAll('+', ' ')
+      : '';
 
-   const tagsStr = params.tags ? decodeURIComponent(params.tags).replace('+', ' ') : '';
-
-   const linksData: ResultsPage<LinkResult> = await getTaggedLinks(params.tags, pageNo, 50);
-   const tagsData: TagResult[] = await getRelatedTags(params.tags, 50);
-
-   if (!linksData) {
-      return <div>Links not found</div>;
-   }
+   const linksData: ResultsPage<LinkResult> = await getTaggedLinks(tagsStr, pageNo, 50);
+   const tagsData: TagResult[] = await getRelatedTags(tagsStr, 50);
 
    return (
       <>
          <section className={styles.content}>
             <Suspense fallback={<>Loading...</>}>
-               <LinkCards items={linksData.results} />
+               {linksData?.results?.length >= 0 ? (
+                  <LinkCards items={linksData.results} />
+               ) : (
+                  <div>No links found {tagsStr}</div>
+               )}
             </Suspense>
-            <Pager
-               currentPage={linksData.pageNumber}
-               totalPages={linksData.totalPages}
-               totalResults={linksData.totalResults}
-            />
+            {linksData ? (
+               <Pager
+                  currentPage={linksData.pageNumber}
+                  totalPages={linksData.totalPages}
+                  totalResults={linksData.totalResults}
+               />
+            ) : null}
          </section>
          <aside className={`sidebar ${styles.sidebar}`}>
             <Suspense fallback={<>Loading...</>}>
-               <TagsCard preexisting={tagsStr} title='Related Tags' tags={tagsData} />
+               <PopularRecentTags baseApi={API_URL} count={50} />
             </Suspense>
          </aside>
       </>
    );
 }
+
+type LinksTagsPageProps = {
+   tags: string[];
+};

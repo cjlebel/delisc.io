@@ -37,6 +37,9 @@ module.exports = withBundleAnalyzer({
    //     },
    //   ];
    // },
+   experimental: {
+      webVitalsAttribution: ['FCP' | 'LCP' | 'CLS' | 'FID' | 'TTFB' | 'INP'],
+   },
    webpack: (config, { dev, isServer }) => {
       config.module.rules.push({
          test: /\.svg$/,

@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import styles from './page.module.scss';
 
@@ -59,6 +60,12 @@ export default async function LinkPage({ params }: { params: LinkPageProps }) {
                   <div className='card-body'>
                      <h1 className='card-title'>{title}</h1>
                      <p className='card-text'>{linkData.description}</p>
+                     <p>
+                        Link:{' '}
+                        <Link href={linkData.url} style={{ color: 'red' }} target='_blank'>
+                           {title}
+                        </Link>
+                     </p>
                   </div>
                   <div
                      className={`card-footer ${styles.tags}`}

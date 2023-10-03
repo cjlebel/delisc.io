@@ -65,6 +65,9 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
         if (count < 1)
             return Enumerable.Empty<LinkTagEntity>();
 
+        // Because we're going to exclude the incoming tags from the results
+        count += count + tags.Length;
+
         // If tags.Length is 0, get all tags. Else, get only those that are related to the specified tags
         BsonDocument match = tags.Length == 0 ? new BsonDocument("$match", new BsonDocument()) :
             new BsonDocument("$match", new BsonDocument("Tags.Name", new BsonDocument("$all", new BsonArray(tags))));
@@ -101,6 +104,9 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
         if (!relatedTags.Any())
             return Enumerable.Empty<LinkTagEntity>();
 
+        // Strip out the tags we used to get the related tags (we only want related)
+        relatedTags = relatedTags.Where(x => !tags.Contains(x.Name)).ToArray();
+
         var totalCounts = relatedTags.Sum(x => x.Count);
 
         foreach (var relatedTag in relatedTags)
@@ -108,7 +114,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
             relatedTag.Weight = totalCounts > 0m ? (relatedTag.Count / (decimal)totalCounts) : 0m;
         }
 
-        return relatedTags.OrderByDescending(t => t.Count);
+        return relatedTags.OrderByDescending(t => t.Count).ThenBy(t=>t.Name);
     }
 
     #endregion
