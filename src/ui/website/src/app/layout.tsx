@@ -14,12 +14,14 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+   const interClassName = inter.className;
+
    return (
-      <html lang='en'>
-         <body className={`${inter.className} d-flex flex-column`}>
+      <html lang='en' suppressHydrationWarning={true}>
+         <body suppressHydrationWarning={true}>
             <Header />
             <BreadCrumbs />
-            <main className='container'>{children}</main>
+            <main className='container-fluid'>{children}</main>
             <Footer />
          </body>
       </html>

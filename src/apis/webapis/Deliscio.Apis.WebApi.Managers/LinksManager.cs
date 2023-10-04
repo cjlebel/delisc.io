@@ -122,7 +122,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
     /// <param name="count">The number of tags to return</param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public Task<LinkTag[]> GetRelatedTagsAsync(string[] tags, int? count = default, CancellationToken token = default)
+    public Task<LinkTag[]> GetTagsAsync(string[] tags, int? count = default, CancellationToken token = default)
     {
         var query = new GetLinksRelatedTagsQuery(tags, count);
 

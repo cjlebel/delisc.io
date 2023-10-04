@@ -1,7 +1,7 @@
 export type LinkResult = {
    id: string;
-   description?: string;
-   domain?: string;
+   description: string;
+   domain: string;
    imageUrl?: string;
    keywords?: string[] | [];
    tags?: any[] | [];

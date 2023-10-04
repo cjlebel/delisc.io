@@ -1,12 +1,10 @@
 using System.Net;
-using Ardalis.GuardClauses;
 using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
@@ -43,8 +41,7 @@ public class LinksApiEndpoints : BaseApiEndpoints
         MapLinksSearch(endpoints);
         MapGetLinksAsPager(endpoints);
         MapGetLinksByTagsAsPager(endpoints);
-        MapGetRelatedTags(endpoints);
-        MapGetTopTags(endpoints);
+        MapGetTags(endpoints);
         MapSubmitLink(endpoints);
     }
 
@@ -203,48 +200,19 @@ public class LinksApiEndpoints : BaseApiEndpoints
         .WithDescription("This endpoint searches for links based on the search term provided. If the search term is null or whitespace, a BadRequest is returned");
     }
 
-    /// <summary>
-    /// Maps the endpoints that gets a collection of Tags that are related to the provided tags, using the Links to get the results.
-    /// </summary>
-    /// <param name="endpoints"></param>
-    private void MapGetRelatedTags(IEndpointRouteBuilder endpoints)
+    private void MapGetTags(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("v1/links/tags/{tags}/{count:int?}",
-                async ([FromRoute] string tags, [FromRoute] int? count, CancellationToken cancellationToken) =>
-                {
-                    if (string.IsNullOrWhiteSpace(tags))
-                        return Results.BadRequest(TAGS_CANNOT_BE_NULL_OR_EMPTY);
-
-                    var newCount = count ?? DEFAULT_TAG_COUNT;
-
-                    if (newCount < 1)
-                        return Results.BadRequest(TAGS_COUNT_CANNOT_BE_LESS_THAN_ONE);
-
-                    var tagsList = tags.Split(",").ToArray();
-
-                    var results = await _manager.GetRelatedTagsAsync(tagsList, newCount, cancellationToken);
-
-                    return Results.Ok(results);
-                })
-            .Produces<LinkTag[]>()
-            .ProducesProblem((int)HttpStatusCode.OK)
-            .ProducesProblem((int)HttpStatusCode.BadRequest)
-            .WithDisplayName("GetRelatedTags")
-            .WithSummary("Get a collection of tags that are related to the tags provided")
-            .WithDescription("");
-    }
-
-    private void MapGetTopTags(IEndpointRouteBuilder endpoints)
-    {
-        endpoints.MapGet("v1/links/tags/top/{count:int?}",
-                async ([FromRoute] int? count, CancellationToken cancellationToken) =>
+        endpoints.MapGet("v1/links/tags",
+                async ([FromQuery] string? tags, [FromQuery] int? count, CancellationToken cancellationToken) =>
                 {
                     var newCount = count ?? DEFAULT_TAG_COUNT;
 
                     if (newCount < 1)
                         return Results.BadRequest(TAGS_COUNT_CANNOT_BE_LESS_THAN_ONE);
 
-                    var results = await _manager.GetRelatedTagsAsync(Array.Empty<string>(), newCount, cancellationToken);
+                    var tagsArr = tags?.Split(",").ToArray() ?? Array.Empty<string>();
+
+                    var results = await _manager.GetTagsAsync(tagsArr, newCount, cancellationToken);
 
                     return Results.Ok(results);
                 })
@@ -255,7 +223,6 @@ public class LinksApiEndpoints : BaseApiEndpoints
             .WithSummary("Get a collection of the top tags")
             .WithDescription("");
     }
-
 
     /// <summary>
     /// Maps the endpoints that submits a new Link.

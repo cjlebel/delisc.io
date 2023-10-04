@@ -22,7 +22,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
 
    //onst qs = [page, count, search, tags].filter((x) => x).join('&');
 
-   //    const res = await fetch(`${process.env.API_URL}/links?${qs}`, {
+   //    const res = await fetch(`${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_VERSION}/links?${qs}`, {
    //       headers: {
    //          'Content-Type': 'application/json',
    //       },

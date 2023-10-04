@@ -66,10 +66,12 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
             return Enumerable.Empty<LinkTagEntity>();
 
         // Because we're going to exclude the incoming tags from the results
-        count += count + tags.Length;
+        count += tags.Length;
+
+        var newTags = tags.Where(t=> !string.IsNullOrWhiteSpace(t)).Select(t => t.ToLower()).ToArray();
 
         // If tags.Length is 0, get all tags. Else, get only those that are related to the specified tags
-        BsonDocument match = tags.Length == 0 ? new BsonDocument("$match", new BsonDocument()) :
+        BsonDocument match = newTags.Length == 0 ? new BsonDocument("$match", new BsonDocument()) :
             new BsonDocument("$match", new BsonDocument("Tags.Name", new BsonDocument("$all", new BsonArray(tags))));
 
         var pipeline = new BsonDocument[]
