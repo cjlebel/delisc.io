@@ -1,11 +1,12 @@
 using System.Net;
-
+using Ardalis.GuardClauses;
 using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
@@ -39,6 +40,7 @@ public class LinksApiEndpoints : BaseApiEndpoints
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         MapGetLink(endpoints);
+        MapLinksSearch(endpoints);
         MapGetLinksAsPager(endpoints);
         MapGetLinksByTagsAsPager(endpoints);
         MapGetRelatedTags(endpoints);
@@ -58,22 +60,18 @@ public class LinksApiEndpoints : BaseApiEndpoints
                 async ([FromRoute] string? linkId, CancellationToken cancellationToken) =>
                 {
                     if (string.IsNullOrWhiteSpace(linkId))
-                        return Results.NotFound(ID_CANNOT_BE_NULL_OR_WHITESPACE);
+                        return Results.BadRequest(ID_CANNOT_BE_NULL_OR_WHITESPACE);
 
                     var guidId = Guid.Parse(linkId);
                     if (guidId == Guid.Empty)
-                        return Results.NotFound(ID_CANNOT_BE_NULL_OR_WHITESPACE);
+                        return Results.BadRequest(ID_CANNOT_BE_NULL_OR_WHITESPACE);
 
                     var result = await _manager.GetLinkAsync(linkId, cancellationToken);
-
-                    if (result is null)
-                        return Results.NotFound(string.Format(LINK_COULD_NOT_BE_FOUND, linkId));
 
                     return Results.Ok(result);
                 })
             .Produces<Link>()
             .ProducesProblem((int)HttpStatusCode.OK)
-            .ProducesProblem((int)HttpStatusCode.NotFound)
             .ProducesProblem((int)HttpStatusCode.BadRequest)
             .WithDisplayName("GetLink")
             .WithSummary("Gets single link item")
@@ -108,14 +106,10 @@ public class LinksApiEndpoints : BaseApiEndpoints
 
                 var results = await _manager.GetLinksAsync(newPageNo, newPageSize, cancellationToken);
 
-                if (!results.Results.Any())
-                    return Results.NotFound(string.Format(LINKS_COULD_NOT_BE_FOUND, pageNo));
-
                 return Results.Ok(results);
             })
             .Produces<PagedResults<Link>>()
             .ProducesProblem((int)HttpStatusCode.OK)
-            .ProducesProblem((int)HttpStatusCode.NotFound)
             .ProducesProblem((int)HttpStatusCode.BadRequest)
             .WithDisplayName("GetLinks")
             .WithSummary("Get paginated collection of links")
@@ -146,18 +140,67 @@ public class LinksApiEndpoints : BaseApiEndpoints
 
                     var results = await _manager.GetLinksByTagsAsync(tagsList, newPageNo, newPageSize, cancellationToken);
 
-                    if (!results.Results.Any())
-                        return Results.NotFound(string.Format(LINKS_COULD_NOT_BE_FOUND, pageNo));
-
                     return Results.Ok(results);
                 })
             .Produces<PagedResults<Link>>()
             .ProducesProblem((int)HttpStatusCode.OK)
-            .ProducesProblem((int)HttpStatusCode.NotFound)
             .ProducesProblem((int)HttpStatusCode.BadRequest)
             .WithDisplayName("GetLinksByTags")
             .WithSummary("Get paginated collection of links")
             .WithDescription("This endpoint retrieves paginated links based on pageNo and pageSize. If either pageNo or pageSize is less than 1, a BadRequest is returned");
+    }
+
+    /// <summary>
+    /// Maps the endpoints that gets a collection of Links as a page of results by the parameters that were populated.
+    /// </summary>
+    /// <param name="endpoints"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    private void MapLinksSearch(IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapGet("v1/links", async ([FromQuery] string? search, [FromQuery] string? tags, [FromQuery] int? page, [FromQuery] int? count, CancellationToken cancellationToken) =>
+        {
+            var newPage = page ?? DEFAULT_PAGE_NO;
+
+            if (newPage < 1)
+                return Results.BadRequest(PAGE_NO_CANNOT_BE_LESS_THAN_ONE);
+
+            var newPageSize = count ?? DEFAULT_PAGE_SIZE;
+
+            if (newPageSize < 1)
+                return Results.BadRequest(PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
+
+            var newSearch = search ?? string.Empty;
+            var newTags = tags ?? string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(newTags))
+            {
+                var tagsList = WebUtility.UrlDecode(newTags).Split(",").ToArray();
+
+                var resultsByTags = await _manager.GetLinksByTagsAsync(tagsList, newPage, newPageSize, cancellationToken);
+
+                return Results.Ok(resultsByTags);
+            }
+
+            if (!string.IsNullOrWhiteSpace(newSearch))
+            {
+                throw new NotImplementedException();
+            }
+
+            var results = await _manager.GetLinksAsync(newPage, newPageSize, cancellationToken);
+            return Results.Ok(results);
+
+            //var results = await _manager.SearchForLinksAsync(search, cancellationToken);
+
+            //return Results.Ok(results);
+
+            //return Results.Ok();
+        })
+        .Produces<PagedResults<Link>>()
+        .ProducesProblem((int)HttpStatusCode.OK)
+        .ProducesProblem((int)HttpStatusCode.BadRequest)
+        .WithDisplayName("SearchForLinks")
+        .WithSummary("Search for links")
+        .WithDescription("This endpoint searches for links based on the search term provided. If the search term is null or whitespace, a BadRequest is returned");
     }
 
     /// <summary>
@@ -185,7 +228,6 @@ public class LinksApiEndpoints : BaseApiEndpoints
                 })
             .Produces<LinkTag[]>()
             .ProducesProblem((int)HttpStatusCode.OK)
-            .ProducesProblem((int)HttpStatusCode.NotFound)
             .ProducesProblem((int)HttpStatusCode.BadRequest)
             .WithDisplayName("GetRelatedTags")
             .WithSummary("Get a collection of tags that are related to the tags provided")
@@ -202,15 +244,12 @@ public class LinksApiEndpoints : BaseApiEndpoints
                     if (newCount < 1)
                         return Results.BadRequest(TAGS_COUNT_CANNOT_BE_LESS_THAN_ONE);
 
-                    var tagsList = Array.Empty<string>();
-
-                    var results = await _manager.GetRelatedTagsAsync(tagsList, newCount, cancellationToken);
+                    var results = await _manager.GetRelatedTagsAsync(Array.Empty<string>(), newCount, cancellationToken);
 
                     return Results.Ok(results);
                 })
             .Produces<LinkTag[]>()
             .ProducesProblem((int)HttpStatusCode.OK)
-            .ProducesProblem((int)HttpStatusCode.NotFound)
             .ProducesProblem((int)HttpStatusCode.BadRequest)
             .WithDisplayName("GetTopTags")
             .WithSummary("Get a collection of the top tags")
