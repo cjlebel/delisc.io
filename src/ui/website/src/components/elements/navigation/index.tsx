@@ -1,5 +1,7 @@
-import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
 
-export { Header, Footer };
+import BreadCrumbs from './BreadCrumbs';
+import Pager from './Pager';
+
+export { Header, Footer, BreadCrumbs, Pager };

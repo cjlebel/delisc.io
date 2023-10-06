@@ -14,7 +14,7 @@ export default async function LinksTagsPage({
    params: LinksTagsPageProps;
    searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-   const page = searchParams?.page ? parseInt(searchParams.page as string) : 1;
+   const page: number = searchParams?.page ? parseInt(searchParams.page as string) : 1;
 
    const links = await apiGetLinks({
       page: page,

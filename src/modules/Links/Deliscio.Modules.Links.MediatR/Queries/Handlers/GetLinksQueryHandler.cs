@@ -9,7 +9,7 @@ namespace Deliscio.Modules.Links.MediatR.Queries.Handlers;
 /// <summary>
 /// Handles getting a page of links from the central repository where each link contains all of the tags
 /// </summary>
-public class GetLinksQueryHandler : IRequestHandler<GetLinksQuery, PagedResults<Link>>
+public class GetLinksQueryHandler : IRequestHandler<GetLinksQuery, PagedResults<LinkItem>>
 {
     private readonly ILinksService _linksService;
 
@@ -20,7 +20,7 @@ public class GetLinksQueryHandler : IRequestHandler<GetLinksQuery, PagedResults<
         _linksService = linksService;
     }
 
-    public async Task<PagedResults<Link>> Handle(GetLinksQuery command, CancellationToken cancellationToken)
+    public async Task<PagedResults<LinkItem>> Handle(GetLinksQuery command, CancellationToken cancellationToken)
     {
         var results = await _linksService.GetAsync(command.PageNo, command.PageSize, token: cancellationToken);
 

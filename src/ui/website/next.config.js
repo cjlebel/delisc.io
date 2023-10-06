@@ -37,9 +37,12 @@ module.exports = withBundleAnalyzer({
    //     },
    //   ];
    // },
-   experimental: {
-      webVitalsAttribution: ['FCP' | 'LCP' | 'CLS' | 'FID' | 'TTFB' | 'INP'],
-   },
+   // ⚠ Invalid next.config.js options detected:
+   // ⚠     The value at .experimental.webVitalsAttribution[0] must be a string but it was a number.
+   // ⚠     The value at .experimental.webVitalsAttribution[0] must be one of: "CLS", "FCP", "FID", "INP", "LCP", or "TTFB".
+   //    experimental: {
+   //       webVitalsAttribution: ['CLS' | 'FCP' | 'FID' | 'INP' | 'LCP' | 'TTFB'],
+   //    },
    webpack: (config, { dev, isServer }) => {
       config.module.rules.push({
          test: /\.svg$/,

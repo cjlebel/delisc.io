@@ -7,11 +7,13 @@ public interface ILinksManager
 {
     Task<Link?> GetLinkAsync(string id, CancellationToken token = default);
 
-    Task<PagedResults<Link>> GetLinksAsync(int pageNo = 1, int pageSize = 25, CancellationToken token = default);
+    Task<PagedResults<LinkItem>> GetLinksAsync(int pageNo = 1, int pageSize = 25, CancellationToken token = default);
 
-    ValueTask<IEnumerable<Link>> GetLinksByIdsAsync(string[] ids, CancellationToken token = default);
+    Task<PagedResults<LinkItem>> GetLinksByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
 
-    ValueTask<PagedResults<Link>> GetLinksByTagsAsync(string[] tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
+    ValueTask<IEnumerable<LinkItem>> GetLinksByIdsAsync(string[] ids, CancellationToken token = default);
+
+    ValueTask<PagedResults<LinkItem>> GetLinksByTagsAsync(string[] tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
 
     /// <summary>
     /// Gets a collection of tags.

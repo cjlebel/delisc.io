@@ -12,7 +12,3 @@ export default function UserProfile({ params }: { params: UserProfileProps }) {
       </div>
    );
 }
-
-export const getStaticProps = async () => {};
-
-export const getServersideProps = async () => {};

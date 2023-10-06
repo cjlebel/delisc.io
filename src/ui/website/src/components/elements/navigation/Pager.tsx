@@ -12,9 +12,7 @@ type PagerProps = {
 };
 
 export default function Pager(props: PagerProps) {
-   const pathName = usePathname();
-
-   let parts = pathName.split('/');
+   let pathName = usePathname();
 
    const firstPage =
       props.currentPage > 1 ? (

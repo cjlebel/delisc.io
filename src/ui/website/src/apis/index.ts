@@ -1,3 +1,5 @@
+import { ResultsPage } from '@/types/ResultsPage';
+import { LinkResult } from '@/types/links';
 import { API_URL } from '@/utils/Configs';
 
 /**
@@ -5,19 +7,29 @@ import { API_URL } from '@/utils/Configs';
  * @param params { page?: number | 1; count?: number | 25; search?: string | ''; tags?: string[] | [];}
  * @returns SERVER SIDE API: Gets a set of links for the provided parameters
  */
-const apiGetLinks = async (params: GetLinksProps) => {
-   const tagsAsString = params.tags
-      ? decodeURIComponent(params.tags.join(',')).replaceAll('+', ' ')
-      : '';
+const apiGetLinks = async ({
+   page,
+   count,
+   search,
+   tags,
+}: GetLinksProps) /*: Promise<ResultsPage<LinkResult>>*/ => {
+   page = page && page >= 1 ? page : 1;
 
-   const count = `count=${params.count ?? 25}`;
-   const page = `page=${params.page ?? 1}`;
-   const search = `search=${params.search ?? ''}`;
-   const tags = `tags=${tagsAsString ?? ''}`;
+   // Attempt to get the max number of links, from the .env file
+   const maxLinks = process.env.REACT_APP_MAX_LINKS_PER_PAGE ?? '1';
+   count = count && count >= 1 ? count : parseInt(maxLinks);
 
-   const qs = [page, count, search, tags].filter((x) => x).join('&');
+   const tagsAsString = tags ? decodeURIComponent(tags.join(',')).replaceAll('+', ' ') : '';
 
-   return await await fetch(`${API_URL}/links?${qs}`);
+   var query = new URLSearchParams();
+   query.append('page', page.toString());
+   query.append('count', count.toString());
+   query.append('search', search ?? '');
+   query.append('tags', tagsAsString ?? '');
+
+   var data = await fetch(`${API_URL}/links?${query.toString()}`).then((res) => res.json());
+
+   return data as ResultsPage<LinkResult>;
 };
 
 /**
@@ -30,13 +42,12 @@ const apiGetTags = async (params: GetTagsProps) => {
       ? decodeURIComponent(params.tags.join(',')).replaceAll('+', ' ')
       : '';
 
-   const count = `count=${params.count ?? 50}`;
-   const tags = `tags=${tagsAsString ?? ''}`;
+   var query = new URLSearchParams();
+   query.append('count', params.count?.toString() ?? '50');
+   query.append('tags', tagsAsString ?? '');
 
-   const qs = [tags, count].filter((x) => x).join('&');
-
-   var data = await fetch(`${API_URL}/links/tags?${qs}`, {
-      next: { revalidate: 60 },
+   var data = await fetch(`${API_URL}/links/tags?${query.toString()}`, {
+      next: { revalidate: 10 },
    });
 
    if (data.ok) {

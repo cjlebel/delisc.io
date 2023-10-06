@@ -8,7 +8,6 @@ using Deliscio.Modules.UserLinks.Common.Models;
 using Deliscio.Modules.UserLinks.MediatR.Commands;
 using Deliscio.Modules.UserLinks.MediatR.Queries;
 using MassTransit;
-using MassTransit.Initializers;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -99,9 +98,9 @@ public sealed class UserLinksManager : ManagerBase<UserLinksManager>, IUserLinks
     /// Merges the User's Links with the original links, using the User's version of it's details if they exist.
     /// </summary>
     /// <param name="userLinks">A collection of links that belong to the user</param>
-    /// <param name="baseLinks">A collection of the original links</param>
+    /// <param name="baseLinks">A collection of the original links (as LinkItems)</param>
     /// <returns>The user's links that have been updated with the original link's information, where applicable</returns>
-    private IEnumerable<UserLink> MergeLinks(IEnumerable<UserLink> userLinks, IEnumerable<Link> baseLinks)
+    private IEnumerable<UserLink> MergeLinks(IEnumerable<UserLink> userLinks, IEnumerable<LinkItem> baseLinks)
     {
         // I drew a blank here coming up with names for these.
         var userItems = userLinks.ToList();

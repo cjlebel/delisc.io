@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+
 using SubmitLinkRequest = Deliscio.Apis.WebApi.Common.Requests.SubmitLinkRequest;
 
 namespace Deliscio.Apis.WebApi.Common.APIs;
@@ -39,8 +40,6 @@ public class LinksApiEndpoints : BaseApiEndpoints
     {
         MapGetLink(endpoints);
         MapLinksSearch(endpoints);
-        MapGetLinksAsPager(endpoints);
-        MapGetLinksByTagsAsPager(endpoints);
         MapGetTags(endpoints);
         MapSubmitLink(endpoints);
     }
@@ -76,75 +75,6 @@ public class LinksApiEndpoints : BaseApiEndpoints
             .WithName("GetLink")
             //https://stackoverflow.com/questions/70800034/add-swagger-description-to-minimal-net-6-apis
             .WithMetadata("Meta data for /links/{id}");
-    }
-
-    /// <summary>
-    /// Maps the endpoints that gets a collection of Links as a page of results.
-    /// </summary>
-    /// <param name="endpoints"></param>
-    /// <remarks>/v1/links/</remarks>
-    /// <remarks>/v1/links/1</remarks>
-    /// <remarks>/v1/links/1/25</remarks>
-    private void MapGetLinksAsPager(IEndpointRouteBuilder endpoints)
-    {
-        // This is also the same as /v1/links where no id, pageNo, or pageSize is provided
-        endpoints.MapGet("v1/links/{pageNo:int?}/{pageSize:int?}",
-                async ([FromRoute] int? pageNo, [FromRoute] int? pageSize, CancellationToken cancellationToken) =>
-            {
-                // pageNo and pageSize are nullable, so we need to check for nulls and set default values
-                var newPageNo = pageNo ?? DEFAULT_PAGE_NO;
-                var newPageSize = pageSize ?? DEFAULT_PAGE_SIZE;
-
-                if (newPageNo < 1)
-                    return Results.BadRequest(PAGE_NO_CANNOT_BE_LESS_THAN_ONE);
-
-                if (newPageSize < 1)
-                    return Results.BadRequest(PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
-
-                var results = await _manager.GetLinksAsync(newPageNo, newPageSize, cancellationToken);
-
-                return Results.Ok(results);
-            })
-            .Produces<PagedResults<Link>>()
-            .ProducesProblem((int)HttpStatusCode.OK)
-            .ProducesProblem((int)HttpStatusCode.BadRequest)
-            .WithDisplayName("GetLinks")
-            .WithSummary("Get paginated collection of links")
-            .WithDescription("This endpoint retrieves paginated links based on pageNo and pageSize. If either pageNo or pageSize is less than 1, a BadRequest is returned");
-    }
-
-    /// <summary>
-    /// Maps the endpoints that gets a collection of Links as a page of results by the provided tags.
-    /// </summary>
-    /// <param name="endpoints"></param>
-    private void MapGetLinksByTagsAsPager(IEndpointRouteBuilder endpoints)
-    {
-        // This is also the same as /v1/links where no id, pageNo, or pageSize is provided
-        endpoints.MapGet("v1/links/{tags}/{pageNo:int?}/{pageSize:int?}",
-                async ([FromRoute] string tags, [FromRoute] int? pageNo, [FromRoute] int? pageSize, CancellationToken cancellationToken) =>
-                {
-                    // pageNo and pageSize are nullable, so we need to check for nulls and set default values
-                    var newPageNo = pageNo ?? DEFAULT_PAGE_NO;
-                    var newPageSize = pageSize ?? DEFAULT_PAGE_SIZE;
-
-                    if (newPageNo < 1)
-                        return Results.BadRequest(PAGE_NO_CANNOT_BE_LESS_THAN_ONE);
-
-                    if (newPageSize < 1)
-                        return Results.BadRequest(PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
-
-                    var tagsList = WebUtility.UrlDecode(tags).Split(",").ToArray();
-
-                    var results = await _manager.GetLinksByTagsAsync(tagsList, newPageNo, newPageSize, cancellationToken);
-
-                    return Results.Ok(results);
-                })
-            .Produces<PagedResults<Link>>()
-            .ProducesProblem((int)HttpStatusCode.OK)
-            .ProducesProblem((int)HttpStatusCode.BadRequest)
-            .WithDisplayName("GetLinksByTags")
-            .WithSummary("Get paginated collection of links")
-            .WithDescription("This endpoint retrieves paginated links based on pageNo and pageSize. If either pageNo or pageSize is less than 1, a BadRequest is returned");
     }
 
     /// <summary>
@@ -192,7 +122,7 @@ public class LinksApiEndpoints : BaseApiEndpoints
 
             //return Results.Ok();
         })
-        .Produces<PagedResults<Link>>()
+        .Produces<PagedResults<LinkItem>>()
         .ProducesProblem((int)HttpStatusCode.OK)
         .ProducesProblem((int)HttpStatusCode.BadRequest)
         .WithDisplayName("SearchForLinks")

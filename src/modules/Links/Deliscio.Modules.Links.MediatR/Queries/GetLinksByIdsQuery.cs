@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Queries;
 
-public sealed record GetLinksByIdsQuery : IRequest<IEnumerable<Link>>
+public sealed record GetLinksByIdsQuery : IRequest<IEnumerable<LinkItem>>
 {
     public Guid[] Ids { get; init; }
 

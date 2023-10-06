@@ -6,7 +6,7 @@ import useSWR from 'swr';
 
 import Link from 'next/link';
 
-import styles from './Tags.module.scss';
+import styles from './PopularRelatedTags.module.scss';
 
 import { TagResult } from '@/types/tags';
 
@@ -27,7 +27,7 @@ const colorOptions = [
 const TITLE_POPULAR = 'Popular Tags';
 const TITLE_RELATED = 'Related Tags';
 
-const PopularRecentTags = (props: PopularRecentTagsProps) => {
+const PopularRelatedTags = (props: PopularRecentTagsProps) => {
    const [data, setData] = useState<TagResult[] | null>(null);
    const [isLoading, setLoading] = useState<boolean>(true);
    const [error, setError] = useState<any>(null);
@@ -35,16 +35,15 @@ const PopularRecentTags = (props: PopularRecentTagsProps) => {
    // Get the pathName from the url
    const originalPathName = usePathname();
 
-   const pathName = usePathname() === '/' ? '' : usePathname().replace('/links/tags/', '');
+   const pathName = originalPathName === '/' ? '' : originalPathName.replace('/links/tags/', '');
    const title = pathName?.replace('/', '').length > 0 ? TITLE_RELATED : TITLE_POPULAR;
 
-   const tagPath = encodeURIComponent(pathName.replaceAll('+', ' ').replaceAll('/', ','));
+   const tagPath = pathName.replaceAll('+', ' ').replaceAll('/', ',');
    const count = props.count && props.count > 0 ? props.count : 25;
 
    // NOTE: This is called twice. Apparently it's because strict mode is true (next.config.js: reactStrictMode)
    useEffect(() => {
-      console.log(`Use Effect: ${originalPathName}`);
-      fetch(`/api/links/tags?tags=${tagPath}&count=${count}`, {
+      fetch(`/api/links/tags?tags=${encodeURIComponent(tagPath)}&count=${count}`, {
          headers: {
             'Content-Type': 'application/json',
          },
@@ -81,7 +80,10 @@ const PopularRecentTags = (props: PopularRecentTagsProps) => {
                  ? colorOptions[idx]
                  : colorOptions[idx % colorOptions.length]) ?? 'bg-white text-dark';
 
-           const href = `/links/tags/${pathName}/${tag.name.replaceAll(' ', '+')}`;
+           const tagQuery = `${tagPath}&${tag.name.replaceAll(' ', '+')}`;
+
+           const href = `?tags=${tagQuery}`;
+
            return (
               <li
                  key={tag.name}
@@ -107,9 +109,10 @@ const PopularRecentTags = (props: PopularRecentTagsProps) => {
       : null;
 
    return (
-      <div className={`card ${styles.card}`} style={{ width: '100%' }}>
-         <div className={`card-header ${styles['card-header']}`}>{title}</div>
-         <div className='card-body'>
+      <div className='side-panel'>
+         <h4 className={`${styles['title']} title`}>{title}</h4>
+         <div className={`${styles['contents']} contents`}>
+            {tagPath}
             <ul className='list-unstyled'>{tagItems}</ul>
          </div>
       </div>
@@ -127,4 +130,4 @@ type PopularRecentTagsProps = {
    count?: number | 25;
 };
 
-export default PopularRecentTags;
+export default PopularRelatedTags;

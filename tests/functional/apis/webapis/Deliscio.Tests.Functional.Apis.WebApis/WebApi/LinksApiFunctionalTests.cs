@@ -11,45 +11,33 @@ namespace Deliscio.Tests.Functional.Apis.WebApis.WebApi;
 public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<WebApplicationFactory<Program>>
 {
     private const string GET_LINK_ENDPOINT = "/{0}/link/{1}";
+
     private const string GET_LINKS_ENDPOINT = "/{0}/links";
-    private const string GET_LINKS_WITH_PAGENO_ENDPOINT = "/{0}/links/{1}";
-    private const string GET_LINKS_WITH_PAGENO_PAGESIZE_ENDPOINT = "/{0}/links/{1}/{2}";
-    private const string GET_LINKS_WITH_TAGS_ENDPOINT = "/{0}/links/{1}";
-    private const string GET_LINKS_RELATED_TAGS_ENDPOINT = "/{0}/links/tags/{1}";
+    private const string GET_LINKS_ENDPOINT_WITH_PAGENO = "/{0}/links?page={1}";
+    private const string GET_LINKS_ENDPOINT_WITH_PAGENO_SIZE = "/{0}/links?page={1}&size={2}";
+    private const string GET_LINKS_ENDPOINT_WITH_TAGS = "/{0}/links?tags={1}";
+    private const string GET_LINKS_ENDPOINT_WITH_TAGS_PAGENO = "/{0}/links?tags={1}&page={2}";
+    private const string GET_LINKS_ENDPOINT_WITH_ALL = "/{0}/links?page={1}&size={2}&search={3}&tags={4}";
+
+    private const string GET_LINKS_RELATED_TAGS_ENDPOINT = "/{0}/links/tags?tags={1}";
+    private const string GET_LINKS_RELATED_TAGS_WITH_COUNT_ENDPOINT = "/{0}/links/tags?tags={1}&count={2}";
 
     public LinksApiFunctionalTests(WebApplicationFactory<Program> factory) : base(factory)
     {
     }
 
+    #region - GetLinkById -
     [Fact]
     public async Task WebApi_GetLinkById_ValidId_OkResult()
     {
         // Arrange
-        var id = new Guid("fa431c01-992b-4773-a504-05b9b672a3b2");
-        var expectedJson =
-            "{\"id\":\"fa431c01-992b-4773-a504-05b9b672a3b2\"," +
-            "\"description\":\"Offered by Duke University. Welcome to the second course in the Building Cloud Computing Solutions at Scale Specialization! In this course, ... Enroll for free.\"," +
-            "\"domain\":\"coursera.org\"," +
-            "\"imageUrl\":\"https://s3.amazonaws.com/coursera_assets/meta_images/generated/XDP/XDP~COURSE!~cloud-virtualization-containers-api-duke/XDP~COURSE!~cloud-virtualization-containers-api-duke.jpeg\"," +
-            "\"keywords\":[]," +
-            "\"tags\":" +
-                "[{\"name\":\"api\",\"count\":1,\"weight\":0}," +
-                "{\"name\":\"web services\",\"count\":1,\"weight\":0}," +
-                "{\"name\":\"integration\",\"count\":1,\"weight\":0}," +
-                "{\"name\":\"cloud computing\",\"count\":1,\"weight\":0}," +
-                "{\"name\":\"scalability\",\"count\":1,\"weight\":0}," +
-                "{\"name\":\"aws\",\"count\":1,\"weight\":0}," +
-                "{\"name\":\"azure\",\"count\":1,\"weight\":0}]," +
-            "\"title\":\"Cloud Virtualization, Containers and APIs | Coursera\"," +
-            "\"url\":\"https://www.coursera.org/learn/cloud-virtualization-containers-api-duke\"," +
-            "\"submittedById\":\"48263056-61ad-b4a3-05e0-712025051842\"," +
-            "\"dateCreated\":\"2023-09-26T01:24:45.185+00:00\"," +
-            "\"dateUpdated\":\"2023-09-26T01:24:45.185+00:00\"}";
+        var id = new Guid("7ea52a6c-e590-4cb5-8c2b-b41c05522e62");
+        var expectedJson = "{\"id\": \"7ea52a6c-e590-4cb5-8c2b-b41c05522e62\",\"description\": \"The first 100 of you can use code SCHOOL2022 for 20% off courses and bundles at https://dometrain.comBecome a Patreon and get source code access: https://www...\",\"domain\": \"youtube.com\",\"imageUrl\": \"https://i.ytimg.com/vi/zCKwlgtVLnQ/maxresdefault.jpg\",\"keywords\": [],\"tags\": [  {    \"name\": \"csharp\",    \"count\": 1,    \"weight\": 0  },  {    \"name\": \"dotnet\",    \"count\": 1,    \"weight\": 0  },  {    \"name\": \"youtube\",    \"count\": 1,    \"weight\": 0  },  {    \"name\": \"video\",    \"count\": 1,    \"weight\": 0  },  {    \"name\": \"c#\",    \"count\": 1,    \"weight\": 0  },  {    \"name\": \"technology\",    \"count\": 1,    \"weight\": 0  },  {    \"name\": \"software\",    \"count\": 1,    \"weight\": 0  },  {    \"name\": \"development\",    \"count\": 1,    \"weight\": 0  },  {    \"name\": \"microsoft\",    \"count\": 1,    \"weight\": 0  },  {    \"name\": \"nick chapsas\",    \"count\": 1,    \"weight\": 0  },  {    \"name\": \"software development\",    \"count\": 1,    \"weight\": 0  }],\"title\": \"The INSANE performance boost of LINQ in .NET 7 - YouTube\",\"url\": \"https://www.youtube.com/watch?v\\u003dzCKwlgtVLnQ\",\"submittedById\": \"48263056-61ad-b4a3-05e0-712025051842\",\"dateCreated\": \"2023-10-01T21:54:44.172+00:00\",\"dateUpdated\": \"2023-10-01T21:54:44.172+00:00\"\r\n    }";
 
         var expectedLink = JsonSerializer.Deserialize<Link>(expectedJson)!;
 
         // Act
-        var response = await HttpClient.GetAsync(string.Format(GET_LINK_ENDPOINT, API_VERSION, id));
+        var response = await HttpClient.GetAsync(string.Format(GET_LINK_ENDPOINT, API_VERSION, id.ToString()));
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -63,18 +51,46 @@ public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<Web
     }
 
     [Theory]
-    [InlineData(null)]
-    [InlineData("")]
-    [InlineData(" ")]
-    [InlineData("00000000-0000-0000-0000-000000000000")]
     [InlineData("fa431c01-992b-4773-a504-05b9b672a3b9")]
-    public async Task WebApi_GetLinkById_NotFoundResult(string invalidId)
+    public async Task WebApi_GetLinkById_ValidId_NotFound_OkResult(string invalidId)
     {
         // Act
         var response = await HttpClient.GetAsync(string.Format(GET_LINK_ENDPOINT, API_VERSION, invalidId)); // Replace with your endpoint URL
 
         // Assert
+        // - If a link isn't found, an Ok is still returned (the endpoint itself exists).
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        response.EnsureSuccessStatusCode();
+
+        // - However, the deserialized LinkItem will be null.
+        var content = await response.Content.ReadAsStringAsync();
+        Assert.Empty(content);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
+    public async Task WebApi_GetLinkById_NullOrEmptyId_NotFoundResult(string invalidId)
+    {
+        // Act
+        var response = await HttpClient.GetAsync(string.Format(GET_LINK_ENDPOINT, API_VERSION, invalidId)); // Replace with your endpoint URL
+
+        // Assert
+        // - This will automatically return a NotFound, without even hitting the endpoint.
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData("00000000-0000-0000-0000-000000000000")]
+    public async Task WebApi_GetLinkById_GuidEmptyId_BadRequestResult(string emptyId)
+    {
+        // Act
+        var response = await HttpClient.GetAsync(string.Format(GET_LINK_ENDPOINT, API_VERSION, emptyId)); // Replace with your endpoint URL
+
+        // Assert
+        // - This differs from WebApi_GetLinkById_NullOrEmptyId_NotFoundResult as it's a valid route, but not a valid Id
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
@@ -89,17 +105,13 @@ public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<Web
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
+    #endregion
 
-    [Theory]
-    [InlineData(null, null)]
-    [InlineData(1, 10)]
-    [InlineData(2, 16)]
-    public async Task WebApi_GetLinks_OkResult(int? pageNo, int? pageSize)
+    [Fact]
+    public async Task WebApi_GetLinks_OkResult()
     {
         // Arrange
-        var url = pageNo != null && pageSize != null ? string.Format(GET_LINKS_WITH_PAGENO_PAGESIZE_ENDPOINT, API_VERSION, pageNo, pageSize) :
-                pageNo != null ? string.Format(GET_LINKS_WITH_PAGENO_ENDPOINT, API_VERSION, pageNo) :
-                string.Format(GET_LINKS_ENDPOINT, API_VERSION);
+        var url = string.Format(GET_LINKS_ENDPOINT, API_VERSION);
 
         // Act
         var response = await HttpClient.GetAsync(url);
@@ -109,39 +121,77 @@ public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<Web
         response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync();
-        var actual = JsonSerializer.Deserialize<PagedResults<Link>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var actual = JsonSerializer.Deserialize<PagedResults<LinkItem>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         Assert.NotNull(actual);
-        Assert.Equal(pageNo ?? DEFAULT_PAGE_NO, actual.PageNumber);
-        Assert.Equal(pageSize ?? DEFAULT_PAGE_SIZE, actual.PageSize);
+        Assert.Equal(DEFAULT_PAGE_NO, actual.PageNumber);
+        Assert.Equal(DEFAULT_PAGE_SIZE, actual.PageSize);
+        Assert.True(actual.IsSuccess);
+        Assert.False(actual.IsError);
 
         Assert.NotNull(actual.Results);
         var links = actual.Results.ToList();
 
-        Assert.Equal(pageSize ?? DEFAULT_PAGE_SIZE, links.Count);
+        Assert.Equal(DEFAULT_PAGE_SIZE, links.Count);
+        Assert.Equal(actual.PageSize, links.Count);
     }
 
     [Theory]
-    [InlineData("nick chapsas")]
-    [InlineData("github, react")]
-    public async Task WebApi_GetLinksByTags_OkResult(string values)
+    [InlineData(1)]
+    [InlineData(2)]
+    public async Task WebApi_GetLinks_With_PageNo_OkResult(int? pageNo)
     {
         // Arrange
-        var tags = string.Join(',', values.Split(',').Select(x => x.Trim()).ToList());
+        var url = string.Format(GET_LINKS_ENDPOINT_WITH_PAGENO, API_VERSION, pageNo.ToString());
 
         // Act
-        var response = await HttpClient.GetAsync(string.Format(GET_LINKS_WITH_TAGS_ENDPOINT, API_VERSION, tags));
+        var response = await HttpClient.GetAsync(url);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync();
-        var actual = JsonSerializer.Deserialize<PagedResults<Link>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var actual = JsonSerializer.Deserialize<PagedResults<LinkItem>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        Assert.NotNull(actual);
+        Assert.Equal(pageNo, actual.PageNumber);
+        Assert.Equal(DEFAULT_PAGE_SIZE, actual.PageSize);
+        Assert.True(actual.IsSuccess);
+        Assert.False(actual.IsError);
+
+        Assert.NotNull(actual.Results);
+        var links = actual.Results.ToList();
+
+        Assert.Equal(DEFAULT_PAGE_SIZE, links.Count);
+        Assert.Equal(actual.PageSize, links.Count);
+    }
+
+    [Theory]
+    [InlineData("recipes")]
+    [InlineData("toronto,nba,raptors")]
+    [InlineData("nick chapsas")]
+    [InlineData("github, react")]
+    public async Task WebApi_GetLinks_With_Tags_OkResult(string values)
+    {
+        // Arrange
+        var tags = string.Join(',', values.Split(',').Select(x => x.Trim()).ToList());
+
+        // Act
+        var response = await HttpClient.GetAsync(string.Format(GET_LINKS_ENDPOINT_WITH_TAGS, API_VERSION, tags));
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+        var actual = JsonSerializer.Deserialize<PagedResults<LinkItem>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
         Assert.NotNull(actual);
         Assert.Equal(DEFAULT_PAGE_NO, actual.PageNumber);
         Assert.Equal(DEFAULT_PAGE_SIZE, actual.PageSize);
+        Assert.True(actual.IsSuccess);
+        Assert.False(actual.IsError);
 
         Assert.NotNull(actual.Results);
         var links = actual.Results.ToList();
@@ -159,10 +209,10 @@ public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<Web
     }
 
     [Theory]
-    [InlineData(".net, c#", 16)]
-    [InlineData("github, react", 23)]
-    [InlineData("csharp", null)]
-    public async Task WebApi_GetRelatedTags_OkResult(string values, int? count)
+    [InlineData("dotnet, csharp")]
+    [InlineData("github, react")]
+    [InlineData("csharp")]
+    public async Task WebApi_GetRelatedTags_OkResult(string values)
     {
         // Arrange
         var tags = string.Join(',', values.Split(',').Select(x => x.Trim()).ToList());
@@ -196,19 +246,55 @@ public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<Web
     }
 
     [Theory]
-    [InlineData("")]
-    [InlineData(" ")]
-    [InlineData(",")]
-    public async Task WebApi_GetLinksByTags_With_InvalidTags_OkResult(string values)
+    [InlineData("dotnet, csharp", 16)]
+    [InlineData("github, react", 23)]
+    [InlineData("csharp", 2)]
+    public async Task WebApi_GetRelatedTags_WithCount_OkResult(string values, int? count)
     {
         // Arrange
         var tags = string.Join(',', values.Split(',').Select(x => x.Trim()).ToList());
 
         // Act
-        var response = await HttpClient.GetAsync(string.Format(GET_LINKS_WITH_TAGS_ENDPOINT, API_VERSION, tags));
+        var response = await HttpClient.GetAsync(string.Format(GET_LINKS_RELATED_TAGS_WITH_COUNT_ENDPOINT, API_VERSION, tags, count));
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+        var actuals = JsonSerializer.Deserialize<LinkTag[]>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        Assert.NotNull(actuals);
+        Assert.NotEmpty(actuals);
+        Assert.True(actuals.Length <= count);
+        decimal totalWeight = 0m;
+
+        foreach (var actual in actuals)
+        {
+            Assert.True(actual.Count > decimal.Zero);
+
+            Assert.True(actual.Weight > decimal.Zero);
+
+            totalWeight += actual.Weight;
+        }
+
+        var delta = 0.00001m;
+        Assert.True(decimal.One - totalWeight <= delta);
+    }
+
+    [Theory]
+    [InlineData("dotnet, csharp", 0)]
+    [InlineData("github, react", -1)]
+    [InlineData("csharp", null)]
+    public async Task WebApi_GetRelatedTags_With_InvalidCount_BadRequestResult(string values, int? count)
+    {
+        // Arrange
+        var tags = string.Join(',', values.Split(',').Select(x => x.Trim()).ToList());
+
+        // Act
+        var response = await HttpClient.GetAsync(string.Format(GET_LINKS_RELATED_TAGS_WITH_COUNT_ENDPOINT, API_VERSION, tags, count));
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        response.EnsureSuccessStatusCode();
     }
 }
