@@ -48,7 +48,7 @@ export default function BreadCrumbs({}: BreadCrumbsProps) {
    });
 
    return (
-      <div className={`${styles.breadcrumbs} container`}>
+      <div className={`${styles.breadcrumbs} container-fluid`}>
          <Link href='/' className={'text-primary'} title='Home'>
             Home
          </Link>{' '}

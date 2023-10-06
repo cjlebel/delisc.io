@@ -23,21 +23,21 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
 
     #region - Links
 
-    public async Task<LinkEntity?> GetByUrlAsync(string url, CancellationToken token = default)
+    public async Task<LinkEntity?> GetLinkByUrlAsync(string url, CancellationToken token = default)
     {
         Guard.Against.NullOrEmpty(url);
 
         return await FirstOrDefault(x => x.Url == url, token);
     }
 
-    public async Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> GetByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> GetLinksByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         Guard.Against.NullOrEmpty(domain);
 
         return await FindAsync(x => x.Domain == domain, pageNo, pageSize, token);
     }
 
-    public async Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> GetByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> GetLinksByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         var arrTags = tags as string[] ?? Array.Empty<string>();
 
@@ -54,7 +54,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
 
     /// <summary>
     /// Gets a collection of tags that are related to the tags that were specified.
-    /// The tags that are returned are the same tags that are in all of the Links that would be found with the GetByTagsAsync(), but without including the paging.
+    /// The tags that are returned are the same tags that are in all of the Links that would be found with the GetLinksByTagsAsync(), but without including the paging.
     /// </summary>
     /// <param name="tags">The tags to use to get all other related tags</param>
     /// <param name="count">The max number of tags to return</param>
@@ -66,10 +66,12 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
             return Enumerable.Empty<LinkTagEntity>();
 
         // Because we're going to exclude the incoming tags from the results
-        count += count + tags.Length;
+        var tmpCount = count + tags.Length;
+
+        var newTags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Select(t => t.ToLower()).ToArray();
 
         // If tags.Length is 0, get all tags. Else, get only those that are related to the specified tags
-        BsonDocument match = tags.Length == 0 ? new BsonDocument("$match", new BsonDocument()) :
+        BsonDocument match = newTags.Length == 0 ? new BsonDocument("$match", new BsonDocument()) :
             new BsonDocument("$match", new BsonDocument("Tags.Name", new BsonDocument("$all", new BsonArray(tags))));
 
         var pipeline = new BsonDocument[]
@@ -99,13 +101,20 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
         // Execute the aggregation pipeline
         var cursor = await Collection.AggregateAsync<BsonDocument>(pipeline, cancellationToken: token);
 
-        var relatedTags = cursor?.ToList(token).OrderByDescending(t => t.Count()).Take(count).Select(x => new LinkTagEntity(x["TagName"].AsString, x["Count"].AsInt32)).ToArray() ?? Array.Empty<LinkTagEntity>();
+        var relatedTags = cursor?
+            .ToList(token)
+            .OrderByDescending(t => t["Count"].AsInt32)
+            //TODO: Filter out here. Wasn't able to get it to work
+            //.Where(x => !tags.Contains(x["Name"].AsString))
+            .Take(tmpCount)
+            .Select(x => new LinkTagEntity(x["TagName"].AsString, x["Count"].AsInt32)).ToArray()
+                          ?? Array.Empty<LinkTagEntity>();
 
         if (!relatedTags.Any())
             return Enumerable.Empty<LinkTagEntity>();
 
         // Strip out the tags we used to get the related tags (we only want related)
-        relatedTags = relatedTags.Where(x => !tags.Contains(x.Name)).ToArray();
+        relatedTags = relatedTags.Where(x => !tags.Contains(x.Name)).Take(count).ToArray();
 
         var totalCounts = relatedTags.Sum(x => x.Count);
 
@@ -114,7 +123,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
             relatedTag.Weight = totalCounts > 0m ? (relatedTag.Count / (decimal)totalCounts) : 0m;
         }
 
-        return relatedTags.OrderByDescending(t => t.Count).ThenBy(t=>t.Name);
+        return relatedTags.OrderByDescending(t => t.Count).ThenBy(t => t.Name);
     }
 
     #endregion

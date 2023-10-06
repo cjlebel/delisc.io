@@ -1,6 +1,6 @@
 namespace Deliscio.Modules.Links.Common.Models;
 
-public class LinkTag
+public sealed record LinkTag
 {
     public string Name { get; set; }
     public int Count { get; set; }
@@ -20,7 +20,7 @@ public class LinkTag
     {
         Name = name;
         Count = count;
-        Weight = weight;
+        Weight = decimal.Round(weight, 10);
     }
 
     public static LinkTag Create(string name)

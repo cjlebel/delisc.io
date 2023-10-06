@@ -4,6 +4,7 @@ using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Apis.WebApi.Managers;
 using Deliscio.Core.Configuration;
 using Deliscio.Core.Data.Mongo;
+using Deliscio.Core.Middleware;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links;
 using Deliscio.Modules.Links.Common.Interfaces;
@@ -57,6 +58,7 @@ public class Program
 
         // AddAsync services to the container.
         builder.Services.AddCors();
+        builder.Services.AddAuthentication();
         builder.Services.AddAuthorization();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -101,6 +103,8 @@ public class Program
             });
         });
 
+        builder.Services.AddSingleton<IConfiguration>(config);
+
         // Links
         builder.Services.AddSingleton<ILinksManager, LinksManager>();
         builder.Services.AddSingleton<ILinksService, LinksService>();
@@ -109,10 +113,10 @@ public class Program
         builder.Services.AddSingleton<IRequestHandler<GetLinkByIdQuery, Link?>, GetsLinkByIdQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinkByUrlQuery, Link?>, GetLinkByUrlQueryHandler>();
 
-        builder.Services.AddSingleton<IRequestHandler<GetLinksByIdsQuery, IEnumerable<Link>>, GetLinksByIdsQueryHandler>();
-        builder.Services.AddSingleton<IRequestHandler<GetLinksQuery, PagedResults<Link>>, GetLinksQueryHandler>();
-        builder.Services.AddSingleton<IRequestHandler<GetLinksByDomainQuery, PagedResults<Link>>, GetLinksByDomainQueryHandler>();
-        builder.Services.AddSingleton<IRequestHandler<GetLinksByTagsQuery, PagedResults<Link>>, GetsLinksByTagsQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetLinksByIdsQuery, IEnumerable<LinkItem>>, GetLinksByIdsQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetLinksQuery, PagedResults<LinkItem>>, GetLinksQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetLinksByDomainQuery, PagedResults<LinkItem>>, GetLinksByDomainQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetLinksByTagsQuery, PagedResults<LinkItem>>, GetsLinksByTagsQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinksRelatedTagsQuery, LinkTag[]>, GetLinksRelatedTagsQueryHandler>();
 
         builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkCommandHandler>();
@@ -140,7 +144,6 @@ public class Program
         builder.Services.AddSingleton<ITaggerProcessor, TaggerProcessor>();
         // This is weird, I should not need to add these here?!?!?
 
-
         builder.Services.AddSingleton<LinksApiEndpoints>();
         builder.Services.AddSingleton<UserLinksApiEndpoints>();
 
@@ -152,11 +155,8 @@ public class Program
         var userLinksApiEndpoints = app.Services.GetRequiredService<UserLinksApiEndpoints>();
         userLinksApiEndpoints.MapEndpoints(app);
 
-        // Disabling for now to get Next working
+        // *** Disabling for now to get Next working *** 
         //app.UseHttpsRedirection();
-
-
-        app.UseAuthorization();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -173,6 +173,13 @@ public class Program
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", $"Delisc.io API {API_VERSION}");
             });
         }
+
+        // NOTE: Order is important.
+        app.UseMiddleware<ApiKeyMiddleware>();
+
+        app.UseAuthorization();
+
+
 
         app.Run();
     }

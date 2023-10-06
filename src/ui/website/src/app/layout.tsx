@@ -3,8 +3,7 @@ import '@/styles/globals.scss';
 
 import { Inter } from 'next/font/google';
 
-import { Header, Footer } from '@/components/elements/navigation';
-import BreadCrumbs from '@/components/elements/breadcrumbs';
+import { Header, Footer, BreadCrumbs } from '@/components/elements/navigation';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,12 +13,14 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+   const interClassName = inter.className;
+
    return (
-      <html lang='en'>
-         <body className={`${inter.className} d-flex flex-column`}>
+      <html lang='en' suppressHydrationWarning={true}>
+         <body suppressHydrationWarning={true}>
             <Header />
             <BreadCrumbs />
-            <main className='container'>{children}</main>
+            <main className='container-fluid'>{children}</main>
             <Footer />
          </body>
       </html>

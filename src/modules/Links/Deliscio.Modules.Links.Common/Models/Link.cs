@@ -1,6 +1,6 @@
 namespace Deliscio.Modules.Links.Common.Models;
 
-public class Link
+public sealed record Link
 {
     public string Id { get; set; }
 
@@ -75,13 +75,7 @@ public class Link
     /// <param name="description">The description of the Link.</param>
     /// <param name="tags">The tags that are associated with the Link.</param>
     /// <returns></returns>
-    /// <exception cref="System.ArgumentNullException">
-    /// url
-    /// or
-    /// title
-    /// or
-    /// tags
-    /// </exception>
+    /// <exception cref="System.ArgumentNullException">url or title or tags </exception>
     public static Link Create(string url, string submittedById, string title, string description, IEnumerable<string>? tags = null)
     {
         if (string.IsNullOrWhiteSpace(url))

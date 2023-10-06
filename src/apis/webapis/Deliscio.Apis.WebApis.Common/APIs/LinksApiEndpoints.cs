@@ -1,5 +1,4 @@
 using System.Net;
-
 using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
@@ -9,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+
 using SubmitLinkRequest = Deliscio.Apis.WebApi.Common.Requests.SubmitLinkRequest;
 
 namespace Deliscio.Apis.WebApi.Common.APIs;
@@ -39,10 +39,8 @@ public class LinksApiEndpoints : BaseApiEndpoints
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         MapGetLink(endpoints);
-        MapGetLinksAsPager(endpoints);
-        MapGetLinksByTagsAsPager(endpoints);
-        MapGetRelatedTags(endpoints);
-        MapGetTopTags(endpoints);
+        MapLinksSearch(endpoints);
+        MapGetTags(endpoints);
         MapSubmitLink(endpoints);
     }
 
@@ -58,22 +56,18 @@ public class LinksApiEndpoints : BaseApiEndpoints
                 async ([FromRoute] string? linkId, CancellationToken cancellationToken) =>
                 {
                     if (string.IsNullOrWhiteSpace(linkId))
-                        return Results.NotFound(ID_CANNOT_BE_NULL_OR_WHITESPACE);
+                        return Results.BadRequest(ID_CANNOT_BE_NULL_OR_WHITESPACE);
 
                     var guidId = Guid.Parse(linkId);
                     if (guidId == Guid.Empty)
-                        return Results.NotFound(ID_CANNOT_BE_NULL_OR_WHITESPACE);
+                        return Results.BadRequest(ID_CANNOT_BE_NULL_OR_WHITESPACE);
 
                     var result = await _manager.GetLinkAsync(linkId, cancellationToken);
-
-                    if (result is null)
-                        return Results.NotFound(string.Format(LINK_COULD_NOT_BE_FOUND, linkId));
 
                     return Results.Ok(result);
                 })
             .Produces<Link>()
             .ProducesProblem((int)HttpStatusCode.OK)
-            .ProducesProblem((int)HttpStatusCode.NotFound)
             .ProducesProblem((int)HttpStatusCode.BadRequest)
             .WithDisplayName("GetLink")
             .WithSummary("Gets single link item")
@@ -84,139 +78,81 @@ public class LinksApiEndpoints : BaseApiEndpoints
     }
 
     /// <summary>
-    /// Maps the endpoints that gets a collection of Links as a page of results.
+    /// Maps the endpoints that gets a collection of Links as a page of results by the parameters that were populated.
     /// </summary>
     /// <param name="endpoints"></param>
-    /// <remarks>/v1/links/</remarks>
-    /// <remarks>/v1/links/1</remarks>
-    /// <remarks>/v1/links/1/25</remarks>
-    private void MapGetLinksAsPager(IEndpointRouteBuilder endpoints)
+    /// <exception cref="NotImplementedException"></exception>
+    private void MapLinksSearch(IEndpointRouteBuilder endpoints)
     {
-        // This is also the same as /v1/links where no id, pageNo, or pageSize is provided
-        endpoints.MapGet("v1/links/{pageNo:int?}/{pageSize:int?}",
-                async ([FromRoute] int? pageNo, [FromRoute] int? pageSize, CancellationToken cancellationToken) =>
+        endpoints.MapGet("v1/links", async ([FromQuery] string? search, [FromQuery] string? tags, [FromQuery] int? page, [FromQuery] int? count, CancellationToken cancellationToken) =>
+        {
+            var newPage = page ?? DEFAULT_PAGE_NO;
+
+            if (newPage < 1)
+                return Results.BadRequest(PAGE_NO_CANNOT_BE_LESS_THAN_ONE);
+
+            var newPageSize = count ?? DEFAULT_PAGE_SIZE;
+
+            if (newPageSize < 1)
+                return Results.BadRequest(PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
+
+            var newSearch = search ?? string.Empty;
+            var newTags = tags ?? string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(newTags))
             {
-                // pageNo and pageSize are nullable, so we need to check for nulls and set default values
-                var newPageNo = pageNo ?? DEFAULT_PAGE_NO;
-                var newPageSize = pageSize ?? DEFAULT_PAGE_SIZE;
+                var tagsList = WebUtility.UrlDecode(newTags).Split(",").ToArray();
 
-                if (newPageNo < 1)
-                    return Results.BadRequest(PAGE_NO_CANNOT_BE_LESS_THAN_ONE);
+                var resultsByTags = await _manager.GetLinksByTagsAsync(tagsList, newPage, newPageSize, cancellationToken);
 
-                if (newPageSize < 1)
-                    return Results.BadRequest(PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
+                return Results.Ok(resultsByTags);
+            }
 
-                var results = await _manager.GetLinksAsync(newPageNo, newPageSize, cancellationToken);
+            if (!string.IsNullOrWhiteSpace(newSearch))
+            {
+                throw new NotImplementedException();
+            }
 
-                if (!results.Results.Any())
-                    return Results.NotFound(string.Format(LINKS_COULD_NOT_BE_FOUND, pageNo));
+            var results = await _manager.GetLinksAsync(newPage, newPageSize, cancellationToken);
+            return Results.Ok(results);
 
-                return Results.Ok(results);
-            })
-            .Produces<PagedResults<Link>>()
-            .ProducesProblem((int)HttpStatusCode.OK)
-            .ProducesProblem((int)HttpStatusCode.NotFound)
-            .ProducesProblem((int)HttpStatusCode.BadRequest)
-            .WithDisplayName("GetLinks")
-            .WithSummary("Get paginated collection of links")
-            .WithDescription("This endpoint retrieves paginated links based on pageNo and pageSize. If either pageNo or pageSize is less than 1, a BadRequest is returned");
+            //var results = await _manager.SearchForLinksAsync(search, cancellationToken);
+
+            //return Results.Ok(results);
+
+            //return Results.Ok();
+        })
+        .Produces<PagedResults<LinkItem>>()
+        .ProducesProblem((int)HttpStatusCode.OK)
+        .ProducesProblem((int)HttpStatusCode.BadRequest)
+        .WithDisplayName("SearchForLinks")
+        .WithSummary("Search for links")
+        .WithDescription("This endpoint searches for links based on the search term provided. If the search term is null or whitespace, a BadRequest is returned");
     }
 
-    /// <summary>
-    /// Maps the endpoints that gets a collection of Links as a page of results by the provided tags.
-    /// </summary>
-    /// <param name="endpoints"></param>
-    private void MapGetLinksByTagsAsPager(IEndpointRouteBuilder endpoints)
+    private void MapGetTags(IEndpointRouteBuilder endpoints)
     {
-        // This is also the same as /v1/links where no id, pageNo, or pageSize is provided
-        endpoints.MapGet("v1/links/{tags}/{pageNo:int?}/{pageSize:int?}",
-                async ([FromRoute] string tags, [FromRoute] int? pageNo, [FromRoute] int? pageSize, CancellationToken cancellationToken) =>
-                {
-                    // pageNo and pageSize are nullable, so we need to check for nulls and set default values
-                    var newPageNo = pageNo ?? DEFAULT_PAGE_NO;
-                    var newPageSize = pageSize ?? DEFAULT_PAGE_SIZE;
-
-                    if (newPageNo < 1)
-                        return Results.BadRequest(PAGE_NO_CANNOT_BE_LESS_THAN_ONE);
-
-                    if (newPageSize < 1)
-                        return Results.BadRequest(PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
-
-                    var tagsList = WebUtility.UrlDecode(tags).Split(",").ToArray();
-
-                    var results = await _manager.GetLinksByTagsAsync(tagsList, newPageNo, newPageSize, cancellationToken);
-
-                    if (!results.Results.Any())
-                        return Results.NotFound(string.Format(LINKS_COULD_NOT_BE_FOUND, pageNo));
-
-                    return Results.Ok(results);
-                })
-            .Produces<PagedResults<Link>>()
-            .ProducesProblem((int)HttpStatusCode.OK)
-            .ProducesProblem((int)HttpStatusCode.NotFound)
-            .ProducesProblem((int)HttpStatusCode.BadRequest)
-            .WithDisplayName("GetLinksByTags")
-            .WithSummary("Get paginated collection of links")
-            .WithDescription("This endpoint retrieves paginated links based on pageNo and pageSize. If either pageNo or pageSize is less than 1, a BadRequest is returned");
-    }
-
-    /// <summary>
-    /// Maps the endpoints that gets a collection of Tags that are related to the provided tags, using the Links to get the results.
-    /// </summary>
-    /// <param name="endpoints"></param>
-    private void MapGetRelatedTags(IEndpointRouteBuilder endpoints)
-    {
-        endpoints.MapGet("v1/links/tags/{tags}/{count:int?}",
-                async ([FromRoute] string tags, [FromRoute] int? count, CancellationToken cancellationToken) =>
-                {
-                    if (string.IsNullOrWhiteSpace(tags))
-                        return Results.BadRequest(TAGS_CANNOT_BE_NULL_OR_EMPTY);
-
-                    var newCount = count ?? DEFAULT_TAG_COUNT;
-
-                    if (newCount < 1)
-                        return Results.BadRequest(TAGS_COUNT_CANNOT_BE_LESS_THAN_ONE);
-
-                    var tagsList = tags.Split(",").ToArray();
-
-                    var results = await _manager.GetRelatedTagsAsync(tagsList, newCount, cancellationToken);
-
-                    return Results.Ok(results);
-                })
-            .Produces<LinkTag[]>()
-            .ProducesProblem((int)HttpStatusCode.OK)
-            .ProducesProblem((int)HttpStatusCode.NotFound)
-            .ProducesProblem((int)HttpStatusCode.BadRequest)
-            .WithDisplayName("GetRelatedTags")
-            .WithSummary("Get a collection of tags that are related to the tags provided")
-            .WithDescription("");
-    }
-
-    private void MapGetTopTags(IEndpointRouteBuilder endpoints)
-    {
-        endpoints.MapGet("v1/links/tags/top/{count:int?}",
-                async ([FromRoute] int? count, CancellationToken cancellationToken) =>
+        endpoints.MapGet("v1/links/tags",
+                async ([FromQuery] string? tags, [FromQuery] int? count, CancellationToken cancellationToken) =>
                 {
                     var newCount = count ?? DEFAULT_TAG_COUNT;
 
                     if (newCount < 1)
                         return Results.BadRequest(TAGS_COUNT_CANNOT_BE_LESS_THAN_ONE);
 
-                    var tagsList = Array.Empty<string>();
+                    var tagsArr = tags?.Split(",").ToArray() ?? Array.Empty<string>();
 
-                    var results = await _manager.GetRelatedTagsAsync(tagsList, newCount, cancellationToken);
+                    var results = await _manager.GetTagsAsync(tagsArr, newCount, cancellationToken);
 
                     return Results.Ok(results);
                 })
             .Produces<LinkTag[]>()
             .ProducesProblem((int)HttpStatusCode.OK)
-            .ProducesProblem((int)HttpStatusCode.NotFound)
             .ProducesProblem((int)HttpStatusCode.BadRequest)
             .WithDisplayName("GetTopTags")
             .WithSummary("Get a collection of the top tags")
             .WithDescription("");
     }
-
 
     /// <summary>
     /// Maps the endpoints that submits a new Link.

@@ -1,6 +1,4 @@
-using Ardalis.GuardClauses;
 using Deliscio.Core.Data.Mongo.Attributes;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -10,7 +8,7 @@ public class MongoDbContext<TDocument> : IMongoDbContext<TDocument>
     private readonly IMongoDatabase _db;
 
     private const string COULD_NOT_GET_OPTIONS = "Could not retrieve the options";
-    private const string COULD_NOT_GET_CONFIG = "Could not retrieve the config";
+    //private const string COULD_NOT_GET_CONFIG = "Could not retrieve the config";
     private const string COULD_NOT_GET_CONNSTRING = "Could not retrieve the connection string";
     private const string COULD_NOT_GET_DBNAME = "Could not retrieve the database name";
 
@@ -26,16 +24,16 @@ public class MongoDbContext<TDocument> : IMongoDbContext<TDocument>
         _db = client.GetDatabase(databaseName);
     }
 
-    public MongoDbContext(IConfiguration config)
-    {
-        Guard.Against.Null(config, message: COULD_NOT_GET_CONFIG);
+    //public MongoDbContext(IConfiguration config)
+    //{
+    //    Guard.Against.Null(config, message: COULD_NOT_GET_CONFIG);
 
-        var connection = config["MongoDbSettings:ConnectionString"] ?? throw new ArgumentException(COULD_NOT_GET_CONNSTRING, nameof(config));
-        var dbName = config["MongoDbSettings:DatabaseName"] ?? throw new ArgumentException(COULD_NOT_GET_DBNAME, nameof(config));
+    //    var connection = config["MongoDbSettings:ConnectionString"] ?? throw new ArgumentException(COULD_NOT_GET_CONNSTRING, nameof(config));
+    //    var dbName = config["MongoDbSettings:DatabaseName"] ?? throw new ArgumentException(COULD_NOT_GET_DBNAME, nameof(config));
 
-        var client = new MongoClient(connection);
-        _db = client.GetDatabase(dbName);
-    }
+    //    var client = new MongoClient(connection);
+    //    _db = client.GetDatabase(dbName);
+    //}
 
     public MongoDbContext(IOptions<MongoDbOptions> options)
     {

@@ -7,7 +7,7 @@ namespace Deliscio.Modules.Links.MediatR.Queries.Handlers;
 /// <summary>
 /// Handles executing the GetLinksByIds Query and getting a collection of links by their unique id
 /// </summary>
-public class GetLinksByIdsQueryHandler : IRequestHandler<GetLinksByIdsQuery, IEnumerable<Link>>
+public class GetLinksByIdsQueryHandler : IRequestHandler<GetLinksByIdsQuery, IEnumerable<LinkItem>>
 {
     private readonly ILinksService _linksService;
 
@@ -16,7 +16,7 @@ public class GetLinksByIdsQueryHandler : IRequestHandler<GetLinksByIdsQuery, IEn
         _linksService = linksService;
     }
 
-    public async Task<IEnumerable<Link>> Handle(GetLinksByIdsQuery command, CancellationToken cancellationToken)
+    public async Task<IEnumerable<LinkItem>> Handle(GetLinksByIdsQuery command, CancellationToken cancellationToken)
     {
         var link = await _linksService.GetByIdsAsync(command.Ids, cancellationToken);
 

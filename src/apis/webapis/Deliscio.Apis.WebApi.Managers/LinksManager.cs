@@ -68,7 +68,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
     /// <remarks>
     /// No async/await is used here, because it's not needed.
     /// </remarks>
-    public Task<PagedResults<Link>> GetLinksAsync(int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public Task<PagedResults<LinkItem>> GetLinksAsync(int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         Guard.Against.NegativeOrZero(pageNo);
         Guard.Against.NegativeOrZero(pageSize);
@@ -78,12 +78,22 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         return _mediator.Send(query, token);
     }
 
-    public async ValueTask<IEnumerable<Link>> GetLinksByIdsAsync(string[] ids, CancellationToken token = default)
+    public async Task<PagedResults<LinkItem>> GetLinksByDomainAsync(string domain, int pageNo = 1, int pageSize = 25,
+        CancellationToken token = default)
+    {
+        Guard.Against.NullOrWhiteSpace(domain);
+
+        var query = new GetLinksByDomainQuery(domain, pageNo, pageSize);
+
+        return await _mediator.Send(query, token);
+    }
+
+    public async ValueTask<IEnumerable<LinkItem>> GetLinksByIdsAsync(string[] ids, CancellationToken token = default)
     {
         var enumerable = ids ?? Array.Empty<string>();
 
         if (enumerable.Length == 0)
-            return Enumerable.Empty<Link>();
+            return Enumerable.Empty<LinkItem>();
 
         var query = new GetLinksByIdsQuery(enumerable);
 
@@ -100,16 +110,16 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
     /// <returns>
     /// A page of links where each link contains all of the links that were given.
     /// </returns>
-    public async ValueTask<PagedResults<Link>> GetLinksByTagsAsync(string[] tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async ValueTask<PagedResults<LinkItem>> GetLinksByTagsAsync(string[] tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         var enumerable = tags ?? Array.Empty<string>();
         if (enumerable.Length == 0)
-            return new PagedResults<Link>();
+            return new PagedResults<LinkItem>();
 
         Guard.Against.NegativeOrZero(pageNo);
         Guard.Against.NegativeOrZero(pageSize);
 
-        var query = new GetLinksByTagsQuery(tags, pageNo, pageSize);
+        var query = new GetLinksByTagsQuery(enumerable, pageNo, pageSize);
 
         return await _mediator.Send(query, token);
     }
@@ -122,7 +132,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
     /// <param name="count">The number of tags to return</param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public Task<LinkTag[]> GetRelatedTagsAsync(string[] tags, int? count = default, CancellationToken token = default)
+    public Task<LinkTag[]> GetTagsAsync(string[] tags, int? count = default, CancellationToken token = default)
     {
         var query = new GetLinksRelatedTagsQuery(tags, count);
 

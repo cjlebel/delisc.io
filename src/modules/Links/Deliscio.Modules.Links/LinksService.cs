@@ -107,18 +107,18 @@ public class LinksService : ServiceBase, ILinksService
     /// <param name="pageSize">The number of results per page</param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public async Task<PagedResults<Link>> GetAsync(int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async Task<PagedResults<LinkItem>> GetAsync(int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         var rslts = await Find(_ => true, pageNo, pageSize, token);
 
         return GetPageOfResults(rslts.Results, pageNo, pageSize, rslts.TotalCount);
     }
 
-    public async Task<IEnumerable<Link>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken token = default)
+    public async Task<IEnumerable<LinkItem>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken token = default)
     {
         var rslts = await _linksRepository.GetAsync(ids, token);
 
-        var links = Mapper.Map(rslts);
+        var links = Mapper.Map<LinkItem>(rslts);
 
         return links;
     }
@@ -132,13 +132,13 @@ public class LinksService : ServiceBase, ILinksService
     /// <param name="token"></param>
     /// /// <exception cref="ArgumentNullException">If the domain is null or empty</exception>
     /// <returns></returns>
-    public async Task<PagedResults<Link>> GetByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async Task<PagedResults<LinkItem>> GetLinksByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(domain);
 
-        var rslts = await _linksRepository.GetByDomainAsync(domain, pageNo, pageSize, token);
+        var rslts = await _linksRepository.GetLinksByDomainAsync(domain, pageNo, pageSize, token);
 
-        var links = Mapper.Map(rslts.Results);
+        var links = Mapper.Map<LinkItem>(rslts.Results);
 
         return GetPageOfResults(links, pageNo, pageSize, rslts.TotalCount);
     }
@@ -152,7 +152,7 @@ public class LinksService : ServiceBase, ILinksService
     /// <param name="token"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public async Task<PagedResults<Link>> GetByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async Task<PagedResults<LinkItem>> GetLinksByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         var array = tags.ToArray();
 
@@ -160,9 +160,9 @@ public class LinksService : ServiceBase, ILinksService
 
         array = array.Select(t => WebUtility.UrlDecode(t).ToLowerInvariant()).ToArray();
 
-        var rslts = await _linksRepository.GetByTagsAsync(array, pageNo, pageSize, token);
+        var rslts = await _linksRepository.GetLinksByTagsAsync(array, pageNo, pageSize, token);
 
-        var links = Mapper.Map(rslts.Results);
+        var links = Mapper.Map<LinkItem>(rslts.Results);
 
         return GetPageOfResults(links, pageNo, pageSize, rslts.TotalCount);
     }
@@ -178,7 +178,7 @@ public class LinksService : ServiceBase, ILinksService
     {
         Guard.Against.NullOrWhiteSpace(url);
 
-        var result = await _linksRepository.GetByUrlAsync(url, token);
+        var result = await _linksRepository.GetLinkByUrlAsync(url, token);
 
         return result is null ? null : Mapper.Map(result);
     }
@@ -212,7 +212,7 @@ public class LinksService : ServiceBase, ILinksService
     /// <param name="token">The cancellation token</param>
     /// <returns>An IEnumerable of Link models, along with the total number of pages of results, and the total number of all results for this filter</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if either pageNo or pageSize are less than 1</exception>
-    private async Task<(IEnumerable<Link> Results, int TotalPages, int TotalCount)> Find(Expression<Func<LinkEntity, bool>> predicate, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    private async Task<(IEnumerable<LinkItem> Results, int TotalPages, int TotalCount)> Find(Expression<Func<LinkEntity, bool>> predicate, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         Guard.Against.NegativeOrZero(pageNo);
         Guard.Against.NegativeOrZero(pageSize);
@@ -220,9 +220,9 @@ public class LinksService : ServiceBase, ILinksService
         var results = await _linksRepository.FindAsync(predicate, pageNo, pageSize, token);
 
         if (!results.Results.Any())
-            return (Enumerable.Empty<Link>(), 0, 0);
+            return (Enumerable.Empty<LinkItem>(), 0, 0);
 
-        var links = Mapper.Map(results.Results);
+        var links = Mapper.Map<LinkItem>(results.Results);
 
         return (links, results.TotalPages, results.TotalCount);
     }
@@ -232,7 +232,7 @@ public class LinksService : ServiceBase, ILinksService
         Guard.Against.NullOrWhiteSpace(url);
         Guard.Against.NullOrEmpty(submittedByUserId);
 
-        var link = await _linksRepository.GetByUrlAsync(url, token);
+        var link = await _linksRepository.GetLinkByUrlAsync(url, token);
 
         // If the link already exists in the central link repository, then we just need to add/update the tags for it
         // Then assign to the user who submitted it
@@ -270,7 +270,7 @@ public class LinksService : ServiceBase, ILinksService
 
     //public async ValueTask<bool> SubmitLinkAsync(SubmitLinkRequest request, CancellationToken token = default)
     //{
-    //    var link = await _linksRepository.GetByUrlAsync(request.Url, token);
+    //    var link = await _linksRepository.GetLinkByUrlAsync(request.Url, token);
 
     //    var userTags = request.UsersTags.Any() ? request.UsersTags.Select(t => LinkTagEntity.Create(t)).ToArray() : Array.Empty<LinkTagEntity>();
 

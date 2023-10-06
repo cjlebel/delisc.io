@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Queries;
 
-public sealed record GetLinksQuery : IRequest<PagedResults<Link>>
+public sealed record GetLinksQuery : IRequest<PagedResults<LinkItem>>
 {
     public int PageNo { get; init; }
 

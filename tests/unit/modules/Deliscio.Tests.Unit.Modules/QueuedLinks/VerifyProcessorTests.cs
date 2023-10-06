@@ -1,14 +1,11 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.QueuedLinks.Common.Enums;
 using Deliscio.Modules.QueuedLinks.Common.Models;
 using Deliscio.Modules.QueuedLinks.Verifier;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
-using Xunit;
 
 namespace Deliscio.Tests.Unit.Modules.QueuedLinks;
 
@@ -17,19 +14,22 @@ public class VerifyProcessorTests
     private VerifyProcessor _testClass;
     private Mock<IMediator> _mediator;
     private Mock<ILogger<VerifyProcessor>> _logger;
+    private Mock<IOptions<QueuedLinksSettingsOptions>> _options;
 
     public VerifyProcessorTests()
     {
         _mediator = new Mock<IMediator>();
         _logger = new Mock<ILogger<VerifyProcessor>>();
-        _testClass = new VerifyProcessor(_mediator.Object, _logger.Object);
+        _options = new Mock<IOptions<QueuedLinksSettingsOptions>>();
+
+        _testClass = new VerifyProcessor(_options.Object, _mediator.Object, _logger.Object);
     }
 
     [Fact]
     public void Can_Construct()
     {
         // Act
-        var instance = new VerifyProcessor(_mediator.Object, _logger.Object);
+        var instance = new VerifyProcessor(_options.Object, _mediator.Object, _logger.Object);
 
         // Assert
         Assert.NotNull(instance);
@@ -38,13 +38,19 @@ public class VerifyProcessorTests
     [Fact]
     public void Cannot_Construct_WithNull_Mediator()
     {
-        Assert.Throws<ArgumentNullException>(() => new VerifyProcessor(default, _logger.Object));
+        Assert.Throws<ArgumentNullException>(() => new VerifyProcessor(_options.Object, default, _logger.Object));
     }
 
     [Fact]
     public void Cannot_Construct_WithNull_Logger()
     {
-        Assert.Throws<ArgumentNullException>(() => new VerifyProcessor(_mediator.Object, default));
+        Assert.Throws<ArgumentNullException>(() => new VerifyProcessor(_options.Object, _mediator.Object, default));
+    }
+
+    [Fact]
+    public void Cannot_Construct_WithNull_Options()
+    {
+        Assert.Throws<ArgumentNullException>(() => new VerifyProcessor(default, _mediator.Object, _logger.Object));
     }
 
     [Fact]
@@ -58,7 +64,7 @@ public class VerifyProcessorTests
         var result = await _testClass.ExecuteAsync(link, token);
 
         // Assert
-        throw new NotImplementedException("Create or modify test");
+        Assert.True(result.IsSuccess);
     }
 
     [Fact]
