@@ -4,7 +4,7 @@ import styles from './page.module.scss';
 import { apiGetLinks } from '@/apis';
 
 import { LinkCards } from '@/components/elements/links';
-import { PopularRecentTags } from '@/components/elements/tags';
+import { PopularRelatedTags } from '@/components/molecules/PopularRelatedTags';
 import { Pager } from '@/components/elements/navigation';
 
 export default async function LinksTagsPage({
@@ -41,7 +41,7 @@ export default async function LinksTagsPage({
          </section>
          <aside className={`sidebar ${styles.sidebar}`}>
             <Suspense fallback={<>Loading...</>}>
-               <PopularRecentTags count={23} />
+               <PopularRelatedTags count={25} />
             </Suspense>
          </aside>
       </>

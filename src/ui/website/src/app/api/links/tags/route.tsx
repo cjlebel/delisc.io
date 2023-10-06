@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const API_KEY = process.env.REACT_APP_API_KEY;
+const USER_AGENT = 'deliscio-web-client';
+
 export async function GET(request: NextRequest, response: NextResponse) {
    const searchParams = request.nextUrl.searchParams;
 
@@ -17,8 +20,13 @@ export async function GET(request: NextRequest, response: NextResponse) {
    const res = await fetch(
       `${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_VERSION}/links/tags?${qs}`,
       {
+         //mode: 'cors',
+         method: 'GET',
          headers: {
+            'x-api-key': `${API_KEY}`,
+            'User-Agent': `${USER_AGENT}`,
             'Content-Type': 'application/json',
+            //Accept: '*/*',
          },
       }
    );

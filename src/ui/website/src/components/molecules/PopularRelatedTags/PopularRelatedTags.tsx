@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import useSWR from 'swr';
 
 import Link from 'next/link';
 
@@ -29,6 +28,8 @@ const TITLE_RELATED = 'Related Tags';
 
 const PopularRelatedTags = (props: PopularRecentTagsProps) => {
    const [data, setData] = useState<TagResult[] | null>(null);
+   const [tagPath, setTagPath] = useState<string>('');
+   const [title, setTitle] = useState<string>('');
    const [isLoading, setLoading] = useState<boolean>(true);
    const [error, setError] = useState<any>(null);
 
@@ -36,29 +37,28 @@ const PopularRelatedTags = (props: PopularRecentTagsProps) => {
    const originalPathName = usePathname();
 
    const pathName = originalPathName === '/' ? '' : originalPathName.replace('/links/tags/', '');
-   const title = pathName?.replace('/', '').length > 0 ? TITLE_RELATED : TITLE_POPULAR;
-
-   const tagPath = pathName.replaceAll('+', ' ').replaceAll('/', ',');
    const count = props.count && props.count > 0 ? props.count : 25;
 
    // NOTE: This is called twice. Apparently it's because strict mode is true (next.config.js: reactStrictMode)
    useEffect(() => {
-      fetch(`/api/links/tags?tags=${encodeURIComponent(tagPath)}&count=${count}`, {
-         headers: {
-            'Content-Type': 'application/json',
-         },
-      })
+      const tagPath = pathName.replaceAll('+', ' ').replaceAll('/', ',');
+      setTagPath(tagPath);
+
+      //TODO: Move this call somewhere else, where if can share a common calling ();
+      fetch(`/api/links/tags?tags=${encodeURIComponent(tagPath)}&count=${count}`, {})
          .then((res) => res.json())
          .then((data) => {
+            const title = pathName?.replace('/', '').length > 0 ? TITLE_RELATED : TITLE_POPULAR;
             //const d = data as TagResult[];
             setData(data);
+            setTitle(title);
             setLoading(false);
          })
          .catch((err) => {
             console.log(err);
             setError(err);
          });
-   }, [title]);
+   }, [count, pathName]);
 
    if (isLoading) return <p>Loading...</p>;
    if (!data) return <p>Failed to load Tags</p>;

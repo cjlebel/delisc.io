@@ -15,7 +15,7 @@
       },
       {
          "name": "Next.js: debug full stack",
-         "type": "chrome",
+         "type": "node-terminal",
          "request": "launch",
          "command": "npm run dev",
          "serverReadyAction": {

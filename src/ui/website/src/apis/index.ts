@@ -2,6 +2,8 @@ import { ResultsPage } from '@/types/ResultsPage';
 import { LinkResult } from '@/types/links';
 import { API_URL } from '@/utils/Configs';
 
+const API_KEY = process.env.REACT_APP_API_KEY;
+const USER_AGENT = 'deliscio-web-client';
 /**
  * Gets a set of links for the provided parameters
  * @param params { page?: number | 1; count?: number | 25; search?: string | ''; tags?: string[] | [];}
@@ -27,7 +29,15 @@ const apiGetLinks = async ({
    query.append('search', search ?? '');
    query.append('tags', tagsAsString ?? '');
 
-   var data = await fetch(`${API_URL}/links?${query.toString()}`).then((res) => res.json());
+   var data = await fetch(`${API_URL}/links?${query.toString()}`, {
+      //mode: 'cors',
+      headers: {
+         'x-api-key': `${API_KEY}`,
+         'User-Agent': `${USER_AGENT}`,
+         //Accept: '*/*',
+      },
+      next: { revalidate: 10 },
+   }).then((res) => res.json());
 
    return data as ResultsPage<LinkResult>;
 };
@@ -47,9 +57,28 @@ const apiGetTags = async (params: GetTagsProps) => {
    query.append('tags', tagsAsString ?? '');
 
    var data = await fetch(`${API_URL}/links/tags?${query.toString()}`, {
+      //mode: 'cors',
+      headers: {
+         'x-api-key': `${API_KEY}`,
+         'User-Agent': `${USER_AGENT}`,
+         //Accept: '*/*',
+      },
       next: { revalidate: 10 },
    });
-
+   //   .then((response) => {
+   //      if (response.ok) {
+   //         return response.json();
+   //      }
+   //      throw new Error('Network response was not ok.');
+   //   })
+   //   .then((data) => {
+   //      // Handle the API response data
+   //      console.log(data);
+   //   })
+   //   .catch((error) => {
+   //      // Handle errors
+   //      console.error('There has been a problem with your fetch operation:', error);
+   //   })
    if (data.ok) {
       return await data.json();
    }
