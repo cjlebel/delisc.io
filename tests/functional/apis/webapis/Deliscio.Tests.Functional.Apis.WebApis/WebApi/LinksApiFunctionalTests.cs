@@ -24,6 +24,7 @@ public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<Web
 
     public LinksApiFunctionalTests(WebApplicationFactory<Program> factory) : base(factory)
     {
+
     }
 
     #region - GetLinkById -

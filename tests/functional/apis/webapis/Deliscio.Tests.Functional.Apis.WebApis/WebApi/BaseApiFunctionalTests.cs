@@ -1,7 +1,9 @@
 using System.Security.Cryptography;
 using System.Text;
 using Deliscio.Apis.WebApi;
+using Deliscio.Core.Configuration;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
 
 namespace Deliscio.Tests.Functional.Apis.WebApis.WebApi;
 
@@ -15,11 +17,24 @@ public class BaseApiFunctionalTests
     protected const int DEFAULT_TAG_COUNT = 50;
 
     protected readonly HttpClient HttpClient;
-
+    protected readonly IConfiguration Config;
     protected BaseApiFunctionalTests(WebApplicationFactory<Program> factory)
     {
         _factory = factory;
+
         HttpClient = _factory.CreateClient();
+
+        //var builder = new ConfigurationBuilder()
+        //    .AddJsonFile("appsettings.json")
+        //    .AddJsonFile("appsettings.development.json");
+
+        //builder.AddEnvironmentVariables();
+        //builder.Build();
+
+        Config = ConfigSettingsManager.GetConfigs();
+        var apiKey = Config.GetValue<string>("ApiKey");
+
+        HttpClient.DefaultRequestHeaders.Add("x-api-key", apiKey);
     }
 
     protected static string GetUserId(string username)
