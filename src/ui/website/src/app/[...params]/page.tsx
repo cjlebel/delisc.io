@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react';
+
 import styles from './page.module.scss';
 
 import { apiGetLinks } from '@/apis';
@@ -41,7 +42,7 @@ export default async function LinksTagsPage({
          </section>
          <aside className={`sidebar ${styles.sidebar}`}>
             <Suspense fallback={<>Loading...</>}>
-               <PopularRelatedTags count={25} />
+               <PopularRelatedTags />
             </Suspense>
          </aside>
       </>

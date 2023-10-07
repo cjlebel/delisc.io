@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
 
 import Link from 'next/link';
 
@@ -26,29 +25,36 @@ const colorOptions = [
 const TITLE_POPULAR = 'Popular Tags';
 const TITLE_RELATED = 'Related Tags';
 
-const PopularRelatedTags = (props: PopularRecentTagsProps) => {
+/**
+ *
+ * @param {PopularRecentTagsProps}
+ * @returns
+ */
+const PopularRelatedTags = ({ count, currentTags }: PopularRecentTagsProps) => {
    const [data, setData] = useState<TagResult[] | null>(null);
-   const [tagPath, setTagPath] = useState<string>('');
+   const [sortedTags, setCurrentTagsSorted] = useState<string[]>(['']);
    const [title, setTitle] = useState<string>('');
    const [isLoading, setLoading] = useState<boolean>(true);
    const [error, setError] = useState<any>(null);
 
-   // Get the pathName from the url
-   const originalPathName = usePathname();
-
-   const pathName = originalPathName === '/' ? '' : originalPathName.replace('/links/tags/', '');
-   const count = props.count && props.count > 0 ? props.count : 25;
-
    // NOTE: This is called twice. Apparently it's because strict mode is true (next.config.js: reactStrictMode)
    useEffect(() => {
-      const tagPath = pathName.replaceAll('+', ' ').replaceAll('/', ',');
-      setTagPath(tagPath);
+      const sortedTags = currentTags
+         ? currentTags
+              .filter((t) => {
+                 return t.trim() !== '';
+              })
+              .sort()
+         : [];
+      const tagDelimited = sortedTags.toString().replaceAll('+', ' ');
+
+      setCurrentTagsSorted(sortedTags);
 
       //TODO: Move this call somewhere else, where if can share a common calling ();
-      fetch(`/api/links/tags?tags=${encodeURIComponent(tagPath)}&count=${count}`, {})
+      fetch(`/api/links/tags?tags=${encodeURIComponent(tagDelimited)}&count=${count}`, {})
          .then((res) => res.json())
          .then((data) => {
-            const title = pathName?.replace('/', '').length > 0 ? TITLE_RELATED : TITLE_POPULAR;
+            const title = tagDelimited?.replace('/', '').length > 0 ? TITLE_RELATED : TITLE_POPULAR;
             //const d = data as TagResult[];
             setData(data);
             setTitle(title);
@@ -58,10 +64,9 @@ const PopularRelatedTags = (props: PopularRecentTagsProps) => {
             console.log(err);
             setError(err);
          });
-   }, [count, pathName]);
+   }, [count, currentTags]);
 
    if (isLoading) return <p>Loading...</p>;
-   if (!data) return <p>Failed to load Tags</p>;
 
    if (error) return <p>Failed to load Tags: {error}</p>;
 
@@ -75,14 +80,25 @@ const PopularRelatedTags = (props: PopularRecentTagsProps) => {
       ? data.map((tag, idx) => {
            const tagSize =
               tag.weight / maxWeight >= 0.0001 ? (tag.weight / maxWeight) * 1 + 1 : 0.8;
-           let colorOption =
+
+           const colorOption =
               (idx <= colorOptions.length
                  ? colorOptions[idx]
                  : colorOptions[idx % colorOptions.length]) ?? 'bg-white text-dark';
 
-           const tagQuery = `${tagPath}&${tag.name.replaceAll(' ', '+')}`;
+           const tagName = tag.name.replaceAll(' ', '+').replaceAll('%20', '+');
+           //TODO: Rearrange the tags in the querystring by the count, so most popular is always first
+           //      This would mean adding the existing tags back into the results that are returned so that we can get the count
+           //      Then filtering them out of what gets displayed
+           //      This is so that there'll be consistency.
+           //TODO: This can be better. Reuse array from above.
+           const newTagsArr = [sortedTags, tagName]
+              .filter((t) => {
+                 return t.toString().trim() !== '';
+              })
+              .sort();
 
-           const href = `?tags=${tagQuery}`;
+           const href = `?tags=${newTagsArr.join(',')}`;
 
            return (
               <li
@@ -111,8 +127,8 @@ const PopularRelatedTags = (props: PopularRecentTagsProps) => {
    return (
       <div className='side-panel'>
          <h4 className={`${styles['title']} title`}>{title}</h4>
+         {currentTags}
          <div className={`${styles['contents']} contents`}>
-            {tagPath}
             <ul className='list-unstyled'>{tagItems}</ul>
          </div>
       </div>
@@ -127,7 +143,8 @@ const PopularRelatedTags = (props: PopularRecentTagsProps) => {
  * @property {number} [count=25]: The number of tags to retrieve
  */
 type PopularRecentTagsProps = {
-   count?: number | 25;
+   count?: number | 50;
+   currentTags?: string[] | undefined;
 };
 
 export default PopularRelatedTags;

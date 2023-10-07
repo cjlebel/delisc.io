@@ -45,7 +45,7 @@ export default function LinkCard(item: LinkItemResult, priority: boolean = false
 
    return (
       <div className={`${styles['link-item']} card`}>
-         <Link href={`/links/link/${item.id}`}>
+         <Link href={`/link/${item.id}`}>
             <Image
                src={src}
                className='card-img-top'
