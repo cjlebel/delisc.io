@@ -7,6 +7,7 @@ using Deliscio.Modules.QueuedLinks.Interfaces;
 using Deliscio.Modules.QueuedLinks.Tagger;
 using Deliscio.Modules.QueuedLinks.Verifier;
 using Microsoft.Extensions.Logging;
+using Structurizr.Annotations;
 
 namespace Deliscio.Modules.QueuedLinks;
 
@@ -16,6 +17,8 @@ namespace Deliscio.Modules.QueuedLinks;
 /// <remarks>
 /// This is not an ideal implementation. Quick and dirty for now.
 /// </remarks>
+[Component(Description = "Deliscio service that deals with queuing the Links for processing", Technology = "C#")]
+[UsedBySoftwareSystem("Deliscio.Apis.WebApi", Description = "Queued Service")]
 public class QueuedLinksService : ServiceBase, IQueuedLinksService
 {
     private readonly IHarvesterProcessor _harvester;

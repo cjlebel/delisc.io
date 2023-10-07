@@ -8,9 +8,12 @@ using Deliscio.Modules.UserLinks.Data.Entities;
 using Deliscio.Modules.UserLinks.Interfaces;
 using Deliscio.Modules.UserLinks.Mappers;
 using Microsoft.Extensions.Logging;
+using Structurizr.Annotations;
 
 namespace Deliscio.Modules.UserLinks;
 
+[Component(Description = "Deliscio service that deals with the user's saved Links", Technology = "C#")]
+[UsedBySoftwareSystem("Deliscio.Apis.WebApi", Description = "User Service")]
 public class UserLinksService : ServiceBase, IUserLinksService
 {
     private readonly ILogger<UserLinksService> _logger;
