@@ -9,7 +9,7 @@ import { LinkResult } from '@/types/links';
 import { TagResult } from '@/types/tags';
 
 import LinkCards from '@/components/elements/links/LinkCards';
-import { TagsCard } from '@/components/elements/tags';
+import TagsCard from '@/components/elements/tags/TagsCard';
 
 const getLinks = async (pageNo: number, size: number) => {
    var data = await fetch(`${API_URL}/links/${pageNo}/${size}`);

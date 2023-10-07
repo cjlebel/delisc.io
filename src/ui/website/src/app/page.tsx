@@ -14,9 +14,11 @@ export default async function Home({
    searchParams?: { [key: string]: string | string[] | undefined };
 }) {
    const page = searchParams?.page ? parseInt(searchParams.page as string) : 1;
+   const tags = searchParams?.tags ? searchParams?.tags.toString().split(',') : [''];
 
    const links = await apiGetLinks({
       page: page,
+      tags: tags,
    });
 
    return (
@@ -33,7 +35,7 @@ export default async function Home({
          </section>
          <aside className={`sidebar ${styles.sidebar}`}>
             <Suspense fallback={<>Loading...</>}>
-               <PopularRelatedTags count={70} />
+               <PopularRelatedTags count={25} currentTags={tags} />
             </Suspense>
          </aside>
       </>

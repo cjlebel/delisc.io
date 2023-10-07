@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import React from 'react';
 import { usePathname } from 'next/navigation';
-
+import { useSearchParams } from 'next/navigation';
 import styles from './Pager.module.scss';
 
 type PagerProps = {
@@ -11,15 +11,33 @@ type PagerProps = {
    totalResults?: number;
 };
 
+/**
+ * A simple pager component to traverse back and forth through the pages (when applicable)
+ * @param props
+ * @returns
+ */
 export default function Pager(props: PagerProps) {
-   let pathName = usePathname();
+   // Used to get the path of the url (excluding query strings)
+   const pathName = usePathname();
+   // Used to get the query strings
+   const searchParams = useSearchParams();
+
+   const tags = searchParams?.get('tags')?.replaceAll(' ', '+') ?? '';
+
+   let baseHref = tags ? `${pathName}?tags=${tags}` : '${pathName}?';
+
+   let query = new URLSearchParams();
+
+   if (tags?.trim() !== '') {
+      query.append('tags', tags);
+   }
 
    const firstPage =
       props.currentPage > 1 ? (
          <li className='first' style={{}}>
             <Link
                className='page-link'
-               href={`/`}
+               href={query.size > 0 ? `${pathName}?${query.toString}` : `/`}
                tabIndex={-1}
                aria-disabled='false'
                style={{ borderRadius: '1rem' }}>
@@ -44,7 +62,11 @@ export default function Pager(props: PagerProps) {
          <li className='previous' style={{}}>
             <Link
                className='page-link'
-               href={`${pathName}?page=${props.currentPage - 1}`}
+               href={
+                  query.size > 0
+                     ? `${pathName}?${query.toString}&page=${props.currentPage - 1}`
+                     : `${pathName}?page=${props.currentPage - 1}`
+               }
                tabIndex={-1}
                aria-disabled='false'
                style={{ borderRadius: '1rem' }}>
@@ -111,7 +133,9 @@ export default function Pager(props: PagerProps) {
       );
 
    const totalResults = props.totalResults ? (
-      <li style={{ padding: '5px 10px' }}>Total Results: {props.totalResults}</li>
+      <li style={{ padding: '5px 10px' }}>
+         Total Results: {props.totalResults} {pathName} {tags}
+      </li>
    ) : (
       <li style={{ padding: '5px 10px' }}></li>
    );
@@ -119,7 +143,11 @@ export default function Pager(props: PagerProps) {
    return (
       <nav className={styles.pager} aria-label='Page navigation'>
          <ul className='pagination justify-content-center' style={{ width: '100%' }}>
-            {firstPage} {prevPage} {totalResults} {nextPage} {lastPage}
+            {props.totalPages > 1 ? (
+               <>
+                  {firstPage} {prevPage} {totalResults} {nextPage} {lastPage}
+               </>
+            ) : null}
          </ul>
       </nav>
    );

@@ -1,9 +1,35 @@
 import { ResultsPage } from '@/types/ResultsPage';
-import { LinkResult } from '@/types/links';
+import { LinkItemResult, LinkResult } from '@/types/links';
 import { API_URL } from '@/utils/Configs';
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 const USER_AGENT = 'deliscio-web-client';
+
+/**
+ *
+ * @param id {string}: The id for the link to fetch
+ * @returns A LinkItem
+ */
+const apiGetLink = async (id: string) => {
+   if (!id) throw new Error('Link Id is required');
+
+   var data = await fetch(`${API_URL}/link/${id}`, {
+      //mode: 'cors',
+      headers: {
+         'x-api-key': `${API_KEY}`,
+         'User-Agent': `${USER_AGENT}`,
+         //Accept: '*/*',
+      },
+      next: { revalidate: 10 },
+   }).then((res) => res.json());
+
+   if (data.ok) {
+      return await data.json();
+   }
+
+   return data as LinkItemResult;
+};
+
 /**
  * Gets a set of links for the provided parameters
  * @param params { page?: number | 1; count?: number | 25; search?: string | ''; tags?: string[] | [];}
@@ -23,13 +49,13 @@ const apiGetLinks = async ({
 
    const tagsAsString = tags ? decodeURIComponent(tags.join(',')).replaceAll('+', ' ') : '';
 
-   var query = new URLSearchParams();
+   let query = new URLSearchParams();
    query.append('page', page.toString());
    query.append('count', count.toString());
    query.append('search', search ?? '');
    query.append('tags', tagsAsString ?? '');
 
-   var data = await fetch(`${API_URL}/links?${query.toString()}`, {
+   let data = await fetch(`${API_URL}/links?${query.toString()}`, {
       //mode: 'cors',
       headers: {
          'x-api-key': `${API_KEY}`,
@@ -52,11 +78,11 @@ const apiGetTags = async (params: GetTagsProps) => {
       ? decodeURIComponent(params.tags.join(',')).replaceAll('+', ' ')
       : '';
 
-   var query = new URLSearchParams();
+   let query = new URLSearchParams();
    query.append('count', params.count?.toString() ?? '50');
    query.append('tags', tagsAsString ?? '');
 
-   var data = await fetch(`${API_URL}/links/tags?${query.toString()}`, {
+   let data = await fetch(`${API_URL}/links/tags?${query.toString()}`, {
       //mode: 'cors',
       headers: {
          'x-api-key': `${API_KEY}`,
@@ -84,6 +110,10 @@ const apiGetTags = async (params: GetTagsProps) => {
    }
 };
 
+type GetLinkProps = {
+   id: string;
+};
+
 type GetLinksProps = {
    page?: number | 1;
    count?: number | 25;
@@ -96,4 +126,4 @@ type GetTagsProps = {
    count?: number | 50;
 };
 
-export { apiGetLinks, apiGetTags };
+export { apiGetLink, apiGetLinks, apiGetTags };

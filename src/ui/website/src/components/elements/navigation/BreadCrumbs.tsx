@@ -9,13 +9,15 @@ import Link from 'next/link';
 type BreadCrumbsProps = {};
 
 export default function BreadCrumbs({}: BreadCrumbsProps) {
-   const pathName = usePathname();
+   const pathName = usePathname(); //.toLowerCase().replace('/link/', '/');
 
    let parts = pathName.split('/');
 
    if (parts.length == 1) {
       return <div>Home</div>;
    }
+
+   const isLinkPage = parts[1] === 'link';
 
    let path = '';
    let foreColor = 'text-primary';
