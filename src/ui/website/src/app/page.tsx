@@ -35,7 +35,7 @@ export default async function Home({
          </section>
          <aside className={`sidebar ${styles.sidebar}`}>
             <Suspense fallback={<>Loading...</>}>
-               <PopularRelatedTags count={25} currentTags={tags} />
+               <PopularRelatedTags maxTags={25} currentTags={tags} />
             </Suspense>
          </aside>
       </>
