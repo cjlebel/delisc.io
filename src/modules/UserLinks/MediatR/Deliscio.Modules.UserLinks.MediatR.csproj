@@ -7,15 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Commands\**" />
     <Compile Remove="Handlers\**" />
-    <Compile Remove="Queries\**" />
-    <EmbeddedResource Remove="Commands\**" />
     <EmbeddedResource Remove="Handlers\**" />
-    <EmbeddedResource Remove="Queries\**" />
-    <None Remove="Commands\**" />
     <None Remove="Handlers\**" />
-    <None Remove="Queries\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ardalis.GuardClauses" Version="4.1.1" />
+    <PackageReference Include="MediatR" Version="12.1.1" />
+    <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
+    <ProjectReference Include="..\Common\Deliscio.Modules.UserLinks.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\Handlers\" />
   </ItemGroup>
 
 </Project>

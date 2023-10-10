@@ -17,8 +17,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\apis\webapis\Deliscio.Apis.WebApis.Common\Deliscio.Apis.WebApi.Common.csproj" />
 	  <ProjectReference Include="..\..\modules\BacklogLinks\Deliscio.Modules.Backlog\Deliscio.Modules.Backlog.csproj" />
-	  <ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
 	</ItemGroup>
 
 </Project>

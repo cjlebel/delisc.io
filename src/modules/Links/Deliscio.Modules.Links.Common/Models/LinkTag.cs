@@ -1,11 +1,14 @@
 namespace Deliscio.Modules.Links.Common.Models;
 
-public class LinkTag
+public sealed record LinkTag
 {
     public string Name { get; set; }
     public int Count { get; set; }
 
     public decimal Weight { get; set; }
+
+    // Needed for deserialization
+    public LinkTag() { }
 
     public LinkTag(string name, int count)
     {
@@ -17,7 +20,7 @@ public class LinkTag
     {
         Name = name;
         Count = count;
-        Weight = weight;
+        Weight = decimal.Round(weight, 10);
     }
 
     public static LinkTag Create(string name)

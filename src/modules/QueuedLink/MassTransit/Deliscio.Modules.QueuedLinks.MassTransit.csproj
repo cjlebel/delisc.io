@@ -7,14 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\LinksQueueSettingsOptions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MassTransit" Version="8.1.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
     <ProjectReference Include="..\Common\Deliscio.Modules.QueuedLinks.Common.csproj" />
     <ProjectReference Include="..\QueuedLinks\Deliscio.Modules.QueuedLinks.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

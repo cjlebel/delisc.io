@@ -5,7 +5,6 @@ using Deliscio.Modules.Links;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Data.Entities;
 using Deliscio.Modules.Links.Interfaces;
-using Deliscio.Modules.Links.Requests;
 
 using Microsoft.Extensions.Logging;
 
@@ -15,10 +14,10 @@ namespace Deliscio.Tests.Unit.Modules.Links;
 
 public class LinksServiceTests
 {
-    private readonly Fixture _fixture = new Fixture();
-    private LinksService _testClass;
-    private Mock<ILinksRepository> _linksRepository;
-    private Mock<ILogger<LinksService>> _logger;
+    private readonly Fixture _fixture = new();
+    private readonly LinksService _testClass;
+    private readonly Mock<ILinksRepository> _linksRepository;
+    private readonly Mock<ILogger<LinksService>> _logger;
 
     public LinksServiceTests()
     {
@@ -50,44 +49,13 @@ public class LinksServiceTests
     }
 
     [Fact]
-    public async Task GetAsync_CanCall_With_StringId_And_CancellationToken()
-    {
-        // Arrange
-        var token = CancellationToken.None;
-        var linkEntity = _fixture.Create<LinkEntity>();
-        var id = linkEntity.Id;
-
-        _linksRepository.Setup(repo => repo.GetAsync(linkEntity.Id, It.IsAny<CancellationToken>())).ReturnsAsync(linkEntity);
-
-        // Act
-        var actual = await _testClass.GetAsync(id.ToString(), token);
-
-        // Assert
-        Assert.NotNull(actual);
-        AssertEntityToModel(linkEntity, actual);
-    }
-
-    [Theory]
-    [InlineData(null)]
-    [InlineData("")]
-    [InlineData("   ")]
-    public async Task GetAsync_CannotCall_With_Invalid_StringId_And_CancellationToken(string value)
-    {
-        // GetAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
-        Assert.Multiple(() =>
-        {
-            Assert.ThrowsAsync<ArgumentException>(() =>
-                _testClass.GetAsync(value, CancellationToken.None));
-            Assert.ThrowsAsync<ArgumentNullException>(() =>
-                _testClass.GetAsync(value, CancellationToken.None));
-        });
-    }
-
-    [Fact]
     public async Task GetAsync_CanCall_With_StringId()
     {
         // Arrange
         var linkEntity = _fixture.Create<LinkEntity>();
+        linkEntity.Url = $"https://www.{linkEntity.Url}.com";
+        linkEntity.ImageUrl = $"https://www.{linkEntity.ImageUrl}.com";
+
         var id = linkEntity.Id;
 
         _linksRepository.Setup(repo => repo.GetAsync(linkEntity.Id, It.IsAny<CancellationToken>())).ReturnsAsync(linkEntity);
@@ -97,7 +65,28 @@ public class LinksServiceTests
 
         // Assert
         Assert.NotNull(actual);
-        AssertEntityToModel(linkEntity, actual);
+        AssertEntityToLinkModel(linkEntity, actual);
+    }
+
+    [Fact]
+    public async Task GetAsync_CanCall_With_StringId_And_CancellationToken()
+    {
+        // Arrange
+        var token = CancellationToken.None;
+        var linkEntity = _fixture.Create<LinkEntity>();
+        linkEntity.Url = $"https://www.{linkEntity.Url}.com";
+        linkEntity.ImageUrl = $"https://www.{linkEntity.ImageUrl}.com";
+
+        var id = linkEntity.Id;
+
+        _linksRepository.Setup(repo => repo.GetAsync(linkEntity.Id, It.IsAny<CancellationToken>())).ReturnsAsync(linkEntity);
+
+        // Act
+        var actual = await _testClass.GetAsync(id.ToString(), token);
+
+        // Assert
+        Assert.NotNull(actual);
+        AssertEntityToLinkModel(linkEntity, actual);
     }
 
     [Theory]
@@ -112,7 +101,23 @@ public class LinksServiceTests
             Assert.ThrowsAsync<ArgumentException>(() =>
                 _testClass.GetAsync(value));
             Assert.ThrowsAsync<ArgumentNullException>(() =>
-                 _testClass.GetAsync(value));
+                _testClass.GetAsync(value));
+        });
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void GetAsync_CannotCall_With_Invalid_StringId_And_CancellationToken(string value)
+    {
+        // GetAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
+        Assert.Multiple(() =>
+        {
+            Assert.ThrowsAsync<ArgumentException>(() =>
+                _testClass.GetAsync(value, CancellationToken.None));
+            Assert.ThrowsAsync<ArgumentNullException>(() =>
+                _testClass.GetAsync(value, CancellationToken.None));
         });
     }
 
@@ -122,6 +127,9 @@ public class LinksServiceTests
         // Arrange
         var token = CancellationToken.None;
         var linkEntity = _fixture.Create<LinkEntity>();
+        linkEntity.Url = $"https://www.{linkEntity.Url}.com";
+        linkEntity.ImageUrl = $"https://www.{linkEntity.ImageUrl}.com";
+
         var id = linkEntity.Id;
 
         _linksRepository.Setup(repo => repo.GetAsync(linkEntity.Id, It.IsAny<CancellationToken>())).ReturnsAsync(linkEntity);
@@ -131,7 +139,7 @@ public class LinksServiceTests
 
         // Assert
         Assert.NotNull(actual);
-        AssertEntityToModel(linkEntity, actual);
+        AssertEntityToLinkModel(linkEntity, actual);
     }
 
     [Fact]
@@ -152,11 +160,11 @@ public class LinksServiceTests
         var actuals = await _testClass.GetAsync(pageNo, pageSize, token);
 
         // Assert
-        AssertPageResults(linkEntities, actuals, pageNo, pageSize, totalResults);
+        AssertPageResultsOfLinkItems(linkEntities, actuals, pageNo, pageSize, totalResults);
     }
 
     [Fact]
-    public async Task GetByDomainAsync_Can_Call()
+    public async Task GetLinksByDomainAsync_Can_Call()
     {
         // Arrange
         var domain = "TestValue111279897";
@@ -168,33 +176,33 @@ public class LinksServiceTests
         var token = CancellationToken.None;
         var linkEntities = _fixture.Create<IEnumerable<LinkEntity>>();
 
-        _linksRepository.Setup(repo => repo.GetByDomainAsync(domain, pageNo, pageSize, It.IsAny<CancellationToken>())).ReturnsAsync((linkEntities, totalPages, totalResults));
+        _linksRepository.Setup(repo => repo.GetLinksByDomainAsync(domain, pageNo, pageSize, It.IsAny<CancellationToken>())).ReturnsAsync((linkEntities, totalPages, totalResults));
 
         // Act
-        var actuals = await _testClass.GetByDomainAsync(domain, pageNo, pageSize, token);
+        var actuals = await _testClass.GetLinksByDomainAsync(domain, pageNo, pageSize, token);
 
         // Assert
-        AssertPageResults(linkEntities, actuals, pageNo, pageSize, totalResults);
+        AssertPageResultsOfLinkItems(linkEntities, actuals, pageNo, pageSize, totalResults);
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void GetByDomain_CannotCall_WithInvalid_Domain(string value)
+    public void GetLinksByDomain_CannotCall_WithInvalid_Domain(string value)
     {
-        // GetByDomainAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
+        // GetLinksByDomainAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
         Assert.Multiple(() =>
         {
             Assert.ThrowsAsync<ArgumentException>(() =>
-                _testClass.GetByDomainAsync(value, 1995334241, 501827622, CancellationToken.None));
+                _testClass.GetLinksByDomainAsync(value, 1995334241, 501827622, CancellationToken.None));
             Assert.ThrowsAsync<ArgumentNullException>(() =>
-                _testClass.GetByDomainAsync(value, 1995334241, 501827622, CancellationToken.None));
+                _testClass.GetLinksByDomainAsync(value, 1995334241, 501827622, CancellationToken.None));
         });
     }
 
     [Fact]
-    public async Task GetByTagsAsync_CanCall()
+    public async Task GetLinksByTagsAsync_CanCall()
     {
         // Arrange
         var tags = new[] { "TestValue275093999", "TestValue1977799120", "TestValue752175942" };
@@ -206,21 +214,21 @@ public class LinksServiceTests
         var token = CancellationToken.None;
         var linkEntities = _fixture.Create<IEnumerable<LinkEntity>>();
 
-        _linksRepository.Setup(repo => repo.GetByTagsAsync(tags, pageNo, pageSize, It.IsAny<CancellationToken>())).ReturnsAsync((linkEntities, totalPages, totalResults));
+        _linksRepository.Setup(repo => repo.GetLinksByTagsAsync(tags, pageNo, pageSize, It.IsAny<CancellationToken>())).ReturnsAsync((linkEntities, totalPages, totalResults));
 
         // Act
-        var actuals = await _testClass.GetByTagsAsync(tags, pageNo, pageSize, token);
+        var actuals = await _testClass.GetLinksByTagsAsync(tags, pageNo, pageSize, token);
 
         // Assert
-        _linksRepository.Verify(mock => mock.GetByTagsAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()));
+        _linksRepository.Verify(mock => mock.GetLinksByTagsAsync(It.IsAny<IEnumerable<string>>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()));
 
-        AssertPageResults(linkEntities, actuals, pageNo, pageSize, totalResults);
+        AssertPageResultsOfLinkItems(linkEntities, actuals, pageNo, pageSize, totalResults);
     }
 
     [Fact]
     public async Task GetByTagsAsync_CannotCall_WithNull_Tags()
     {
-        await Assert.ThrowsAsync<ArgumentException>(() => _testClass.GetByTagsAsync(default, 283271778, 1594713334, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetLinksByTagsAsync(default, 283271778, 1594713334, CancellationToken.None));
     }
 
     [Fact]
@@ -228,16 +236,19 @@ public class LinksServiceTests
     {
         // Arrange
         var linkEntity = _fixture.Create<LinkEntity>();
+        linkEntity.Url = $"https://www.{linkEntity.Url}.com";
+        linkEntity.ImageUrl = $"https://www.{linkEntity.ImageUrl}.com";
+
         var url = linkEntity.Url;
 
-        _linksRepository.Setup(repo => repo.GetByUrlAsync(url, It.IsAny<CancellationToken>())).ReturnsAsync(linkEntity);
+        _linksRepository.Setup(repo => repo.GetLinkByUrlAsync(url, It.IsAny<CancellationToken>())).ReturnsAsync(linkEntity);
 
         // Act
         var actual = await _testClass.GetByUrlAsync(url);
 
         // Assert
         Assert.NotNull(actual);
-        AssertEntityToModel(linkEntity, actual);
+        AssertEntityToLinkModel(linkEntity, actual);
     }
 
     [Theory]
@@ -246,7 +257,7 @@ public class LinksServiceTests
     [InlineData("   ")]
     public void GetByUrlAsync_Cannot_Call_WithInvalid_Url(string value)
     {
-        // GetByDomainAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
+        // GetLinksByDomainAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
         Assert.Multiple(() =>
         {
             Assert.ThrowsAsync<ArgumentException>(() =>
@@ -265,13 +276,13 @@ public class LinksServiceTests
         var tags = new[] { "TestValue1509245304", "TestValue1745193086", "TestValue669590334" };
         var token = CancellationToken.None;
 
-        _linksRepository.Setup(mock => mock.GetByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new LinkEntity(Guid.NewGuid(), "TestValue447647022", "TestValue859312934"));
+        _linksRepository.Setup(mock => mock.GetLinkByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new LinkEntity(Guid.NewGuid(), "TestValue447647022", "TestValue859312934"));
 
         // Act
         var result = await _testClass.SubmitLinkAsync(url, submittedByUserId, tags, token);
 
         // Assert
-        _linksRepository.Verify(mock => mock.GetByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()));
+        _linksRepository.Verify(mock => mock.GetLinkByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()));
 
         throw new NotImplementedException("Create or modify test");
     }
@@ -295,13 +306,13 @@ public class LinksServiceTests
         var expectedId = Guid.NewGuid();
         var expected = new LinkEntity(expectedId, "TestValue761697808", "TestValue1774356627");
 
-        _linksRepository.Setup(mock => mock.GetByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(expected);
+        _linksRepository.Setup(mock => mock.GetLinkByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(expected);
 
         // Act
         var actual = await _testClass.SubmitLinkAsync(url, userId);
 
         // Assert
-        _linksRepository.Verify(mock => mock.GetByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()));
+        _linksRepository.Verify(mock => mock.GetLinkByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()));
 
         Assert.Equal(expectedId, actual);
     }
@@ -315,13 +326,13 @@ public class LinksServiceTests
 
         var expectedId = Guid.Empty;
 
-        _linksRepository.Setup(mock => mock.GetByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(default(LinkEntity));
+        _linksRepository.Setup(mock => mock.GetLinkByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(default(LinkEntity));
 
         // Act
         var actual = await _testClass.SubmitLinkAsync(url, userId);
 
         // Assert
-        _linksRepository.Verify(mock => mock.GetByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()));
+        _linksRepository.Verify(mock => mock.GetLinkByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()));
 
         Assert.Equal(expectedId, actual);
     }
@@ -332,7 +343,7 @@ public class LinksServiceTests
         //await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync(default(SubmitLinkRequest), CancellationToken.None));
     }
 
-    private void AssertPageResults(IEnumerable<LinkEntity>? expecteds, PagedResults<Link> actuals, int expectedPageNo, int expectedPageSize, int expectedTotalResults)
+    private void AssertPageResultsOfLinkItems(IEnumerable<LinkEntity>? expecteds, PagedResults<LinkItem> actuals, int expectedPageNo, int expectedPageSize, int expectedTotalResults)
     {
         Assert.NotNull(actuals);
         Assert.NotNull(actuals.Results);
@@ -343,10 +354,10 @@ public class LinksServiceTests
         Assert.Equal(expectedPages, actuals.TotalPages);
         Assert.Equal(expectedTotalResults, actuals.TotalResults);
 
-        AssertEntitiesToModels(expecteds, actuals.Results);
+        AssertEntitiesToLinkItemModels(expecteds, actuals.Results);
     }
 
-    private void AssertEntitiesToModels(IEnumerable<LinkEntity> entities, IEnumerable<Link> links)
+    private void AssertEntitiesToLinkModels(IEnumerable<LinkEntity> entities, IEnumerable<Link> links)
     {
         Assert.NotNull(links);
 
@@ -356,11 +367,25 @@ public class LinksServiceTests
 
             Assert.NotNull(entity);
 
-            AssertEntityToModel(entity, link);
+            AssertEntityToLinkModel(entity, link);
         }
     }
 
-    private void AssertEntityToModel(LinkEntity entity, Link link)
+    private void AssertEntitiesToLinkItemModels(IEnumerable<LinkEntity> entities, IEnumerable<LinkItem> links)
+    {
+        Assert.NotNull(links);
+
+        foreach (var link in links)
+        {
+            var entity = entities.FirstOrDefault(x => x.Id == new Guid(link.Id));
+
+            Assert.NotNull(entity);
+
+            AssertEntityToLinkItemModel(entity, link);
+        }
+    }
+
+    private void AssertEntityToLinkModel(LinkEntity entity, Link link)
     {
         Assert.Equal(entity.Id.ToString(), link.Id);
         Assert.Equal(entity.SubmittedById.ToString(), link.SubmittedById);
@@ -375,5 +400,22 @@ public class LinksServiceTests
 
         Assert.Equal(entity.DateCreated, link.DateCreated);
         Assert.Equal(entity.DateUpdated, link.DateUpdated);
+    }
+
+    private void AssertEntityToLinkItemModel(LinkEntity entity, LinkItem link)
+    {
+        Assert.Equal(entity.Id.ToString(), link.Id);
+        //Assert.Equal(entity.SubmittedById.ToString(), link.SubmittedById);
+
+        Assert.Equal(entity.Description, link.Description);
+        Assert.Equal(entity.ImageUrl, link.ImageUrl);
+        //Assert.Equal(linkEntity.IsE, actual.IsExcluded);
+
+        Assert.Equal(entity.Tags.Count, link.Tags.Count);
+        Assert.Equal(entity.Title, link.Title);
+        Assert.Equal(entity.Url, link.Url);
+
+        Assert.Equal(entity.DateCreated, link.DateCreated);
+        //Assert.Equal(entity.DateUpdated, link.DateUpdated);
     }
 }

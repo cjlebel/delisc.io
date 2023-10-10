@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 
 namespace Deliscio.Core.Configuration;
 
@@ -8,10 +7,6 @@ namespace Deliscio.Core.Configuration;
 /// </summary>
 public static class ConfigSettingsManager
 {
-    private static IConfiguration _config;
-
-    private static readonly IConfigurationSection _section;
-
     /// <summary>
     /// Due to SetBasePath - This property currently used mostly for tests and console type apps (not web apps and api)
     /// </summary>
@@ -25,6 +20,10 @@ public static class ConfigSettingsManager
     {
         get
         {
+            //var x = Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Machine);
+            //var y = Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Process);
+            //var z = Environment.GetEnvironmentVariables(EnvironmentVariableTarget.User);
+
             // Via AspNetCoreEnvironmentVariableKey
             var environmentName =
                 Environment.GetEnvironmentVariable(AspNetCoreEnvironmentVariableKey, EnvironmentVariableTarget.Machine);

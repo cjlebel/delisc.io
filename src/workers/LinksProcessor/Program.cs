@@ -8,10 +8,10 @@ using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Modules.Links.MediatR.Queries.Handlers;
 using Deliscio.Modules.QueuedLinks;
+using Deliscio.Modules.QueuedLinks.Common.Models;
 using Deliscio.Modules.QueuedLinks.Harvester;
 using Deliscio.Modules.QueuedLinks.Interfaces;
 using Deliscio.Modules.QueuedLinks.MassTransit.Consumers;
-using Deliscio.Modules.QueuedLinks.MassTransit.Models;
 using Deliscio.Modules.QueuedLinks.Verifier;
 using MassTransit;
 using MediatR;
@@ -28,7 +28,7 @@ public class Program
             {
                 var config = ConfigSettingsManager.GetConfigs();
 
-                services.Configure<LinksQueueSettingsOptions>(config.GetSection(LinksQueueSettingsOptions.SectionName));
+                services.Configure<QueuedLinksSettingsOptions>(config.GetSection(QueuedLinksSettingsOptions.SectionName));
 
                 services.AddSingleton<HttpClient>();
 
@@ -42,7 +42,7 @@ public class Program
                 //services.AddScoped<AddNewQueuedLinkConsumer>();
 
 
-                services.AddSingleton<IRequestHandler<GetLinkByIdQuery, Link?>, GetLinkByIdQueryHandler>();
+                services.AddSingleton<IRequestHandler<GetLinkByIdQuery, Link?>, GetsLinkByIdQueryHandler>();
                 services.AddSingleton<IRequestHandler<GetLinkByUrlQuery, Link?>, GetLinkByUrlQueryHandler>();
 
                 services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
@@ -52,7 +52,7 @@ public class Program
 
                     x.UsingRabbitMq((context, cfg) =>
                     {
-                        var options = context.GetRequiredService<IOptions<LinksQueueSettingsOptions>>().Value;
+                        var options = context.GetRequiredService<IOptions<QueuedLinksSettingsOptions>>().Value;
 
                         cfg.Host(new Uri(options.Host), hostConfig =>
                         {

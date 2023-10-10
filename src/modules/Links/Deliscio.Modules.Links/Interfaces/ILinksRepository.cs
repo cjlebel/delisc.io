@@ -7,11 +7,11 @@ public interface ILinksRepository : IRepository<LinkEntity>
 {
     #region - Links -
 
-    Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> GetByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
+    Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> GetLinksByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
 
-    Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> GetByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
+    Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> GetLinksByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
 
-    Task<LinkEntity?> GetByUrlAsync(string url, CancellationToken token = default);
+    Task<LinkEntity?> GetLinkByUrlAsync(string url, CancellationToken token = default);
 
     #endregion
 
@@ -24,15 +24,9 @@ public interface ILinksRepository : IRepository<LinkEntity>
     /// <param name="tag">The tag in which its count will be incremented.</param>
     /// <param name="token">The token.</param>
     /// <returns>Task</returns>
-    Task AddTag(Guid id, string tag, CancellationToken token);
+    Task AddTagAsync(Guid linkId, string tag, CancellationToken token);
 
-    /// <summary>
-    /// Gets the tags that are associated with the Submitted link with the id.
-    /// </summary>
-    /// <param name="id">The id of the Link to retrieve the tags from.</param>
-    /// <param name="token">The token.</param>
-    /// <returns></returns>
-    Task<IEnumerable<LinkTagEntity>> GetTags(Guid id, CancellationToken token);
+    Task<IEnumerable<LinkTagEntity>> GetRelatedTagsAsync(string[] tags, int count, CancellationToken token = default);
 
     /// <summary>
     /// Removes an occurrence of the tag from the Tag collection that belongs to Link with the id.<br />
@@ -41,7 +35,7 @@ public interface ILinksRepository : IRepository<LinkEntity>
     /// <param name="tag">The tag in which its count will be incremented.</param>
     /// <param name="token">The token.</param>
     /// <returns>Task</returns>
-    Task RemoveTag(Guid id, string tag, CancellationToken token);
+    Task RemoveTagAsync(Guid linkId, string tag, CancellationToken token);
     #endregion
 
 }

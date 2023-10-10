@@ -18,9 +18,9 @@ public class HarvesterProcessor : IHarvesterProcessor
 
     public HarvesterProcessor(IMediator mediator, HttpClient httpClient, ILogger<HarvesterProcessor> logger)
     {
-        Guard.Against.Null(mediator, nameof(mediator));
-        Guard.Against.Null(httpClient, nameof(httpClient));
-        Guard.Against.Null(logger, nameof(logger));
+        Guard.Against.Null(mediator);
+        Guard.Against.Null(httpClient);
+        Guard.Against.Null(logger);
 
         _httpClient = httpClient;
         _logger = logger;
@@ -30,7 +30,7 @@ public class HarvesterProcessor : IHarvesterProcessor
         _httpClient.Timeout = TimeSpan.FromSeconds(10);
     }
 
-    public async ValueTask<(bool IsSuccess, string Message, QueuedLink Link)> ExecuteAsync(QueuedLink link, CancellationToken token = default)
+    public async ValueTask<(bool IsSuccess, string Message, QueuedLink? Link)> ExecuteAsync(QueuedLink link, CancellationToken token = default)
     {
         link = link with { State = QueuedStates.FetchingData };
 
@@ -42,7 +42,7 @@ public class HarvesterProcessor : IHarvesterProcessor
             return (false, $"Could not fetch the URL's page:\nError: {metaData.Message}", link);
         }
 
-        link = link with { Title = metaData.Result.Title ?? "", Description = metaData.Result.Description, MetaData = metaData.Result, State = QueuedStates.FetchingDataCompleted };
+        link = link with { Title = metaData.Result.Title ?? "", Description = metaData.Result.Description ?? string.Empty, MetaData = metaData.Result, State = QueuedStates.FetchingDataCompleted };
 
         return (true, "Harvesting Completed", link);
     }

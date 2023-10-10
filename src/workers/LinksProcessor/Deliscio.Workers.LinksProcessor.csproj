@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\common\Common\Deliscio.Common.csproj" />
     <ProjectReference Include="..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
     <ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links.Common\Deliscio.Modules.Links.Common.csproj" />
     <ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links.MediatR\Deliscio.Modules.Links.MediatR.csproj" />

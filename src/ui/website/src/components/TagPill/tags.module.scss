@@ -1,0 +1,59 @@
+.pill {
+   display: inline-block;
+   background-color: #ff0100;
+   color: #fff;
+   padding: 0.2rem 0.5rem;
+   border-radius: 2px;
+   font-size: 0.8rem;
+   margin-right: 0.5rem;
+
+   &:hover {
+      background-color: #ff5733;
+   }
+}
+
+.tag {
+   display: inline-block;
+   margin-right: 0.5rem;
+   margin-bottom: 0.75rem;
+   border-radius: 1rem;
+   padding: 0.5em;
+   word-break: break-all;
+}
+
+.tag-1 {
+   background-color: #d90502;
+}
+.tag-2 {
+   background-color: rgb(13, 110, 253);
+}
+.tag-3 {
+   background-color: rgb(108, 117, 125);
+}
+.tag-4 {
+   background-color: rgb(25, 135, 84);
+}
+.tag-5 {
+   background-color: rgb(255, 193, 7);
+   color: rgb(33, 37, 41);
+}
+.tag-6 {
+   background-color: rgb(13, 202, 240);
+   color: rgb(33, 37, 41);
+}
+.tag-7 {
+   background-color: rgb(217, 5, 2);
+   color: rgb(33, 37, 41);
+}
+.tag-8 {
+   background-color: rgb(13, 110, 253);
+   color: rgb(33, 37, 41);
+}
+.tag-9 {
+   background-color: rgb(108, 117, 125);
+   color: rgb(33, 37, 41);
+}
+.tag-10 {
+   background-color: rgb(25, 135, 84);
+   color: rgb(33, 37, 41);
+}

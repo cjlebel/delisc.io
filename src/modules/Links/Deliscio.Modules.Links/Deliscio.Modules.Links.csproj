@@ -7,8 +7,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Requests\**" />
 	  <Compile Remove="Responses\**" />
+	  <EmbeddedResource Remove="Requests\**" />
 	  <EmbeddedResource Remove="Responses\**" />
+	  <None Remove="Requests\**" />
 	  <None Remove="Responses\**" />
 	</ItemGroup>
 

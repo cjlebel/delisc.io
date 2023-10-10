@@ -4,6 +4,7 @@ using Deliscio.Modules.QueuedLinks.Common.Enums;
 using Deliscio.Modules.QueuedLinks.Common.Models;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Deliscio.Modules.QueuedLinks.Verifier;
 
@@ -11,6 +12,7 @@ public class VerifyProcessor : IVerifyProcessor
 {
     private readonly ILogger<VerifyProcessor> _logger;
     private readonly IMediator _mediator;
+    private readonly IOptions<QueuedLinksSettingsOptions> _options;
 
     // Best practice is to use a constant for the message format string. This way it will be reused, instead of recreated for each message
     private const string VERIFYING_STARTED_MESSAGE = "{time}: Verifying Started for: {url}";
@@ -19,18 +21,23 @@ public class VerifyProcessor : IVerifyProcessor
     private const string VERIFYING_LINK_ALREADY_EXISTS_MESSAGE = "{time}: Link already exists for: {url}";
 
 
-    // Simple list of invalid domains. Should be read from somewhere, where that list can be updated.
-    private readonly string[] _invalidDomains = { "127.0.0.1", "192.168.", "localhost", "mail.", "calendar.", "okcupid.com", "pof.com" };
+    // Simple list of invalid domains.
+    private readonly string[] _invalidDomains;
 
-    // Simple list of valid protocols. Should be read from somewhere, where that list can be updated.
-    private readonly string[] _validProtocols = { "http:", "https:", "chrome:" };
-    public VerifyProcessor(IMediator mediator, ILogger<VerifyProcessor> logger)
+    // Simple list of valid protocols.
+    private readonly string[] _validProtocols = { "http:", "https:" };
+
+    public VerifyProcessor(IOptions<QueuedLinksSettingsOptions> options, IMediator mediator, ILogger<VerifyProcessor> logger)
     {
         Guard.Against.Null(mediator);
         Guard.Against.Null(logger);
+        Guard.Against.Null(options);
 
         _logger = logger;
         _mediator = mediator;
+        _options = options;
+
+        _invalidDomains = _options.Value.BannedHosts;
     }
 
     /// <summary>
@@ -60,7 +67,7 @@ public class VerifyProcessor : IVerifyProcessor
 
         link = link with { State = QueuedStates.Verifying };
 
-        var query = new GetLinkByUrlQuery(link.Url);
+        var query = new GetLinkByUrlQuery(new Uri(link.Url));
         var existingLink = await _mediator.Send(query, token);
 
         if (existingLink is not null)

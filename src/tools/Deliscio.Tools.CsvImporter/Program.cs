@@ -1,12 +1,12 @@
+using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-
+using Deliscio.Apis.WebApi.Common.Requests;
 using Deliscio.Modules.BackLog;
 using Deliscio.Modules.BackLog.Models;
-using Deliscio.Modules.Links.Requests;
 
 namespace Deliscio.Tools.CsvImporter;
 
@@ -14,7 +14,11 @@ internal partial class Program
 {
     static async Task Main(string[] args)
     {
-        var username = "jlebel";
+#if DEBUG
+        Console.WriteLine("Press any key to continue...");
+        Console.ReadKey();
+#endif
+        var username = "deliscio";
         var userId = GetUserId(username);
 
         var connectionString = "mongodb://mongo:g%3F7%3CVd%3E9v4%3BZKk%3DJ@localhost:27018";
@@ -25,14 +29,25 @@ internal partial class Program
         await AddBacklogItems(service, userId);
 
         //await DeleteAllBacklogItems(service);
+#if DEBUG
+        Console.WriteLine("Press any key to exit...");
+        Console.ReadKey();
+#endif
     }
 
     private static async Task AddBacklogItems(BacklogService service, string userId)
     {
+        using var client = new HttpClient();
+        client.BaseAddress = new Uri("http://localhost:31178");
+
         const string dataDir = "C:\\Temp\\MyFavs\\Data";
         const string outputDir = "C:\\Temp\\MyFavs\\Data\\Output";
 
-        var files = Directory.GetFiles(dataDir, "*.csv");
+        //var files1 = Directory.GetFiles(dataDir, "all-links.csv");
+        var files2 = Directory.GetFiles(dataDir, "phone-tablet-links.txt");
+
+        // var files = files1.Concat(files2).ToArray();
+        var files = files2;
 
         if (files.Length > 0)
         {
@@ -40,170 +55,168 @@ internal partial class Program
 
             foreach (var file in files)
             {
-                var lines = File.ReadAllLines(file);
+                var isFile2 = file.Contains("phone-tablet-links.txt");
+
+                var lines = await File.ReadAllLinesAsync(file);
+
+                if (isFile2)
+                {
+                    var x = true;
+                }
 
                 foreach (var line in lines)
                 {
-                    if (!string.IsNullOrWhiteSpace(line))
+                    if (!string.IsNullOrWhiteSpace(line) &&
+                        !line.Equals("title,url", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        var parts = SplitLineRegEx().Split(line);
+                        string[] parts = !isFile2 ? SplitLineRegEx().Split(line) : line.Split(". ");
 
-                        if (parts.Length == 2)
+                        //var parts = SplitLineRegEx().Split(line);
+
+                        if (parts[0].ToLower() != "title" && parts[0].ToLower() != "url")
+                        // || parts[0].ToLower() != "url" || (parts.Length > 1 || parts[1].ToLower() != "title" || parts[1].ToLower() != "url"))
                         {
-                            var title = parts[0]?.Trim('"') ?? string.Empty;
-                            var url = parts[1]?.Trim('"') ?? string.Empty;
+                            Uri? tmpUri = null;
 
-                            // First row of each file _MAY_ contain the header. If so, skip it.
-                            if (!string.IsNullOrWhiteSpace(title) && !string.IsNullOrWhiteSpace(url) && title.ToLower() != "title" && url.ToLower() != "url" && !backlinks.Exists(x => x.Url == url))
+                            if (!isFile2 && Uri.TryCreate(parts[0].Trim('"').Trim(), UriKind.Absolute, out tmpUri))
+                                continue;
+
+                            if (parts.Length == 2 && !Uri.TryCreate(parts[1].Trim('"').Trim(), UriKind.RelativeOrAbsolute, out tmpUri))
+                                continue;
+
+
+                            if (tmpUri != null)
                             {
-                                //if (IsAcceptableHost(url))
-                                //{
-                                try
+                                if (tmpUri.IsAbsoluteUri && !string.IsNullOrWhiteSpace(tmpUri.AbsoluteUri))
                                 {
-                                    var backlink = BacklogItem.Create(url, title, userId);
+                                    var url = tmpUri.AbsoluteUri;
 
-                                    backlinks.Add(backlink);
+                                    try
+                                    {
+                                        if (backlinks.Any(b => b.Url == url))
+                                        {
+                                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                            Console.WriteLine($"{url} already exists to the queue");
+                                            Console.ResetColor();
+                                        }
+                                        else
+                                        {
+                                            var backlink = BacklogItem.Create(url, string.Empty, userId);
+
+                                            backlinks.Add(backlink);
+
+                                            Console.ForegroundColor = ConsoleColor.Yellow;
+                                            Console.WriteLine($"Added {url} to the queue");
+                                            Console.ResetColor();
+                                        }
+
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Red;
+                                        Console.WriteLine($"Could not parse {url}");
+                                        Console.ResetColor();
+                                    }
                                 }
-                                catch (Exception e)
+                                else
                                 {
-                                    Console.WriteLine($"There was an error while attempting to import {url}\n{e}");
+                                    Console.WriteLine($"Could not parse {tmpUri.OriginalString}");
                                 }
                             }
-                            else
-                            {
-                                var x = false;
-                            }
                         }
-                        else
-                        {
-                            var x = false;
-                        }
-                    }
-                    else
-                    {
-                        var x = false;
+
                     }
                 }
 
-
-
-                //#if DEBUG
-                //                // Save backlinks to a file
-                //                var json = JsonSerializer.Serialize(backlinks.Select(l => new { l.Url, l.Title }).ToList());
-
-                //                if (!Directory.Exists(outputDir))
-                //                    Directory.CreateDirectory(outputDir);
-
-                //                File.WriteAllText($"{outputDir}\\backlinks_{DateTime.Now.Ticks}.json", json);
-                //#endif
-            }
-
-            if (backlinks != null && backlinks.Any())
-            {
-                try
+                if (backlinks.Any())
                 {
-                    //var rslts = await service.AddBacklogItemsAsync(backlinks, CancellationToken.None);
+#if DEBUG
+                    // Save backlinks to a file
+                    var json = JsonSerializer.Serialize(
+                        backlinks.OrderBy(l => l.Url.Trim('#')).Select(l => $"{l.Url}").ToList(),
+                        new JsonSerializerOptions() { AllowTrailingCommas = false });
 
-                    Thread.Sleep(5_000);
+                    if (!Directory.Exists(outputDir))
+                        Directory.CreateDirectory(outputDir);
 
-                    var counter = 0;
-                    using (var client = new HttpClient())
-                    {
-                        client.BaseAddress = new Uri("http://localhost:31178");
-                        foreach (var backlink in backlinks)
-                        {
-                            var request = new SubmitLinkRequest(backlink.Url, backlink.CreatedById);
+                    await File.WriteAllTextAsync($"{outputDir}\\backlinks_all_filtered_{DateTime.Now.Ticks}.json",
+                        json);
+#endif
 
-                            try
+                    var sw = new Stopwatch();
+                    sw.Start();
+
+                    await Parallel.ForEachAsync(backlinks, new ParallelOptions { MaxDegreeOfParallelism = 3 },
+                            async (backlink, token) =>
                             {
-                                var response = await client.PostAsJsonAsync("v1/links", request);
-                                response.EnsureSuccessStatusCode();
+                                await CallApi(client, backlink);
+                            });
 
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine($"Successfully submitted {backlink.Url}");
-                                counter++;
-                            }
-                            catch (HttpRequestException e)
-                            {
-                                Console.WriteLine($"Could not post {backlink.Url}");
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine($"Could not post {backlink.Url}");
-                            }
+                    sw.Stop();
+                    Console.ForegroundColor = ConsoleColor.Green;
 
-                            Thread.Sleep(500);
-                        }
-                    }
+                    Console.WriteLine($"Successfully imported {backlinks.Count} Backlink Results in {sw.Elapsed.Seconds} seconds");
 
-
-                }
-                catch (Exception e)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-
-                    Console.WriteLine($"AN Exception occurred while trying to save the Back Links to the Db");
-
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-
-                    Console.WriteLine($"Message:{Environment.NewLine}{e.Message}");
-                    Console.WriteLine($"Inner:{Environment.NewLine}{e.InnerException}");
                     Console.ResetColor();
-
-                    throw;
                 }
-
-                Console.ForegroundColor = ConsoleColor.Green;
-
-                Console.WriteLine($"Successfully imported {backlinks.Count} Backlink Results");
-
-                Console.ResetColor();
             }
         }
     }
 
-    private static async Task DeleteAllBacklogItems(BacklogService service)
+    private static async Task<bool> CallApi(HttpClient client, BacklogItem backlink)
     {
-        await service.RemoveAll(CancellationToken.None);
+        try
+        {
+            var counter = 0;
 
-        Console.ForegroundColor = ConsoleColor.Green;
 
-        Console.WriteLine($"Successfully deleted all Backlink Results");
+            //foreach (var backlink in backlinks)
+            //{
+            var request = new SubmitLinkRequest(backlink.Url, backlink.CreatedById);
 
-        Console.ResetColor();
+            try
+            {
+                var response = await client.PostAsJsonAsync("v1/links", request);
+                response.EnsureSuccessStatusCode();
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"Successfully submitted {backlink.Url}");
+                Console.ResetColor();
+                counter++;
+            }
+            catch (HttpRequestException e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Could not post {backlink.Url}{Environment.NewLine}Message:{e.Message}");
+                Console.ResetColor();
+            }
+            catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Could not post {backlink.Url}{Environment.NewLine}Message:{e.Message}");
+                Console.ResetColor();
+            }
+
+            //Thread.Sleep(500);
+            //}
+        }
+        catch (Exception e)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+
+            Console.WriteLine($"An Exception occurred while trying to save the Back Links to the Db");
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
+            Console.WriteLine($"Message:{Environment.NewLine}{e.Message}");
+            Console.WriteLine($"Inner:{Environment.NewLine}{e.InnerException}");
+            Console.ResetColor();
+
+            //throw;
+        }
+
+        return true;
     }
-
-    //private static string[] GenerateTags(string title)
-    //{
-    //    var tagSuggestions = new Dictionary<string, string[]>
-    //    {
-    //        { "agile", new [] { "agile", "scrum", "project management" } },
-    //        { "apis", new [] { "api", "web services", "integration" } },
-    //        { "azure", new [] { "azure", "cloud", "microsoft" } },
-    //        { "best practices", new[] { "best practices", "development", "coding" } },
-    //        { "cloud", new [] { "cloud computing", "scalability", "aws", "azure" } },
-    //        { "c#", new [] { "csharp", "c#" } },
-    //        { "containerization#", new[] { "docker", "kubernates", "k8" } },
-    //        { "design patterns", new [] { "design patterns", "architecture", "best practices" } },
-    //        { "development", new [] { "technology", "software", "development" } },
-    //        { "devops", new [] { "devops", "automation", "cloud" } },
-    //        { "docker", new [] { "docker", "containerization", "deployment" } },
-    //        { "github", new []{"github"}},
-    //        { "javascript", new [] { "javascript", "web", "frontend" } },
-    //        { "next.js", new [] { "next.js", "react", "frontend" } },
-    //        { "react", new [] { "react", "javascript", "frontend" } },
-    //        { "security", new [] { "cybersecurity", "security", "hacking" } },
-    //        { "software", new [] { "technology", "software", "development" } },
-    //        { "stackoverflow", new[] { "stackoverflow" }},
-    //        { "technology", new [] { "technology", "software", "development" } },
-    //        { "visual studio", new [] {"visual studio"}},
-    //        { ".net", new [] { ".net", "csharp", "microsoft", ".net", "dotnet" } },
-    //    };
-
-    //    var tags = tagSuggestions.Where(x => title.ToLower().Contains(x.Key)).SelectMany(x => x.Value).ToArray() ?? Array.Empty<string>();
-
-    //    return tags;
-    //}
 
     /// <summary>
     /// Creates a unique id as a (string) GUID based on the username that was provided.
@@ -218,54 +231,6 @@ internal partial class Program
         byte[] data = MD5.HashData(Encoding.Default.GetBytes(username));
 
         return new Guid(data).ToString();
-    }
-
-    private static string ParseDomainFromUrl(string url)
-    {
-        var commonSubdomains = new List<string> { "www", "mail", "ftp" };
-
-        if (!string.IsNullOrWhiteSpace(url))
-        {
-            if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
-            {
-                string host = uri.Host.ToLower();
-
-                //                      commonSubdomains.FirstOrDefault(subdomain => host.StartsWith(subdomain + "."));
-                var matchingSubdomain = commonSubdomains.Find(subdomain => host.StartsWith(subdomain + "."));
-                if (!string.IsNullOrWhiteSpace(matchingSubdomain))
-                {
-                    host = host.Substring(matchingSubdomain.Length + 1); // Remove the subdomain and the following dot
-                }
-
-                return host;
-            }
-        }
-
-        return string.Empty;
-    }
-
-    private static bool IsAcceptableHost(string url)
-    {
-        var filter = new List<string>
-        {
-            "localhost",
-            "gmail",
-            "127.0.0.1",
-            "192.168.",
-            "mail."
-        };
-
-        if (!string.IsNullOrWhiteSpace(url))
-        {
-            if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
-            {
-                string host = uri.Host.ToLower();
-
-                return !filter.Exists(f => f.ToLower().Contains(host));
-            }
-        }
-
-        return false;
     }
 
     [GeneratedRegex(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)")]

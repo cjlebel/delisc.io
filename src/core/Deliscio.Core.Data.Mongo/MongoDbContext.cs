@@ -1,6 +1,4 @@
-using Ardalis.GuardClauses;
 using Deliscio.Core.Data.Mongo.Attributes;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -10,7 +8,7 @@ public class MongoDbContext<TDocument> : IMongoDbContext<TDocument>
     private readonly IMongoDatabase _db;
 
     private const string COULD_NOT_GET_OPTIONS = "Could not retrieve the options";
-    private const string COULD_NOT_GET_CONFIG = "Could not retrieve the config";
+    //private const string COULD_NOT_GET_CONFIG = "Could not retrieve the config";
     private const string COULD_NOT_GET_CONNSTRING = "Could not retrieve the connection string";
     private const string COULD_NOT_GET_DBNAME = "Could not retrieve the database name";
 
@@ -18,24 +16,24 @@ public class MongoDbContext<TDocument> : IMongoDbContext<TDocument>
     {
         if (string.IsNullOrWhiteSpace(connectionString))
             throw new ArgumentNullException(nameof(connectionString), COULD_NOT_GET_CONNSTRING);
-        
+
         if (string.IsNullOrWhiteSpace(databaseName))
             throw new ArgumentNullException(nameof(connectionString), COULD_NOT_GET_DBNAME);
-        
+
         var client = new MongoClient(connectionString);
         _db = client.GetDatabase(databaseName);
     }
 
-    public MongoDbContext(IConfiguration config)
-    {
-        Guard.Against.Null(config, nameof(config), COULD_NOT_GET_CONFIG);
+    //public MongoDbContext(IConfiguration config)
+    //{
+    //    Guard.Against.Null(config, message: COULD_NOT_GET_CONFIG);
 
-        var connection = config["MongoDbSettings:ConnectionString"] ?? throw new ArgumentException(COULD_NOT_GET_CONNSTRING, nameof(config));
-        var dbName = config["MongoDbSettings:DatabaseName"] ?? throw new ArgumentException(COULD_NOT_GET_DBNAME, nameof(config));
+    //    var connection = config["MongoDbSettings:ConnectionString"] ?? throw new ArgumentException(COULD_NOT_GET_CONNSTRING, nameof(config));
+    //    var dbName = config["MongoDbSettings:DatabaseName"] ?? throw new ArgumentException(COULD_NOT_GET_DBNAME, nameof(config));
 
-        var client = new MongoClient(connection);
-        _db = client.GetDatabase(dbName);
-    }
+    //    var client = new MongoClient(connection);
+    //    _db = client.GetDatabase(dbName);
+    //}
 
     public MongoDbContext(IOptions<MongoDbOptions> options)
     {
@@ -47,17 +45,17 @@ public class MongoDbContext<TDocument> : IMongoDbContext<TDocument>
 
         if (string.IsNullOrWhiteSpace(options.Value.DatabaseName))
             throw new ArgumentException(COULD_NOT_GET_DBNAME, nameof(options));
-        
+
         var optionValue = options.Value;
-        
-        
+
+
         var connection = optionValue.ConnectionString;
         var dbName = optionValue.DatabaseName;
 
         var client = new MongoClient(connection);
         _db = client.GetDatabase(dbName);
     }
-    
+
     public IMongoCollection<TDocument> Collection()
     {
         var collection = _db.GetCollection<TDocument>(GetCollectionName(typeof(TDocument)));
@@ -69,9 +67,9 @@ public class MongoDbContext<TDocument> : IMongoDbContext<TDocument>
     {
         var name = (documentType.GetCustomAttributes(typeof(BsonCollectionAttribute), true)
             .FirstOrDefault() as BsonCollectionAttribute)?
-            .CollectionName ?? 
+            .CollectionName ??
             string.Empty;
-        
+
         return name;
     }
 }

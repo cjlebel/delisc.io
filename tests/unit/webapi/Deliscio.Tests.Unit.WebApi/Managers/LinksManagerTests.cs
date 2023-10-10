@@ -1,5 +1,5 @@
-using System.Runtime.InteropServices;
 using Deliscio.Apis.WebApi.Managers;
+using Deliscio.Modules.QueuedLinks.Common.Enums;
 using Deliscio.Modules.QueuedLinks.Common.Models;
 using Deliscio.Modules.QueuedLinks.Interfaces;
 using MassTransit;
@@ -11,11 +11,11 @@ namespace Deliscio.Tests.Unit.WebApi.Managers;
 
 public class LinksManagerTests
 {
-    private LinksManager _testClass;
-    private Mock<IMediator> _mediator;
-    private Mock<IBusControl> _bus;
-    private Mock<IQueuedLinksService> _queueService;
-    private Mock<ILogger<LinksManager>> _logger;
+    private readonly LinksManager _testClass;
+    private readonly Mock<IMediator> _mediator;
+    private readonly Mock<IBusControl> _bus;
+    private readonly Mock<IQueuedLinksService> _queueService;
+    private readonly Mock<ILogger<LinksManager>> _logger;
 
     public LinksManagerTests()
     {
@@ -39,25 +39,25 @@ public class LinksManagerTests
     [Fact]
     public void Cannot_Construct_WithNull_Mediator()
     {
-        Assert.Throws<ArgumentNullException>(() => new LinksManager(default(IMediator), _bus.Object, _queueService.Object, _logger.Object));
+        Assert.Throws<ArgumentNullException>(() => new LinksManager(default, _bus.Object, _queueService.Object, _logger.Object));
     }
 
     [Fact]
     public void Cannot_Construct_WithNull_Bus()
     {
-        Assert.Throws<ArgumentNullException>(() => new LinksManager(_mediator.Object, default(IBusControl), _queueService.Object, _logger.Object));
+        Assert.Throws<ArgumentNullException>(() => new LinksManager(_mediator.Object, default, _queueService.Object, _logger.Object));
     }
 
     [Fact]
     public void Cannot_Construct_WithNull_QueueService()
     {
-        Assert.Throws<ArgumentNullException>(() => new LinksManager(_mediator.Object, _bus.Object, default(IQueuedLinksService), _logger.Object));
+        Assert.Throws<ArgumentNullException>(() => new LinksManager(_mediator.Object, _bus.Object, default, _logger.Object));
     }
 
     [Fact]
     public void Cannot_Construct_WithNull_Logger()
     {
-        Assert.Throws<ArgumentNullException>(() => new LinksManager(_mediator.Object, _bus.Object, _queueService.Object, default(ILogger<LinksManager>)));
+        Assert.Throws<ArgumentNullException>(() => new LinksManager(_mediator.Object, _bus.Object, _queueService.Object, default));
     }
 
     [Fact]
@@ -133,22 +133,36 @@ public class LinksManagerTests
     public async Task Can_Call_SubmitLinkAsync()
     {
         // Arrange
-        var url = "TestValue2034192875";
-        var submittedByUserId = "TestValue1704909426";
-        var usersTitle = "TestValue2122871760";
+        var now = DateTime.Now.Ticks;
+        var userId = Guid.NewGuid().ToString();
+
+        var url = $"http://www.test-site.com/{now}";
+        var submittedByUserId = userId;
+        var usersTitle = $"{now}";
         var usersDescription = "TestValue477213193";
         var tags = new[] { "TestValue2070647648", "TestValue1655817658", "TestValue1311775846" };
         var token = CancellationToken.None;
 
-        _queueService.Setup(mock => mock.ProcessNewLinkAsync(It.IsAny<QueuedLink>(), It.IsAny<CancellationToken>())).Returns(new ValueTask<(bool IsSuccess, string Message, QueuedLink Link)>());
+        (bool IsSuccess, string Message, QueuedLink Link) expected = (true, $"Success Message: {now}", new QueuedLink
+        {
+            Url = url,
+            SubmittedById = Guid.Parse(submittedByUserId),
+            Title = usersTitle,
+            Description = usersDescription,
+            Tags = tags,
+            State = QueuedStates.Finished,
+        });
+
+        _queueService.Setup(mock => mock.ProcessNewLinkAsync(It.IsAny<QueuedLink>(), It.IsAny<CancellationToken>())).ReturnsAsync(expected);
 
         // Act
-        var result = await _testClass.SubmitLinkAsync(url, submittedByUserId, usersTitle, usersDescription, tags, token);
+        var actual = await _testClass.SubmitLinkAsync(url, submittedByUserId, usersTitle, tags, token);
 
         // Assert
         _queueService.Verify(mock => mock.ProcessNewLinkAsync(It.IsAny<QueuedLink>(), It.IsAny<CancellationToken>()));
 
-        throw new NotImplementedException("Create or modify test");
+        Assert.NotNull(actual);
+        Assert.Equal(expected.Message, actual);
     }
 
     [Theory]
@@ -157,7 +171,7 @@ public class LinksManagerTests
     [InlineData("   ")]
     public async Task Cannot_Call_SubmitLinkAsync_WithInvalid_UrlAsync(string value)
     {
-        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync(value, "TestValue324332177", "TestValue932041627", "TestValue1462936722", new[] { "TestValue1550313992", "TestValue2081488401", "TestValue741571745" }, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync(value, "TestValue324332177", "TestValue1462936722", new[] { "TestValue1550313992", "TestValue2081488401", "TestValue741571745" }, CancellationToken.None));
     }
 
     [Theory]
@@ -166,7 +180,7 @@ public class LinksManagerTests
     [InlineData("   ")]
     public async Task Cannot_Call_SubmitLinkAsync_WithInvalid_SubmittedByUserIdAsync(string value)
     {
-        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync("TestValue17814585", value, "TestValue1143163502", "TestValue1317416754", new[] { "TestValue1569180359", "TestValue1765644044", "TestValue1590741572" }, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync("TestValue17814585", value, "TestValue1143163502", new[] { "TestValue1569180359", "TestValue1765644044", "TestValue1590741572" }, CancellationToken.None));
     }
 
     [Theory]
@@ -175,7 +189,7 @@ public class LinksManagerTests
     [InlineData("   ")]
     public async Task Cannot_Call_SubmitLinkAsync_WithInvalid_UsersTitleAsync(string value)
     {
-        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync("TestValue9617144", "TestValue374577968", value, "TestValue43246622", new[] { "TestValue1329053182", "TestValue1059139476", "TestValue1733123712" }, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync("TestValue9617144", "TestValue374577968", value, new[] { "TestValue1329053182", "TestValue1059139476", "TestValue1733123712" }, CancellationToken.None));
     }
 
     [Theory]
@@ -184,6 +198,6 @@ public class LinksManagerTests
     [InlineData("   ")]
     public async Task Cannot_Call_SubmitLinkAsync_WithInvalid_UsersDescriptionAsync(string value)
     {
-        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync("TestValue1361125351", "TestValue50538018", "TestValue763252262", value, new[] { "TestValue568751364", "TestValue151885363", "TestValue1414406010" }, CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.SubmitLinkAsync("TestValue1361125351", "TestValue50538018", "TestValue763252262", new[] { "TestValue568751364", "TestValue151885363", "TestValue1414406010" }, CancellationToken.None));
     }
 }

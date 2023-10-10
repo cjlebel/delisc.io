@@ -25,6 +25,8 @@ public sealed class LinksQueueSettingsOptions : RabbitMqSettingsOptions
 
     public override string Password { get; set; } = string.Empty;
 
+    public string[] BannedSites { get; set; } = Array.Empty<string>();
+
     public LinksQueueSettingsOptions()
     {
         QueueName = "submitted-links";

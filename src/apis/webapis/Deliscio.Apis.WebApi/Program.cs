@@ -4,6 +4,7 @@ using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Apis.WebApi.Managers;
 using Deliscio.Core.Configuration;
 using Deliscio.Core.Data.Mongo;
+using Deliscio.Core.Middleware;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links;
 using Deliscio.Modules.Links.Common.Interfaces;
@@ -15,13 +16,21 @@ using Deliscio.Modules.Links.MediatR.Commands.Handlers;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Modules.Links.MediatR.Queries.Handlers;
 using Deliscio.Modules.QueuedLinks;
+using Deliscio.Modules.QueuedLinks.Common.Models;
 using Deliscio.Modules.QueuedLinks.Harvester;
 using Deliscio.Modules.QueuedLinks.Interfaces;
-using Deliscio.Modules.QueuedLinks.MassTransit.Models;
 using Deliscio.Modules.QueuedLinks.MediatR.Commands;
 using Deliscio.Modules.QueuedLinks.MediatR.Commands.Handlers;
 using Deliscio.Modules.QueuedLinks.Tagger;
 using Deliscio.Modules.QueuedLinks.Verifier;
+using Deliscio.Modules.UserLinks;
+using Deliscio.Modules.UserLinks.Common.Interfaces;
+using Deliscio.Modules.UserLinks.Common.Models;
+using Deliscio.Modules.UserLinks.Interfaces;
+using Deliscio.Modules.UserLinks.MediatR.Commands;
+using Deliscio.Modules.UserLinks.MediatR.Commands.Handlers;
+using Deliscio.Modules.UserLinks.MediatR.Queries;
+using Deliscio.Modules.UserLinks.MediatR.Queries.Handlers;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -45,9 +54,11 @@ public class Program
 
         var config = ConfigSettingsManager.GetConfigs();
         builder.Services.Configure<MongoDbOptions>(config.GetSection(MongoDbOptions.SectionName));
-        builder.Services.Configure<LinksQueueSettingsOptions>(config.GetSection(LinksQueueSettingsOptions.SectionName));
+        builder.Services.Configure<QueuedLinksSettingsOptions>(config.GetSection(QueuedLinksSettingsOptions.SectionName));
 
         // AddAsync services to the container.
+        builder.Services.AddCors();
+        builder.Services.AddAuthentication();
         builder.Services.AddAuthorization();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -79,7 +90,7 @@ public class Program
         {
             x.UsingRabbitMq((context, cfg) =>
             {
-                var options = context.GetRequiredService<IOptions<LinksQueueSettingsOptions>>().Value;
+                var options = context.GetRequiredService<IOptions<QueuedLinksSettingsOptions>>().Value;
 
                 cfg.Host(new Uri(options.Host), hostConfig =>
                 {
@@ -92,49 +103,83 @@ public class Program
             });
         });
 
+        builder.Services.AddSingleton<IConfiguration>(config);
+
+        // Links
         builder.Services.AddSingleton<ILinksManager, LinksManager>();
         builder.Services.AddSingleton<ILinksService, LinksService>();
         builder.Services.AddSingleton<ILinksRepository, LinksRepository>();
 
-        builder.Services.AddSingleton<IRequestHandler<GetLinkByIdQuery, Link?>, GetLinkByIdQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetLinkByIdQuery, Link?>, GetsLinkByIdQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinkByUrlQuery, Link?>, GetLinkByUrlQueryHandler>();
-        builder.Services.AddSingleton<IRequestHandler<GetLinksByDomainQuery, PagedResults<Link>>, GetLinkByDomainQueryHandler>();
-        builder.Services.AddSingleton<IRequestHandler<GetLinksByTagsQuery, PagedResults<Link>>, GetLinkByTagsQueryHandler>();
+
+        builder.Services.AddSingleton<IRequestHandler<GetLinksByIdsQuery, IEnumerable<LinkItem>>, GetLinksByIdsQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetLinksQuery, PagedResults<LinkItem>>, GetLinksQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetLinksByDomainQuery, PagedResults<LinkItem>>, GetLinksByDomainQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetLinksByTagsQuery, PagedResults<LinkItem>>, GetsLinksByTagsQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetLinksRelatedTagsQuery, LinkTag[]>, GetLinksRelatedTagsQueryHandler>();
+
+        builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkCommandHandler>();
         builder.Services.AddSingleton<IRequestHandler<SubmitLinkCommand, Guid>, SubmitLinkCommandHandler>();
 
-        // This is weird, I should not need to add these here?!?!?
+        // User Links
+        builder.Services.AddSingleton<IUserLinksManager, UserLinksManager>();
+        builder.Services.AddSingleton<IUserLinksService, UserLinksService>();
+        builder.Services.AddSingleton<IUserLinksRepository, UserLinksRepository>();
+
+        builder.Services.AddSingleton<IRequestHandler<GetUserLinkByIdQuery, UserLink?>, GetUserLinkByIdQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetUserLinksQuery, PagedResults<UserLink>>, GetUserLinksQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<AddLinkToUserCommand, Guid>, AddLinkToUserCommandHandler>();
+
+        // Queue
         builder.Services.AddSingleton<IQueuedLinksService, QueuedLinksService>();
+
+        // Adds a new link to the queue - currently masstransit/rabbitmq aren't co-operating
+        builder.Services.AddSingleton<IRequestHandler<AddNewLinkQueueCommand, bool>, AddNewLinkQueueCommandHandler>();
+
+
+        // This is weird, I should not need to add these here?!?!?
         builder.Services.AddSingleton<IVerifyProcessor, VerifyProcessor>();
         builder.Services.AddSingleton<IHarvesterProcessor, HarvesterProcessor>();
         builder.Services.AddSingleton<ITaggerProcessor, TaggerProcessor>();
         // This is weird, I should not need to add these here?!?!?
 
-        builder.Services.AddSingleton<IRequestHandler<AddNewLinkQueueCommand, bool>, AddNewLinkQueueCommandHandler>();
-        builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkCommandHandler>();
-
-
         builder.Services.AddSingleton<LinksApiEndpoints>();
+        builder.Services.AddSingleton<UserLinksApiEndpoints>();
 
         var app = builder.Build();
 
         var linksApiEndpoints = app.Services.GetRequiredService<LinksApiEndpoints>();
         linksApiEndpoints.MapEndpoints(app);
 
-        app.MapGet("/", () => "Hello World!");
+        var userLinksApiEndpoints = app.Services.GetRequiredService<UserLinksApiEndpoints>();
+        userLinksApiEndpoints.MapEndpoints(app);
 
-        app.UseHttpsRedirection();
-
-        app.UseAuthorization();
+        // *** Disabling for now to get Next working *** 
+        //app.UseHttpsRedirection();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
+            // DO not use AllowAnyOrigin in production
+            app.UseCors(options =>
+            {
+                options.AllowAnyOrigin();
+            });
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", $"Delisc.io API {API_VERSION}");
             });
         }
+
+        // NOTE: Order is important.
+        app.UseMiddleware<ApiKeyMiddleware>();
+
+        app.UseAuthorization();
+
+
 
         app.Run();
     }

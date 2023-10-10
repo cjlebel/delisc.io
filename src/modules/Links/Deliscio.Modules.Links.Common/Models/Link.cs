@@ -1,8 +1,6 @@
-using System.Collections.ObjectModel;
-
 namespace Deliscio.Modules.Links.Common.Models;
 
-public class Link
+public sealed record Link
 {
     public string Id { get; set; }
 
@@ -20,7 +18,7 @@ public class Link
 
     public string[] Keywords { get; set; } = Array.Empty<string>();
 
-    public ReadOnlyCollection<LinkTag> Tags { get; set; }
+    public List<LinkTag> Tags { get; set; } = new List<LinkTag>();
 
     public string Title { get; set; }
 
@@ -31,13 +29,15 @@ public class Link
     public DateTimeOffset DateCreated { get; set; }
     public DateTimeOffset DateUpdated { get; set; }
 
+    // Needed for deserialization
+    public Link() { }
+
     public Link(string id, string url, string submittedById)
     {
         Id = id;
         Title = string.Empty;
         Url = url;
         SubmittedById = submittedById;
-        Tags = new ReadOnlyCollection<LinkTag>(new List<LinkTag>());
     }
 
     public Link(Guid id, string url, Guid submittedById)
@@ -46,7 +46,6 @@ public class Link
         Title = string.Empty;
         Url = url;
         SubmittedById = submittedById.ToString();
-        Tags = new ReadOnlyCollection<LinkTag>(new List<LinkTag>());
     }
 
     public Link(Guid id, string url, string title, string description, IEnumerable<LinkTag>? tags)
@@ -60,7 +59,7 @@ public class Link
         Title = title;
         Description = description;
         Url = url;
-        Tags = new ReadOnlyCollection<LinkTag>((tags?.ToList() ?? new List<LinkTag>()));
+        Tags = tags?.ToList() ?? new List<LinkTag>();
     }
 
     public static Link Create(string url, string submittedById)
@@ -76,13 +75,7 @@ public class Link
     /// <param name="description">The description of the Link.</param>
     /// <param name="tags">The tags that are associated with the Link.</param>
     /// <returns></returns>
-    /// <exception cref="System.ArgumentNullException">
-    /// url
-    /// or
-    /// title
-    /// or
-    /// tags
-    /// </exception>
+    /// <exception cref="System.ArgumentNullException">url or title or tags </exception>
     public static Link Create(string url, string submittedById, string title, string description, IEnumerable<string>? tags = null)
     {
         if (string.IsNullOrWhiteSpace(url))
