@@ -11,9 +11,6 @@ const Header = (props: HeaderProps) => {
                   <a href='/'>Home</a>
                </li>
                <li>
-                  <a href='/bookmarks'>Bookmarks</a>
-               </li>
-               <li>
                   <a href='/tags'>Tags</a>
                </li>
                <li>

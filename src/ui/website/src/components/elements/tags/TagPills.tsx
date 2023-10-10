@@ -2,7 +2,7 @@ import React from 'react';
 
 import styles from './Tags.module.scss';
 
-import { TagPill } from '@/components/atoms/tags';
+import { TagPill } from '@/components/TagPill';
 import { TagResult } from '@/types/tags';
 
 type TagPillsProps = {
@@ -10,26 +10,27 @@ type TagPillsProps = {
 };
 
 export default function TagPills({ tags }: TagPillsProps) {
-   const options = [
-      'bg-deliscio',
-      'bg-primary',
-      'bg-secondary',
-      'bg-success',
-      'bg-warning text-dark',
-      'bg-info text-dark',
-      'bg-light text-dark',
-      'bg-deliscio text-dark',
-      'bg-primary text-dark',
-      'bg-secondary text-dark',
-      'bg-success text-dark',
-   ];
+   let totalCount = 0;
+
+   tags.forEach((tag) => {
+      totalCount += tag.count;
+   });
 
    const results = tags
-      ? tags.map((tag: TagResult, index: number) => {
-           const option =
-              index <= options.length ? options[index] : options[index % options.length];
+      ? tags.map((tag: TagResult, idx: number) => {
+           const tagId = `tag-${(idx % 10) + 1}`;
+           const href = `/tags/${tag.name}`;
 
-           return <TagPill key={tag.name} tag={tag} className={option} />;
+           return (
+              <TagPill
+                 key={tag.name}
+                 href={href}
+                 name={tag.name}
+                 className={tagId}
+                 count={tag.count}
+                 totalCount={tag.count}
+              />
+           );
         })
       : [];
 

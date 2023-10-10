@@ -8,13 +8,15 @@ import LinkCards from '@/components/elements/links/LinkCards';
 import { PopularRelatedTags } from '@/components/PopularRelatedTags';
 import { Pager } from '@/components/elements/navigation';
 
-export default async function Home({
+export default async function TagsLinksPage({
+   params,
    searchParams,
 }: {
+   params: TagsLinksPageProps;
    searchParams?: { [key: string]: string | string[] | undefined };
 }) {
    const page = searchParams?.page ? parseInt(searchParams.page as string) : 1;
-   const tags = searchParams?.tags ? searchParams?.tags.toString().split(',') : [''];
+   const tags = params.tags ? params.tags : []; // searchParams?.tags ? searchParams?.tags.toString().split(',') : [''];
 
    const links = await apiGetLinks({
       page: page,
@@ -24,6 +26,7 @@ export default async function Home({
    return (
       <>
          <section className={styles.content}>
+            <h1>Tags ....</h1>
             <Suspense fallback={<>Loading...</>}>
                <LinkCards items={links.results} />
             </Suspense>
@@ -41,3 +44,7 @@ export default async function Home({
       </>
    );
 }
+
+type TagsLinksPageProps = {
+   tags: string[];
+};

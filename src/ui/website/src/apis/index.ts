@@ -1,6 +1,7 @@
+import { API_URL } from '@/utils/Configs';
+
 import { ResultsPage } from '@/types/ResultsPage';
 import { LinkItemResult, LinkResult } from '@/types/links';
-import { API_URL } from '@/utils/Configs';
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 const USER_AGENT = 'deliscio-web-client';

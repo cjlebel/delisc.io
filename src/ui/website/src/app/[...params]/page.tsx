@@ -5,7 +5,7 @@ import styles from './page.module.scss';
 import { apiGetLinks } from '@/apis';
 
 import { LinkCards } from '@/components/elements/links';
-import { PopularRelatedTags } from '@/components/molecules/PopularRelatedTags';
+import { PopularRelatedTags } from '@/components/PopularRelatedTags';
 import { Pager } from '@/components/elements/navigation';
 
 export default async function LinksTagsPage({

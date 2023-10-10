@@ -4,22 +4,26 @@ import Link from 'next/link';
 
 import styles from './page.module.scss';
 
-import { API_URL } from '@/utils/Configs';
-import { apiGetLink } from '@/apis';
+import { ClientSideApis } from '@/apis/LinksApis';
 
-import { LinkResult } from '@/types/links';
 import TagPills from '@/components/elements/tags/TagPills';
+import RelatedLinksPanel from '@/components/RelatedLinks/RelatedLinksPanel';
+import { LinkItemResult } from '@/types/links';
 
 type LinkPageProps = {
    id: string;
 };
 
 export default async function LinkPage({ params }: { params: LinkPageProps }) {
-   var link = await apiGetLink(params.id);
+   const link: LinkItemResult = await ClientSideApis.LinksApis.getLink(params.id);
 
    if (!link) {
       return <div>Link not found</div>;
    }
+
+   const relatedTags: string[] = link?.tags?.map((tag) => {
+      return tag.name;
+   }) as string[];
 
    var title = link.title
       ? link.title.length > 150
@@ -72,7 +76,9 @@ export default async function LinkPage({ params }: { params: LinkPageProps }) {
                {getFooter()}
             </div>
          </section>
-         <aside className={`sidebar ${styles.sidebar}`}>some stuff</aside>
+         <aside className={`sidebar ${styles.sidebar}`}>
+            <RelatedLinksPanel tags={relatedTags} />
+         </aside>
       </Suspense>
    );
 }

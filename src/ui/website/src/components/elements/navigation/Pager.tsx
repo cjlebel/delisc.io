@@ -133,9 +133,7 @@ export default function Pager(props: PagerProps) {
       );
 
    const totalResults = props.totalResults ? (
-      <li style={{ padding: '5px 10px' }}>
-         Total Results: {props.totalResults} {pathName} {tags}
-      </li>
+      <li style={{ padding: '5px 10px' }}>Total Results: {props.totalResults}</li>
    ) : (
       <li style={{ padding: '5px 10px' }}></li>
    );
