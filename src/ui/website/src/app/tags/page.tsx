@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TagCloud } from '@/components/molecules/TagCloud';
+import { TagCloud } from '@/components/TagCloud';
 
 type TagsPageProps = {};
 

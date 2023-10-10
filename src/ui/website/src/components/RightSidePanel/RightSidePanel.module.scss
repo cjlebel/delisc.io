@@ -1,3 +1,10 @@
+.panel {
+   h4 {
+      text-decoration: underline;
+      margin-bottom: 1.5rem;
+   }
+}
+
 .card {
    background-color: transparent;
    //    background-color: #2d333b;
@@ -10,10 +17,4 @@
    color: #adbac7;
    text-transform: uppercase;
    text-align: center;
-}
-
-.tag-pills {
-   span:not(:first-of-type) {
-      margin-left: 0.5rem;
-   }
 }

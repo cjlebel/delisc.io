@@ -7,6 +7,7 @@ import Link from 'next/link';
 import styles from './TagCloud.module.scss';
 
 import { TagResult } from '@/types/tags';
+import { TagPill } from '../TagPill';
 
 const colorOptions = [
    'bg-deliscio',
@@ -24,27 +25,28 @@ const colorOptions = [
 
 const TagCloud = ({ maxTags, currentTags }: PopularRecentTagsProps) => {
    const [tags, setTags] = useState<TagResult[] | null>(null);
-   const [sortedTags, setCurrentTagsSorted] = useState<string[]>(['']);
+   const [tagsToFilterBy, setCurrentTags] = useState<string[]>(['']);
    const [isLoading, setLoading] = useState<boolean>(true);
    const [error, setError] = useState<any>(null);
 
    // NOTE: This is called twice. Apparently it's because strict mode is true (next.config.js: reactStrictMode)
    useEffect(() => {
       // Sort the tags for consistency
-      const sortedTags = currentTags
-         ? currentTags
-              .filter((t) => {
-                 return t.trim() !== '';
-              })
-              .sort()
+      var trimmedTags = currentTags
+         ? currentTags.filter((t) => {
+              return t.trim() !== '';
+           })
          : [];
 
-      const tagDelimited = sortedTags.toString().replaceAll('+', ' ');
+      setCurrentTags(trimmedTags);
 
-      setCurrentTagsSorted(sortedTags);
+      const tagAsStringForApiCall = trimmedTags.join(',').replaceAll('+', ' ');
 
       //TODO: Move this call somewhere else, where if can share a common calling ();
-      fetch(`/api/links/tags?tags=${encodeURIComponent(tagDelimited)}&count=${maxTags}`, {})
+      fetch(
+         `/api/links/tags?tags=${encodeURIComponent(tagAsStringForApiCall)}&count=${maxTags}`,
+         {}
+      )
          .then((res) => res.json())
          .then((data) => {
             setTags(data);
@@ -70,15 +72,8 @@ const TagCloud = ({ maxTags, currentTags }: PopularRecentTagsProps) => {
       totalCount += tag.count;
    });
 
-   //const maxWeight = Math.max(...data.map((tag) => tag.weight));
-
    const tagItems = tags
       ? tags.map((tag, idx) => {
-           const tagSize =
-              totalCount > 0 && tag.count / totalCount >= 0.0001
-                 ? 1 + (tag.count / totalCount) * 5
-                 : 0.8;
-
            const tagId = `tag-${(idx % 10) + 1}`;
 
            const tagName = tag.name.replaceAll(' ', '+').replaceAll('%20', '+');
@@ -87,35 +82,41 @@ const TagCloud = ({ maxTags, currentTags }: PopularRecentTagsProps) => {
            //      Then filtering them out of what gets displayed
            //      This is so that there'll be consistency.
            //TODO: This can be better. Reuse array from above.
-           const newTagsArr = [sortedTags, tagName]
-              .filter((t) => {
-                 return t.toString().trim() !== '';
-              })
-              .sort();
 
-           const href = `?tags=${newTagsArr.join(',')}`;
+           let newTagsArr =
+              [...tagsToFilterBy, tagName]
+                 ?.filter((t, idx) => {
+                    return t.toString().trim() !== '';
+                 })
+                 .sort() ?? [];
+
+           const href = `/tags/${newTagsArr.join('/')}`;
 
            return (
-              <li className={`${styles.tag}`} key={tag.name}>
-                 <Link
+              <>
+                 <TagPill
+                    name={tag.name}
+                    className={styles[tagId]}
                     href={href}
-                    className={`${styles[tagId]}`}
+                    count={tag.count}
+                    totalCount={totalCount}
+                 />
+                 {/* <Link
+                    href={href}
+                    className={`${styles.tag} ${}`}
+                    key={tag.name}
                     data-count={tag.count}
                     data-weight={tag.weight}
                     data-totalcount={totalCount}
                     data-percent={tag.count / totalCount}
                     style={{
                        fontSize: `${tagSize}rem`,
-                       padding: '5px',
-                       borderRadius: '0.5rem',
-                       wordBreak: 'break-word',
                     }}>
                     <span>
-                       {tag.name} <span>[{tag.count}]</span>
+                       {tag.name}
                     </span>
-                 </Link>
-                 &nbsp;
-              </li>
+                 </Link> */}
+              </>
            );
         })
       : null;

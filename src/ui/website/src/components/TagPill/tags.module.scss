@@ -1,16 +1,24 @@
-.root {
+.pill {
+   display: inline-block;
+   background-color: #ff0100;
+   color: #fff;
+   padding: 0.2rem 0.5rem;
+   border-radius: 2px;
+   font-size: 0.8rem;
+   margin-right: 0.5rem;
+
+   &:hover {
+      background-color: #ff5733;
+   }
 }
 
 .tag {
-   border-radius: 1rem;
    display: inline-block;
    margin-right: 0.5rem;
    margin-bottom: 1.5rem;
+   border-radius: 1rem;
+   padding: 0.5em;
    word-break: break-all;
-
-   a {
-      padding: 0.5em;
-   }
 }
 
 .tag-1 {

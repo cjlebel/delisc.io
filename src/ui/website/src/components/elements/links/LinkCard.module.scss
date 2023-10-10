@@ -19,8 +19,9 @@
    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add transitions for smooth animation */
 
    &:hover {
-      transform: scale(1.025) translateY(-5px); /* Grow the element by 5% and shift it 5 pixels upwards on hover */
-      box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.1); /* Add a glow effect with a white color */
+      z-index: 999;
+      transform: scale(1.01) translateY(-1px) translateX(-1px); /* Grow the element by 5% and shift it 5 pixels upwards on hover */
+      //box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.1); /* Add a glow effect with a white color */
    }
 
    img {

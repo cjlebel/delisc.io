@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './PopularRelatedTags.module.scss';
 
 import { TagCloud } from '../TagCloud';
+import RightSidePanel from '../RightSidePanel/RightSidePanel';
 
 const TITLE_POPULAR = 'Popular Tags';
 const TITLE_RELATED = 'Related Tags';
@@ -31,13 +32,9 @@ const PopularRelatedTags = (props: PopularRecentTagsProps) => {
    }, [props.maxTags, props.currentTags]);
 
    return (
-      <div className='tags-panel'>
-         <h4 className={`${styles['title']} title`}>{title}</h4>
-         Current Tags: {props.currentTags?.length} {props.currentTags}
-         <div className={`${styles['contents']} contents`}>
-            <TagCloud maxTags={props.maxTags} currentTags={props.currentTags} />
-         </div>
-      </div>
+      <RightSidePanel title={title}>
+         <TagCloud maxTags={props.maxTags} currentTags={props.currentTags} />
+      </RightSidePanel>
    );
 };
 
