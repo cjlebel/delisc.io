@@ -40,8 +40,10 @@ const TagCloud = ({ maxTags, currentTags }: PopularRecentTagsProps) => {
 
       setCurrentTags(trimmedTags);
 
-      const tagAsStringForApiCall = trimmedTags.join(',').replaceAll('+', ' ');
+      let tagAsStringForApiCall = trimmedTags.join(',');
+      tagAsStringForApiCall = tagAsStringForApiCall.replaceAll('%2B', '%20').replaceAll('+', '%20');
 
+      console.log(trimmedTags);
       //TODO: Move this call somewhere else, where if can share a common calling ();
       fetch(
          `/api/links/tags?tags=${encodeURIComponent(tagAsStringForApiCall)}&count=${maxTags}`,
@@ -90,42 +92,24 @@ const TagCloud = ({ maxTags, currentTags }: PopularRecentTagsProps) => {
                  })
                  .sort() ?? [];
 
-           const href = `/tags/${newTagsArr.join('/')}`;
+           const slug = `${newTagsArr.join('/').replaceAll('%2B', '+')}`;
 
            return (
               <>
                  <TagPill
+                    key={tag.name}
                     name={tag.name}
-                    className={styles[tagId]}
-                    href={href}
+                    className={tagId}
+                    href={slug}
                     count={tag.count}
                     totalCount={totalCount}
                  />
-                 {/* <Link
-                    href={href}
-                    className={`${styles.tag} ${}`}
-                    key={tag.name}
-                    data-count={tag.count}
-                    data-weight={tag.weight}
-                    data-totalcount={totalCount}
-                    data-percent={tag.count / totalCount}
-                    style={{
-                       fontSize: `${tagSize}rem`,
-                    }}>
-                    <span>
-                       {tag.name}
-                    </span>
-                 </Link> */}
               </>
            );
         })
       : null;
 
-   return (
-      <div className={styles.root}>
-         <ul className='list-unstyled'>{tagItems}</ul>
-      </div>
-   );
+   return <div className={styles.root}>{tagItems}</div>;
 };
 
 /**

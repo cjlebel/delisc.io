@@ -6,9 +6,9 @@ import styles from './tags.module.scss';
 export default function TagPill({ name, className, href, count, totalCount }: TagPillProps) {
    const css = `${styles.tag} ${className ? styles[className] : ''}`;
 
-   const sanitizedTag = `${name.replace(/ /g, '+')}`;
+   const sanitizedHref = `${href.replace(/ /g, '+')}`;
 
-   href = `/tags/${sanitizedTag}`;
+   href = `/tags/${sanitizedHref}`;
 
    const tagSize =
       count === totalCount

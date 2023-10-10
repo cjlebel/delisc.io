@@ -8,8 +8,7 @@ import { ClientSideApis } from '@/apis/LinksApis';
 
 import TagPills from '@/components/elements/tags/TagPills';
 import RelatedLinksPanel from '@/components/RelatedLinks/RelatedLinksPanel';
-import { LinkItemResult, LinkResult } from '@/types/links';
-import { ResultsPage } from '@/types/ResultsPage';
+import { LinkItemResult } from '@/types/links';
 
 type LinkPageProps = {
    id: string;
