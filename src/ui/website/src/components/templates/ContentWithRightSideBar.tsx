@@ -9,12 +9,10 @@ type ContentWithRightSideBarProps = {
 
 export default function ContentWithRightSideBar({ main, rightSide }: ContentWithRightSideBarProps) {
    return (
-      <div className='container-fluid my-2'>
-         <div className='d-flex'>
-            <MainContent>{main}</MainContent>
+      <div className='d-flex'>
+         <MainContent>{main}</MainContent>
 
-            <RightSideContent>{rightSide}</RightSideContent>
-         </div>
+         <RightSideContent>{rightSide}</RightSideContent>
       </div>
    );
 }
