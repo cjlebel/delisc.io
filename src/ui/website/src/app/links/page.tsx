@@ -27,7 +27,7 @@ const getTopTags = async (size: number) => {
    }
 };
 
-export default async function LinksPage({
+export default async function TagsPage({
    searchParams,
 }: {
    searchParams?: { [key: string]: string | string[] | undefined };

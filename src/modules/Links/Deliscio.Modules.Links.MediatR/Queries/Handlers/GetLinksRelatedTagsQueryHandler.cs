@@ -18,7 +18,7 @@ public class GetLinksRelatedTagsQueryHandler : IRequestHandler<GetLinksRelatedTa
 
     public async Task<LinkTag[]> Handle(GetLinksRelatedTagsQuery command, CancellationToken cancellationToken)
     {
-        var results = (await _linksService.GetRelatedTagsAsync(command.Tags, command.Count, token: cancellationToken)).ToArray();
+        var results = (await _linksService.GetRelatedTagsAsync(command.Tags, command.Count.GetValueOrDefault(), token: cancellationToken)).ToArray();
 
         return results;
     }

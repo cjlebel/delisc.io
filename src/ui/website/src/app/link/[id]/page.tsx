@@ -4,18 +4,18 @@ import Link from 'next/link';
 
 import styles from './page.module.scss';
 
-import { ClientSideApis } from '@/apis/LinksApis';
+import { ServerSideApis } from '@/apis/clientside/LinksApis';
 
 import TagPills from '@/components/elements/tags/TagPills';
-import RelatedLinksPanel from '@/components/RelatedLinks/RelatedLinksPanel';
 import { LinkItemResult } from '@/types/links';
+import ContentWithRightSideBarTemplate from '@/components/templates/ContentWithRightSideBar';
 
 type LinkPageProps = {
    id: string;
 };
 
 export default async function LinkPage({ params }: { params: LinkPageProps }) {
-   const link: LinkItemResult = await ClientSideApis.LinksApis.getLink(params.id);
+   const link: LinkItemResult = await ServerSideApis.LinksApis.getLink(params.id);
 
    if (!link) {
       return <div>Link not found</div>;
@@ -46,39 +46,73 @@ export default async function LinkPage({ params }: { params: LinkPageProps }) {
       return <div>{tags}</div>;
    };
 
-   return (
-      <Suspense fallback={<>Loading...</>}>
-         <section className={styles.content}>
+   const getMainContent = (): React.ReactNode => {
+      return (
+         <>
             <h1>{title}</h1>
-            <div className='content d-flex flex-row'>
+            <Image
+               src={imgUrl}
+               className='card-img-top'
+               alt={link.title}
+               width={0}
+               height={0}
+               sizes='100vw'
+               style={{ width: '100%', height: 'auto' }}
+            />
+            {/* <div className='position-absolute bottom-0 start-0 end-0 p-3'> */}
+            <div className='d-flex justify-content-between pt-2 pb-2'>
+               <div className=''>
+                  <span className='badge bg-primary'>Dinner</span>&nbsp;
+                  <span className='badge bg-primary'>Italian</span>
+               </div>
+
                <div>
-                  <Image
-                     src={imgUrl}
-                     className='card-img-top'
-                     alt={link.title}
-                     width={0}
-                     height={0}
-                     sizes='100vw'
-                     style={{ width: '100%', height: 'auto' }}
-                  />
+                  <a
+                     href='original-source-url.com'
+                     className='btn btn-outline-danger'
+                     target='_blank'>
+                     Original Source
+                  </a>
                </div>
-               <div style={{ maxWidth: '33%', padding: '0 0.5em' }}>
-                  <p className='description'>{link.description}</p>
+
+               <div className=''>
+                  <button className='btn btn-outline-primary'>Like</button>&nbsp;
+                  <button className='btn btn-outline-secondary'>Save</button>
                </div>
             </div>
-            <div className={`footer ${styles.tags}`} style={{ width: '100%', minHeight: '2.5em' }}>
-               <p>
-                  Link:{' '}
-                  <Link href={link.url} style={{ color: 'red' }} target='_blank'>
-                     {title}
-                  </Link>
-               </p>
-               {getFooter()}
+
+            <p>{link.description}</p>
+
+            <h3 className='mt-4'>Personal Notes</h3>
+            <p>User&apos;s notes about the recipe go here.</p>
+
+            <h3 className='mt-4'>Comments</h3>
+            <div className='mb-4'>{/*<!--  Comments from users go here --> */}</div>
+         </>
+      );
+   };
+
+   const getRightSideContent = (): React.ReactNode => {
+      return (
+         <>
+            <div className='flex-shrink-0' style={{ width: '300px' }}>
+               <div>
+                  <h3>Notes</h3>
+                  <p>Notes ....</p>
+               </div>
+               <div>
+                  <h3>Related Links</h3>
+                  <ul className='list-group'>
+                     <li className='list-group-item'>Related Link 1</li>
+                     <li className='list-group-item'>Related Link 2</li>
+                  </ul>
+               </div>
             </div>
-         </section>
-         <aside className={`sidebar ${styles.sidebar}`}>
-            <RelatedLinksPanel tags={relatedTags} />
-         </aside>
-      </Suspense>
+         </>
+      );
+   };
+
+   return (
+      <ContentWithRightSideBarTemplate main={getMainContent()} rightSide={getRightSideContent()} />
    );
 }
