@@ -40,6 +40,7 @@ public class LinksApiEndpoints : BaseApiEndpoints
     {
         MapGetLink(endpoints);
         MapLinksSearch(endpoints);
+        MapLinksRelated(endpoints);
         MapGetTags(endpoints);
         MapSubmitLink(endpoints);
     }
@@ -128,6 +129,30 @@ public class LinksApiEndpoints : BaseApiEndpoints
         .WithDisplayName("SearchForLinks")
         .WithSummary("Search for links")
         .WithDescription("This endpoint searches for links based on the search term provided. If the search term is null or whitespace, a BadRequest is returned");
+    }
+
+    private void MapLinksRelated(IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapGet("v1/links/{linkId}/related",
+                async ([FromRoute] string linkId, CancellationToken cancellationToken) =>
+                {
+                    if (string.IsNullOrWhiteSpace(linkId))
+                        return Results.BadRequest(ID_CANNOT_BE_NULL_OR_WHITESPACE);
+
+                    var guidId = Guid.Parse(linkId);
+                    if (guidId == Guid.Empty)
+                        return Results.BadRequest(ID_CANNOT_BE_NULL_OR_WHITESPACE);
+
+                    var result = await _manager.GetRelatedLinksAsync(linkId, cancellationToken);
+
+                    return Results.Ok(result);
+                })
+            .Produces<LinkItem[]>()
+            .ProducesProblem((int)HttpStatusCode.OK)
+            .ProducesProblem((int)HttpStatusCode.BadRequest)
+            .WithDisplayName("GetRelatedLinks")
+            .WithSummary("Gets links that are related to the link with the id that was provided")
+            .WithDescription("This endpoint retrieves a collection of related links based on the id provided.");
     }
 
     private void MapGetTags(IEndpointRouteBuilder endpoints)

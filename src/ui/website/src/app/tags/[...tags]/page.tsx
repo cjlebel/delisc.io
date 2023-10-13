@@ -1,50 +1,12 @@
-import { Suspense } from 'react';
-
-import styles from './page.module.scss';
-
-import { apiGetLinks } from '@/apis';
-
-import LinkCards from '@/components/elements/links/LinkCards';
-import { PopularRelatedTags } from '@/components/PopularRelatedTags';
-import { Pager } from '@/components/elements/navigation';
+import LinksPage from '@/components/modules/LinksPage/LinksPage';
 
 export default async function TagsLinksPage({
    params,
    searchParams,
 }: {
-   params: TagsLinksPageProps;
+   params: { tags: string[] };
    searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-   const page = searchParams?.page ? parseInt(searchParams.page as string) : 1;
-   const tags = params.tags ? params.tags : []; // searchParams?.tags ? searchParams?.tags.toString().split(',') : [''];
-
-   const links = await apiGetLinks({
-      page: page,
-      tags: tags,
-   });
-
-   return (
-      <>
-         <section className={styles.content}>
-            <h1>Tags ....</h1>
-            <Suspense fallback={<>Loading...</>}>
-               <LinkCards items={links.results} />
-            </Suspense>
-            <Pager
-               currentPage={links.pageNumber}
-               totalPages={links.totalPages}
-               totalResults={links.totalResults}
-            />
-         </section>
-         <aside className={`sidebar ${styles.sidebar}`}>
-            <Suspense fallback={<>Loading...</>}>
-               <PopularRelatedTags maxTags={25} currentTags={tags} />
-            </Suspense>
-         </aside>
-      </>
-   );
+   console.log('Tags Page');
+   return <LinksPage tagsParams={params.tags} searchParams={searchParams} />;
 }
-
-type TagsLinksPageProps = {
-   tags: string[];
-};

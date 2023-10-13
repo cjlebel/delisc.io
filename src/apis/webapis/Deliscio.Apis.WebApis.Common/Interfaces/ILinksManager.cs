@@ -16,6 +16,13 @@ public interface ILinksManager
     ValueTask<PagedResults<LinkItem>> GetLinksByTagsAsync(string[] tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
 
     /// <summary>
+    /// Gets a collection of links that are related to the link with the provided id.
+    /// </summary>
+    /// <param name="id">THe id of the link for which the related links will be based on</param>
+    /// <returns></returns>
+    ValueTask<LinkItem[]> GetRelatedLinksAsync(string id, CancellationToken token = default);
+
+    /// <summary>
     /// Gets a collection of tags.
     /// If tags are provided, then the returning tags will be related to them via the links.
     /// Else, if no tags are provided, then the returning tags will be the most popular tags.

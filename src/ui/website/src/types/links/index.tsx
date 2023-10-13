@@ -1,10 +1,12 @@
+import { TagResult } from '../tags';
+
 export type LinkResult = {
    id: string;
    description: string;
    domain: string;
    imageUrl?: string;
    keywords?: string[] | [];
-   tags?: any[] | [];
+   tags?: TagResult[] | [];
    title: string;
    url: string;
    submittedById: string;
@@ -17,7 +19,7 @@ export type LinkItemResult = {
    description: string;
    domain: string;
    imageUrl: string;
-   tags?: any[] | [];
+   tags?: TagResult[] | [];
    title: string;
    url: string;
 };

@@ -1,16 +1,17 @@
-.link-item {
+.link-tile {
    //    align-self: flex-start;
-   background-color: #2d333b;
-   border: 2px solid #444c56;
+   //    background-color: #2d333b;
+   //    border: 2px solid #2d333b;
+   background-color: #f4f4f4;
+   border: 1px solid #a0a0a0;
    border-radius: 0.75rem;
    color: #adbac7;
    display: flex;
    flex-direction: column;
    height: auto;
+   margin-bottom: 1rem;
    min-width: 23%;
    max-width: 32.5%;
-   margin-bottom: 1rem;
-   padding: 2px;
 
    a {
       flex: 1;
@@ -20,21 +21,24 @@
 
    &:hover {
       z-index: 999;
-      transform: scale(1.01) translateY(-1px) translateX(-1px); /* Grow the element by 5% and shift it 5 pixels upwards on hover */
+      transform: scale(1.02) translateY(-2px) translateX(-2px); /* Grow the element by 5% and shift it 5 pixels upwards on hover */
       //box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.1); /* Add a glow effect with a white color */
    }
 
    img {
       width: 100%;
       height: auto;
-      border-radius: 8px;
+      border-radius: 10px 10px 0 0;
    }
 
    .title {
-      color: #adbac7;
+      color: #2d333b;
       font-weight: 900;
-      padding-top: 5px;
-      padding-bottom: 5px;
+      padding: 0.25em;
+   }
+
+   .body {
+      padding: 0.5em;
    }
 
    .description {
@@ -42,11 +46,16 @@
       color: #adbac7;
    }
 
-   .footer-tags {
-      background-color: #1c2128;
+   .footer {
+      background-color: #e8e8e8;
       padding: 0.5rem;
+      height: 2.75em;
+      overflow: hidden;
+      width: 100%;
+      border-radius: 0 0 10px 10px;
 
-      .tag {
+      span {
+         //  margin-bottom: 0 !important;
          //  display: inline-block;
          //  background-color: #ff0100;
          //  color: #fff;
