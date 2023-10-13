@@ -124,6 +124,15 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         return await _mediator.Send(query, token);
     }
 
+    public async ValueTask<LinkItem[]> GetRelatedLinksAsync(string id, CancellationToken token = default)
+    {
+        Guard.Against.NullOrWhiteSpace(id);
+
+        var query = new GetLinkRelatedLinksQuery(new Guid(id));
+
+        return await _mediator.Send(query, token);
+    }
+
     /// <summary>
     /// Gets a collection of tags that are related to the given tags.
     /// This is used to drill down into the links.

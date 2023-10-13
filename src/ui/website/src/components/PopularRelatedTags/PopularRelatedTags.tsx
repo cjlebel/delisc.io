@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 
-import styles from './PopularRelatedTags.module.scss';
-
 import { TagCloud } from '../TagCloud';
 import RightSidePanel from '../RightSidePanel/RightSidePanel';
 
@@ -16,6 +14,7 @@ const TITLE_RELATED = 'Related Tags';
  * @returns
  */
 const PopularRelatedTags = (props: PopularRecentTagsProps) => {
+   const [maxTags, setMaxTags] = useState<number>(50);
    const [title, setTitle] = useState<string>('');
 
    useEffect(() => {
@@ -27,13 +26,17 @@ const PopularRelatedTags = (props: PopularRecentTagsProps) => {
               .sort()
          : null;
 
+      // Yes, they are the same. One may potentially have more than the other at a later time
+      const maxTags = existingTags && existingTags.length > 0 ? 100 : 100;
+      setMaxTags(maxTags);
+
       const title = existingTags && existingTags.length > 0 ? TITLE_RELATED : TITLE_POPULAR; // tagDelimited?.replace('/', '').length > 0 ? TITLE_RELATED : TITLE_POPULAR;
       setTitle(title);
-   }, [props.maxTags, props.currentTags]);
+   }, [props.currentTags]);
 
    return (
       <RightSidePanel title={title}>
-         <TagCloud maxTags={props.maxTags} currentTags={props.currentTags} />
+         <TagCloud maxTags={maxTags} currentTags={props.currentTags} />
       </RightSidePanel>
    );
 };
@@ -46,7 +49,6 @@ const PopularRelatedTags = (props: PopularRecentTagsProps) => {
  * @property {number} [maxTags=50]: The number of tags to retrieve
  */
 type PopularRecentTagsProps = {
-   maxTags?: number | 50;
    currentTags?: string[];
 };
 

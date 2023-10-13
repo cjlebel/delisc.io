@@ -7,17 +7,19 @@ public interface ILinksService
 {
     Task<Guid> AddAsync(Link link, CancellationToken token = default);
 
-    Task<Link?> GetAsync(Guid id, CancellationToken token = default);
+    Task<Link?> GetAsync(Guid linkId, CancellationToken token = default);
 
-    Task<PagedResults<LinkItem>> GetAsync(int pageNo = 1, int pageSize = 25, CancellationToken token = default);
+    Task<PagedResults<LinkItem>> GetAsync(int pageNo = 1, int? pageSize = default, CancellationToken token = default);
 
-    Task<IEnumerable<LinkItem>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken token = default);
+    Task<IEnumerable<LinkItem>> GetByIdsAsync(IEnumerable<Guid> linkIds, CancellationToken token = default);
 
     Task<Link?> GetByUrlAsync(string url, CancellationToken token = default);
 
-    Task<PagedResults<LinkItem>> GetLinksByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
+    Task<PagedResults<LinkItem>> GetLinksByDomainAsync(string domain, int pageNo = 1, int? pageSize = default, CancellationToken token = default);
 
-    Task<PagedResults<LinkItem>> GetLinksByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
+    Task<PagedResults<LinkItem>> GetLinksByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int? pageSize = default, CancellationToken token = default);
+
+    Task<LinkItem[]> GetRelatedLinksAsync(Guid linkId, int? count = default, CancellationToken token = default);
 
     /// <summary>
     /// Gets a collection of tags that are related to the ones that are passed in.

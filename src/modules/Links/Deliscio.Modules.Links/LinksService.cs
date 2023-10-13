@@ -22,6 +22,10 @@ public class LinksService : ServiceBase, ILinksService
     private readonly ILogger<LinksService> _logger;
     private readonly ILinksRepository _linksRepository;
 
+    //TODO: Get these from config
+    private readonly int _defaultLinksPageSize = 50;
+    private readonly int _defaultRelatedLinksCount = 20;
+    private readonly int _defaultTagsCount = 50;
     public LinksService(ILinksRepository linksRepository, ILogger<LinksService> logger)
     {
         Guard.Against.Null(linksRepository);
@@ -76,27 +80,27 @@ public class LinksService : ServiceBase, ILinksService
     /// <summary>
     /// Gets a single link by its id from the central link repository
     /// </summary>
-    /// <param name="id">The id of the link to retrieve</param>
+    /// <param name="linkId">The id of the link to retrieve</param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public async Task<Link?> GetAsync(string id, CancellationToken token = default)
+    public async Task<Link?> GetAsync(string linkId, CancellationToken token = default)
     {
-        Guard.Against.NullOrWhiteSpace(id);
+        Guard.Against.NullOrWhiteSpace(linkId);
 
-        return await GetAsync(new Guid(id), token);
+        return await GetAsync(new Guid(linkId), token);
     }
 
     /// <summary>
     /// Gets a single link by its id from the central link repository
     /// </summary>
-    /// <param name="id">The id of the link to retrieve</param>
+    /// <param name="linkId">The id of the link to retrieve</param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public async Task<Link?> GetAsync(Guid id, CancellationToken token = default)
+    public async Task<Link?> GetAsync(Guid linkId, CancellationToken token = default)
     {
-        Guard.Against.NullOrEmpty(id);
+        Guard.Against.NullOrEmpty(linkId);
 
-        var result = await _linksRepository.GetAsync(id, token);
+        var result = await _linksRepository.GetAsync(linkId, token);
 
         var link = Mapper.Map(result);
 
@@ -110,16 +114,20 @@ public class LinksService : ServiceBase, ILinksService
     /// <param name="pageSize">The number of results per page</param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public async Task<PagedResults<LinkItem>> GetAsync(int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async Task<PagedResults<LinkItem>> GetAsync(int pageNo = 1, int? pageSize = default, CancellationToken token = default)
     {
-        var rslts = await Find(_ => true, pageNo, pageSize, token);
+        var newPageSize = pageSize ?? _defaultLinksPageSize;
 
-        return GetPageOfResults(rslts.Results, pageNo, pageSize, rslts.TotalCount);
+        Guard.Against.NegativeOrZero(newPageSize, message: $"{nameof(pageSize)} must be greater than zero");
+
+        var rslts = await Find(_ => true, pageNo, newPageSize, token);
+
+        return GetPageOfResults(rslts.Results, pageNo, newPageSize, rslts.TotalCount);
     }
 
-    public async Task<IEnumerable<LinkItem>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken token = default)
+    public async Task<IEnumerable<LinkItem>> GetByIdsAsync(IEnumerable<Guid> linkIds, CancellationToken token = default)
     {
-        var rslts = await _linksRepository.GetAsync(ids, token);
+        var rslts = await _linksRepository.GetAsync(linkIds, token);
 
         var links = Mapper.Map<LinkItem>(rslts);
 
@@ -135,15 +143,19 @@ public class LinksService : ServiceBase, ILinksService
     /// <param name="token"></param>
     /// /// <exception cref="ArgumentNullException">If the domain is null or empty</exception>
     /// <returns></returns>
-    public async Task<PagedResults<LinkItem>> GetLinksByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async Task<PagedResults<LinkItem>> GetLinksByDomainAsync(string domain, int pageNo = 1, int? pageSize = default, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(domain);
 
-        var rslts = await _linksRepository.GetLinksByDomainAsync(domain, pageNo, pageSize, token);
+        var newPageSize = pageSize ?? _defaultLinksPageSize;
+
+        Guard.Against.NegativeOrZero(newPageSize, message: $"{nameof(pageSize)} must be greater than zero");
+
+        var rslts = await _linksRepository.GetLinksByDomainAsync(domain, pageNo, newPageSize, token);
 
         var links = Mapper.Map<LinkItem>(rslts.Results);
 
-        return GetPageOfResults(links, pageNo, pageSize, rslts.TotalCount);
+        return GetPageOfResults(links, pageNo, newPageSize, rslts.TotalCount);
     }
 
     /// <summary>
@@ -155,19 +167,23 @@ public class LinksService : ServiceBase, ILinksService
     /// <param name="token"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public async Task<PagedResults<LinkItem>> GetLinksByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async Task<PagedResults<LinkItem>> GetLinksByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int? pageSize = default, CancellationToken token = default)
     {
         var array = tags.ToArray();
 
         Guard.Against.NullOrEmpty(array, message: $"{nameof(tags)} cannot be null or empty");
 
+        var newPageSize = pageSize ?? _defaultLinksPageSize;
+
+        Guard.Against.NegativeOrZero(newPageSize, message: $"{nameof(pageSize)} must be greater than zero");
+
         array = array.Select(t => WebUtility.UrlDecode(t).ToLowerInvariant()).ToArray();
 
-        var rslts = await _linksRepository.GetLinksByTagsAsync(array, pageNo, pageSize, token);
+        var rslts = await _linksRepository.GetLinksByTagsAsync(array, pageNo, newPageSize, token);
 
         var links = Mapper.Map<LinkItem>(rslts.Results);
 
-        return GetPageOfResults(links, pageNo, pageSize, rslts.TotalCount);
+        return GetPageOfResults(links, pageNo, newPageSize, rslts.TotalCount);
     }
 
     /// <summary>
@@ -187,15 +203,58 @@ public class LinksService : ServiceBase, ILinksService
     }
 
     /// <summary>
+    /// Attempts to get a collection of links that are related to a specific one.
+    /// </summary>
+    /// <param name="linkId">The id of the link for which to get the related links for</param>
+    /// <param name="count">The max number of related links to return</param>
+    /// <param name="token"></param>
+    /// <returns>An array of link items</returns>
+    public async Task<LinkItem[]> GetRelatedLinksAsync(Guid linkId, int? count = default, CancellationToken token = default)
+    {
+        Guard.Against.NullOrEmpty(linkId);
+
+        var newCount = count ?? _defaultRelatedLinksCount;
+
+        Guard.Against.NegativeOrZero(newCount);
+
+        var linkItems = Array.Empty<LinkItem>();
+
+        var link = await GetAsync(linkId, token);
+
+        if (link is null)
+            return Array.Empty<LinkItem>();
+
+        var linkTags = link.Tags.Select(t => t.Name).ToArray();
+
+        if (linkTags.Length > 0)
+        {
+            var results = await _linksRepository.GetLinksByTagsAsync(linkTags, 1, newCount, token);
+
+            if (results.Results.TryGetNonEnumeratedCount(out int resultsCount) && resultsCount > 0)
+                linkItems = Mapper.Map<LinkItem>(results.Results).ToArray();
+        }
+
+        if (linkItems.Length < newCount)
+        {
+            var results = await _linksRepository.GetLinksByDomainAsync(link.Domain, 1, newCount, token);
+
+            if (results.Results.TryGetNonEnumeratedCount(out int resultsCount) && resultsCount > 0)
+                linkItems = Mapper.Map<LinkItem>(results.Results).ToArray();
+        }
+
+        return linkItems.Take(newCount).ToArray();
+    }
+
+    /// <summary>
     /// Gets a collection of tags that are related to the provided tags
     /// </summary>
-    /// <param name="tags">The tags to use as the bait to lure out the related tags</param>
+    /// <param name="tags">The tags to use as the bait to lure out the related tags. If no tags are provided, then all will be returned.</param>
     /// <param name="count">The number of related tags to return</param>
     /// <param name="token"></param>
     /// <returns></returns>
     public async Task<LinkTag[]> GetRelatedTagsAsync(string[] tags, int? count = default, CancellationToken token = default)
     {
-        var newCount = count ?? 10;
+        var newCount = count ?? _defaultTagsCount;
 
         Guard.Against.NegativeOrZero(newCount);
 

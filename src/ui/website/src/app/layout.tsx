@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
          <body suppressHydrationWarning={true}>
             <Header />
             <BreadCrumbs />
-            <main className='container-fluid'>{children}</main>
+            <main className='container-fluid mx-2'>{children}</main>
             <Footer />
          </body>
       </html>

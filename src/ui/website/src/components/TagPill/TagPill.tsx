@@ -8,8 +8,6 @@ export default function TagPill({ name, className, href, count, totalCount }: Ta
 
    const sanitizedHref = `${href.replace(/ /g, '+')}`;
 
-   href = `/tags/${sanitizedHref}`;
-
    const tagSize =
       count === totalCount
          ? 1
@@ -20,7 +18,7 @@ export default function TagPill({ name, className, href, count, totalCount }: Ta
    return (
       <span key={name} className={css}>
          <Link
-            href={href}
+            href={sanitizedHref}
             style={{
                fontSize: `${tagSize}rem`,
             }}

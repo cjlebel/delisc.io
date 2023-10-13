@@ -1,59 +1,127 @@
-.pill {
-   display: inline-block;
-   background-color: #ff0100;
-   color: #fff;
-   padding: 0.2rem 0.5rem;
-   border-radius: 2px;
-   font-size: 0.8rem;
-   margin-right: 0.5rem;
+$bg-tag-1: #ff0100;
+$bg-tag-2: #0d6efd;
+$bg-tag-3: #6c757d;
+$bg-tag-4: #198754;
+$bg-tag-5: #ffc107;
+$bg-tag-6: #0dcaf0;
+$bg-tag-7: #d90502;
+$bg-tag-8: #0d6efd;
+$bg-tag-9: #6c757d;
+$bg-tag-10: #198754;
 
-   &:hover {
-      background-color: #ff5733;
-   }
-}
+$fg-tag-1: #fff;
+$fg-tag-2: #fff;
+$fg-tag-3: #fff;
+$fg-tag-4: #fff;
+$fg-tag-5: #212529;
+$fg-tag-6: #212529;
+$fg-tag-7: #212529;
+$fg-tag-8: #212529;
+$fg-tag-9: #212529;
+$fg-tag-10: #212529;
+
+// .pill {
+//    display: inline-block;
+//    padding: 0.2rem 0.5rem;
+//    border-radius: 2px;
+//    font-size: 0.8rem;
+//    margin-right: 0.5rem;
+
+// }
 
 .tag {
+   border-radius: 1rem;
    display: inline-block;
    margin-right: 0.5rem;
    margin-bottom: 0.75rem;
-   border-radius: 1rem;
    padding: 0.5em;
    word-break: break-all;
+
+   transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add transitions for smooth animation */
+
+   &:hover {
+      z-index: 999;
+      transform: scale(1.05) translateY(2px) translateX(2px); /* Grow the element by 5% and shift it 5 pixels upwards on hover */
+      //box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.1); /* Add a glow effect with a white color */
+   }
 }
 
 .tag-1 {
-   background-color: #d90502;
+   background-color: $bg-tag-1;
+   color: $fg-tag-1;
+   &:hover {
+      background-color: lighten($bg-tag-1, 10%);
+   }
 }
+
 .tag-2 {
-   background-color: rgb(13, 110, 253);
+   background-color: $bg-tag-2;
+   color: $fg-tag-2;
+   &:hover {
+      background-color: lighten($bg-tag-2, 10%);
+   }
 }
+
 .tag-3 {
-   background-color: rgb(108, 117, 125);
+   background-color: $bg-tag-3;
+   color: $fg-tag-3;
+   &:hover {
+      background-color: lighten($bg-tag-3, 10%);
+   }
 }
+
 .tag-4 {
-   background-color: rgb(25, 135, 84);
+   background-color: $bg-tag-4;
+   color: $fg-tag-4;
+   &:hover {
+      background-color: lighten($bg-tag-4, 10%);
+   }
 }
+
 .tag-5 {
-   background-color: rgb(255, 193, 7);
-   color: rgb(33, 37, 41);
+   background-color: $bg-tag-5;
+   color: $fg-tag-5;
+   &:hover {
+      background-color: lighten($bg-tag-5, 10%);
+   }
 }
+
 .tag-6 {
-   background-color: rgb(13, 202, 240);
-   color: rgb(33, 37, 41);
+   background-color: $bg-tag-6;
+   color: $fg-tag-6;
+   &:hover {
+      background-color: lighten($bg-tag-6, 10%);
+   }
 }
+
 .tag-7 {
-   background-color: rgb(217, 5, 2);
-   color: rgb(33, 37, 41);
+   background-color: $bg-tag-7;
+   color: $fg-tag-7;
+   &:hover {
+      background-color: lighten($bg-tag-7, 10%);
+   }
 }
+
 .tag-8 {
-   background-color: rgb(13, 110, 253);
-   color: rgb(33, 37, 41);
+   background-color: $bg-tag-8;
+   color: $fg-tag-8;
+   &:hover {
+      background-color: lighten($bg-tag-8, 10%);
+   }
 }
+
 .tag-9 {
-   background-color: rgb(108, 117, 125);
-   color: rgb(33, 37, 41);
+   background-color: $bg-tag-9;
+   color: $fg-tag-9;
+   &:hover {
+      background-color: lighten($bg-tag-9, 10%);
+   }
 }
+
 .tag-10 {
    background-color: rgb(25, 135, 84);
-   color: rgb(33, 37, 41);
+   color: $fg-tag-10;
+   &:hover {
+      background-color: lighten($bg-tag-10, 10%);
+   }
 }
