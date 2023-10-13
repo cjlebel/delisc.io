@@ -7,5 +7,6 @@ export default async function TagsLinksPage({
    params: { tags: string[] };
    searchParams?: { [key: string]: string | string[] | undefined };
 }) {
+   console.log('Tags Page');
    return <LinksPage tagsParams={params.tags} searchParams={searchParams} />;
 }

@@ -5,20 +5,19 @@ import { Pager } from '@/components/elements/navigation';
 import { PopularRelatedTags } from '@/components/PopularRelatedTags';
 import { ContentWithRightSideBar } from '@/components/templates';
 
+type LinksPageProps = {
+   tagsParams?: string[];
+   searchParams?: { [key: string]: string | string[] | undefined };
+};
+
 /**
  * A reusable page component to display a page of links
  */
-export default async function LinksPage({
-   tagsParams,
-   searchParams,
-}: {
-   tagsParams?: string[];
-   searchParams?: { [key: string]: string | string[] | undefined };
-}) {
+export default async function LinksPage({ tagsParams, searchParams }: LinksPageProps) {
    const page = searchParams?.page ? parseInt(searchParams.page as string) : 1;
    const tags =
       tagsParams && tagsParams.length > 0
-         ? tagsParams?.toString().split('/')
+         ? tagsParams
          : searchParams?.tags
          ? searchParams?.tags?.toString().split(',')
          : [];

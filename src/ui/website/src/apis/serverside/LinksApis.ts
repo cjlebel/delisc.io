@@ -6,7 +6,7 @@ import { LinkItemResult, LinkResult } from '@/types/links';
 /**
  * Utils class for Client Side API calls (so not to confuse them with client side when calling them)
  */
-namespace ServerSideApis {
+namespace ServerSideClientApis {
    const API_KEY = process.env.REACT_APP_API_KEY;
    const USER_AGENT = 'deliscio-web-client';
 
@@ -119,16 +119,6 @@ namespace ServerSideApis {
 }
 
 /**
- * Properties to get an individual Link
- */
-type GetLinkProps = {
-   /**
-    * {number} id: The id of the link to be retrieved
-    */
-   id: string;
-};
-
-/**
  * Properties to get a collection of Links
  */
 type GetLinksProps = {
@@ -152,4 +142,4 @@ type GetTagsProps = {
    count?: number | 50;
 };
 
-export { ServerSideApis };
+export { ServerSideClientApis };

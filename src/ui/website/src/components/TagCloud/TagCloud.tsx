@@ -2,28 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 
-import Link from 'next/link';
-
 import styles from './TagCloud.module.scss';
 
 import { TagResult } from '@/types/tags';
 import { TagPill } from '../TagPill';
 
-const colorOptions = [
-   'bg-deliscio',
-   'bg-primary',
-   'bg-secondary',
-   'bg-success',
-   'bg-warning text-dark',
-   'bg-info text-dark',
-   //    'bg-light text-dark',
-   'bg-deliscio text-dark',
-   'bg-primary text-dark',
-   'bg-secondary text-dark',
-   'bg-success text-dark',
-];
-
-const TagCloud = ({ maxTags, currentTags }: PopularRecentTagsProps) => {
+const TagCloud = ({ maxTags, currentTags }: TagCloudProps) => {
    const [tags, setTags] = useState<TagResult[] | null>(null);
    const [tagsToFilterBy, setCurrentTags] = useState<string[]>(['']);
    const [isLoading, setLoading] = useState<boolean>(true);
@@ -43,7 +27,6 @@ const TagCloud = ({ maxTags, currentTags }: PopularRecentTagsProps) => {
       let tagAsStringForApiCall = trimmedTags.join(',');
       tagAsStringForApiCall = tagAsStringForApiCall.replaceAll('%2B', '%20').replaceAll('+', '%20');
 
-      console.log(trimmedTags);
       //TODO: Move this call somewhere else, where if can share a common calling ();
       fetch(
          `/api/links/tags?tags=${encodeURIComponent(tagAsStringForApiCall)}&count=${maxTags}`,
@@ -92,19 +75,17 @@ const TagCloud = ({ maxTags, currentTags }: PopularRecentTagsProps) => {
                  })
                  .sort() ?? [];
 
-           const slug = `${newTagsArr.join('/').replaceAll('%2B', '+')}`;
+           const slug = `/tags/${newTagsArr.join('/').replaceAll('%2B', '+')}`;
 
            return (
-              <>
-                 <TagPill
-                    key={tag.name}
-                    name={tag.name}
-                    className={tagId}
-                    href={slug}
-                    count={tag.count}
-                    totalCount={totalCount}
-                 />
-              </>
+              <TagPill
+                 key={`${tag.name}-${idx}`}
+                 name={tag.name}
+                 className={tagId}
+                 href={slug}
+                 count={tag.count}
+                 totalCount={totalCount}
+              />
            );
         })
       : null;
@@ -112,16 +93,9 @@ const TagCloud = ({ maxTags, currentTags }: PopularRecentTagsProps) => {
    return <div className={styles.root}>{tagItems}</div>;
 };
 
-/**
- * PopularRecentTagsProps
- * @typedef TagCloudProps
- * @property {string} baseApi: The api's base url so that we can retrieve the tags.
- * At the moment it's needed as client-side can't read .env files
- * @property {number} [count=50]: The number of tags to retrieve
- */
-type PopularRecentTagsProps = {
+type TagCloudProps = {
    maxTags?: number | 50;
-   currentTags?: string[] | undefined;
+   currentTags?: string[];
 };
 
 export default TagCloud;

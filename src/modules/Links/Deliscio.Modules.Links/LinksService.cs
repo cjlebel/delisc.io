@@ -248,7 +248,7 @@ public class LinksService : ServiceBase, ILinksService
     /// <summary>
     /// Gets a collection of tags that are related to the provided tags
     /// </summary>
-    /// <param name="tags">The tags to use as the bait to lure out the related tags</param>
+    /// <param name="tags">The tags to use as the bait to lure out the related tags. If no tags are provided, then all will be returned.</param>
     /// <param name="count">The number of related tags to return</param>
     /// <param name="token"></param>
     /// <returns></returns>

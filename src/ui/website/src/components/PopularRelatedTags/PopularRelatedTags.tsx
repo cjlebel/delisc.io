@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 
-import styles from './PopularRelatedTags.module.scss';
-
 import { TagCloud } from '../TagCloud';
 import RightSidePanel from '../RightSidePanel/RightSidePanel';
 
