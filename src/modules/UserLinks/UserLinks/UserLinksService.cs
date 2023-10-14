@@ -1,13 +1,16 @@
 using System.Linq.Expressions;
 using Ardalis.GuardClauses;
 using Deliscio.Core.Abstracts;
+using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Models;
 using Deliscio.Modules.UserLinks.Common.Interfaces;
 using Deliscio.Modules.UserLinks.Common.Models;
 using Deliscio.Modules.UserLinks.Data.Entities;
+using Deliscio.Modules.UserLinks.Data.Mongo;
 using Deliscio.Modules.UserLinks.Interfaces;
 using Deliscio.Modules.UserLinks.Mappers;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Structurizr.Annotations;
 
 namespace Deliscio.Modules.UserLinks;
@@ -19,13 +22,22 @@ public class UserLinksService : ServiceBase, IUserLinksService
     private readonly ILogger<UserLinksService> _logger;
     private readonly IUserLinksRepository _repository;
 
-    public UserLinksService(IUserLinksRepository repository, ILogger<UserLinksService> logger)
+    //public UserLinksService(IUserLinksRepository repository, ILogger<UserLinksService> logger)
+    //{
+    //    Guard.Against.Null(repository);
+    //    Guard.Against.Null(logger);
+
+    //    _logger = logger;
+    //    _repository = repository;
+    //}
+
+    public UserLinksService(IOptions<MongoDbOptions> options, ILogger<UserLinksService> logger)
     {
-        Guard.Against.Null(repository);
+        Guard.Against.Null(options);
         Guard.Against.Null(logger);
 
+        _repository = new UserLinksRepository(options);
         _logger = logger;
-        _repository = repository;
     }
 
     /// <summary>

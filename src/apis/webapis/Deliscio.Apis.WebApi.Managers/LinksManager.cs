@@ -90,12 +90,10 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
 
     public async ValueTask<IEnumerable<LinkItem>> GetLinksByIdsAsync(string[] ids, CancellationToken token = default)
     {
-        var enumerable = ids ?? Array.Empty<string>();
-
-        if (enumerable.Length == 0)
+        if (ids.Length == 0)
             return Enumerable.Empty<LinkItem>();
 
-        var query = new GetLinksByIdsQuery(enumerable);
+        var query = new GetLinksByIdsQuery(ids);
 
         return await _mediator.Send(query, token);
     }
@@ -112,14 +110,13 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
     /// </returns>
     public async ValueTask<PagedResults<LinkItem>> GetLinksByTagsAsync(string[] tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
-        var enumerable = tags ?? Array.Empty<string>();
-        if (enumerable.Length == 0)
+        if (tags.Length == 0)
             return new PagedResults<LinkItem>();
 
         Guard.Against.NegativeOrZero(pageNo);
         Guard.Against.NegativeOrZero(pageSize);
 
-        var query = new GetLinksByTagsQuery(enumerable, pageNo, pageSize);
+        var query = new GetLinksByTagsQuery(tags, pageNo, pageSize);
 
         return await _mediator.Send(query, token);
     }
@@ -148,7 +145,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         return _mediator.Send(query, token);
     }
 
-    public async Task<string> SubmitLinkAsync(string url, string submittedByUserId, string usersTitle = "", string[]? tags = default, CancellationToken token = default)
+    public async Task<string> SubmitLinkAsync(string url, string submittedByUserId, string usersTitle = "", string usersDescription = "", string[]? tags = default, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(url);
         Guard.Against.NullOrEmpty(submittedByUserId);
@@ -161,7 +158,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         try
         {
             url = url.Trim('"');
-            var newLink = QueuedLink.Create(new Uri(url), submittedByUserId, UsersData.Create(usersTitle, string.Empty, tagsToAdd));
+            var newLink = QueuedLink.Create(new Uri(url), submittedByUserId, UsersData.Create(usersTitle, usersDescription, tagsToAdd));
 
             // var addToQueueCommand = new AddNewLinkQueueCommand(newLink);
             // await Publish(newLink, token);

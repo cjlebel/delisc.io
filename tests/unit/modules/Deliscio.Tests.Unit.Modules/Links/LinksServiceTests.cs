@@ -1,5 +1,5 @@
 using AutoFixture;
-
+using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links;
 using Deliscio.Modules.Links.Common.Models;
@@ -7,7 +7,7 @@ using Deliscio.Modules.Links.Data.Entities;
 using Deliscio.Modules.Links.Interfaces;
 
 using Microsoft.Extensions.Logging;
-
+using Microsoft.Extensions.Options;
 using Moq;
 
 namespace Deliscio.Tests.Unit.Modules.Links;
@@ -18,19 +18,20 @@ public class LinksServiceTests
     private readonly LinksService _testClass;
     private readonly Mock<ILinksRepository> _linksRepository;
     private readonly Mock<ILogger<LinksService>> _logger;
+    private readonly Mock<IOptions<MongoDbOptions>> _options;
 
     public LinksServiceTests()
     {
         _linksRepository = new Mock<ILinksRepository>();
         _logger = new Mock<ILogger<LinksService>>();
-        _testClass = new LinksService(_linksRepository.Object, _logger.Object);
+        _testClass = new LinksService(_options.Object, _logger.Object);
     }
 
     [Fact]
     public void Can_Construct()
     {
         // Act
-        var instance = new LinksService(_linksRepository.Object, _logger.Object);
+        var instance = new LinksService(_options.Object, _logger.Object);
 
         // Assert
         Assert.NotNull(instance);
@@ -45,7 +46,7 @@ public class LinksServiceTests
     [Fact]
     public void Cannot_Construct_WithNull_Logger()
     {
-        Assert.Throws<ArgumentNullException>(() => new LinksService(_linksRepository.Object, default));
+        Assert.Throws<ArgumentNullException>(() => new LinksService(_options.Object, default));
     }
 
     [Fact]

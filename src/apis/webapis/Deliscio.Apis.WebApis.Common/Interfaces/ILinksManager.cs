@@ -33,5 +33,5 @@ public interface ILinksManager
     /// <returns></returns>
     Task<LinkTag[]> GetTagsAsync(string[] tags, int? count = default, CancellationToken token = default);
 
-    Task<string> SubmitLinkAsync(string url, string submittedByUserId, string usersTitle = "", string[]? tags = default, CancellationToken token = default);
+    Task<string> SubmitLinkAsync(string url, string submittedByUserId, string usersTitle = "", string usersDescription = "", string[]? tags = default, CancellationToken token = default);
 }

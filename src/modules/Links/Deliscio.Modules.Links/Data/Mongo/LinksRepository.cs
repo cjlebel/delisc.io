@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using Deliscio.Core.Data.Mongo;
+using Deliscio.Core.Data.Mongo.Interfaces;
 using Deliscio.Modules.Links.Data.Entities;
 using Deliscio.Modules.Links.Interfaces;
 using Microsoft.Extensions.Options;
@@ -16,9 +17,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
     #region - Constructors -
     public LinksRepository(IOptions<MongoDbOptions> options) : base(options) { }
 
-    public LinksRepository(string connectionString, string databaseName) : base(connectionString, databaseName) { }
-
-    public LinksRepository(MongoDbContext<LinkEntity> context) : base(context) { }
+    public LinksRepository(IMongoDbClient client) : base(client) { }
     #endregion
 
     #region - Links

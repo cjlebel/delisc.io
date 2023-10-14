@@ -3,14 +3,17 @@ using System.Net;
 using Ardalis.GuardClauses;
 
 using Deliscio.Core.Abstracts;
+using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Data.Entities;
+using Deliscio.Modules.Links.Data.Mongo;
 using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Modules.Links.Mappers;
 
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Structurizr.Annotations;
 
 namespace Deliscio.Modules.Links;
@@ -20,18 +23,28 @@ namespace Deliscio.Modules.Links;
 public class LinksService : ServiceBase, ILinksService
 {
     private readonly ILogger<LinksService> _logger;
-    private readonly ILinksRepository _linksRepository;
+    private readonly ILinksRepository _repository;
 
     //TODO: Get these from config
     private readonly int _defaultLinksPageSize = 50;
     private readonly int _defaultRelatedLinksCount = 20;
     private readonly int _defaultTagsCount = 50;
-    public LinksService(ILinksRepository linksRepository, ILogger<LinksService> logger)
+
+    //public LinksService(ILinksRepository linksRepository, ILogger<LinksService> logger)
+    //{
+    //    Guard.Against.Null(linksRepository);
+    //    Guard.Against.Null(logger);
+
+    //    _repository = linksRepository;
+    //    _logger = logger;
+    //}
+
+    public LinksService(IOptions<MongoDbOptions> options, ILogger<LinksService> logger)
     {
-        Guard.Against.Null(linksRepository);
+        Guard.Against.Null(options);
         Guard.Against.Null(logger);
 
-        _linksRepository = linksRepository;
+        _repository = new LinksRepository(options);
         _logger = logger;
     }
 
@@ -50,7 +63,7 @@ public class LinksService : ServiceBase, ILinksService
             return Guid.Empty;
         }
 
-        await _linksRepository.AddAsync(entity, token);
+        await _repository.AddAsync(entity, token);
 
         return entity.Id;
     }
@@ -72,7 +85,7 @@ public class LinksService : ServiceBase, ILinksService
 
         var entity = LinkEntity.Create(url, title, submittedById, tags);
 
-        await _linksRepository.AddAsync(entity, token);
+        await _repository.AddAsync(entity, token);
 
         return entity.Id;
     }
@@ -100,7 +113,7 @@ public class LinksService : ServiceBase, ILinksService
     {
         Guard.Against.NullOrEmpty(linkId);
 
-        var result = await _linksRepository.GetAsync(linkId, token);
+        var result = await _repository.GetAsync(linkId, token);
 
         var link = Mapper.Map(result);
 
@@ -127,7 +140,7 @@ public class LinksService : ServiceBase, ILinksService
 
     public async Task<IEnumerable<LinkItem>> GetByIdsAsync(IEnumerable<Guid> linkIds, CancellationToken token = default)
     {
-        var rslts = await _linksRepository.GetAsync(linkIds, token);
+        var rslts = await _repository.GetAsync(linkIds, token);
 
         var links = Mapper.Map<LinkItem>(rslts);
 
@@ -151,7 +164,7 @@ public class LinksService : ServiceBase, ILinksService
 
         Guard.Against.NegativeOrZero(newPageSize, message: $"{nameof(pageSize)} must be greater than zero");
 
-        var rslts = await _linksRepository.GetLinksByDomainAsync(domain, pageNo, newPageSize, token);
+        var rslts = await _repository.GetLinksByDomainAsync(domain, pageNo, newPageSize, token);
 
         var links = Mapper.Map<LinkItem>(rslts.Results);
 
@@ -179,7 +192,7 @@ public class LinksService : ServiceBase, ILinksService
 
         array = array.Select(t => WebUtility.UrlDecode(t).ToLowerInvariant()).ToArray();
 
-        var rslts = await _linksRepository.GetLinksByTagsAsync(array, pageNo, newPageSize, token);
+        var rslts = await _repository.GetLinksByTagsAsync(array, pageNo, newPageSize, token);
 
         var links = Mapper.Map<LinkItem>(rslts.Results);
 
@@ -197,7 +210,7 @@ public class LinksService : ServiceBase, ILinksService
     {
         Guard.Against.NullOrWhiteSpace(url);
 
-        var result = await _linksRepository.GetLinkByUrlAsync(url, token);
+        var result = await _repository.GetLinkByUrlAsync(url, token);
 
         return result is null ? null : Mapper.Map(result);
     }
@@ -228,7 +241,7 @@ public class LinksService : ServiceBase, ILinksService
 
         if (linkTags.Length > 0)
         {
-            var results = await _linksRepository.GetLinksByTagsAsync(linkTags, 1, newCount, token);
+            var results = await _repository.GetLinksByTagsAsync(linkTags, 1, newCount, token);
 
             if (results.Results.TryGetNonEnumeratedCount(out int resultsCount) && resultsCount > 0)
                 linkItems = Mapper.Map<LinkItem>(results.Results).ToArray();
@@ -236,7 +249,7 @@ public class LinksService : ServiceBase, ILinksService
 
         if (linkItems.Length < newCount)
         {
-            var results = await _linksRepository.GetLinksByDomainAsync(link.Domain, 1, newCount, token);
+            var results = await _repository.GetLinksByDomainAsync(link.Domain, 1, newCount, token);
 
             if (results.Results.TryGetNonEnumeratedCount(out int resultsCount) && resultsCount > 0)
                 linkItems = Mapper.Map<LinkItem>(results.Results).ToArray();
@@ -260,7 +273,7 @@ public class LinksService : ServiceBase, ILinksService
 
         tags = tags.Select(t => WebUtility.UrlDecode(t).ToLowerInvariant()).ToArray();
 
-        var result = await _linksRepository.GetRelatedTagsAsync(tags, newCount, token);
+        var result = await _repository.GetRelatedTagsAsync(tags, newCount, token);
 
         return Mapper.Map(result).ToArray();
     }
@@ -279,7 +292,7 @@ public class LinksService : ServiceBase, ILinksService
         Guard.Against.NegativeOrZero(pageNo);
         Guard.Against.NegativeOrZero(pageSize);
 
-        var results = await _linksRepository.FindAsync(predicate, pageNo, pageSize, token);
+        var results = await _repository.FindAsync(predicate, pageNo, pageSize, token);
 
         if (!results.Results.Any())
             return (Enumerable.Empty<LinkItem>(), 0, 0);
@@ -294,7 +307,7 @@ public class LinksService : ServiceBase, ILinksService
         Guard.Against.NullOrWhiteSpace(url);
         Guard.Against.NullOrEmpty(submittedByUserId);
 
-        var link = await _linksRepository.GetLinkByUrlAsync(url, token);
+        var link = await _repository.GetLinkByUrlAsync(url, token);
 
         // If the link already exists in the central link repository, then we just need to add/update the tags for it
         // Then assign to the user who submitted it
@@ -318,12 +331,12 @@ public class LinksService : ServiceBase, ILinksService
 
             link.Tags.AddRange(nonExistingTagNames.Select(LinkTagEntity.Create));
 
-            await _linksRepository.UpdateAsync(link, token);
+            await _repository.UpdateAsync(link, token);
 
 
         }
 
-        //await _linksRepository.AddAsync(link, token);
+        //await _repository.AddAsync(link, token);
 
         //return link.Id;
 
@@ -332,7 +345,7 @@ public class LinksService : ServiceBase, ILinksService
 
     //public async ValueTask<bool> SubmitLinkAsync(SubmitLinkRequest request, CancellationToken token = default)
     //{
-    //    var link = await _linksRepository.GetLinkByUrlAsync(request.Url, token);
+    //    var link = await _repository.GetLinkByUrlAsync(request.Url, token);
 
     //    var userTags = request.UsersTags.Any() ? request.UsersTags.Select(t => LinkTagEntity.Create(t)).ToArray() : Array.Empty<LinkTagEntity>();
 

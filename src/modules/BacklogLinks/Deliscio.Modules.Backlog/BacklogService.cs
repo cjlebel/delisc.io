@@ -17,7 +17,7 @@ namespace Deliscio.Modules.BackLog;
 [Component(Description = "The Backlog Service is responsible for saving and retrieving backlog items. This is temporary", Technology = "C#")]
 public sealed class BacklogService : IBacklogService
 {
-    private readonly ILogger<BacklogService> _logger;
+    private readonly ILogger<BacklogService>? _logger;
     private readonly IBacklogRepository _repository;
 
     private const string COLLECTION_CANNOT_BE_NULL_OR_EMPTY = "The collection cannot be null or empty.";
@@ -30,20 +30,25 @@ public sealed class BacklogService : IBacklogService
     private const string URL_CANNOT_BE_EMPTY = "The URL cannot be null or whitespace.";
     private const string USER_ID_CANNOT_BE_EMPTY = "The Id cannot be null or whitespace.";
 
-    public BacklogService(string connectionString, string databaseName)
-    {
-        _repository = new BacklogRepository(connectionString, databaseName);
-    }
+    //public BacklogService(IOptions<MongoDbOptions> options, ILogger<BacklogService> logger)
+    //{
+    //    _logger = logger;
+    //    _repository = new BacklogRepository(options, null);
+    //}
 
-    public BacklogService(IOptions<MongoDbOptions> options, ILogger<BacklogService> logger)
+    //public BacklogService(IBacklogRepository repository, ILogger<BacklogService> logger)
+    //{
+    //    _logger = logger;
+    //    _repository = repository;
+    //}
+
+
+    public BacklogService(IOptions<MongoDbOptions> options, ILogger<BacklogService>? logger = default)
     {
+        Guard.Against.Null(options);
+
+        _repository = new BacklogRepository(options);
         _logger = logger;
-        _repository = new BacklogRepository(options, null);
-    }
-
-    public BacklogService(IBacklogRepository repository)
-    {
-        _repository = repository;
     }
 
     /// <summary>

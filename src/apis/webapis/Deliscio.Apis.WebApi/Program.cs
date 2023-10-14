@@ -9,8 +9,6 @@ using Deliscio.Core.Models;
 using Deliscio.Modules.Links;
 using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
-using Deliscio.Modules.Links.Data.Mongo;
-using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Modules.Links.MediatR.Commands;
 using Deliscio.Modules.Links.MediatR.Commands.Handlers;
 using Deliscio.Modules.Links.MediatR.Queries;
@@ -26,7 +24,6 @@ using Deliscio.Modules.QueuedLinks.Verifier;
 using Deliscio.Modules.UserLinks;
 using Deliscio.Modules.UserLinks.Common.Interfaces;
 using Deliscio.Modules.UserLinks.Common.Models;
-using Deliscio.Modules.UserLinks.Interfaces;
 using Deliscio.Modules.UserLinks.MediatR.Commands;
 using Deliscio.Modules.UserLinks.MediatR.Commands.Handlers;
 using Deliscio.Modules.UserLinks.MediatR.Queries;
@@ -53,10 +50,11 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         var config = ConfigSettingsManager.GetConfigs();
-        builder.Services.Configure<MongoDbOptions>(config.GetSection(MongoDbOptions.SectionName));
+        var mongoConfig = config.GetSection(MongoDbOptions.SectionName);
+
+        builder.Services.Configure<MongoDbOptions>(mongoConfig);
         builder.Services.Configure<QueuedLinksSettingsOptions>(config.GetSection(QueuedLinksSettingsOptions.SectionName));
 
-        // AddAsync services to the container.
         builder.Services.AddCors();
         builder.Services.AddAuthentication();
         builder.Services.AddAuthorization();
@@ -105,10 +103,19 @@ public class Program
 
         builder.Services.AddSingleton<IConfiguration>(config);
 
+        // Tried to get an extension method to work, but no luck so far.
+        // Moving on so that I can be productive elsewhere
+        //builder.Services.AddMongoDbSingleton(config);
+
+        builder.Services.AddSingleton<MongoDbClient, MongoDbClient>(sp =>
+        {
+            var mongoDbOptions = sp.GetRequiredService<IOptions<MongoDbOptions>>().Value;
+            return new MongoDbClient(mongoDbOptions);
+        });
+
         // Links
         builder.Services.AddSingleton<ILinksManager, LinksManager>();
         builder.Services.AddSingleton<ILinksService, LinksService>();
-        builder.Services.AddSingleton<ILinksRepository, LinksRepository>();
 
         builder.Services.AddSingleton<IRequestHandler<GetLinkByIdQuery, Link?>, GetsLinkByIdQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinkByUrlQuery, Link?>, GetLinkByUrlQueryHandler>();
@@ -126,7 +133,6 @@ public class Program
         // User Links
         builder.Services.AddSingleton<IUserLinksManager, UserLinksManager>();
         builder.Services.AddSingleton<IUserLinksService, UserLinksService>();
-        builder.Services.AddSingleton<IUserLinksRepository, UserLinksRepository>();
 
         builder.Services.AddSingleton<IRequestHandler<GetUserLinkByIdQuery, UserLink?>, GetUserLinkByIdQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetUserLinksQuery, PagedResults<UserLink>>, GetUserLinksQueryHandler>();
@@ -156,7 +162,7 @@ public class Program
         var userLinksApiEndpoints = app.Services.GetRequiredService<UserLinksApiEndpoints>();
         userLinksApiEndpoints.MapEndpoints(app);
 
-        // *** Disabling for now to get Next working *** 
+        // *** Disabling for now to get Next.js working *** 
         //app.UseHttpsRedirection();
 
         // Configure the HTTP request pipeline.
