@@ -10,7 +10,7 @@ namespace Deliscio.Modules.Links.Data.Entities;
 /// <seealso cref="MongoEntityBase" />
 [Table("Link")]
 [BsonCollection("links")]
-public class LinkEntity : MongoEntityBase
+public sealed class LinkEntity : MongoEntityBase
 {
     /// <summary>
     /// The title of the page, from the page itself, that the link points to.

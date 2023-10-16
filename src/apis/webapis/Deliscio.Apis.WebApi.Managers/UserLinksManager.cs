@@ -24,7 +24,6 @@ namespace Deliscio.Apis.WebApi.Managers;
 public sealed class UserLinksManager : ManagerBase<UserLinksManager>, IUserLinksManager
 {
     private readonly IBusControl _bus;
-    private readonly ILogger<UserLinksManager> _logger;
     private readonly IMediator _mediator;
 
     public UserLinksManager(IMediator mediator, IBusControl bus, ILogger<UserLinksManager> logger) : base(bus, logger)
@@ -35,7 +34,6 @@ public sealed class UserLinksManager : ManagerBase<UserLinksManager>, IUserLinks
 
         _bus = bus;
         _mediator = mediator;
-        _logger = logger;
     }
 
     /// <summary>

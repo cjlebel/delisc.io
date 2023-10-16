@@ -1,4 +1,5 @@
 using System.Reflection;
+using AspNetCore.Identity.MongoDbCore.Models;
 using Deliscio.Apis.WebApi.Common.APIs;
 using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Apis.WebApi.Managers;
@@ -6,6 +7,7 @@ using Deliscio.Core.Configuration;
 using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Middleware;
 using Deliscio.Core.Models;
+using Deliscio.Modules.Authentication.Common.Models;
 using Deliscio.Modules.Links;
 using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
@@ -30,6 +32,8 @@ using Deliscio.Modules.UserLinks.MediatR.Queries;
 using Deliscio.Modules.UserLinks.MediatR.Queries.Handlers;
 using MassTransit;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -55,9 +59,11 @@ public class Program
         builder.Services.Configure<MongoDbOptions>(mongoConfig);
         builder.Services.Configure<QueuedLinksSettingsOptions>(config.GetSection(QueuedLinksSettingsOptions.SectionName));
 
+
+
         builder.Services.AddCors();
-        builder.Services.AddAuthentication();
-        builder.Services.AddAuthorization();
+        //builder.Services.AddAuthentication();
+        //builder.Services.AddAuthorization();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
@@ -74,7 +80,7 @@ public class Program
             options.ReportApiVersions = true;
         });
 
-        //builder.Services.ConfigureApiVersioning().A.AddApiVersioning(options =>
+        //builder.Services.ConfigureApiVersioning().AddApiVersioning(options =>
         //{
         //    options.DefaultApiVersion = new ApiVersion(1, 0);
         //    options.AssumeDefaultVersionWhenUnspecified = true;
@@ -82,6 +88,16 @@ public class Program
         //});
 
         builder.Services.AddSingleton<HttpClient>();
+
+        // Tried to get an extension method to work, but no luck so far.
+        // Moving on so that I can be productive elsewhere
+        //builder.Services.AddMongoDbSingleton(config);
+
+        builder.Services.AddSingleton<MongoDbClient, MongoDbClient>(sp =>
+        {
+            var mongoDbOptions = sp.GetRequiredService<IOptions<MongoDbOptions>>().Value;
+            return new MongoDbClient(mongoDbOptions);
+        });
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
         builder.Services.AddMassTransit(x =>
@@ -103,14 +119,26 @@ public class Program
 
         builder.Services.AddSingleton<IConfiguration>(config);
 
-        // Tried to get an extension method to work, but no luck so far.
-        // Moving on so that I can be productive elsewhere
-        //builder.Services.AddMongoDbSingleton(config);
+        builder.Services.AddIdentity<AuthUser, MongoIdentityRole>()
+            // Wasn't able to pass the client in, had to do it this way for now
+            // sp => sp.GetRequiredService<MongoDbClient>().Database
+            .AddMongoDbStores<AuthUser, MongoIdentityRole, Guid>(mongoConfig["ConnectionString"], mongoConfig["DatabaseName"])
+            .AddDefaultTokenProviders();
 
-        builder.Services.AddSingleton<MongoDbClient, MongoDbClient>(sp =>
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.Cookie.Name = "DeliscioTastyCookie";
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromDays(30); // Adjust the expiration time as needed
+                options.SlidingExpiration = true;
+                options.LoginPath = "/account/login"; // Specify your login path
+            });
+
+        builder.Services.AddAuthorization(options =>
         {
-            var mongoDbOptions = sp.GetRequiredService<IOptions<MongoDbOptions>>().Value;
-            return new MongoDbClient(mongoDbOptions);
+            options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
         });
 
         // Links
@@ -151,6 +179,7 @@ public class Program
         builder.Services.AddSingleton<ITaggerProcessor, TaggerProcessor>();
         // This is weird, I should not need to add these here?!?!?
 
+        builder.Services.AddSingleton<AuthApiEndpoints>();
         builder.Services.AddSingleton<LinksApiEndpoints>();
         builder.Services.AddSingleton<UserLinksApiEndpoints>();
 

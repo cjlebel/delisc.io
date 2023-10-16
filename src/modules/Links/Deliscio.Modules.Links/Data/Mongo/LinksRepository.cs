@@ -26,7 +26,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
     {
         Guard.Against.NullOrEmpty(url);
 
-        return await FirstOrDefault(x => x.Url == url, token);
+        return await FirstOrDefaultAsync(x => x.Url == url, token);
     }
 
     public async Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> GetLinksByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)

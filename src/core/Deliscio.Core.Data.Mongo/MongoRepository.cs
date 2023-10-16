@@ -207,7 +207,7 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
         return await FindAsync(_ => true, pageNo, pageSize, token);
     }
 
-    public async Task<TDocument?> FirstOrDefault(Expression<Func<TDocument, bool>> predicate, CancellationToken token = default)
+    public async Task<TDocument?> FirstOrDefaultAsync(Expression<Func<TDocument, bool>> predicate, CancellationToken token = default)
     {
         var filter = Builders<TDocument>.Filter.Where(predicate);
 

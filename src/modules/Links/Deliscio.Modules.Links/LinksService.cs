@@ -20,7 +20,7 @@ namespace Deliscio.Modules.Links;
 
 [Component(Description = "Deliscio service that deals with the central Links", Technology = "C#")]
 [UsedBySoftwareSystem("Deliscio.Apis.WebApi", Description = "Links Service")]
-public class LinksService : ServiceBase, ILinksService
+public sealed class LinksService : ServiceBase, ILinksService
 {
     private readonly ILogger<LinksService> _logger;
     private readonly ILinksRepository _repository;

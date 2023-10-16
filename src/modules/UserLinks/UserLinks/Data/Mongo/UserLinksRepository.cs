@@ -36,7 +36,7 @@ public sealed class UserLinksRepository : MongoRepository<UserLinkEntity>, IUser
         Guard.Against.NullOrEmpty(userId);
         Guard.Against.NullOrEmpty(linkId);
 
-        return await FirstOrDefault(x => x.UserId == userId && x.Id == linkId, token);
+        return await FirstOrDefaultAsync(x => x.UserId == userId && x.Id == linkId, token);
     }
 
     /// <summary>
@@ -77,7 +77,7 @@ public sealed class UserLinksRepository : MongoRepository<UserLinkEntity>, IUser
     //{
     //    Guard.Against.NullOrEmpty(url);
 
-    //    return await FirstOrDefault(x => x.Url == url, token);
+    //    return await FirstOrDefaultAsync(x => x.Url == url, token);
     //}
 
     //public async Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> GetByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)

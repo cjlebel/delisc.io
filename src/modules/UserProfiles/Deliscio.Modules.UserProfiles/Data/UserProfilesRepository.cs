@@ -1,10 +1,9 @@
+using Ardalis.GuardClauses;
 using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Data.Mongo.Interfaces;
-using Deliscio.Modules.UserProfiles.Data.Entities;
-using Deliscio.Modules.UserProfiles.Interfaces;
 using Microsoft.Extensions.Options;
 
-namespace Deliscio.Modules.UserProfiles.Data.Mongo;
+namespace Deliscio.Modules.UserProfiles.Data;
 
 internal class UserProfilesRepository : MongoRepository<UserProfileEntity>, IUserProfilesRepository
 {
@@ -13,4 +12,11 @@ internal class UserProfilesRepository : MongoRepository<UserProfileEntity>, IUse
 
     public UserProfilesRepository(IMongoDbClient client) : base(client) { }
     #endregion
+
+    public Task<UserProfileEntity?> GetAync(Guid userId, CancellationToken token = default)
+    {
+        Guard.Against.Default(userId);
+
+        return FirstOrDefaultAsync(x => x.Id == userId, token);
+    }
 }

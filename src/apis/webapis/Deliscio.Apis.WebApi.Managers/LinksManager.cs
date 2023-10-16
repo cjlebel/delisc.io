@@ -21,7 +21,6 @@ namespace Deliscio.Apis.WebApi.Managers;
 public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
 {
     private readonly IBusControl _bus;
-    private readonly ILogger<LinksManager> _logger;
     private readonly IMediator _mediator;
     private readonly IQueuedLinksService _queueService;
 
@@ -37,7 +36,6 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         _bus = bus;
         _mediator = mediator;
         _queueService = queueService;
-        _logger = logger;
     }
 
     /// <summary>
@@ -179,7 +177,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
 
                     if (!result.IsSuccess)
                     {
-                        _logger.LogWarning(ERROR_COULD_NOT_APPROVE, DateTimeOffset.Now, queuedLink.Url);
+                        Logger.LogWarning(ERROR_COULD_NOT_APPROVE, DateTimeOffset.Now, queuedLink.Url);
                     }
 
                     // Success
@@ -220,7 +218,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
                             //        {
                             //            if (!string.IsNullOrWhiteSpace(tag))
                             //            {
-                            //                var existingTag = link.Tags.FirstOrDefault(t => t.Name.Equals(tag, StringComparison.OrdinalIgnoreCase));
+                            //                var existingTag = link.Tags.FirstOrDefaultAsync(t => t.Name.Equals(tag, StringComparison.OrdinalIgnoreCase));
 
                             //                if (existingTag == null)
                             //                {
@@ -252,30 +250,30 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
             // Token ran out of time
             catch (OperationCanceledException e)
             {
-                _logger.LogError(e, "Operation was cancelled");
+                Logger.LogError(e, "Operation was cancelled");
                 throw;
             }
             // Couldn't reach the queue's endpoint
             catch (UnreachableException e)
             {
-                _logger.LogError(e, "Could not reach the Queue");
+                Logger.LogError(e, "Could not reach the Queue");
                 throw;
             }
             // Everything else
             catch (Exception e)
             {
-                _logger.LogError(e, "An error occurred while trying to submit a new link");
+                Logger.LogError(e, "An error occurred while trying to submit a new link");
                 throw;
             }
         }
         catch (UriFormatException e)
         {
-            _logger.LogError(e, e.Message);
+            Logger.LogError(e, e.Message);
             throw;
         }
         catch (Exception e)
         {
-            _logger.LogError(e, e.Message);
+            Logger.LogError(e, e.Message);
             throw;
         }
 

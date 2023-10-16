@@ -15,4 +15,16 @@ public sealed record UserProfile
     public string? ImageUrl { get; set; }
 
     public string? Location { get; set; }
+
+    public UserProfile(string id, string email, string displayName)
+    {
+        Id = id;
+        Email = email;
+        DisplayName = displayName;
+    }
+
+    public static UserProfile Create(string id, string email, string displayName)
+    {
+        return new UserProfile(id, email, displayName);
+    }
 }

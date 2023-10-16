@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
-using SubmitLinkRequest = Deliscio.Apis.WebApi.Common.Requests.SubmitLinkRequest;
+using Deliscio.Apis.WebApi.Common.Requests;
 
 namespace Deliscio.Apis.WebApi.Common.APIs;
 
