@@ -31,6 +31,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\modules\Authentication\Deliscio.Modules.Authentication\Deliscio.Modules.Authentication.csproj" />
 		<ProjectReference Include="..\..\..\modules\Links\Deliscio.Modules.Links.MediatR\Deliscio.Modules.Links.MediatR.csproj" />
 		<ProjectReference Include="..\..\..\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
 		<ProjectReference Include="..\..\..\modules\QueuedLink\Common\Deliscio.Modules.QueuedLinks.Common.csproj" />

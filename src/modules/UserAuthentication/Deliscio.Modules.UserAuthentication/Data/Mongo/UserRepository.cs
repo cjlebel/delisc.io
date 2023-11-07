@@ -11,6 +11,6 @@ internal class UserRepository : MongoRepository<UserEntity>, IUserRepository
     #region - Constructors -
     public UserRepository(IOptions<MongoDbOptions> options) : base(options) { }
 
-    public UserRepository(IMongoDbClient client) : base(client) { }
+    //public UserRepository(IMongoDbClient client) : base(client) { }
     #endregion
 }

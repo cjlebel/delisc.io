@@ -21,11 +21,11 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
 
     #region - Constructors -
 
-    protected MongoRepository(IMongoDbClient client)
-    {
-        _context = new MongoDbContext<TDocument>(client);
-        PopulateCollection();
-    }
+    //protected MongoRepository(IMongoDbClient client)
+    //{
+    //    _context = new MongoDbContext<TDocument>(client);
+    //    PopulateCollection();
+    //}
 
     protected MongoRepository(IOptions<MongoDbOptions> options)
     {

@@ -18,6 +18,15 @@ public sealed class UserProfilesService : IUserProfilesService
     private readonly ILogger<UserProfilesService> _logger;
     private readonly IUserProfilesRepository _repository;
 
+    //public UserProfilesService(MongoDbClient client, ILogger<UserProfilesService> logger)
+    //{
+    //    Guard.Against.Null(client);
+    //    Guard.Against.Null(logger);
+
+    //    _repository = new UserProfilesRepository(client);
+    //    _logger = logger;
+    //}
+
     public UserProfilesService(IOptions<MongoDbOptions> options, ILogger<UserProfilesService> logger)
     {
         Guard.Against.Null(options);

@@ -10,7 +10,7 @@ internal class UserProfilesRepository : MongoRepository<UserProfileEntity>, IUse
     #region - Constructors -
     public UserProfilesRepository(IOptions<MongoDbOptions> options) : base(options) { }
 
-    public UserProfilesRepository(IMongoDbClient client) : base(client) { }
+    //public UserProfilesRepository(IMongoDbClient client) : base(client) { }
     #endregion
 
     public Task<UserProfileEntity?> GetAync(Guid userId, CancellationToken token = default)

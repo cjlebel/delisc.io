@@ -39,6 +39,15 @@ public sealed class LinksService : ServiceBase, ILinksService
     //    _logger = logger;
     //}
 
+    //public LinksService(MongoDbClient client, ILogger<LinksService> logger)
+    //{
+    //    Guard.Against.Null(client);
+    //    Guard.Against.Null(logger);
+
+    //    _repository = new LinksRepository(client);
+    //    _logger = logger;
+    //}
+
     public LinksService(IOptions<MongoDbOptions> options, ILogger<LinksService> logger)
     {
         Guard.Against.Null(options);

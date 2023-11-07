@@ -1,0 +1,39 @@
+import React, { useEffect, useState } from 'react';
+import Component1 from './Component1'; // Import your React components
+import Component2 from './Component2';
+
+const DynamicComponentRenderer = () => {
+    const [componentConfig, setComponentConfig] = useState(null);
+
+    useEffect(() => {
+        const script = document.getElementById('react-component-config');
+        if (script) {
+            try {
+                const config = JSON.parse(script.textContent || script.innerText);
+                setComponentConfig(config);
+            } catch (error) {
+                console.error('Error parsing component configuration:', error);
+            }
+        }
+    }, []);
+
+    if (!componentConfig) {
+        return <div>Loading...</div>;
+    }
+
+    const { componentName, componentProps } = componentConfig;
+
+    // Dynamically render the specified component based on the componentName
+    let renderedComponent;
+    if (componentName === 'Component1') {
+        renderedComponent = <Component1 {...componentProps} />;
+    } else if (componentName === 'Component2') {
+        renderedComponent = <Component2 {...componentProps} />;
+    } else {
+        renderedComponent = <div>Component not found</div>;
+    }
+
+    return <div>{renderedComponent}</div>;
+};
+
+export default DynamicComponentRenderer;

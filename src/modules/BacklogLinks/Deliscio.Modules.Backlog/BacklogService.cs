@@ -65,7 +65,7 @@ public sealed class BacklogService : IBacklogService
         Guard.Against.NullOrEmpty(item.Title, message: TITLE_CANNOT_BE_EMPTY);
         Guard.Against.NullOrEmpty(item.Url, message: URL_CANNOT_BE_EMPTY);
 
-        return await _repository.AddOrUpdateAsync(item.Url, item.Title, item.CreatedById);
+        return await _repository.AddOrUpdateAsync(item.Url, item.Title, item.CreatedById, token);
     }
 
     /// <summary>
@@ -186,7 +186,7 @@ public sealed class BacklogService : IBacklogService
         if (!guidIds.Any())
             return Enumerable.Empty<BacklogItem>();
 
-        var entities = await _repository.GetAsync(guidIds);
+        var entities = await _repository.GetAsync(guidIds, token);
 
         return Mappers.Map(entities);
     }

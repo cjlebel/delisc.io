@@ -11,6 +11,7 @@ using Deliscio.Modules.UserLinks.Interfaces;
 using Deliscio.Modules.UserLinks.Mappers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using Structurizr.Annotations;
 
 namespace Deliscio.Modules.UserLinks;
@@ -29,6 +30,15 @@ public class UserLinksService : ServiceBase, IUserLinksService
 
     //    _logger = logger;
     //    _repository = repository;
+    //}
+
+    //public UserLinksService(MongoDbClient client, ILogger<UserLinksService> logger)
+    //{
+    //    Guard.Against.Null(client);
+    //    Guard.Against.Null(logger);
+
+    //    _repository = new UserLinksRepository(client);
+    //    _logger = logger;
     //}
 
     public UserLinksService(IOptions<MongoDbOptions> options, ILogger<UserLinksService> logger)

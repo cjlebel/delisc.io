@@ -1,7 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Deliscio.Apis.WebApi.Common.Requests;
 
-public class SignInRequest
+public sealed record SignInRequest
 {
-    public string EmailOrUserName { get; set; }
-    public string Password { get; set; }
+    [Required]
+    public string EmailOrUserName { get; set; } = string.Empty;
+
+    [Required]
+    public string Password { get; set; } = string.Empty;
 }

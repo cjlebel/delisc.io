@@ -17,7 +17,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
     #region - Constructors -
     public LinksRepository(IOptions<MongoDbOptions> options) : base(options) { }
 
-    public LinksRepository(IMongoDbClient client) : base(client) { }
+    //public LinksRepository(IMongoDbClient client) : base(client) { }
     #endregion
 
     #region - Links

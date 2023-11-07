@@ -2,19 +2,17 @@ using System.Reflection;
 using AspNetCore.Identity.MongoDbCore.Models;
 using Deliscio.Apis.WebApi.Common.APIs;
 using Deliscio.Apis.WebApi.Common.Interfaces;
+using Deliscio.Apis.WebApi.Common.Requests;
 using Deliscio.Apis.WebApi.Managers;
+using Deliscio.Apis.WebApi.Startups;
 using Deliscio.Core.Configuration;
 using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Middleware;
-using Deliscio.Core.Models;
+using Deliscio.Modules.Authentication;
+using Deliscio.Modules.Authentication.Common.Interfaces;
 using Deliscio.Modules.Authentication.Common.Models;
-using Deliscio.Modules.Links;
-using Deliscio.Modules.Links.Common.Interfaces;
-using Deliscio.Modules.Links.Common.Models;
-using Deliscio.Modules.Links.MediatR.Commands;
-using Deliscio.Modules.Links.MediatR.Commands.Handlers;
-using Deliscio.Modules.Links.MediatR.Queries;
-using Deliscio.Modules.Links.MediatR.Queries.Handlers;
+using Deliscio.Modules.Authentication.MediatR.Commands;
+using Deliscio.Modules.Authentication.MediatR.Commands.Handlers;
 using Deliscio.Modules.QueuedLinks;
 using Deliscio.Modules.QueuedLinks.Common.Models;
 using Deliscio.Modules.QueuedLinks.Harvester;
@@ -23,16 +21,10 @@ using Deliscio.Modules.QueuedLinks.MediatR.Commands;
 using Deliscio.Modules.QueuedLinks.MediatR.Commands.Handlers;
 using Deliscio.Modules.QueuedLinks.Tagger;
 using Deliscio.Modules.QueuedLinks.Verifier;
-using Deliscio.Modules.UserLinks;
-using Deliscio.Modules.UserLinks.Common.Interfaces;
-using Deliscio.Modules.UserLinks.Common.Models;
-using Deliscio.Modules.UserLinks.MediatR.Commands;
-using Deliscio.Modules.UserLinks.MediatR.Commands.Handlers;
-using Deliscio.Modules.UserLinks.MediatR.Queries;
-using Deliscio.Modules.UserLinks.MediatR.Queries.Handlers;
 using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -53,17 +45,18 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddSingleton<HttpClient>();
+
         var config = ConfigSettingsManager.GetConfigs();
+        var apiKey = config.GetValue<string>("ApiKey");
         var mongoConfig = config.GetSection(MongoDbOptions.SectionName);
+        var mongoConfigConnectionString = config.GetSection($"{MongoDbOptions.SectionName}:ConnectionString").Value;
+        var mongoConfigDatabaseName = config.GetSection($"{MongoDbOptions.SectionName}:DatabaseName").Value;
 
         builder.Services.Configure<MongoDbOptions>(mongoConfig);
         builder.Services.Configure<QueuedLinksSettingsOptions>(config.GetSection(QueuedLinksSettingsOptions.SectionName));
 
-
-
         builder.Services.AddCors();
-        //builder.Services.AddAuthentication();
-        //builder.Services.AddAuthorization();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
@@ -71,6 +64,30 @@ public class Program
         {
             c.SwaggerDoc(API_VERSION, new OpenApiInfo { Title = "Delisc.io", Version = API_VERSION });
             c.EnableAnnotations();
+
+            c.AddSecurityDefinition("SwaggerAuthApiKey", new OpenApiSecurityScheme()
+            {
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Name = "x-api-key",
+                Description = apiKey,
+
+            });
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "SwaggerAuthApiKey"
+                        }
+                    },
+                    new string[] { }
+                }
+            });
         });
 
         builder.Services.AddApiVersioning(options =>
@@ -80,24 +97,17 @@ public class Program
             options.ReportApiVersions = true;
         });
 
-        //builder.Services.ConfigureApiVersioning().AddApiVersioning(options =>
-        //{
-        //    options.DefaultApiVersion = new ApiVersion(1, 0);
-        //    options.AssumeDefaultVersionWhenUnspecified = true;
-        //    options.ReportApiVersions = true;
-        //});
-
-        builder.Services.AddSingleton<HttpClient>();
-
         // Tried to get an extension method to work, but no luck so far.
         // Moving on so that I can be productive elsewhere
         //builder.Services.AddMongoDbSingleton(config);
 
-        builder.Services.AddSingleton<MongoDbClient, MongoDbClient>(sp =>
-        {
-            var mongoDbOptions = sp.GetRequiredService<IOptions<MongoDbOptions>>().Value;
-            return new MongoDbClient(mongoDbOptions);
-        });
+        //builder.Services.AddScoped<MongoDbClient, MongoDbClient>(sp =>
+        //{
+        //    var mongoDbOptions = sp.GetRequiredService<IOptions<MongoDbOptions>>().Value;
+        //    var client = new MongoDbClient(mongoDbOptions);
+
+        //    return client;
+        //});
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
         builder.Services.AddMassTransit(x =>
@@ -117,13 +127,31 @@ public class Program
             });
         });
 
-        builder.Services.AddSingleton<IConfiguration>(config);
+        builder.Services.AddSingleton(config);
 
+        #region - Authentication / Authorization -
         builder.Services.AddIdentity<AuthUser, MongoIdentityRole>()
             // Wasn't able to pass the client in, had to do it this way for now
             // sp => sp.GetRequiredService<MongoDbClient>().Database
-            .AddMongoDbStores<AuthUser, MongoIdentityRole, Guid>(mongoConfig["ConnectionString"], mongoConfig["DatabaseName"])
+            .AddMongoDbStores<AuthUser, MongoIdentityRole, Guid>(mongoConfigConnectionString, mongoConfigDatabaseName)
             .AddDefaultTokenProviders();
+
+        builder.Services.Configure<IdentityOptions>(options =>
+        {
+            options.Password.RequiredLength = 6;
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequiredUniqueChars = 1;
+
+            //options.AuthUser.AllowedUserNameCharacters 
+            options.User.RequireUniqueEmail = true;
+
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+            options.Lockout.MaxFailedAccessAttempts = 5;
+            options.Lockout.AllowedForNewUsers = true;
+        });
 
         builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
@@ -140,31 +168,21 @@ public class Program
         {
             options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
         });
+        #endregion
+
+        // Authentication 
+        builder.Services.AddScoped<IUsersManager, UsersManager>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
+
+
+        builder.Services.AddScoped<IRequestHandler<RegisterCommand, (bool IsSuccess, string Message, string[] ErrorMessages)>, RegisterCommandHandler>();
+        builder.Services.AddScoped<IRequestHandler<SignInCommand, (bool IsSuccess, string Message, AuthUser? User)>, SignInCommandHandler>();
 
         // Links
-        builder.Services.AddSingleton<ILinksManager, LinksManager>();
-        builder.Services.AddSingleton<ILinksService, LinksService>();
+        builder.ConfigureLinksDependencies();
 
-        builder.Services.AddSingleton<IRequestHandler<GetLinkByIdQuery, Link?>, GetsLinkByIdQueryHandler>();
-        builder.Services.AddSingleton<IRequestHandler<GetLinkByUrlQuery, Link?>, GetLinkByUrlQueryHandler>();
-
-        builder.Services.AddSingleton<IRequestHandler<GetLinksByIdsQuery, IEnumerable<LinkItem>>, GetLinksByIdsQueryHandler>();
-        builder.Services.AddSingleton<IRequestHandler<GetLinksQuery, PagedResults<LinkItem>>, GetLinksQueryHandler>();
-        builder.Services.AddSingleton<IRequestHandler<GetLinksByDomainQuery, PagedResults<LinkItem>>, GetLinksByDomainQueryHandler>();
-        builder.Services.AddSingleton<IRequestHandler<GetLinksByTagsQuery, PagedResults<LinkItem>>, GetsLinksByTagsQueryHandler>();
-        builder.Services.AddSingleton<IRequestHandler<GetLinkRelatedLinksQuery, LinkItem[]>, GetLinkRelatedLinksQueryHandler>();
-        builder.Services.AddSingleton<IRequestHandler<GetLinksRelatedTagsQuery, LinkTag[]>, GetLinksRelatedTagsQueryHandler>();
-
-        builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkCommandHandler>();
-        builder.Services.AddSingleton<IRequestHandler<SubmitLinkCommand, Guid>, SubmitLinkCommandHandler>();
-
-        // User Links
-        builder.Services.AddSingleton<IUserLinksManager, UserLinksManager>();
-        builder.Services.AddSingleton<IUserLinksService, UserLinksService>();
-
-        builder.Services.AddSingleton<IRequestHandler<GetUserLinkByIdQuery, UserLink?>, GetUserLinkByIdQueryHandler>();
-        builder.Services.AddSingleton<IRequestHandler<GetUserLinksQuery, PagedResults<UserLink>>, GetUserLinksQueryHandler>();
-        builder.Services.AddSingleton<IRequestHandler<AddLinkToUserCommand, Guid>, AddLinkToUserCommandHandler>();
+        // AuthUser Links
+        builder.ConfigureUserLinksDependencies();
 
         // Queue
         builder.Services.AddSingleton<IQueuedLinksService, QueuedLinksService>();
@@ -179,11 +197,32 @@ public class Program
         builder.Services.AddSingleton<ITaggerProcessor, TaggerProcessor>();
         // This is weird, I should not need to add these here?!?!?
 
-        builder.Services.AddSingleton<AuthApiEndpoints>();
+        //builder.Services.AddScoped<AuthApiEndpoints>();
         builder.Services.AddSingleton<LinksApiEndpoints>();
         builder.Services.AddSingleton<UserLinksApiEndpoints>();
 
         var app = builder.Build();
+
+        // Unfortunately, have to place these in here due to 'scoped' issues
+        app.MapPost("/v1/auth/register", [AllowAnonymous] async (
+            [FromBody] RegisterRequest register,
+            HttpRequest req,
+            HttpResponse res,
+            IUsersManager manager
+            ) =>
+        {
+            await manager.RegisterAsync(register);
+        }).AllowAnonymous();
+
+        app.MapPost("/v1/auth/signin",
+            [AllowAnonymous] async (
+                [FromBody] SignInRequest signIn,
+                HttpRequest req,
+                HttpResponse res,
+                IUsersManager manager) =>
+        {
+            await manager.SignInAsync(signIn);
+        }).AllowAnonymous();
 
         var linksApiEndpoints = app.Services.GetRequiredService<LinksApiEndpoints>();
         linksApiEndpoints.MapEndpoints(app);
@@ -209,13 +248,18 @@ public class Program
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", $"Delisc.io API {API_VERSION}");
             });
         }
+        else
+        {
+            // Temp - allow dev to bypass middleware, until I can get Swagger to authenticate as a client
+            app.UseMiddleware<ApiKeyMiddleware>();
+        }
 
         // NOTE: Order is important.
-        app.UseMiddleware<ApiKeyMiddleware>();
-
-        app.UseAuthorization();
-
-
+        ////app.UseAuthentication();
+        ////app.UseAuthorization();
+        /// 
+        //TODO: Not able to get swagger to authenticate
+        //app.UseMiddleware<ApiKeyMiddleware>();
 
         app.Run();
     }

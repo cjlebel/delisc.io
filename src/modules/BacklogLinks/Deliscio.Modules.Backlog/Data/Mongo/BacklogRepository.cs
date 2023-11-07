@@ -16,7 +16,7 @@ internal sealed class BacklogRepository : MongoRepository<BacklogItemEntity>, IB
 
     public BacklogRepository(IOptions<MongoDbOptions> options) : base(options) { }
 
-    public BacklogRepository(IMongoDbClient client) : base(client) { }
+    //public BacklogRepository(IMongoDbClient client) : base(client) { }
 
     #endregion
 

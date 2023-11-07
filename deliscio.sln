@@ -128,7 +128,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.UserAuthen
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentication", "{5E364BA3-3466-4E95-B495-07DCE788CD46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deliscio.Modules.Authentication", "src\modules\Authentication\Deliscio.Modules.Authentication\Deliscio.Modules.Authentication.csproj", "{D10A1FD8-866D-4136-8116-64E9B0AEB834}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.Authentication", "src\modules\Authentication\Deliscio.Modules.Authentication\Deliscio.Modules.Authentication.csproj", "{D10A1FD8-866D-4136-8116-64E9B0AEB834}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mvc", "src\ui\mvc\Mvc.csproj", "{393601DE-E72C-4C3D-A3A1-5C0DFA5ED82D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -252,6 +254,10 @@ Global
 		{D10A1FD8-866D-4136-8116-64E9B0AEB834}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D10A1FD8-866D-4136-8116-64E9B0AEB834}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D10A1FD8-866D-4136-8116-64E9B0AEB834}.Release|Any CPU.Build.0 = Release|Any CPU
+		{393601DE-E72C-4C3D-A3A1-5C0DFA5ED82D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{393601DE-E72C-4C3D-A3A1-5C0DFA5ED82D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{393601DE-E72C-4C3D-A3A1-5C0DFA5ED82D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{393601DE-E72C-4C3D-A3A1-5C0DFA5ED82D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -307,6 +313,7 @@ Global
 		{81580E2C-6C55-480A-A58E-1519DE69F93E} = {ADC4DB66-6FC6-4168-BA22-085BD2907B95}
 		{5E364BA3-3466-4E95-B495-07DCE788CD46} = {2A3D1CD1-9B6F-4B54-B65A-8D49F486EDB9}
 		{D10A1FD8-866D-4136-8116-64E9B0AEB834} = {5E364BA3-3466-4E95-B495-07DCE788CD46}
+		{393601DE-E72C-4C3D-A3A1-5C0DFA5ED82D} = {EFBF74E7-FE8B-4E45-9806-DA1A2ECDFD11}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC98CF49-1486-4252-A157-DA1293256158}

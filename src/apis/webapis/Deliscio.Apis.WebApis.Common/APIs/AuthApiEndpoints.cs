@@ -1,108 +1,175 @@
 using System.Net;
+using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Apis.WebApi.Common.Requests;
-using Deliscio.Modules.Authentication.Common.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Deliscio.Apis.WebApi.Common.APIs;
 
-public class AuthApiEndpoints : BaseApiEndpoints
-{
-    private readonly ILogger<LinksApiEndpoints> _logger;
-    private readonly SignInManager<AuthUser> _signInManager;
-    private readonly UserManager<AuthUser> _userManager;
+//public class AuthApiEndpoints : BaseApiEndpoints
+//{
+//    private readonly IAuthenticationManager _authManager;
+//    private readonly ILogger<LinksApiEndpoints> _logger;
 
-    public AuthApiEndpoints(SignInManager<AuthUser> signInManager, UserManager<AuthUser> userManager, ILogger<LinksApiEndpoints> logger)
-    {
-        _logger = logger;
-        _signInManager = signInManager;
-        _userManager = userManager;
-    }
+//    public AuthApiEndpoints(IAuthenticationManager authManager, ILogger<LinksApiEndpoints> logger)
+//    {
+//        _authManager = authManager;
+//        _logger = logger;
+//    }
 
-    public void MapEndpoints(IEndpointRouteBuilder endpoints)
-    {
-        MapPostSignIn(endpoints);
-    }
+//    public static void MapEndpoints(IEndpointRouteBuilder endpoints)
+//    {
+//        MapPostSignIn(endpoints);
+//    }
 
-    private void MapPostSignIn(IEndpointRouteBuilder endpoints)
-    {
-        endpoints.MapPost("/v1/account/signin", async context =>
-        {
-            var request = await context.Request.ReadFromJsonAsync<SignInRequest>();
+//    private static void MapPostSignIn(IEndpointRouteBuilder endpoints)
+//    {
+//        endpoints.MapPost("/v1/auth/signin", [AllowAnonymous] async ([FromBody] SignInRequest signinRequest, IAuthorizationService authService, HttpRequest request, HttpResponse response) =>
+//        {
 
-            if (request is null)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                return;
-            }
+//        });
+//    }
 
-            var user = await _userManager.FindByEmailAsync(request.EmailOrUserName);
+//    ///// <summary>
+//    ///// Maps the POST endpoint for registering.
+//    ///// </summary>
+//    ///// <param name="endpoints"></param>
+//    //private void MapPostRegister(IEndpointRouteBuilder endpoints)
+//    //{
+//    //    endpoints.MapPost("/v1/auth/register", async context =>
+//    //    {
+//    //        using (var scope = context.RequestServices.CreateScope())
+//    //        {
+//    //            var authEndpoints = scope.ServiceProvider.GetRequiredService<AuthApiEndpoints>();
+//    //        }
+//    //        var request = await context.Request.ReadFromJsonAsync<RegisterRequest>();
 
-            if (user == null)
-            {
-                user = await _userManager.FindByNameAsync(request.EmailOrUserName);
-            }
+//    //        if (request is null)
+//    //        {
+//    //            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+//    //            await context.Response.WriteAsJsonAsync("Invalid request.");
 
-            if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                return;
-            }
+//    //            return;
+//    //        }
 
-            var isPersistent = true; // Set this based on your requirements
-            await _signInManager.SignInAsync(user, isPersistent);
+//    //        if (string.IsNullOrWhiteSpace(request.Email))
+//    //        {
+//    //            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+//    //            await context.Response.WriteAsJsonAsync("Email is required.");
 
-            await context.Response.WriteAsJsonAsync("Successfully authenticated!");
-        });
+//    //            return;
+//    //        }
 
-        endpoints.MapPost("/v1/account/signout", async context =>
-        {
-            await _signInManager.SignOutAsync();
+//    //        if (string.IsNullOrWhiteSpace(request.UserName))
+//    //        {
+//    //            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+//    //            await context.Response.WriteAsJsonAsync("UserName is required.");
 
-            await context.Response.WriteAsJsonAsync("Successfully signed out!");
-        });
+//    //            return;
+//    //        }
 
-        endpoints.MapPost("/v1/account/register", async context =>
-        {
-            var request = await context.Request.ReadFromJsonAsync<RegisterRequest>();
+//    //        if (string.IsNullOrWhiteSpace(request.Password))
+//    //        {
+//    //            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+//    //            await context.Response.WriteAsJsonAsync("Password is required.");
 
-            if (request is null)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                await context.Response.WriteAsJsonAsync("Invalid request.");
+//    //            return;
+//    //        }
 
-                return;
-            }
+//    //        (bool IsSuccess, string Message) result;
 
-            var user = await _userManager.FindByEmailAsync(request.Email);
+//    //        result = await _authManager.RegisterAsync(request);
 
-            if (user != null)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                await context.Response.WriteAsJsonAsync("Email is already taken.");
 
-                return;
-            }
+//    //        if (result.IsSuccess)
+//    //        {
+//    //            context.Response.StatusCode = (int)HttpStatusCode.OK;
+//    //            await context.Response.WriteAsJsonAsync("Successfully registered!");
+//    //        }
+//    //        else
+//    //        {
+//    //            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+//    //            await context.Response.WriteAsJsonAsync("Failed to register the account.");
 
-            user = new AuthUser { UserName = request.Email, Email = request.Email };
-            var result = await _userManager.CreateAsync(user, request.Password);
+//    //        }
+//    //    });
+//    //}
 
-            if (!result.Succeeded)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                await context.Response.WriteAsJsonAsync("There was a problem creating your account.");
+//    ///// <summary>
+//    ///// Maps the POST endpoint for signing in.
+//    ///// </summary>
+//    ///// <param name="endpoints"></param>
+//    //private void MapPostSignIn(IEndpointRouteBuilder endpoints)
+//    //{
+//    //    endpoints.MapPost("/v1/auth/signin", async context =>
+//    //    {
+//    //        var request = await context.Request.ReadFromJsonAsync<SignInRequest>();
 
-                return;
-            }
+//    //        if (request is null)
+//    //        {
+//    //            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+//    //            return;
+//    //        }
 
-            await _userManager.AddToRoleAsync(user, "User");
+//    //        var result = await _authManager.SignInAsync(request);
 
-            await _signInManager.SignInAsync(user, isPersistent: false);
+//    //        string message;
 
-            await context.Response.WriteAsJsonAsync("Successfully registered!");
-        });
-    }
-}
+//    //        if (result.IsSuccess)
+//    //        {
+//    //            context.Response.StatusCode = (int)HttpStatusCode.OK;
+//    //            message = "Successfully logged in!";
+//    //        }
+//    //        else
+//    //        {
+//    //            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+//    //            message = "Failed to log in";
+//    //        }
+
+//    //        await context.Response.WriteAsJsonAsync(message);
+//    //    });
+//    //}
+
+//    ///// <summary>
+//    ///// Maps the POST endpoint for signing out.
+//    ///// </summary>
+//    ///// <param name="endpoints"></param>
+//    //private void MapPostSignout(IEndpointRouteBuilder endpoints)
+//    //{
+//    //    endpoints.MapPost("/v1/auth/signout", async context =>
+//    //    {
+//    //        await _authManager.SignOutAsync();
+
+//    //        await context.Response.WriteAsJsonAsync("Successfully signed out!");
+//    //    });
+//    //}
+
+//    ///// <summary>
+//    ///// Maps the POST endpoint for resetting a known password.
+//    ///// </summary>
+//    ///// <param name="endpoints"></param>
+//    //private void MapPostPasswordReset(IEndpointRouteBuilder endpoints)
+//    //{
+//    //    endpoints.MapPost("/v1/auth/password-reset", async context =>
+//    //    {
+
+//    //    });
+//    //}
+
+//    ///// <summary>
+//    ///// Maps the POST endpoint for requesting a reset for a forgotten password.
+//    ///// </summary>
+//    ///// <param name="endpoints"></param>
+//    //private void MapPostPasswordForgot(IEndpointRouteBuilder endpoints)
+//    //{
+//    //    endpoints.MapPost("/v1/auth/password-forgot", async context =>
+//    //    {
+
+//    //    });
+//    //}
+//}

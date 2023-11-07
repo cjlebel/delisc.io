@@ -14,7 +14,7 @@ public class HarvesterProcessor : IHarvesterProcessor
     private readonly ILogger<HarvesterProcessor> _logger;
     private readonly IMediator _mediator;
 
-    private const string HARVESTER_ERROR_HTTPCLIENT = "{time}: Harvesting Error for: {url} {newLine}Message: {message}";
+    private const string HARVESTER_ERROR_HTTP_CLIENT = "{time}: Harvesting Error for: {url} {newLine}Message: {message}";
 
     public HarvesterProcessor(IMediator mediator, HttpClient httpClient, ILogger<HarvesterProcessor> logger)
     {
@@ -55,15 +55,11 @@ public class HarvesterProcessor : IHarvesterProcessor
     /// <returns></returns>
     private async Task<(bool IsSuccess, string Message, MetaData Result)> Fetch(string url, CancellationToken token = default)
     {
-        (bool, string, MetaData) result;
-
         var htmlDocument = new HtmlDocument();
-        HttpResponseMessage response = null;
+        HttpResponseMessage? response = null;
 
         try
         {
-
-
             response = await _httpClient.GetAsync(url, token);
             response.EnsureSuccessStatusCode();
 
@@ -73,7 +69,7 @@ public class HarvesterProcessor : IHarvesterProcessor
         }
         catch (Exception e)
         {
-            _logger.LogError(HARVESTER_ERROR_HTTPCLIENT, DateTimeOffset.Now, url, e.Message, Environment.NewLine);
+            _logger.LogError(HARVESTER_ERROR_HTTP_CLIENT, DateTimeOffset.Now, url, e.Message, Environment.NewLine);
             var statusCode = response?.StatusCode ?? HttpStatusCode.BadRequest;
 
             return (false, $"Could not harvest the link\nStatus: {statusCode}", new MetaData());
@@ -117,14 +113,14 @@ public class HarvesterProcessor : IHarvesterProcessor
             Description = description,
             OgDescription = ogDescription,
 
-            Author = htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='author']")?.Attributes["content"]?.Value,
-            CanonicalUrl = htmlDocument.DocumentNode.SelectSingleNode("//link[@rel='canonical']")?.Attributes["href"]?.Value,
-            Keywords = htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='keywords']")?.Attributes["content"]?.Value,
-            LastUpdate = htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='last-modified']")?.Attributes["content"]?.Value,
-            OgImage = htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:image']")?.Attributes["content"]?.Value
+            Author = htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='author']")?.Attributes["content"]?.Value ?? string.Empty,
+            CanonicalUrl = htmlDocument.DocumentNode.SelectSingleNode("//link[@rel='canonical']")?.Attributes["href"]?.Value ?? string.Empty,
+            Keywords = htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='keywords']")?.Attributes["content"]?.Value ?? string.Empty,
+            LastUpdate = htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='last-modified']")?.Attributes["content"]?.Value ?? string.Empty,
+            OgImage = htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:image']")?.Attributes["content"]?.Value ?? string.Empty
         };
 
-        result = (true, "Harvesting Complete", meta);
+        var result = (true, "Harvesting Complete", meta);
 
         return result;
     }

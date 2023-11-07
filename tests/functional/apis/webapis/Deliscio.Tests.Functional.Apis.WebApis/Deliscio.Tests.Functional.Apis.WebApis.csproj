@@ -42,10 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="WebApi\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\src\apis\webapis\Deliscio.Apis.WebApi\Deliscio.Apis.WebApi.csproj" />
   </ItemGroup>
 

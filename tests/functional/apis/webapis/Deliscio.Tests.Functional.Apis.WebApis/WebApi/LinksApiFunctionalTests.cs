@@ -10,6 +10,7 @@ namespace Deliscio.Tests.Functional.Apis.WebApis.WebApi;
 // https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0
 public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<WebApplicationFactory<Program>>
 {
+    #region - Endpoint Constants -
     private const string GET_LINK_ENDPOINT = "/{0}/link/{1}";
 
     private const string GET_LINKS_ENDPOINT = "/{0}/links";
@@ -21,11 +22,9 @@ public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<Web
 
     private const string GET_LINKS_RELATED_TAGS_ENDPOINT = "/{0}/links/tags?tags={1}";
     private const string GET_LINKS_RELATED_TAGS_WITH_COUNT_ENDPOINT = "/{0}/links/tags?tags={1}&count={2}";
+    #endregion
 
-    public LinksApiFunctionalTests(WebApplicationFactory<Program> factory) : base(factory)
-    {
-
-    }
+    public LinksApiFunctionalTests(WebApplicationFactory<Program> factory) : base(factory) { }
 
     #region - GetLinkById -
     [Fact]

@@ -16,7 +16,7 @@ public sealed class UserLinksRepository : MongoRepository<UserLinkEntity>, IUser
     #region - Constructors -
     public UserLinksRepository(IOptions<MongoDbOptions> options) : base(options) { }
 
-    public UserLinksRepository(IMongoDbClient client) : base(client) { }
+    //public UserLinksRepository(IMongoDbClient client) : base(client) { }
     #endregion
 
     #region - Links -
