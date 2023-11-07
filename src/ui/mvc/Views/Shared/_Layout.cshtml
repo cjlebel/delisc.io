@@ -20,12 +20,14 @@
         </div>
 
         @RenderBody()
+        <div id="pager-container" class="col"></div>
     </main>
 </div>
 
 
 @await RenderSectionAsync("Scripts", required: false)
-<script src="~/js/Counter.bundle.js"></script>
-    <script src="~/js/Counter2.bundle.js"></script>
+    <script src="~/js/Counter.bundle.js"></script>
+<script src="~/js/Counter2.bundle.js"></script>
+    <script src="~/js/Pager.bundle.js"></script>
 </body>
 </html>

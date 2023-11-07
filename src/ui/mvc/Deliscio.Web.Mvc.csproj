@@ -68,6 +68,7 @@
 
 	<ItemGroup>
 			  <Folder Include="Library\scss\" />
+			  <Folder Include="wwwroot\js\" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -130,7 +130,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.Authentication", "src\modules\Authentication\Deliscio.Modules.Authentication\Deliscio.Modules.Authentication.csproj", "{D10A1FD8-866D-4136-8116-64E9B0AEB834}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mvc", "src\ui\mvc\Mvc.csproj", "{393601DE-E72C-4C3D-A3A1-5C0DFA5ED82D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Web.Mvc", "src\ui\mvc\Deliscio.Web.Mvc.csproj", "{393601DE-E72C-4C3D-A3A1-5C0DFA5ED82D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

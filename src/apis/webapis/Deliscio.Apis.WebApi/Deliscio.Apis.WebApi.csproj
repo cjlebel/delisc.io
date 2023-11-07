@@ -8,6 +8,8 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerfileContext>..\..\..\..</DockerfileContext>
+		<AssemblyName>Deliscio.Apis.WebApi</AssemblyName>
+		<RootNamespace>Deliscio.Apis.WebApi</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
