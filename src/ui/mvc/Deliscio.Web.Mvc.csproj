@@ -47,12 +47,16 @@
 
 	<ItemGroup>
 		<Compile Remove="wwwroot\js\NewFolder\**" />
+		<Compile Remove="wwwroot\libs\bootstrap\**" />
 		<Compile Remove="wwwroot\react\**" />
 		<Content Remove="wwwroot\js\NewFolder\**" />
+		<Content Remove="wwwroot\libs\bootstrap\**" />
 		<Content Remove="wwwroot\react\**" />
 		<EmbeddedResource Remove="wwwroot\js\NewFolder\**" />
+		<EmbeddedResource Remove="wwwroot\libs\bootstrap\**" />
 		<EmbeddedResource Remove="wwwroot\react\**" />
 		<None Remove="wwwroot\js\NewFolder\**" />
+		<None Remove="wwwroot\libs\bootstrap\**" />
 		<None Remove="wwwroot\react\**" />
 	</ItemGroup>
 
@@ -67,38 +71,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-			  <Folder Include="Library\scss\" />
+			  <Folder Include="Library\dist\" />
+			  <Folder Include="ViewComponents\Header\" />
+			  <Folder Include="wwwroot\css\" />
 			  <Folder Include="wwwroot\js\" />
+			  <Folder Include="wwwroot\libs\" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Include="wwwroot\libs\bootstrap\css\bootstrap-grid.css.map" />
-	  <None Include="wwwroot\libs\bootstrap\css\bootstrap-grid.min.css.map" />
-	  <None Include="wwwroot\libs\bootstrap\css\bootstrap-grid.rtl.css.map" />
-	  <None Include="wwwroot\libs\bootstrap\css\bootstrap-grid.rtl.min.css.map" />
-	  <None Include="wwwroot\libs\bootstrap\css\bootstrap-reboot.css.map" />
-	  <None Include="wwwroot\libs\bootstrap\css\bootstrap-reboot.min.css.map" />
-	  <None Include="wwwroot\libs\bootstrap\css\bootstrap-reboot.rtl.css.map" />
-	  <None Include="wwwroot\libs\bootstrap\css\bootstrap-reboot.rtl.min.css.map" />
-	  <None Include="wwwroot\libs\bootstrap\css\bootstrap-utilities.css.map" />
-	  <None Include="wwwroot\libs\bootstrap\css\bootstrap-utilities.min.css.map" />
-	  <None Include="wwwroot\libs\bootstrap\css\bootstrap-utilities.rtl.css.map" />
-	  <None Include="wwwroot\libs\bootstrap\css\bootstrap-utilities.rtl.min.css.map" />
-	  <None Include="wwwroot\libs\bootstrap\css\bootstrap.css.map" />
-	  <None Include="wwwroot\libs\bootstrap\css\bootstrap.min.css.map" />
-	  <None Include="wwwroot\libs\bootstrap\css\bootstrap.rtl.css.map" />
-	  <None Include="wwwroot\libs\bootstrap\css\bootstrap.rtl.min.css.map" />
-	  <None Include="wwwroot\libs\bootstrap\js\bootstrap.bundle.js" />
-	  <None Include="wwwroot\libs\bootstrap\js\bootstrap.bundle.js.map" />
-	  <None Include="wwwroot\libs\bootstrap\js\bootstrap.bundle.min.js" />
-	  <None Include="wwwroot\libs\bootstrap\js\bootstrap.bundle.min.js.map" />
-	  <None Include="wwwroot\libs\bootstrap\js\bootstrap.esm.js" />
-	  <None Include="wwwroot\libs\bootstrap\js\bootstrap.esm.js.map" />
-	  <None Include="wwwroot\libs\bootstrap\js\bootstrap.esm.min.js" />
-	  <None Include="wwwroot\libs\bootstrap\js\bootstrap.esm.min.js.map" />
-	  <None Include="wwwroot\libs\bootstrap\js\bootstrap.js" />
-	  <None Include="wwwroot\libs\bootstrap\js\bootstrap.js.map" />
-	  <None Include="wwwroot\libs\bootstrap\js\bootstrap.min.js" />
-	  <None Include="wwwroot\libs\bootstrap\js\bootstrap.min.js.map" />
+	  <None Include="wwwroot\scss\app.scss" />
+	  <None Include="wwwroot\scss\_navigation.scss" />
 	</ItemGroup>
 </Project>

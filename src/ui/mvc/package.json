@@ -1,42 +1,64 @@
 {
-    "name": "mvcjsmodules",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "webpack --mode=development",
-        "watch": "webpack --mode=development --watch"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "devDependencies": {
-        "@babel/core": "^7.23.2",
-        "@babel/preset-env": "^7.23.2",
-        "@babel/preset-react": "^7.22.15",
-        "@babel/preset-typescript": "^7.23.2",
-        "@types/react": "^18.2.36",
-        "@types/react-dom": "^18.2.14",
-        "babel-loader": "^9.1.3",
-        "bootstrap": "5.3.2",
-        "clean-webpack-plugin": "^4.0.0",
-        "css-loader": "^6.8.1",
-        "eslint": "^8.53.0",
-        "glob-all": "^3.3.1",
-        "purgecss-webpack-plugin": "^5.0.0",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
-        "sass": "^1.69.5",
-        "sass-loader": "^13.3.2",
-        "style-loader": "^3.3.3",
-        "webpack": "^5.89.0",
-        "webpack-cli": "^5.1.4",
-        "webpack-hot-middleware": "^2.25.4"
-    },
-    "-vs-binding": {
-        "BeforeBuild": [
-            "install"
-        ]
-    }
+  "name": "mvcjsmodules",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack --mode=development",
+    "watch": "webpack --mode=development --watch",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.23.2",
+    "@babel/preset-env": "^7.23.2",
+    "@babel/preset-react": "^7.22.15",
+    "@babel/preset-typescript": "^7.23.2",
+    "@storybook/addon-essentials": "^7.5.3",
+    "@storybook/addon-interactions": "^7.5.3",
+    "@storybook/addon-links": "^7.5.3",
+    "@storybook/addon-onboarding": "^1.0.8",
+    "@storybook/blocks": "^7.5.3",
+    "@storybook/react": "^7.5.3",
+    "@storybook/react-webpack5": "^7.5.3",
+    "@storybook/testing-library": "^0.2.2",
+    "@types/aria-query": "^5.0.4",
+    "@types/react": "^18.2.36",
+    "@types/react-dom": "^18.2.14",
+    "babel-loader": "^9.1.3",
+    "bootstrap": "5.3.2",
+    "clean-webpack-plugin": "^4.0.0",
+    "css-loader": "^6.8.1",
+    "css-modules-typescript-loader": "^4.0.1",
+    "eslint": "^8.53.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-storybook": "^0.6.15",
+    "glob-all": "^3.3.1",
+    "mini-css-extract-plugin": "^2.7.6",
+    "node-sass": "^9.0.0",
+    "purgecss-webpack-plugin": "^5.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sass": "^1.69.5",
+    "sass-loader": "^13.3.2",
+    "storybook": "^7.5.3",
+    "style-loader": "^3.3.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-hot-middleware": "^2.25.4"
+  },
+  "-vs-binding": {
+    "BeforeBuild": [
+      "install"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
+  }
 }
