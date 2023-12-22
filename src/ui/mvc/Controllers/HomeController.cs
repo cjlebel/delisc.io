@@ -1,20 +1,28 @@
-using System.Diagnostics;
+ using System.Diagnostics;
+using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Web.Mvc.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Structurizr.Annotations;
 
 namespace Deliscio.Web.Mvc.Controllers;
-public class HomeController : Controller
-{
-    private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+[Component(Description = "The Deliscio Website", Technology = "C#")]
+[UsedByPerson("End Users", Description = "Public APIs")]
+public class HomeController : BaseController<HomeController>
+{
+    public HomeController(IMediator mediator, ILogger<HomeController> logger) : base(mediator, logger)
     {
-        _logger = logger;
+
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index(int pageNo = 1, int pageSize = 50, CancellationToken token = default)
     {
-        return View();
+        var query = new GetLinksQuery(pageNo, pageSize);
+
+        var results = await MediatR!.Send(query, token);
+
+        return View(results);
     }
 
     public IActionResult Privacy()

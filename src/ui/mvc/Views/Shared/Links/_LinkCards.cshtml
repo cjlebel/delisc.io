@@ -1,0 +1,12 @@
+@model IEnumerable<Deliscio.Modules.Links.Common.Models.LinkItem>
+
+@if (Model.Any())
+{
+    <div class="links-list d-flex flex-wrap" style="gap: 10px">
+    @foreach (var linkItem in Model)
+    {
+        await Html.RenderPartialAsync("_LinkCard.cshtml", linkItem);
+    }
+    </div>
+}
+

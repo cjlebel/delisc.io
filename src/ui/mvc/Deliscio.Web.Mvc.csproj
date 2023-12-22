@@ -46,18 +46,37 @@
 
 
 	<ItemGroup>
-		<Compile Remove="wwwroot\js\NewFolder\**" />
-		<Compile Remove="wwwroot\libs\bootstrap\**" />
+		<Compile Remove="Library\**" />
+		<Compile Remove="wwwroot\css\**" />
+		<Compile Remove="wwwroot\js\**" />
 		<Compile Remove="wwwroot\react\**" />
-		<Content Remove="wwwroot\js\NewFolder\**" />
-		<Content Remove="wwwroot\libs\bootstrap\**" />
+		<Content Remove="Library\**" />
+		<Content Remove="wwwroot\css\**" />
+		<Content Remove="wwwroot\js\**" />
 		<Content Remove="wwwroot\react\**" />
-		<EmbeddedResource Remove="wwwroot\js\NewFolder\**" />
-		<EmbeddedResource Remove="wwwroot\libs\bootstrap\**" />
+		<EmbeddedResource Remove="Library\**" />
+		<EmbeddedResource Remove="wwwroot\css\**" />
+		<EmbeddedResource Remove="wwwroot\js\**" />
 		<EmbeddedResource Remove="wwwroot\react\**" />
-		<None Remove="wwwroot\js\NewFolder\**" />
-		<None Remove="wwwroot\libs\bootstrap\**" />
+		<None Remove="Library\**" />
+		<None Remove="wwwroot\css\**" />
+		<None Remove="wwwroot\js\**" />
 		<None Remove="wwwroot\react\**" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<Content Remove="compilerconfig.json" />
+		<Content Remove="wwwroot\modules\images\ImageCollection.mjs" />
+		<Content Remove="wwwroot\scss\_variables.scss" />
+		<Content Remove="wwwroot\tsx\Pager\bak\index.xtsx" />
+		<Content Remove="wwwroot\tsx\Pager\bak\Pager.module.scss.d.xts" />
+		<Content Remove="wwwroot\tsx\Pager\bak\Pager.module.xscss" />
+		<Content Remove="wwwroot\tsx\Pager\bak\Pager.xtsx" />
+		<Content Remove="wwwroot\tsx\Pager\index.tsx" />
+		<Content Remove="wwwroot\tsx\Pager\Pager.module.scss" />
+		<Content Remove="wwwroot\tsx\Pager\Pager.module.scss.d.ts" />
+		<Content Remove="wwwroot\tsx\Pager\Pager.tsx" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -65,21 +84,52 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<_ContentIncludedByDefault Remove="wwwroot\modules\images\ImageCollection.mjs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="wwwroot\css\site.css" />
+		<Content Include="wwwroot\css\site.min.css" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AspNetCore.Identity.MongoDbCore" Version="3.1.2" />
+		<PackageReference Include="MassTransit.Abstractions" Version="8.1.1" />
+		<PackageReference Include="MediatR" Version="12.1.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.13" />
 		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="7.0.13" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+		<PackageReference Include="Structurizr.Annotations" Version="0.9.3" />
 	</ItemGroup>
 
 	<ItemGroup>
-			  <Folder Include="Library\dist\" />
-			  <Folder Include="ViewComponents\Header\" />
-			  <Folder Include="wwwroot\css\" />
-			  <Folder Include="wwwroot\js\" />
-			  <Folder Include="wwwroot\libs\" />
+		<Folder Include="ViewComponents\Header\" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Include="wwwroot\scss\app.scss" />
-	  <None Include="wwwroot\scss\_navigation.scss" />
+		<None Include="compilerconfig.json" />
+		<None Include="wwwroot\modules\images\ImageCollection.mjs" />
+		<None Include="wwwroot\scss\_variables.scss" />
+		<None Include="wwwroot\tsx\Pager\bak\index.xtsx" />
+		<None Include="wwwroot\tsx\Pager\bak\Pager.module.scss.d.xts" />
+		<None Include="wwwroot\tsx\Pager\bak\Pager.module.xscss" />
+		<None Include="wwwroot\tsx\Pager\bak\Pager.xtsx" />
+		<None Include="wwwroot\tsx\Pager\index.tsx" />
+		<None Include="wwwroot\tsx\Pager\Pager.module.scss" />
+		<None Include="wwwroot\tsx\Pager\Pager.module.scss.d.ts" />
+		<None Include="wwwroot\tsx\Pager\Pager.tsx" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
+		<ProjectReference Include="..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
+		<ProjectReference Include="..\..\modules\Authentication\Deliscio.Modules.Authentication\Deliscio.Modules.Authentication.csproj" />
+		<ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links.Common\Deliscio.Modules.Links.Common.csproj" />
+		<ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links.MediatR\Deliscio.Modules.Links.MediatR.csproj" />
+		<ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
+	</ItemGroup>
+
+	<Target Name="GitVersion" BeforeTargets="BeforeBuild">
+		<Exec Command="dotnet gitversion /output buildserver" />
+	</Target>
 </Project>

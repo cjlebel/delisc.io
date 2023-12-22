@@ -76,9 +76,11 @@ public sealed class LinkEntity : MongoEntityBase
 
     }
 
-    public LinkEntity(Guid id, string url, string title)
+
+    public LinkEntity(Guid id, string url, string title, Guid submittedById)
     {
         Id = id;
+        SubmittedById = submittedById;
         Title = title;
         Url = url;
 

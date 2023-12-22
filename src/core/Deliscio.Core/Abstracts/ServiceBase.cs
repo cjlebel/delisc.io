@@ -15,7 +15,7 @@ public abstract class ServiceBase
     /// <param name="pageSize">The max number of items per page</param>
     /// <param name="totalCount">The total number of items that this page was plucked from</param>
     /// <returns></returns>
-    public static PagedResults<T> GetPageOfResults<T>(IEnumerable<T> items, int pageNo, int pageSize, int totalCount)
+    protected static PagedResults<T> GetPageOfResults<T>(IEnumerable<T> items, int pageNo, int pageSize, int totalCount)
     {
         var array = items.ToArray();
 

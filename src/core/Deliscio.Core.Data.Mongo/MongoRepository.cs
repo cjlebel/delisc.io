@@ -75,7 +75,7 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
         {
             try
             {
-                await Collection.InsertManyAsync(entities, new InsertManyOptions() { }, cancellationToken: token);
+                await Collection.InsertManyAsync(entities, new InsertManyOptions(), cancellationToken: token);
             }
             catch (Exception e)
             {
@@ -171,12 +171,10 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     /// <exception cref="System.ArgumentException">id</exception>
     public async Task<TDocument?> GetAsync(Guid id, CancellationToken token = default)
     {
-        if (id == Guid.Empty)
-        {
-            return await Task.FromException<TDocument>(new ArgumentException(EXCEPTION_ID_CANT_BE_EMPTY, nameof(id)));
-        }
+        Guard.Against.NullOrEmpty(id, message: EXCEPTION_ID_CANT_BE_EMPTY);
 
         var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, id);
+
         return await Collection.Find(filter)
             .SingleOrDefaultAsync(token);
     }

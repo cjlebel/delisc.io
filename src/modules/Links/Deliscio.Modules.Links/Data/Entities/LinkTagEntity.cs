@@ -23,9 +23,9 @@ public class LinkTagEntity : MongoEntityBase
 
     public int Count { get; set; }
 
-    public decimal Weight { get; set; }
+    public float Weight { get; set; }
 
-    public LinkTagEntity(string name, int count = 1, decimal weight = 0)
+    public LinkTagEntity(string name, int count = 1, float weight = 0)
     {
         Name = name.Replace('/', '-');
         Count = count;

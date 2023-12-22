@@ -5,7 +5,7 @@ public sealed record LinkTag
     public string Name { get; set; }
     public int Count { get; set; }
 
-    public decimal Weight { get; set; }
+    public float Weight { get; set; }
 
     // Needed for deserialization
     public LinkTag() { }
@@ -16,11 +16,11 @@ public sealed record LinkTag
         Count = count;
     }
 
-    public LinkTag(string name, int count, decimal weight)
+    public LinkTag(string name, int count, float weight)
     {
         Name = name;
         Count = count;
-        Weight = decimal.Round(weight, 10);
+        Weight = float.Round(weight, 6);
     }
 
     public static LinkTag Create(string name)

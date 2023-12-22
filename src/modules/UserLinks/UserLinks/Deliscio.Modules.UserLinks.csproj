@@ -1,27 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Requests\**" />
-    <Compile Remove="Responses\**" />
-    <EmbeddedResource Remove="Requests\**" />
-    <EmbeddedResource Remove="Responses\**" />
-    <None Remove="Requests\**" />
-    <None Remove="Responses\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Requests\**" />
+		<Compile Remove="Responses\**" />
+		<EmbeddedResource Remove="Requests\**" />
+		<EmbeddedResource Remove="Responses\**" />
+		<None Remove="Requests\**" />
+		<None Remove="Responses\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
-    <ProjectReference Include="..\Common\Deliscio.Modules.UserLinks.Common.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
+		<ProjectReference Include="..\Common\Deliscio.Modules.UserLinks.Common.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Mappers\" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<Folder Include="Mappers\" />
+	</ItemGroup>
+	<Target Name="GitVersion" BeforeTargets="BeforeBuild">
+		<Exec Command="dotnet gitversion /output buildserver" />
+	</Target>
 </Project>

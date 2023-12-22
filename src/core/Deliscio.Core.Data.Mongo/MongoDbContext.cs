@@ -18,6 +18,9 @@ public class MongoDbContext<TDocument> : IMongoDbContext<TDocument>
     {
         Guard.Against.Null(client, message: "Could not retrieve the client");
 
+        ////BsonSerializer.RegisterSerializer(new ObjectSerializer(BsonSerializer.LookupDiscriminatorConvention(typeof(object)), GuidRepresentation.Standard));
+        //BsonDefaults.GuidRepresentationMode = GuidRepresentationMode.V3;
+
         _db = client.Database;
     }
 
@@ -54,6 +57,8 @@ public class MongoDbContext<TDocument> : IMongoDbContext<TDocument>
 
         var optionValue = options.Value;
 
+        //BsonSerializer.RegisterSerializer(new ObjectSerializer(BsonSerializer.LookupDiscriminatorConvention(typeof(object)), GuidRepresentation.Standard));
+        //BsonDefaults.GuidRepresentationMode = GuidRepresentationMode.V3;
 
         var connection = optionValue.ConnectionString;
         var dbName = optionValue.DatabaseName;
@@ -64,6 +69,7 @@ public class MongoDbContext<TDocument> : IMongoDbContext<TDocument>
 
     public IMongoCollection<TDocument> Collection()
     {
+
         var collection = _db.GetCollection<TDocument>(GetCollectionName(typeof(TDocument)));
 
         return collection;

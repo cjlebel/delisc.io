@@ -29,6 +29,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson;
 using Structurizr.Annotations;
 
 namespace Deliscio.Apis.WebApi;
@@ -52,6 +55,9 @@ public class Program
         var mongoConfig = config.GetSection(MongoDbOptions.SectionName);
         var mongoConfigConnectionString = config.GetSection($"{MongoDbOptions.SectionName}:ConnectionString").Value;
         var mongoConfigDatabaseName = config.GetSection($"{MongoDbOptions.SectionName}:DatabaseName").Value;
+
+        //BsonDefaults.GuidRepresentationMode = GuidRepresentationMode.V2;
+        //BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
         builder.Services.Configure<MongoDbOptions>(mongoConfig);
         builder.Services.Configure<QueuedLinksSettingsOptions>(config.GetSection(QueuedLinksSettingsOptions.SectionName));
@@ -110,11 +116,14 @@ public class Program
         //});
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
         builder.Services.AddMassTransit(x =>
         {
+            QueuedLinksSettingsOptions options;
+            
             x.UsingRabbitMq((context, cfg) =>
             {
-                var options = context.GetRequiredService<IOptions<QueuedLinksSettingsOptions>>().Value;
+                options = context.GetRequiredService<IOptions<QueuedLinksSettingsOptions>>().Value;
 
                 cfg.Host(new Uri(options.Host), hostConfig =>
                 {
@@ -130,53 +139,53 @@ public class Program
         builder.Services.AddSingleton(config);
 
         #region - Authentication / Authorization -
-        builder.Services.AddIdentity<AuthUser, MongoIdentityRole>()
-            // Wasn't able to pass the client in, had to do it this way for now
-            // sp => sp.GetRequiredService<MongoDbClient>().Database
-            .AddMongoDbStores<AuthUser, MongoIdentityRole, Guid>(mongoConfigConnectionString, mongoConfigDatabaseName)
-            .AddDefaultTokenProviders();
+        //builder.Services.AddIdentity<AuthUser, MongoIdentityRole>()
+        //    // Wasn't able to pass the client in, had to do it this way for now
+        //    // sp => sp.GetRequiredService<MongoDbClient>().Database
+        //    .AddMongoDbStores<AuthUser, MongoIdentityRole, Guid>(mongoConfigConnectionString, mongoConfigDatabaseName)
+        //    .AddDefaultTokenProviders();
 
-        builder.Services.Configure<IdentityOptions>(options =>
-        {
-            options.Password.RequiredLength = 6;
-            options.Password.RequireDigit = true;
-            options.Password.RequireLowercase = true;
-            options.Password.RequireNonAlphanumeric = true;
-            options.Password.RequireUppercase = true;
-            options.Password.RequiredUniqueChars = 1;
+        //builder.Services.Configure<IdentityOptions>(options =>
+        //{
+        //    options.Password.RequiredLength = 6;
+        //    options.Password.RequireDigit = true;
+        //    options.Password.RequireLowercase = true;
+        //    options.Password.RequireNonAlphanumeric = true;
+        //    options.Password.RequireUppercase = true;
+        //    options.Password.RequiredUniqueChars = 1;
 
-            //options.AuthUser.AllowedUserNameCharacters 
-            options.User.RequireUniqueEmail = true;
+        //    //options.AuthUser.AllowedUserNameCharacters 
+        //    options.User.RequireUniqueEmail = true;
 
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-            options.Lockout.MaxFailedAccessAttempts = 5;
-            options.Lockout.AllowedForNewUsers = true;
-        });
+        //    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+        //    options.Lockout.MaxFailedAccessAttempts = 5;
+        //    options.Lockout.AllowedForNewUsers = true;
+        //});
 
-        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(options =>
-            {
-                options.Cookie.Name = "DeliscioTastyCookie";
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromDays(30); // Adjust the expiration time as needed
-                options.SlidingExpiration = true;
-                options.LoginPath = "/account/login"; // Specify your login path
-            });
+        //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+        //    .AddCookie(options =>
+        //    {
+        //        options.Cookie.Name = "DeliscioTastyCookie";
+        //        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        //        options.Cookie.HttpOnly = true;
+        //        options.ExpireTimeSpan = TimeSpan.FromDays(30); // Adjust the expiration time as needed
+        //        options.SlidingExpiration = true;
+        //        options.LoginPath = "/account/login"; // Specify your login path
+        //    });
 
-        builder.Services.AddAuthorization(options =>
-        {
-            options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
-        });
+        //builder.Services.AddAuthorization(options =>
+        //{
+        //    options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
+        //});
         #endregion
 
         // Authentication 
-        builder.Services.AddScoped<IUsersManager, UsersManager>();
-        builder.Services.AddScoped<IAuthService, AuthService>();
+        //builder.Services.AddScoped<IUsersManager, UsersManager>();
+        //builder.Services.AddScoped<IAuthService, AuthService>();
 
 
-        builder.Services.AddScoped<IRequestHandler<RegisterCommand, (bool IsSuccess, string Message, string[] ErrorMessages)>, RegisterCommandHandler>();
-        builder.Services.AddScoped<IRequestHandler<SignInCommand, (bool IsSuccess, string Message, AuthUser? User)>, SignInCommandHandler>();
+        //builder.Services.AddScoped<IRequestHandler<RegisterCommand, (bool IsSuccess, string Message, string[] ErrorMessages)>, RegisterCommandHandler>();
+        //builder.Services.AddScoped<IRequestHandler<SignInCommand, (bool IsSuccess, string Message, AuthUser? User)>, SignInCommandHandler>();
 
         // Links
         builder.ConfigureLinksDependencies();
@@ -203,26 +212,26 @@ public class Program
 
         var app = builder.Build();
 
-        // Unfortunately, have to place these in here due to 'scoped' issues
-        app.MapPost("/v1/auth/register", [AllowAnonymous] async (
-            [FromBody] RegisterRequest register,
-            HttpRequest req,
-            HttpResponse res,
-            IUsersManager manager
-            ) =>
-        {
-            await manager.RegisterAsync(register);
-        }).AllowAnonymous();
+        //// Unfortunately, have to place these in here due to 'scoped' issues
+        //app.MapPost("/v1/auth/register", [AllowAnonymous] async (
+        //    [FromBody] RegisterRequest register,
+        //    HttpRequest req,
+        //    HttpResponse res,
+        //    IUsersManager manager
+        //    ) =>
+        //{
+        //    await manager.RegisterAsync(register);
+        //}).AllowAnonymous();
 
-        app.MapPost("/v1/auth/signin",
-            [AllowAnonymous] async (
-                [FromBody] SignInRequest signIn,
-                HttpRequest req,
-                HttpResponse res,
-                IUsersManager manager) =>
-        {
-            await manager.SignInAsync(signIn);
-        }).AllowAnonymous();
+        //app.MapPost("/v1/auth/signin",
+        //    [AllowAnonymous] async (
+        //        [FromBody] SignInRequest signIn,
+        //        HttpRequest req,
+        //        HttpResponse res,
+        //        IUsersManager manager) =>
+        //{
+        //    await manager.SignInAsync(signIn);
+        //}).AllowAnonymous();
 
         var linksApiEndpoints = app.Services.GetRequiredService<LinksApiEndpoints>();
         linksApiEndpoints.MapEndpoints(app);

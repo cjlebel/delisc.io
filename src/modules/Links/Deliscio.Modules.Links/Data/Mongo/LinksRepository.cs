@@ -1,6 +1,5 @@
 using Ardalis.GuardClauses;
 using Deliscio.Core.Data.Mongo;
-using Deliscio.Core.Data.Mongo.Interfaces;
 using Deliscio.Modules.Links.Data.Entities;
 using Deliscio.Modules.Links.Interfaces;
 using Microsoft.Extensions.Options;
@@ -119,7 +118,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
 
         foreach (var relatedTag in relatedTags)
         {
-            relatedTag.Weight = totalCounts > 0m ? (relatedTag.Count / (decimal)totalCounts) : 0m;
+            relatedTag.Weight = totalCounts > 0f ? (relatedTag.Count / (float)totalCounts) : 0f;
         }
 
         return relatedTags.OrderByDescending(t => t.Count).ThenBy(t => t.Name);

@@ -12,18 +12,17 @@ internal static class Mapper
         if (link is null)
             return null;
 
-        var entity = new LinkEntity(new Guid(link.Id), link.Url, link.Title)
+        var entity = new LinkEntity(new Guid(link.Id), link.Url, link.Title, new Guid(link.SubmittedById))
         {
             Description = link.Description,
             Domain = link.Domain,
             ImageUrl = link.ImageUrl,
-            Keywords = link.Keywords ?? Array.Empty<string>(),
+            Keywords = link.Keywords,
             //IsExcluded = link.IsExcluded,
             //IsFlagged = link.IsFlagged,
             Tags = Map(link.Tags).ToList(),
             Title = link.Title,
 
-            SubmittedById = new Guid(link.SubmittedById),
             DateCreated = link.DateCreated,
             DateUpdated = link.DateUpdated
         };

@@ -3,17 +3,14 @@ using System.Net;
 using Ardalis.GuardClauses;
 
 using Deliscio.Core.Abstracts;
-using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Data.Entities;
-using Deliscio.Modules.Links.Data.Mongo;
 using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Modules.Links.Mappers;
 
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Structurizr.Annotations;
 
 namespace Deliscio.Modules.Links;
@@ -30,14 +27,14 @@ public sealed class LinksService : ServiceBase, ILinksService
     private readonly int _defaultRelatedLinksCount = 20;
     private readonly int _defaultTagsCount = 50;
 
-    //public LinksService(ILinksRepository linksRepository, ILogger<LinksService> logger)
-    //{
-    //    Guard.Against.Null(linksRepository);
-    //    Guard.Against.Null(logger);
+    public LinksService(ILinksRepository linksRepository, ILogger<LinksService> logger)
+    {
+        Guard.Against.Null(linksRepository);
+        Guard.Against.Null(logger);
 
-    //    _repository = linksRepository;
-    //    _logger = logger;
-    //}
+        _repository = linksRepository;
+        _logger = logger;
+    }
 
     //public LinksService(MongoDbClient client, ILogger<LinksService> logger)
     //{
@@ -48,14 +45,14 @@ public sealed class LinksService : ServiceBase, ILinksService
     //    _logger = logger;
     //}
 
-    public LinksService(IOptions<MongoDbOptions> options, ILogger<LinksService> logger)
-    {
-        Guard.Against.Null(options);
-        Guard.Against.Null(logger);
+    //public LinksService(IOptions<MongoDbOptions> options, ILogger<LinksService> logger)
+    //{
+    //    Guard.Against.Null(options);
+    //    Guard.Against.Null(logger);
 
-        _repository = new LinksRepository(options);
-        _logger = logger;
-    }
+    //    _repository = new LinksRepository(options);
+    //    _logger = logger;
+    //}
 
     public async Task<Guid> AddAsync(Link link, CancellationToken token = default)
     {
@@ -142,7 +139,7 @@ public sealed class LinksService : ServiceBase, ILinksService
 
         Guard.Against.NegativeOrZero(newPageSize, message: $"{nameof(pageSize)} must be greater than zero");
 
-        var rslts = await Find(_ => true, pageNo, newPageSize, token);
+        var rslts = await FindAsync(_ => true, pageNo, newPageSize, token);
 
         return GetPageOfResults(rslts.Results, pageNo, newPageSize, rslts.TotalCount);
     }
@@ -248,6 +245,7 @@ public sealed class LinksService : ServiceBase, ILinksService
 
         var linkTags = link.Tags.Select(t => t.Name).ToArray();
 
+        // First try to get links that have the same tags
         if (linkTags.Length > 0)
         {
             var results = await _repository.GetLinksByTagsAsync(linkTags, 1, newCount, token);
@@ -256,6 +254,7 @@ public sealed class LinksService : ServiceBase, ILinksService
                 linkItems = Mapper.Map<LinkItem>(results.Results).ToArray();
         }
 
+        // Then try to get links that have the same domain
         if (linkItems.Length < newCount)
         {
             var results = await _repository.GetLinksByDomainAsync(link.Domain, 1, newCount, token);
@@ -296,7 +295,7 @@ public sealed class LinksService : ServiceBase, ILinksService
     /// <param name="token">The cancellation token</param>
     /// <returns>An IEnumerable of Link models, along with the total number of pages of results, and the total number of all results for this filter</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if either pageNo or pageSize are less than 1</exception>
-    private async Task<(IEnumerable<LinkItem> Results, int TotalPages, int TotalCount)> Find(Expression<Func<LinkEntity, bool>> predicate, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    private async Task<(IEnumerable<LinkItem> Results, int TotalPages, int TotalCount)> FindAsync(Expression<Func<LinkEntity, bool>> predicate, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         Guard.Against.NegativeOrZero(pageNo);
         Guard.Against.NegativeOrZero(pageSize);
@@ -311,45 +310,55 @@ public sealed class LinksService : ServiceBase, ILinksService
         return (links, results.TotalPages, results.TotalCount);
     }
 
-    public async ValueTask<Guid> SubmitLinkAsync(string url, Guid submittedByUserId, string[]? tags = default, CancellationToken token = default)
+    public async Task<Guid> SubmitLinkAsync(string url, Guid submittedByUserId, string[]? tags = default, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(url);
         Guard.Against.NullOrEmpty(submittedByUserId);
 
-        var link = await _repository.GetLinkByUrlAsync(url, token);
+        var linkEntity = await _repository.GetLinkByUrlAsync(url, token);
 
         // If the link already exists in the central link repository, then we just need to add/update the tags for it
         // Then assign to the user who submitted it
-        if (link == null)
-            return Guid.Empty;
-
-        if (tags is { Length: > 0 })
-        {
-            tags = tags.Distinct().ToArray();
-
-            var linkTagNames = link.Tags.Select(t => t.Name).ToArray();
-
-            var existingTagNames = tags.Where(t => linkTagNames.Contains(t)).ToArray();
-            var nonExistingTagNames = tags.Where(t => !linkTagNames.Contains(t)).ToArray();
-
-            foreach (var existingTagName in existingTagNames)
-            {
-                var t = link.Tags.First(t => t.Name == existingTagName);
-                t.Count++;
-            }
-
-            link.Tags.AddRange(nonExistingTagNames.Select(LinkTagEntity.Create));
-
-            await _repository.UpdateAsync(link, token);
-
-
-        }
+        if (linkEntity == null)
+            throw new NotImplementedException("The ability to add a new link from here does not exist yet. It's in the Queue service");
+        else
+            await UpdateLinkAsync(linkEntity, tags, token);
 
         //await _repository.AddAsync(link, token);
 
         //return link.Id;
 
-        return link.Id;
+        return linkEntity.Id;
+    }
+
+    private async Task UpdateLinkAsync(LinkEntity linkEntity, string[]? tags = default, CancellationToken token = default)
+    {
+        Guard.Against.Null(linkEntity);
+        Guard.Against.NullOrWhiteSpace(linkEntity.Url);
+        Guard.Against.NullOrWhiteSpace(linkEntity.Title);
+        Guard.Against.NullOrEmpty(linkEntity.SubmittedById);
+
+        if (tags is { Length: > 0 })
+        {
+            tags = tags.Distinct().ToArray();
+
+            var linkTagNames = linkEntity.Tags.Select(t => t.Name).ToArray();
+
+            var existingTagNames = tags.Where(t => linkTagNames.Contains(t)).ToArray();
+            var nonExistingTagNames = tags.Where(t => !linkTagNames.Contains(t)).ToArray();
+
+            // If the tag already exists, then just increment the count
+            foreach (var existingTagName in existingTagNames)
+            {
+                var t = linkEntity.Tags.First(t => t.Name == existingTagName);
+                t.Count++;
+            }
+
+            // If the tag doesn't exist, then add it to the existing tags
+            linkEntity.Tags.AddRange(nonExistingTagNames.Select(LinkTagEntity.Create));
+
+            await _repository.UpdateAsync(linkEntity, token);
+        }
     }
 
     //public async ValueTask<bool> SubmitLinkAsync(SubmitLinkRequest request, CancellationToken token = default)
@@ -372,7 +381,7 @@ public sealed class LinksService : ServiceBase, ILinksService
     //    {
     //        foreach (var tag in link.Tags)
     //        {
-    //            var linkTag = link.Tags.Find(t => t.Name == tag.Name);
+    //            var linkTag = link.Tags.FindAsync(t => t.Name == tag.Name);
 
     //            if (linkTag != null)
     //            {

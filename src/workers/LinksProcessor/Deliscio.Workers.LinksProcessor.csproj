@@ -1,27 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dotnet-Deliscio.Workers.LinksProcessor-6c561a17-0044-43d4-a19c-ffc536c6e507</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..\..</DockerfileContext>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>dotnet-Deliscio.Workers.LinksProcessor-6c561a17-0044-43d4-a19c-ffc536c6e507</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..\..</DockerfileContext>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MassTransit" Version="8.1.1" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="MassTransit" Version="8.1.1" />
+		<PackageReference Include="MassTransit.RabbitMQ" Version="8.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
-    <ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links.Common\Deliscio.Modules.Links.Common.csproj" />
-    <ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links.MediatR\Deliscio.Modules.Links.MediatR.csproj" />
-    <ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
-    <ProjectReference Include="..\..\modules\QueuedLink\Common\Deliscio.Modules.QueuedLinks.Common.csproj" />
-    <ProjectReference Include="..\..\modules\QueuedLink\MassTransit\Deliscio.Modules.QueuedLinks.MassTransit.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
+		<ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links.Common\Deliscio.Modules.Links.Common.csproj" />
+		<ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links.MediatR\Deliscio.Modules.Links.MediatR.csproj" />
+		<ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
+		<ProjectReference Include="..\..\modules\QueuedLink\Common\Deliscio.Modules.QueuedLinks.Common.csproj" />
+		<ProjectReference Include="..\..\modules\QueuedLink\MassTransit\Deliscio.Modules.QueuedLinks.MassTransit.csproj" />
+	</ItemGroup>
+	<Target Name="GitVersion" BeforeTargets="BeforeBuild">
+		<Exec Command="dotnet gitversion /output buildserver" />
+	</Target>
 </Project>

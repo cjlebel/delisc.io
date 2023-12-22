@@ -1,19 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Common\Interfaces\" />
-    <Folder Include="Common\Models\" />
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Common\Interfaces\" />
+		<Folder Include="Common\Models\" />
+		<Folder Include="Interfaces\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
+	</ItemGroup>
+	<Target Name="GitVersion" BeforeTargets="BeforeBuild">
+		<Exec Command="dotnet gitversion /output buildserver" />
+	</Target>
 </Project>
