@@ -408,3 +408,5 @@ FodyWeavers.xsd
 /.idea/
 /tests/functional/apis/webapis/Deliscio.Tests.Functional.Apis.WebApis/appsettings.Development.json
 /tests/functional/apis/webapis/Deliscio.Tests.Functional.Apis.WebApis/appsettings.json
+/tests/integration/Deliscio.Tests.Integration/appsettings.json
+/tests/functional/web/Deliscio.Tests.Functional.Web.Mvc/appsettings.json
