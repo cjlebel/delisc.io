@@ -5,8 +5,10 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Deliscio.Apis.WebApi.Common.Requests;
+using Deliscio.Core.Data.Mongo;
 using Deliscio.Modules.BackLog;
 using Deliscio.Modules.BackLog.Models;
+using Microsoft.Extensions.Options;
 
 namespace Deliscio.Tools.CsvImporter;
 
@@ -24,7 +26,13 @@ internal partial class Program
         var connectionString = "mongodb://mongo:g%3F7%3CVd%3E9v4%3BZKk%3DJ@localhost:27018";
         var dbName = "deliscio";
 
-        var service = new BacklogService(connectionString, dbName);
+        IOptions<MongoDbOptions> options = Options.Create(new MongoDbOptions
+        {
+            ConnectionString = connectionString,
+            DatabaseName = dbName
+        });
+
+        var service = new BacklogService(options);
 
         await AddBacklogItems(service, userId);
 

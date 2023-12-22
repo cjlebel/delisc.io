@@ -1,27 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Models\LinksQueueSettingsOptions.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Models\LinksQueueSettingsOptions.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MassTransit" Version="8.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="MassTransit" Version="8.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Deliscio.Modules.QueuedLinks.Common.csproj" />
-    <ProjectReference Include="..\QueuedLinks\Deliscio.Modules.QueuedLinks.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Common\Deliscio.Modules.QueuedLinks.Common.csproj" />
+		<ProjectReference Include="..\QueuedLinks\Deliscio.Modules.QueuedLinks.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<Folder Include="Models\" />
+	</ItemGroup>
+	<Target Name="GitVersion" BeforeTargets="BeforeBuild">
+		<Exec Command="dotnet gitversion /output buildserver" />
+	</Target>
 </Project>

@@ -1,11 +1,12 @@
 using Ardalis.GuardClauses;
 using Deliscio.Core.Data.Mongo;
+using Deliscio.Core.Data.Mongo.Interfaces;
 using Deliscio.Modules.UserLinks.Data.Entities;
 using Deliscio.Modules.UserLinks.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace Deliscio.Modules.Links.Data.Mongo;
+namespace Deliscio.Modules.UserLinks.Data.Mongo;
 
 /// <summary>
 /// Responsible for interacting with the MongoDb database for the Links module
@@ -15,9 +16,7 @@ public sealed class UserLinksRepository : MongoRepository<UserLinkEntity>, IUser
     #region - Constructors -
     public UserLinksRepository(IOptions<MongoDbOptions> options) : base(options) { }
 
-    public UserLinksRepository(string connectionString, string databaseName) : base(connectionString, databaseName) { }
-
-    public UserLinksRepository(MongoDbContext<UserLinkEntity> context) : base(context) { }
+    //public UserLinksRepository(IMongoDbClient client) : base(client) { }
     #endregion
 
     #region - Links -
@@ -37,7 +36,7 @@ public sealed class UserLinksRepository : MongoRepository<UserLinkEntity>, IUser
         Guard.Against.NullOrEmpty(userId);
         Guard.Against.NullOrEmpty(linkId);
 
-        return await FirstOrDefault(x => x.UserId == userId && x.Id == linkId, token);
+        return await FirstOrDefaultAsync(x => x.UserId == userId && x.Id == linkId, token);
     }
 
     /// <summary>
@@ -78,7 +77,7 @@ public sealed class UserLinksRepository : MongoRepository<UserLinkEntity>, IUser
     //{
     //    Guard.Against.NullOrEmpty(url);
 
-    //    return await FirstOrDefault(x => x.Url == url, token);
+    //    return await FirstOrDefaultAsync(x => x.Url == url, token);
     //}
 
     //public async Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> GetByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)

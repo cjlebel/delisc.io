@@ -13,9 +13,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AspNetCore.Identity.Mongo" Version="8.3.3" />
 		<PackageReference Include="Carter" Version="7.2.0" />
-		<PackageReference Include="MassTransit.Abstractions" Version="8.1.0" />
-		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.10.0.77988">
+		<PackageReference Include="MassTransit.Abstractions" Version="8.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.12.0.78982">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -25,8 +27,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\..\modules\Authentication\Deliscio.Modules.Authentication\Deliscio.Modules.Authentication.csproj" />
 	  <ProjectReference Include="..\..\..\modules\Links\Deliscio.Modules.Links.Common\Deliscio.Modules.Links.Common.csproj" />
 	  <ProjectReference Include="..\..\..\modules\UserLinks\Common\Deliscio.Modules.UserLinks.Common.csproj" />
+	  <ProjectReference Include="..\..\..\modules\UserProfiles\Deliscio.Modules.UserProfiles\Deliscio.Modules.UserProfiles.csproj" />
 	</ItemGroup>
 
 </Project>

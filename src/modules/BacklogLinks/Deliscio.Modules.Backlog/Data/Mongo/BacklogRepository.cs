@@ -1,4 +1,5 @@
 using Deliscio.Core.Data.Mongo;
+using Deliscio.Core.Data.Mongo.Interfaces;
 using Deliscio.Modules.BackLog.Data.Entities;
 using Deliscio.Modules.BackLog.Interfaces;
 
@@ -9,15 +10,13 @@ using MongoDB.Driver;
 
 namespace Deliscio.Modules.BackLog.Data.Mongo;
 
-public sealed class BacklogRepository : MongoRepository<BacklogItemEntity>, IBacklogRepository
+internal sealed class BacklogRepository : MongoRepository<BacklogItemEntity>, IBacklogRepository
 {
     #region - Constructors -
 
-    public BacklogRepository(IOptions<MongoDbOptions> options, ILogger? logger) : base(options) { }
+    public BacklogRepository(IOptions<MongoDbOptions> options) : base(options) { }
 
-    public BacklogRepository(string connectionString, string databaseName) : base(connectionString, databaseName) { }
-
-    public BacklogRepository(MongoDbContext<BacklogItemEntity> context) : base(context) { }
+    //public BacklogRepository(IMongoDbClient client) : base(client) { }
 
     #endregion
 

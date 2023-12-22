@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using Ardalis.GuardClauses;
 using Deliscio.Core.Data.Interfaces;
+using Deliscio.Core.Data.Mongo.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Structurizr.Annotations;
@@ -19,23 +20,20 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     protected IMongoCollection<TDocument> Collection;
 
     #region - Constructors -
+
+    //protected MongoRepository(IMongoDbClient client)
+    //{
+    //    _context = new MongoDbContext<TDocument>(client);
+    //    PopulateCollection();
+    //}
+
     protected MongoRepository(IOptions<MongoDbOptions> options)
     {
         _context = new MongoDbContext<TDocument>(options);
         PopulateCollection();
     }
 
-    protected MongoRepository(string connectionString, string databaseName)
-    {
-        _context = new MongoDbContext<TDocument>(connectionString, databaseName);
-        PopulateCollection();
-    }
 
-    protected MongoRepository(MongoDbContext<TDocument> context)
-    {
-        _context = context;
-        PopulateCollection();
-    }
     #endregion
 
     public void Add(TDocument entity)
@@ -77,7 +75,7 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
         {
             try
             {
-                await Collection.InsertManyAsync(entities, new InsertManyOptions() { }, cancellationToken: token);
+                await Collection.InsertManyAsync(entities, new InsertManyOptions(), cancellationToken: token);
             }
             catch (Exception e)
             {
@@ -153,12 +151,10 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     /// <exception cref="System.ArgumentException">ids</exception>
     public IEnumerable<TDocument> Get(IEnumerable<Guid> ids)
     {
-        var enumerable = ids?.ToArray() ?? Array.Empty<Guid>();
-
-        if (!enumerable.Any())
+        if (!ids.TryGetNonEnumeratedCount(out var count) || count == 0)
             throw new ArgumentException(EXCEPTION_ID_CANT_BE_EMPTY, nameof(ids));
 
-        var filter = Builders<TDocument>.Filter.In("_id", enumerable);
+        var filter = Builders<TDocument>.Filter.In("_id", ids.ToArray());
 
         var cursor = Collection.Find(filter, null);
 
@@ -175,12 +171,10 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     /// <exception cref="System.ArgumentException">id</exception>
     public async Task<TDocument?> GetAsync(Guid id, CancellationToken token = default)
     {
-        if (id == Guid.Empty)
-        {
-            return await Task.FromException<TDocument>(new ArgumentException(EXCEPTION_ID_CANT_BE_EMPTY, nameof(id)));
-        }
+        Guard.Against.NullOrEmpty(id, message: EXCEPTION_ID_CANT_BE_EMPTY);
 
         var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, id);
+
         return await Collection.Find(filter)
             .SingleOrDefaultAsync(token);
     }
@@ -194,14 +188,10 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     /// <exception cref="System.ArgumentException">ids</exception>
     public async Task<IEnumerable<TDocument>> GetAsync(IEnumerable<Guid> ids, CancellationToken token = default)
     {
-        var enumerable = ids?.ToArray() ?? Array.Empty<Guid>();
-
-        if (!enumerable.Any())
-        {
+        if (!ids.TryGetNonEnumeratedCount(out var count) || count == 0)
             return await Task.FromException<IEnumerable<TDocument>>(new ArgumentException(EXCEPTION_ID_CANT_BE_EMPTY, nameof(ids)));
-        }
 
-        var filter = Builders<TDocument>.Filter.In("_id", enumerable);
+        var filter = Builders<TDocument>.Filter.In("_id", ids.ToArray());
 
         var cursor = await Collection.FindAsync(filter, null, token);
 
@@ -215,7 +205,7 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
         return await FindAsync(_ => true, pageNo, pageSize, token);
     }
 
-    public async Task<TDocument?> FirstOrDefault(Expression<Func<TDocument, bool>> predicate, CancellationToken token = default)
+    public async Task<TDocument?> FirstOrDefaultAsync(Expression<Func<TDocument, bool>> predicate, CancellationToken token = default)
     {
         var filter = Builders<TDocument>.Filter.Where(predicate);
 

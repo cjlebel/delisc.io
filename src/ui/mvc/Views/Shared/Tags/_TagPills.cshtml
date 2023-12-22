@@ -1,0 +1,16 @@
+@using Deliscio.Web.Mvc.Models.Tags
+@model TagsModel
+
+@{
+    var tags = Model.Tags?.ToList() ?? new List<TagModel>();
+}
+
+@if (tags.Any())
+{
+    <span class="tag-pills">
+        @foreach (var tag in tags)
+        {
+            await Html.RenderPartialAsync("_TagPill.cshtml", tag);
+        }
+    </span>
+}

@@ -12,11 +12,11 @@ namespace Deliscio.Tests.Unit.Modules.QueuedLinks;
 
 public class QueuedLinksServiceTests
 {
-    private QueuedLinksService _testClass;
-    private Mock<IVerifyProcessor> _verifier;
-    private Mock<IHarvesterProcessor> _harvester;
-    private Mock<ITaggerProcessor> _tagger;
-    private Mock<ILogger<QueuedLinksService>> _logger;
+    private readonly QueuedLinksService _testClass;
+    private readonly Mock<IVerifyProcessor> _verifier;
+    private readonly Mock<IHarvesterProcessor> _harvester;
+    private readonly Mock<ITaggerProcessor> _tagger;
+    private readonly Mock<ILogger<QueuedLinksService>> _logger;
 
     public QueuedLinksServiceTests()
     {
@@ -68,9 +68,9 @@ public class QueuedLinksServiceTests
         var link = new QueuedLink();
         var token = CancellationToken.None;
 
-        _harvester.Setup(mock => mock.ExecuteAsync(It.IsAny<QueuedLink>(), It.IsAny<CancellationToken>())).Returns(new ValueTask<(bool IsSuccess, string Message, QueuedLink Link)>());
-        _tagger.Setup(mock => mock.ExecuteAsync(It.IsAny<QueuedLink>(), It.IsAny<CancellationToken>())).Returns(new ValueTask<(bool IsSuccess, string Message, QueuedLink Link)>());
-        _verifier.Setup(mock => mock.ExecuteAsync(It.IsAny<QueuedLink>(), It.IsAny<CancellationToken>())).Returns(new ValueTask<(bool IsSuccess, string Message, QueuedLink Link)>());
+        _harvester.Setup(mock => mock.ExecuteAsync(It.IsAny<QueuedLink>(), It.IsAny<CancellationToken>())).Returns(new ValueTask<(bool IsSuccess, string Message, QueuedLink? Link)>());
+        _tagger.Setup(mock => mock.ExecuteAsync(It.IsAny<QueuedLink>(), It.IsAny<CancellationToken>())).Returns(new ValueTask<(bool IsSuccess, string Message, QueuedLink? Link)>());
+        _verifier.Setup(mock => mock.ExecuteAsync(It.IsAny<QueuedLink>(), It.IsAny<CancellationToken>())).Returns(new ValueTask<(bool IsSuccess, string Message, QueuedLink? Link)>());
 
         // Act
         var result = await _testClass.ProcessNewLinkAsync(link, token);

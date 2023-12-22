@@ -38,7 +38,7 @@ public interface IRepositoryWithTypedId<T, TId> where T : IEntityWithTypedId<TId
 
     Task<(IEnumerable<T> Results, int TotalPages, int TotalCount)> GetAsync(int pageNo, int pageSize, CancellationToken token = default);
 
-    Task<T?> FirstOrDefault(Expression<Func<T, bool>> predicate, CancellationToken token = default);
+    Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken token = default);
 
 
     #region - CRUD -

@@ -8,7 +8,7 @@ namespace Deliscio.Modules.Links.MediatR.Commands;
 /// </summary>
 public sealed record AddLinkCommand : IRequest<Guid>
 {
-    public Link Link { get; set; }
+    public Link Link { get; }
 
     public AddLinkCommand(Link link)
     {

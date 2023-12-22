@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 namespace Deliscio.Apis.WebApi.Managers;
 
 /// <summary>
-/// Facilitates the management of a User's Links between the API and the UserLinks module.
+/// Facilitates the management of a AuthUser's Links between the API and the UserLinks module.
 /// Although in most cases this may be/seem redundant, there could be extra logic that the API needs,
 /// which would be handled here instead of in the APIs themselves (biz logic does not belong in APIs or Controllers).
 ///
@@ -24,7 +24,6 @@ namespace Deliscio.Apis.WebApi.Managers;
 public sealed class UserLinksManager : ManagerBase<UserLinksManager>, IUserLinksManager
 {
     private readonly IBusControl _bus;
-    private readonly ILogger<UserLinksManager> _logger;
     private readonly IMediator _mediator;
 
     public UserLinksManager(IMediator mediator, IBusControl bus, ILogger<UserLinksManager> logger) : base(bus, logger)
@@ -35,11 +34,10 @@ public sealed class UserLinksManager : ManagerBase<UserLinksManager>, IUserLinks
 
         _bus = bus;
         _mediator = mediator;
-        _logger = logger;
     }
 
     /// <summary>
-    /// Adds a Link to the User's collection of Links.
+    /// Adds a Link to the AuthUser's collection of Links.
     /// </summary>
     /// <param name="userId">The id of the user to associate the link to</param>
     /// <param name="linkId">The id of the Link itself (not to be confused with the UserLink's Id).</param>
@@ -67,7 +65,7 @@ public sealed class UserLinksManager : ManagerBase<UserLinksManager>, IUserLinks
 
         var query = new GetUserLinkByIdQuery(userId, linkId);
 
-        // TODO: Get Link from central repo and merge their details with User's Link
+        // TODO: Get Link from central repo and merge their details with AuthUser's Link
         // MergeLinks
         return _mediator.Send(query, token);
     }
@@ -95,7 +93,7 @@ public sealed class UserLinksManager : ManagerBase<UserLinksManager>, IUserLinks
     }
 
     /// <summary>
-    /// Merges the User's Links with the original links, using the User's version of it's details if they exist.
+    /// Merges the AuthUser's Links with the original links, using the AuthUser's version of it's details if they exist.
     /// </summary>
     /// <param name="userLinks">A collection of links that belong to the user</param>
     /// <param name="baseLinks">A collection of the original links (as LinkItems)</param>
