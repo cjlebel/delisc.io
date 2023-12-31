@@ -14,13 +14,22 @@ public class TagCloudViewComponent : ViewComponent
         _mediator = mediator;
     }
 
-    public async Task<IViewComponentResult> InvokeAsync(string[] tags, string title = "", int count = 50)
+    public async Task<IViewComponentResult> InvokeAsync(string title = "", int count = 50, string[]? tags = default)
     {
-        var command = new GetLinksRelatedTagsQuery(new string[] { }, count: count);
+        var q1 = Request.Query["t"];
+        var q2 = Request.Query["d"];
 
-        var newTags = await _mediator.Send(command);
+        // Querystring takes precedence over the tags parameter. The results need to match the url
+        if (!string.IsNullOrWhiteSpace(q1))
+            tags = q1.ToString().Split(',');
 
-        var model = new TagsModel(newTags, title);
+        tags ??= Array.Empty<string>();
+
+        var command = new GetRelatedTagsByTagsQuery(tags, count: count);
+
+        var results = await _mediator.Send(command);
+
+        var model = new TagsModel(results, title, tags);
 
         return View(model);
     }

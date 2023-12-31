@@ -3,11 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Delisc.io</title>
-    
+    <title>@ViewBag.PageTitle</title>
+    <meta name="description" content="@ViewBag.PageDescription"/>
+
     @if (!string.IsNullOrWhiteSpace(ViewBag.CanonicalUrl))
     {
-        <link rel="canonical" href="@ViewBag.CanonicalUrl" />
+        var canonicalUrl = Html.Raw(ViewBag.CanonicalUrl);
+
+        <link rel="canonical" href="@canonicalUrl" />
 
         @if (ViewBag.AlternateUrls != null && ViewBag.AlternateUrls.Any())
         {

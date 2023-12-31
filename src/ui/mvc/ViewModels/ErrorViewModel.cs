@@ -1,6 +1,6 @@
-namespace Deliscio.Web.Mvc.Models;
+namespace Deliscio.Web.Mvc.ViewModels;
 
-public class ErrorViewModel
+public record ErrorViewModel : BasePageViewModel
 {
     public string? RequestId { get; set; }
 

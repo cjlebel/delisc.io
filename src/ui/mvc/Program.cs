@@ -7,6 +7,8 @@ using Deliscio.Modules.Authentication.Common.Interfaces;
 using Deliscio.Modules.Authentication.Common.Models;
 using Deliscio.Modules.Authentication.MediatR.Commands;
 using Deliscio.Modules.Authentication.MediatR.Commands.Handlers;
+using Deliscio.Modules.Links.Data.Mongo;
+using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Web.Mvc.Startups;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -113,6 +115,8 @@ public class Program
 
         //builder.Services.AddScoped<IRequestHandler<RegisterCommand, (bool IsSuccess, string Message, string[] ErrorMessages)>, RegisterCommandHandler>();
         //builder.Services.AddScoped<IRequestHandler<SignInCommand, (bool IsSuccess, string Message, AuthUser? User)>, SignInCommandHandler>();
+
+
 
         // Links
         builder.ConfigureLinksDependencies();

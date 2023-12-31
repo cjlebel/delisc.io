@@ -124,6 +124,11 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
         return relatedTags.OrderByDescending(t => t.Count).ThenBy(t => t.Name);
     }
 
+    public Task<IEnumerable<LinkTagEntity>> GetRelatedTagsByDomainAsync(string domain, int count, CancellationToken token = default)
+    {
+        throw new NotImplementedException();
+    }
+
     #endregion
 
     #region - Tags -

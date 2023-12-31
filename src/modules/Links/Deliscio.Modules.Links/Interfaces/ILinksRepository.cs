@@ -28,6 +28,8 @@ public interface ILinksRepository : IRepository<LinkEntity>
 
     Task<IEnumerable<LinkTagEntity>> GetRelatedTagsAsync(string[] tags, int count, CancellationToken token = default);
 
+    Task<IEnumerable<LinkTagEntity>> GetRelatedTagsByDomainAsync(string domain, int count, CancellationToken token = default);
+
     /// <summary>
     /// Removes an occurrence of the tag from the Tag collection that belongs to Link with the id.<br />
     /// </summary>

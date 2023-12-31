@@ -25,10 +25,19 @@ public interface ILinksService
     /// Gets a collection of tags that are related to the ones that are passed in.
     /// </summary>
     /// <param name="tags"></param>
-    /// <param name="count"></param>
+    /// <param name="count">The number of tags to return</param>
     /// <param name="token"></param>
     /// <returns></returns>
     Task<LinkTag[]> GetRelatedTagsAsync(string[] tags, int? count = default, CancellationToken token = default);
+
+    /// <summary>
+    /// Gets a collection of tags for all links that belong to the same domain.
+    /// </summary>
+    /// <param name="domain">The domain to use for retrieving the collection of tags</param>
+    /// <param name="count">The number of tags to return</param>
+    /// <param name="token"></param>
+    /// <returns></returns>
+    Task<LinkTag[]> GetRelatedTagsByDomainAsync(string domain, int? count = default, CancellationToken token = default);
 
     Task<Guid> SubmitLinkAsync(string url, Guid submittedByUserId, string[]? tags = default, CancellationToken token = default);
 }

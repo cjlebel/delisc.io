@@ -1,22 +1,13 @@
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Deliscio.Web.Mvc.Controllers;
 public class BaseController<T> : Controller
 {
-    protected IMediator? MediatR;
-
     protected ILogger<T> Logger { get; }
 
     protected BaseController(ILogger<T> logger)
     {
         Logger = logger;
-    }
-
-    protected BaseController(IMediator mediator, ILogger<T> logger)
-    {
-        Logger = logger;
-        MediatR = mediator;
     }
 
     /// <summary>
