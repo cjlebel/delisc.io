@@ -13579,6 +13579,12 @@ header .navbar {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   transition: transform 0.3s ease, box-shadow 0.3s ease, -webkit-transform 0.3s ease, -webkit-box-shadow 0.3s ease; /* Add transitions for smooth animation */
 }
+@media (max-width: 1200px) {
+  .link-card {
+    min-width: 32%;
+    max-width: 32%;
+  }
+}
 @media (max-width: 992px) {
   .link-card {
     min-width: 48%;
@@ -13632,6 +13638,8 @@ header .navbar {
   font-size: 1.25rem;
   font-weight: 900;
   margin-bottom: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .link-card .link-card-body .link-card-description {
   color: #2d333b;

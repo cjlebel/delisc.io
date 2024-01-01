@@ -32,9 +32,9 @@
 
     @{ await Html.RenderPartialAsync("Navigation/_Breadcrumbs"); }
 
-<main class="container-fluid mx-2">
+    <div class="container d-flex">
     @RenderBody()
-</main>
+    </div>
 
     @await RenderSectionAsync("Scripts", required: false)
     @* <script src="~/js/Pager.bundle.js"></script> *@
