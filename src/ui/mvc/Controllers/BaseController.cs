@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace Deliscio.Web.Mvc.Controllers;
 public class BaseController<T> : Controller
 {
-    protected ILogger<T> Logger { get; }
+    protected ILogger<T>? Logger { get; }
 
-    protected BaseController(ILogger<T> logger)
+    protected BaseController(ILogger<T>? logger)
     {
         Logger = logger;
     }

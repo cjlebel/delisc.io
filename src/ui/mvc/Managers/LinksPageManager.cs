@@ -27,14 +27,9 @@ public interface ILinksPageManager
 
 public class LinksPageManager : BasePageManager, ILinksPageManager
 {
-    private readonly ILogger<LinksPageManager> _logger;
-
     public int DefaultPageSize => 50;
 
-    public LinksPageManager(IMediator mediator, ILogger<LinksPageManager> logger) : base(mediator)
-    {
-        _logger = logger;
-    }
+    public LinksPageManager(IMediator mediator, ILogger<LinksPageManager>? logger) : base(mediator, logger) { }
 
     public async Task<LinksPageViewModel?> GetLinksPageViewModelAsync(int? pageNo = 1, int? skip = 0, string? tags = default, CancellationToken token = default)
     {
@@ -68,7 +63,7 @@ public class LinksPageManager : BasePageManager, ILinksPageManager
             PageDescription = "Links to useful resources",
             CanonicalUrl = $"https://deliscio.com/links{queryString}",
 
-            Links = results,
+            Results = results,
             Tags = tagsArr!,
         };
 

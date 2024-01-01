@@ -5,7 +5,7 @@
     ViewBag.PageDescription = Model.PageDescription;
     ViewBag.CanonicalUrl = Model.CanonicalUrl;
 
-    var links = Model.Links;
+    var links = Model.Results;
 }
 
 <div class="d-flex flex-grow-1 me-4">
@@ -13,7 +13,12 @@
         @{
             await Html.RenderPartialAsync("Links/_LinkCards", links.Results);
         }
-        <div id="pager-container" data-pageno="@links.PageNumber" data-size="@links.PageSize" data-pages="@links.TotalPages" data-results="@links.TotalResults" data-url="/links"></div>
+        <div id="pager-container" 
+             data-pageno="@links.PageNumber" 
+             data-size="@links.PageSize" 
+             data-pages="@links.TotalPages" 
+             data-results="@links.TotalResults" 
+             data-url="/links"></div>
     </div>
     <div class="flex-shrink-0 pe-4" style="width: 30%; max-width: 400px">
 

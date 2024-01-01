@@ -12,19 +12,14 @@ public interface IHomePageManager
 
 public class HomePagePageManager : BasePageManager, IHomePageManager
 {
-    private readonly ILogger<HomePagePageManager> _logger;
-
     private readonly int _defaultPageSize;
 
-    public HomePagePageManager(IMediator mediator, ILogger<HomePagePageManager> logger) : base(mediator)
+    public HomePagePageManager(IMediator mediator, ILogger<HomePagePageManager>? logger) : base(mediator, logger)
     {
         Guard.Against.Null(mediator);
-        Guard.Against.Null(logger);
 
         // This can come from a settings file
         _defaultPageSize = 50;
-
-        _logger = logger;
     }
 
     /// <summary>
@@ -45,7 +40,7 @@ public class HomePagePageManager : BasePageManager, IHomePageManager
             PageTitle = "Deliscio - Home",
             PageDescription = "Deliscio - Home",
 
-            Links = results
+            Results = results
         };
 
         return model;

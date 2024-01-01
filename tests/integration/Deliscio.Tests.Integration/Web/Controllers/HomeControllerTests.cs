@@ -31,42 +31,30 @@ public class HomeControllerTests : BaseControllerTests
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
 
+        // ViewData
+        Assert.NotNull(viewResult.ViewData);
+        Assert.NotNull(viewResult.ViewData.Values);
+        Assert.Equal(1, viewResult.ViewData.Values.Count);
+
+        // Breadcrumbs
+        var breadCrumbs = viewResult.ViewData["Breadcrumbs"] as Dictionary<string, string>;
+        Assert.NotNull(breadCrumbs);
+        Assert.Single(breadCrumbs);
+        Assert.Equal("Home", breadCrumbs.Keys.First());
+        Assert.Equal("/", breadCrumbs.Values.First());
+
+        // Model
         var model = Assert.IsAssignableFrom<HomePageViewModel>(viewResult.Model);
-
         Assert.NotNull(model);
+        Assert.NotEqual(string.Empty, model.PageDescription);
+        Assert.NotEqual(string.Empty, model.PageTitle);
 
-        var links = model.Links;
+        var links = model.Results;
 
         Assert.Equal(1, links.PageNumber);
         Assert.Equal(50, links.PageSize);
         Assert.NotNull(links.Results);
         Assert.True(links.Results.Count <= 50);
-        Assert.True(links.TotalResults > 50);
-    }
-
-    [Theory]
-    [InlineData(1, 50)]
-    [InlineData(2, 13)]
-    [InlineData(10, 99)]
-    public async Task HomeController_Index_With_PageNo_And_PageSize_Returns_ViewModel(int pageNo, int pageSize)
-    {
-        // Arrange
-        // Act
-        var result = await _controller.Index();
-
-        // Assert
-        var viewResult = Assert.IsType<ViewResult>(result);
-
-        var model = Assert.IsAssignableFrom<HomePageViewModel>(viewResult.Model);
-
-        Assert.NotNull(model);
-
-        var links = model.Links;
-
-        Assert.Equal(pageNo, links.PageNumber);
-        Assert.Equal(pageSize, links.PageSize);
-        Assert.NotNull(links.Results);
-        Assert.True(links.Results.Count <= pageSize);
         Assert.True(links.TotalResults > 50);
     }
 }

@@ -16,7 +16,6 @@ public class HomeController : BaseController<HomeController>
     public HomeController(IHomePageManager pageManager, ILogger<HomeController> logger) : base(logger)
     {
         Guard.Against.Null(pageManager);
-        Guard.Against.Null(logger);
 
         _pageManager = pageManager;
     }
