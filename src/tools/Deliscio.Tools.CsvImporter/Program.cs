@@ -51,11 +51,11 @@ internal partial class Program
         const string dataDir = "C:\\Temp\\MyFavs\\Data";
         const string outputDir = "C:\\Temp\\MyFavs\\Data\\Output";
 
-        //var files1 = Directory.GetFiles(dataDir, "all-links.csv");
+        var files1 = Directory.GetFiles(dataDir, "all-links.csv");
         var files2 = Directory.GetFiles(dataDir, "phone-tablet-links.txt");
 
-        // var files = files1.Concat(files2).ToArray();
-        var files = files2;
+        var files = files1.Concat(files2).ToArray();
+        //var files = files2;
 
         if (files.Length > 0)
         {
@@ -67,16 +67,17 @@ internal partial class Program
 
                 var lines = await File.ReadAllLinesAsync(file);
 
-                if (isFile2)
-                {
-                    var x = true;
-                }
+                //if (isFile2)
+                //{
+                //    var x = true;
+                //}
 
                 foreach (var line in lines)
                 {
                     if (!string.IsNullOrWhiteSpace(line) &&
                         !line.Equals("title,url", StringComparison.InvariantCultureIgnoreCase))
                     {
+                        // If it's the second file, then each line starts with a number and a ., so split on the .
                         string[] parts = !isFile2 ? SplitLineRegEx().Split(line) : line.Split(". ");
 
                         //var parts = SplitLineRegEx().Split(line);

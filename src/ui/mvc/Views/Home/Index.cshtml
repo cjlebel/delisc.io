@@ -1,19 +1,28 @@
-@{
-    ViewData["Title"] = "Home Page";
-}
+@using Deliscio.Web.Mvc.ViewComponents.TagCloud
+@model Deliscio.Web.Mvc.ViewModels.Home.HomePageViewModel
 
-@model Deliscio.Core.Models.PagedResults<Deliscio.Modules.Links.Common.Models.LinkItem>
+@{
+    ViewBag.PageTitle = Model.PageTitle;
+    ViewBag.PageDescription = Model.PageDescription;
+    ViewBag.CanonicalUrl = Model.CanonicalUrl;
+
+    var links = Model.Results;
+}
 
 <div class="d-flex flex-grow-1 me-4">
     <div id="links-container">
         @{
-            await Html.RenderPartialAsync("Links/_LinkCards", Model.Results);
+            await Html.RenderPartialAsync("Links/_LinkCards", links.Results);
         }
-        <div id="pager-container" data-pageno="@Model.PageNumber" data-size="@Model.PageSize" data-pages="@Model.TotalPages" data-results="@Model.TotalResults" data-url="/links"></div>
+        <div id="pager-container" 
+             data-pageno="@links.PageNumber" 
+             data-size="@links.PageSize" 
+             data-pages="@links.TotalPages" 
+             data-results="@links.TotalResults" 
+             data-url="/links"></div>
     </div>
     <div class="flex-shrink-0 pe-4" style="width: 30%; max-width: 400px">
-
-       <vc:tag-cloud tags="new string[]{}" count="100"></vc:tag-cloud>
+       <vc:tag-cloud count="100"></vc:tag-cloud>
     </div>
 </div>
 
@@ -43,20 +52,20 @@
 
             const img = card.querySelector("img");
             const dataSrc = img.getAttribute("data-src");
-            const noImage = "./imgs/no-image-found.png";
+            const noImage = '/imgs/no-image-found.png';
 
             let newSrc = noImage;
 
             if (dataSrc) {
                 if (dataSrc.startsWith('http')) {
                     if (dataSrc.indexOf('duckduckgo') >= 0) {
-                        newSrc = './imgs/duckduckgo-logo.jpg';
+                        newSrc = '/imgs/duckduckgo-logo.jpg';
                     }
                     else if (dataSrc.indexOf('google') >= 0) {
-                        newSrc = './imgs/google-logo.jpg';
+                        newSrc = '/imgs/google-logo.jpg';
                     }
                     else if (dataSrc.indexOf('reddit') >= 0) {
-                        newSrc = './imgs/reddit-logo.png';
+                        newSrc = '/imgs/reddit-logo.png';
                     }
                     else {
                         newSrc = dataSrc;

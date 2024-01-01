@@ -77,10 +77,10 @@ public class HarvesterProcessor : IHarvesterProcessor
 
         var ogTitle = WebUtility.HtmlDecode(htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:title']")
             ?.Attributes["content"]
-            ?.Value ?? string.Empty);
+            ?.Value ?? string.Empty).Trim();
 
         var title = WebUtility.HtmlDecode(htmlDocument.DocumentNode.SelectSingleNode("//title")?.InnerText ??
-                                          string.Empty);
+                                          string.Empty).Trim();
 
         if (string.IsNullOrWhiteSpace(title))
         {
@@ -91,12 +91,12 @@ public class HarvesterProcessor : IHarvesterProcessor
         }
 
         var description =
-            htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='description']")?.Attributes["content"]?.Value;
+            htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='description']")?.Attributes["content"]?.Value.Trim();
 
         var ogDescription =
             WebUtility.HtmlDecode(htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:description']")
                 ?.Attributes["content"]
-                ?.Value ?? string.Empty);
+                ?.Value ?? string.Empty).Trim();
 
         if (string.IsNullOrWhiteSpace(description))
         {
@@ -113,11 +113,11 @@ public class HarvesterProcessor : IHarvesterProcessor
             Description = description,
             OgDescription = ogDescription,
 
-            Author = htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='author']")?.Attributes["content"]?.Value ?? string.Empty,
-            CanonicalUrl = htmlDocument.DocumentNode.SelectSingleNode("//link[@rel='canonical']")?.Attributes["href"]?.Value ?? string.Empty,
-            Keywords = htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='keywords']")?.Attributes["content"]?.Value ?? string.Empty,
-            LastUpdate = htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='last-modified']")?.Attributes["content"]?.Value ?? string.Empty,
-            OgImage = htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:image']")?.Attributes["content"]?.Value ?? string.Empty
+            Author = htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='author']")?.Attributes["content"]?.Value.Trim() ?? string.Empty,
+            CanonicalUrl = htmlDocument.DocumentNode.SelectSingleNode("//link[@rel='canonical']")?.Attributes["href"]?.Value.Trim() ?? string.Empty,
+            Keywords = htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='keywords']")?.Attributes["content"]?.Value.Trim() ?? string.Empty,
+            LastUpdate = htmlDocument.DocumentNode.SelectSingleNode("//meta[@name='last-modified']")?.Attributes["content"]?.Value.Trim() ?? string.Empty,
+            OgImage = htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:image']")?.Attributes["content"]?.Value.Trim() ?? string.Empty
         };
 
         var result = (true, "Harvesting Complete", meta);

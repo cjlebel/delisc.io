@@ -114,7 +114,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         Guard.Against.NegativeOrZero(pageNo);
         Guard.Against.NegativeOrZero(pageSize);
 
-        var query = new GetLinksByTagsQuery(tags, pageNo, pageSize);
+        var query = new GetLinksByTagsQuery(pageNo, pageSize, tags);
 
         return await _mediator.Send(query, token);
     }
@@ -138,7 +138,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
     /// <returns></returns>
     public Task<LinkTag[]> GetTagsAsync(string[] tags, int? count = default, CancellationToken token = default)
     {
-        var query = new GetLinksRelatedTagsQuery(tags, count);
+        var query = new GetRelatedTagsByTagsQuery(tags, count);
 
         return _mediator.Send(query, token);
     }

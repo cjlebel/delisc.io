@@ -2,7 +2,7 @@
 @model Deliscio.Modules.Links.Common.Models.LinkItem
 
 @{
-    var linkHref = $"/link/{Model.Id}";
+    var linkHref = $"/links/{Model.Id}";
     var title = Model.Title.Length > 50 ? $"{Model.Title.Substring(0, 47)}..." : Model.Title;
     var description = Model.Description.Length > 100 ?
         $"{Model.Description[..97]}..." : Model.Description;

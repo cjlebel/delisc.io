@@ -16,6 +16,8 @@ using Deliscio.Modules.UserLinks.MediatR.Commands;
 using Deliscio.Modules.UserLinks.MediatR.Queries.Handlers;
 using Deliscio.Modules.UserLinks.MediatR.Queries;
 using Deliscio.Modules.UserLinks;
+using Deliscio.Modules.Links.Data.Mongo;
+using Deliscio.Modules.Links.Interfaces;
 
 namespace Deliscio.Apis.WebApi.Startups;
 
@@ -31,6 +33,7 @@ public static class StartupExtensions
     {
         builder.Services.AddSingleton<ILinksManager, LinksManager>();
         builder.Services.AddSingleton<ILinksService, LinksService>();
+        builder.Services.AddSingleton<ILinksRepository, LinksRepository>();
 
         builder.Services.AddSingleton<IRequestHandler<GetLinkByIdQuery, Link?>, GetsLinkByIdQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinkByUrlQuery, Link?>, GetLinkByUrlQueryHandler>();
@@ -40,7 +43,7 @@ public static class StartupExtensions
         builder.Services.AddSingleton<IRequestHandler<GetLinksByDomainQuery, PagedResults<LinkItem>>, GetLinksByDomainQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinksByTagsQuery, PagedResults<LinkItem>>, GetsLinksByTagsQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinkRelatedLinksQuery, LinkItem[]>, GetLinkRelatedLinksQueryHandler>();
-        builder.Services.AddSingleton<IRequestHandler<GetLinksRelatedTagsQuery, LinkTag[]>, GetLinksRelatedTagsQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetRelatedTagsByTagsQuery, LinkTag[]>, GetRelatedTagsByTagsQueryHandler>();
 
         builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkCommandHandler>();
         builder.Services.AddSingleton<IRequestHandler<SubmitLinkCommand, Guid>, SubmitLinkCommandHandler>();

@@ -12,8 +12,8 @@
     flex-direction: column;
     height: auto;
     margin-bottom: 1rem;
-    min-width: 12%;
-    max-width: 12%;
+    min-width: 32%;
+    max-width: 32%;
 
     @media (max-width: $xl) {
         min-width: 32%;
@@ -62,6 +62,8 @@
             font-size: 1.25rem;
             font-weight: 900;
             margin-bottom: 0.5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .link-card-description {

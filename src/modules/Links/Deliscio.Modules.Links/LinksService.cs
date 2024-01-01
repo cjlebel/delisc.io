@@ -286,6 +286,19 @@ public sealed class LinksService : ServiceBase, ILinksService
         return Mapper.Map(result).ToArray();
     }
 
+    public async Task<LinkTag[]> GetRelatedTagsByDomainAsync(string domain, int? count = default, CancellationToken token = default)
+    {
+        Guard.Against.NullOrWhiteSpace(domain);
+
+        var newCount = count ?? _defaultTagsCount;
+
+        Guard.Against.NegativeOrZero(newCount);
+
+        var result = await _repository.GetRelatedTagsByDomainAsync(domain, newCount, token);
+
+        return Mapper.Map(result).ToArray();
+    }
+
     /// <summary>
     /// Helper method to retrieve links from the repository
     /// </summary>

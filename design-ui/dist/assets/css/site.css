@@ -13572,8 +13572,8 @@ header .navbar {
           flex-direction: column;
   height: auto;
   margin-bottom: 1rem;
-  min-width: 12%;
-  max-width: 12%;
+  min-width: 32%;
+  max-width: 32%;
   -webkit-transition: -webkit-transform 0.3s ease, -webkit-box-shadow 0.3s ease;
   transition: -webkit-transform 0.3s ease, -webkit-box-shadow 0.3s ease;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -13638,6 +13638,8 @@ header .navbar {
   font-size: 1.25rem;
   font-weight: 900;
   margin-bottom: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .link-card .link-card-body .link-card-description {
   color: #2d333b;

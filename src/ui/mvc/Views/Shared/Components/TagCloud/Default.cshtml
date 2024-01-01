@@ -20,7 +20,7 @@
         var css = $"tag tag-{idx}";
 
         <span class="tag tag-@idx">
-            <a href="@Url.Action("Index", "Home", new { tag = name })" data-count="@tag.Count" tag-weight="@tag.Weight" style="font-size: @fontSize">@tag.Name</a>
+            <a href="@tag.Href" data-count="@tag.Count" tag-weight="@tag.Weight" style="font-size: @fontSize">@tag.Name</a>
         </span>
     }
 </div>
