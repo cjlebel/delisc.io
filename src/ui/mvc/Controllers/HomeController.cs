@@ -44,6 +44,29 @@ public class HomeController : BaseController<HomeController>
         }
     }
 
+    [Route("tags")]
+    public async Task<IActionResult> Tags(string? tags = default, CancellationToken token = default)
+    {
+        try
+        {
+            var model = await _pageManager.GetHomePageViewModelAsync(token);
+
+            var breadCrumbs = new Dictionary<string, string>
+            {
+                { "Home", "/" },
+                { "Tags", "" }
+            };
+
+            ViewBag.BreadCrumbs = breadCrumbs;
+
+            return View(model);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
     public IActionResult Privacy()
     {
         return View();
