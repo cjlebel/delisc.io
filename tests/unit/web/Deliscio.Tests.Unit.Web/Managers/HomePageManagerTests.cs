@@ -66,6 +66,6 @@ public class HomePagePageManagerTests
         Assert.Equal("Deliscio - Home", result.PageTitle);
         Assert.Equal("Deliscio - Home", result.PageDescription);
 
-        Assert.NotNull(result.Links);
+        Assert.NotNull(result.Results);
     }
 }
