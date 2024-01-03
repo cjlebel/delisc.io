@@ -1,0 +1,104 @@
+@use "variables" as *;
+
+// .link-cards-list {
+//     justify-content: space-between;
+// }
+.link-card {
+    background-color: #f4f4f4;
+    border: 1px solid #a0a0a0;
+    border-radius: 0.75rem;
+    color: #adbac7;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    margin-bottom: 1rem;
+    min-width: 32%;
+    max-width: 32%;
+
+    @media (max-width: $xl) {
+        min-width: 32%;
+        max-width: 32%;
+    }
+
+    @media (max-width: $lg) {
+        min-width: 48%;
+        max-width: 48%;
+    }
+
+    @media (max-width: $md) {
+        min-width: 100%;
+        max-width: 100%;
+    }
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add transitions for smooth animation */
+
+    a {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    &:hover {
+        z-index: 999;
+        transform: scale(1.02) translateY(-2px) translateX(-2px); /* Grow the element by 5% and shift it 5 pixels upwards on hover */
+        //box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.1); /* Add a glow effect with a white color */
+    }
+
+    img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .link-card-body {
+        color: #adbac7;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        padding: 0.5em;
+
+        h5 {
+            color: #2d333b;
+            font-size: 1.25rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .link-card-description {
+            color: #2d333b;
+        }
+    }
+
+    .link-card-footer {
+        background-color: #e8e8e8;
+        border-radius: 0 0 10px 10px;
+        font-size: 1rem;
+        height: 2.5em;
+        overflow: hidden;
+        padding: 0.5rem;
+        width: 100%;
+
+        .tag-pills .tag a {
+            font-size: 1em !important;
+        }
+
+        @media (max-width: $lg) {
+            .tag-pills .tag a {
+                font-size: 0.9em !important;
+            }
+        }
+
+        span {
+            //  margin-bottom: 0 !important;
+            //  display: inline-block;
+            //  background-color: #ff0100;
+            //  color: #fff;
+            //  padding: 0.2rem 0.5rem;
+            //  border-radius: 2px;
+            //  font-size: 0.8rem;
+            //  margin-right: 0.5rem;
+        }
+    }
+}

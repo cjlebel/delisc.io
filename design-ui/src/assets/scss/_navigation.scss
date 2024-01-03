@@ -1,0 +1,28 @@
+@use "../../../node_modules/bootstrap/scss/bootstrap";
+header {
+    .navbar {
+        // &.navbar-dark {
+        //     background-color: $primary;
+        // }
+        // &.navbar-light {
+        //     background-color: $white;
+        // }
+
+        background-color: #e3f2fd;
+    }
+}
+
+.breadcrumbs {
+    padding: 1rem 1.5rem;
+
+    a {
+        &.active {
+            background-color: #e3f2fd;
+        }
+
+        &.disabled,
+        &:disabled {
+            color: red;
+        }
+    }
+}

@@ -16,9 +16,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
     #region - Constructors -
     public LinksRepository(IOptions<MongoDbOptions> options) : base(options) { }
 
-    public LinksRepository(string connectionString, string databaseName) : base(connectionString, databaseName) { }
-
-    public LinksRepository(MongoDbContext<LinkEntity> context) : base(context) { }
+    //public LinksRepository(IMongoDbClient client) : base(client) { }
     #endregion
 
     #region - Links
@@ -27,7 +25,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
     {
         Guard.Against.NullOrEmpty(url);
 
-        return await FirstOrDefault(x => x.Url == url, token);
+        return await FirstOrDefaultAsync(x => x.Url == url, token);
     }
 
     public async Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> GetLinksByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
@@ -120,10 +118,15 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
 
         foreach (var relatedTag in relatedTags)
         {
-            relatedTag.Weight = totalCounts > 0m ? (relatedTag.Count / (decimal)totalCounts) : 0m;
+            relatedTag.Weight = totalCounts > 0f ? (relatedTag.Count / (float)totalCounts) : 0f;
         }
 
         return relatedTags.OrderByDescending(t => t.Count).ThenBy(t => t.Name);
+    }
+
+    public Task<IEnumerable<LinkTagEntity>> GetRelatedTagsByDomainAsync(string domain, int count, CancellationToken token = default)
+    {
+        throw new NotImplementedException();
     }
 
     #endregion

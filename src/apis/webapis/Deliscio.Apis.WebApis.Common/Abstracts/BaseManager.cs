@@ -7,13 +7,19 @@ namespace Deliscio.Apis.WebApi.Common.Abstracts;
 
 public abstract class ManagerBase<T>
 {
-    private readonly IBusControl _bus;
-    private readonly ILogger<T> _logger;
+    private readonly IBusControl? _bus;
+
+    protected ILogger<T> Logger { get; }
+
+    protected ManagerBase(ILogger<T> logger)
+    {
+        Logger = logger;
+    }
 
     protected ManagerBase(IBusControl bus, ILogger<T> logger)
     {
         _bus = bus;
-        _logger = logger;
+        Logger = logger;
     }
 
     /// <summary>
@@ -26,6 +32,7 @@ public abstract class ManagerBase<T>
     /// <returns></returns>
     protected async Task Publish<TMessage>(TMessage message, CancellationToken token = default)
     {
+        Guard.Against.Null(_bus, message: "The message bus was not provided");
         Guard.Against.Null(message);
 
         try
@@ -35,19 +42,19 @@ public abstract class ManagerBase<T>
         // Token ran out of time
         catch (OperationCanceledException e)
         {
-            _logger.LogError(e, "Operation was cancelled");
+            Logger.LogError(e, "Operation was cancelled");
             throw;
         }
         // Couldn't reach the queue's endpoint
         catch (UnreachableException e)
         {
-            _logger.LogError(e, "Could not reach the Queue");
+            Logger.LogError(e, "Could not reach the Queue");
             throw;
         }
         // Everything else
         catch (Exception e)
         {
-            _logger.LogError(e, "An error occurred while trying to submit a new link");
+            Logger.LogError(e, "An error occurred while trying to submit a new link");
             throw;
         }
     }

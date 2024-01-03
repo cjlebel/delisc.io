@@ -11,7 +11,7 @@ const USER_AGENT = 'deliscio-web-client';
  * @param id {string}: The id for the link to fetch
  * @returns A LinkItem
  */
-const apiGetLink = async (id: string) => {
+const apiGetLink = async (id: string): Promise<LinkItemResult> => {
    if (!id) throw new Error('Link Id is required');
 
    var data = await fetch(`${API_URL}/link/${id}`, {
@@ -41,7 +41,7 @@ const apiGetLinks = async ({
    count,
    search,
    tags,
-}: GetLinksProps) /*: Promise<ResultsPage<LinkResult>>*/ => {
+}: GetLinksProps): Promise<ResultsPage<LinkResult>> => {
    page = page && page >= 1 ? page : 1;
 
    // Attempt to get the max number of links, from the .env file

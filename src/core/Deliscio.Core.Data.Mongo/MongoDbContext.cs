@@ -1,4 +1,6 @@
+using Ardalis.GuardClauses;
 using Deliscio.Core.Data.Mongo.Attributes;
+using Deliscio.Core.Data.Mongo.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -12,13 +14,20 @@ public class MongoDbContext<TDocument> : IMongoDbContext<TDocument>
     private const string COULD_NOT_GET_CONNSTRING = "Could not retrieve the connection string";
     private const string COULD_NOT_GET_DBNAME = "Could not retrieve the database name";
 
+    public MongoDbContext(IMongoDbClient client)
+    {
+        Guard.Against.Null(client, message: "Could not retrieve the client");
+
+        ////BsonSerializer.RegisterSerializer(new ObjectSerializer(BsonSerializer.LookupDiscriminatorConvention(typeof(object)), GuidRepresentation.Standard));
+        //BsonDefaults.GuidRepresentationMode = GuidRepresentationMode.V3;
+
+        _db = client.Database;
+    }
+
     public MongoDbContext(string connectionString, string databaseName)
     {
-        if (string.IsNullOrWhiteSpace(connectionString))
-            throw new ArgumentNullException(nameof(connectionString), COULD_NOT_GET_CONNSTRING);
-
-        if (string.IsNullOrWhiteSpace(databaseName))
-            throw new ArgumentNullException(nameof(connectionString), COULD_NOT_GET_DBNAME);
+        Guard.Against.NullOrWhiteSpace(connectionString, message: COULD_NOT_GET_CONNSTRING);
+        Guard.Against.NullOrWhiteSpace(databaseName, message: COULD_NOT_GET_DBNAME);
 
         var client = new MongoClient(connectionString);
         _db = client.GetDatabase(databaseName);
@@ -48,6 +57,8 @@ public class MongoDbContext<TDocument> : IMongoDbContext<TDocument>
 
         var optionValue = options.Value;
 
+        //BsonSerializer.RegisterSerializer(new ObjectSerializer(BsonSerializer.LookupDiscriminatorConvention(typeof(object)), GuidRepresentation.Standard));
+        //BsonDefaults.GuidRepresentationMode = GuidRepresentationMode.V3;
 
         var connection = optionValue.ConnectionString;
         var dbName = optionValue.DatabaseName;
@@ -58,6 +69,7 @@ public class MongoDbContext<TDocument> : IMongoDbContext<TDocument>
 
     public IMongoCollection<TDocument> Collection()
     {
+
         var collection = _db.GetCollection<TDocument>(GetCollectionName(typeof(TDocument)));
 
         return collection;

@@ -1,19 +1,15 @@
+using Deliscio.Modules.QueuedLinks.Common.Models;
+using Deliscio.Modules.QueuedLinks.Interfaces;
+using Deliscio.Modules.QueuedLinks.MediatR.Commands;
+using Deliscio.Modules.QueuedLinks.MediatR.Commands.Handlers;
+using Moq;
+
 namespace Deliscio.Tests.Unit.Modules.QueuedLinks.Handlers
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Deliscio.Modules.QueuedLinks.Common.Models;
-    using Deliscio.Modules.QueuedLinks.Interfaces;
-    using Deliscio.Modules.QueuedLinks.MediatR.Commands;
-    using Deliscio.Modules.QueuedLinks.MediatR.Commands.Handlers;
-    using Moq;
-    using Xunit;
-
     public class AddNewLinkQueueCommandHandlerTests
     {
-        private AddNewLinkQueueCommandHandler _testClass;
-        private Mock<IQueuedLinksService> _queueService;
+        private readonly AddNewLinkQueueCommandHandler _testClass;
+        private readonly Mock<IQueuedLinksService> _queueService;
 
         public AddNewLinkQueueCommandHandlerTests()
         {

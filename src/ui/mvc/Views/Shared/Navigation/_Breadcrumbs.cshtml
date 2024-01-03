@@ -1,0 +1,29 @@
+@{
+    var breadcrumbs = ViewBag.BreadCrumbs as Dictionary<string, string>;
+}
+
+<div class="breadcrumbs container-fluid">
+    @if (breadcrumbs is { Count: > 0 })
+    {
+        for(var i = 0; i < breadcrumbs.Count; i++)
+        {
+            var breadcrumb = breadcrumbs.ElementAt(i);
+
+            var text = breadcrumb.Key.Length > 50? breadcrumb.Key.Substring(0, 50) + "..." : breadcrumb.Key;
+
+            if (string.IsNullOrWhiteSpace(breadcrumb.Value) || i == breadcrumbs.Count - 1)
+            {
+                @text
+            }
+            else
+            {
+                <a href="@breadcrumb.Value" class="text-primary" title="@breadcrumb.Value">@text</a>
+            }
+
+            if (i < breadcrumbs.Count - 1)
+            {
+                <span class="mx-1">/</span>
+            }
+        }
+    }
+</div>

@@ -1,0 +1,4538 @@
+<html lang="en">
+    <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delisc.io</title>
+    <link rel="stylesheet" href="/assets/css/site.css" />
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+</head>
+
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Delisc.io</a>
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/tags">Tags</a>
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link disabled"
+                        href="#"
+                        tabindex="-1"
+                        aria-disabled="true"
+                    >
+                        Profile
+                    </a>
+                </li>
+            </ul>
+            <form class="d-flex">
+                <input
+                    class="form-control me-2"
+                    type="search"
+                    placeholder="Search"
+                    aria-label="Search"
+                />
+                <button class="btn btn-outline-success" type="submit">
+                    Search
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="breadcrumbs container-fluid">
+    <a href="/" class="text-primary" title="Home"> Home </a>
+    <a href="/page1.html" class="text-primary" title="Home">Home</a> /
+    <a href="/page2.html" class="text-primary" title="Page 1">Page 1</a> /
+    <a href="/page3.html" class="disabled" title="Page 2" disabled="disabled">
+        Page 2
+    </a>
+    /
+    <a href="/page4.html" class="active" title="Page 4">Page 4</a>
+</div>
+
+
+
+<div class="container d-flex">
+    <main id="link-cards" class="flex-grow-1 me-4 flex-row">
+        <div
+    class="link-cards-list d-flex flex-wrap justify-content-between"
+    style="gap: 10px"
+>
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/000/fff"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link 1's Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <div class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a href="@Model.Href" style="font-size: 1em" title="Tag Name 1">
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/f20597/99bfa3"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 2 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/links/09de2201-414d-4d70-9d6c-f4d55a2f784e">
+        <img
+            src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+            class="card-img-top"
+            alt="SignalR/src/Microsoft.AspNetCore.SignalR.Core/M..."
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">
+                SignalR/src/Microsoft.AspNetCore.SignalR.Core/M...
+            </h5>
+            <p>via : <span>github.com</span></p>
+            <p class="link-card-description">
+                [Archived] Incredibly simple real-time web for ASP.NET Core.
+                Project moved to https://github.com/...
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="microsoft" class="tag tag-1">
+                <a
+                    href="/links?t=microsoft"
+                    style="font-size: 1.7142857"
+                    title="microsoft Tag"
+                >
+                    microsoft
+                </a>
+            </span>
+
+            <span key="git" class="tag tag-2">
+                <a
+                    href="/links?t=git"
+                    style="font-size: 1.7142857"
+                    title="git Tag"
+                >
+                    git
+                </a>
+            </span>
+
+            <span key="github" class="tag tag-3">
+                <a
+                    href="/links?t=github"
+                    style="font-size: 1.7142857"
+                    title="github Tag"
+                >
+                    github
+                </a>
+            </span>
+
+            <span key="version control" class="tag tag-4">
+                <a
+                    href="/links?t=version+control"
+                    style="font-size: 1.7142857"
+                    title="version control Tag"
+                >
+                    version control
+                </a>
+            </span>
+
+            <span key="ci-cd" class="tag tag-5">
+                <a
+                    href="/links?t=ci-cd"
+                    style="font-size: 1.7142857"
+                    title="ci-cd Tag"
+                >
+                    ci-cd
+                </a>
+            </span>
+
+            <span key="csharp" class="tag tag-6">
+                <a
+                    href="/links?t=csharp"
+                    style="font-size: 1.7142857"
+                    title="csharp Tag"
+                >
+                    csharp
+                </a>
+            </span>
+
+            <span key="dotnet" class="tag tag-7">
+                <a
+                    href="/links?t=dotnet"
+                    style="font-size: 1.7142857"
+                    title="dotnet Tag"
+                >
+                    dotnet
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/15b3d6/c91a46"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 4 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/ba7a22/3b2027"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 5 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOre ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/15b3d6/c91a46"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 4 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/f20597/99bfa3"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 2 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/links/09de2201-414d-4d70-9d6c-f4d55a2f784e">
+        <img
+            src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+            class="card-img-top"
+            alt="SignalR/src/Microsoft.AspNetCore.SignalR.Core/M..."
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">
+                SignalR/src/Microsoft.AspNetCore.SignalR.Core/M...
+            </h5>
+            <p>via : <span>github.com</span></p>
+            <p class="link-card-description">
+                [Archived] Incredibly simple real-time web for ASP.NET Core.
+                Project moved to https://github.com/...
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="microsoft" class="tag tag-1">
+                <a
+                    href="/links?t=microsoft"
+                    style="font-size: 1.7142857"
+                    title="microsoft Tag"
+                >
+                    microsoft
+                </a>
+            </span>
+
+            <span key="git" class="tag tag-2">
+                <a
+                    href="/links?t=git"
+                    style="font-size: 1.7142857"
+                    title="git Tag"
+                >
+                    git
+                </a>
+            </span>
+
+            <span key="github" class="tag tag-3">
+                <a
+                    href="/links?t=github"
+                    style="font-size: 1.7142857"
+                    title="github Tag"
+                >
+                    github
+                </a>
+            </span>
+
+            <span key="version control" class="tag tag-4">
+                <a
+                    href="/links?t=version+control"
+                    style="font-size: 1.7142857"
+                    title="version control Tag"
+                >
+                    version control
+                </a>
+            </span>
+
+            <span key="ci-cd" class="tag tag-5">
+                <a
+                    href="/links?t=ci-cd"
+                    style="font-size: 1.7142857"
+                    title="ci-cd Tag"
+                >
+                    ci-cd
+                </a>
+            </span>
+
+            <span key="csharp" class="tag tag-6">
+                <a
+                    href="/links?t=csharp"
+                    style="font-size: 1.7142857"
+                    title="csharp Tag"
+                >
+                    csharp
+                </a>
+            </span>
+
+            <span key="dotnet" class="tag tag-7">
+                <a
+                    href="/links?t=dotnet"
+                    style="font-size: 1.7142857"
+                    title="dotnet Tag"
+                >
+                    dotnet
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/000/fff"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link 1's Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <div class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a href="@Model.Href" style="font-size: 1em" title="Tag Name 1">
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/f20597/99bfa3"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 2 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/links/09de2201-414d-4d70-9d6c-f4d55a2f784e">
+        <img
+            src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+            class="card-img-top"
+            alt="SignalR/src/Microsoft.AspNetCore.SignalR.Core/M..."
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">
+                SignalR/src/Microsoft.AspNetCore.SignalR.Core/M...
+            </h5>
+            <p>via : <span>github.com</span></p>
+            <p class="link-card-description">
+                [Archived] Incredibly simple real-time web for ASP.NET Core.
+                Project moved to https://github.com/...
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="microsoft" class="tag tag-1">
+                <a
+                    href="/links?t=microsoft"
+                    style="font-size: 1.7142857"
+                    title="microsoft Tag"
+                >
+                    microsoft
+                </a>
+            </span>
+
+            <span key="git" class="tag tag-2">
+                <a
+                    href="/links?t=git"
+                    style="font-size: 1.7142857"
+                    title="git Tag"
+                >
+                    git
+                </a>
+            </span>
+
+            <span key="github" class="tag tag-3">
+                <a
+                    href="/links?t=github"
+                    style="font-size: 1.7142857"
+                    title="github Tag"
+                >
+                    github
+                </a>
+            </span>
+
+            <span key="version control" class="tag tag-4">
+                <a
+                    href="/links?t=version+control"
+                    style="font-size: 1.7142857"
+                    title="version control Tag"
+                >
+                    version control
+                </a>
+            </span>
+
+            <span key="ci-cd" class="tag tag-5">
+                <a
+                    href="/links?t=ci-cd"
+                    style="font-size: 1.7142857"
+                    title="ci-cd Tag"
+                >
+                    ci-cd
+                </a>
+            </span>
+
+            <span key="csharp" class="tag tag-6">
+                <a
+                    href="/links?t=csharp"
+                    style="font-size: 1.7142857"
+                    title="csharp Tag"
+                >
+                    csharp
+                </a>
+            </span>
+
+            <span key="dotnet" class="tag tag-7">
+                <a
+                    href="/links?t=dotnet"
+                    style="font-size: 1.7142857"
+                    title="dotnet Tag"
+                >
+                    dotnet
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/15b3d6/c91a46"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 4 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/ba7a22/3b2027"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 5 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOre ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/15b3d6/c91a46"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 4 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/f20597/99bfa3"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 2 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/links/09de2201-414d-4d70-9d6c-f4d55a2f784e">
+        <img
+            src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+            class="card-img-top"
+            alt="SignalR/src/Microsoft.AspNetCore.SignalR.Core/M..."
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">
+                SignalR/src/Microsoft.AspNetCore.SignalR.Core/M...
+            </h5>
+            <p>via : <span>github.com</span></p>
+            <p class="link-card-description">
+                [Archived] Incredibly simple real-time web for ASP.NET Core.
+                Project moved to https://github.com/...
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="microsoft" class="tag tag-1">
+                <a
+                    href="/links?t=microsoft"
+                    style="font-size: 1.7142857"
+                    title="microsoft Tag"
+                >
+                    microsoft
+                </a>
+            </span>
+
+            <span key="git" class="tag tag-2">
+                <a
+                    href="/links?t=git"
+                    style="font-size: 1.7142857"
+                    title="git Tag"
+                >
+                    git
+                </a>
+            </span>
+
+            <span key="github" class="tag tag-3">
+                <a
+                    href="/links?t=github"
+                    style="font-size: 1.7142857"
+                    title="github Tag"
+                >
+                    github
+                </a>
+            </span>
+
+            <span key="version control" class="tag tag-4">
+                <a
+                    href="/links?t=version+control"
+                    style="font-size: 1.7142857"
+                    title="version control Tag"
+                >
+                    version control
+                </a>
+            </span>
+
+            <span key="ci-cd" class="tag tag-5">
+                <a
+                    href="/links?t=ci-cd"
+                    style="font-size: 1.7142857"
+                    title="ci-cd Tag"
+                >
+                    ci-cd
+                </a>
+            </span>
+
+            <span key="csharp" class="tag tag-6">
+                <a
+                    href="/links?t=csharp"
+                    style="font-size: 1.7142857"
+                    title="csharp Tag"
+                >
+                    csharp
+                </a>
+            </span>
+
+            <span key="dotnet" class="tag tag-7">
+                <a
+                    href="/links?t=dotnet"
+                    style="font-size: 1.7142857"
+                    title="dotnet Tag"
+                >
+                    dotnet
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/000/fff"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link 1's Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <div class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a href="@Model.Href" style="font-size: 1em" title="Tag Name 1">
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/f20597/99bfa3"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 2 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/links/09de2201-414d-4d70-9d6c-f4d55a2f784e">
+        <img
+            src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+            class="card-img-top"
+            alt="SignalR/src/Microsoft.AspNetCore.SignalR.Core/M..."
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">
+                SignalR/src/Microsoft.AspNetCore.SignalR.Core/M...
+            </h5>
+            <p>via : <span>github.com</span></p>
+            <p class="link-card-description">
+                [Archived] Incredibly simple real-time web for ASP.NET Core.
+                Project moved to https://github.com/...
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="microsoft" class="tag tag-1">
+                <a
+                    href="/links?t=microsoft"
+                    style="font-size: 1.7142857"
+                    title="microsoft Tag"
+                >
+                    microsoft
+                </a>
+            </span>
+
+            <span key="git" class="tag tag-2">
+                <a
+                    href="/links?t=git"
+                    style="font-size: 1.7142857"
+                    title="git Tag"
+                >
+                    git
+                </a>
+            </span>
+
+            <span key="github" class="tag tag-3">
+                <a
+                    href="/links?t=github"
+                    style="font-size: 1.7142857"
+                    title="github Tag"
+                >
+                    github
+                </a>
+            </span>
+
+            <span key="version control" class="tag tag-4">
+                <a
+                    href="/links?t=version+control"
+                    style="font-size: 1.7142857"
+                    title="version control Tag"
+                >
+                    version control
+                </a>
+            </span>
+
+            <span key="ci-cd" class="tag tag-5">
+                <a
+                    href="/links?t=ci-cd"
+                    style="font-size: 1.7142857"
+                    title="ci-cd Tag"
+                >
+                    ci-cd
+                </a>
+            </span>
+
+            <span key="csharp" class="tag tag-6">
+                <a
+                    href="/links?t=csharp"
+                    style="font-size: 1.7142857"
+                    title="csharp Tag"
+                >
+                    csharp
+                </a>
+            </span>
+
+            <span key="dotnet" class="tag tag-7">
+                <a
+                    href="/links?t=dotnet"
+                    style="font-size: 1.7142857"
+                    title="dotnet Tag"
+                >
+                    dotnet
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/15b3d6/c91a46"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 4 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/ba7a22/3b2027"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 5 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOre ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/15b3d6/c91a46"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 4 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/f20597/99bfa3"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 2 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/links/09de2201-414d-4d70-9d6c-f4d55a2f784e">
+        <img
+            src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+            class="card-img-top"
+            alt="SignalR/src/Microsoft.AspNetCore.SignalR.Core/M..."
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">
+                SignalR/src/Microsoft.AspNetCore.SignalR.Core/M...
+            </h5>
+            <p>via : <span>github.com</span></p>
+            <p class="link-card-description">
+                [Archived] Incredibly simple real-time web for ASP.NET Core.
+                Project moved to https://github.com/...
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="microsoft" class="tag tag-1">
+                <a
+                    href="/links?t=microsoft"
+                    style="font-size: 1.7142857"
+                    title="microsoft Tag"
+                >
+                    microsoft
+                </a>
+            </span>
+
+            <span key="git" class="tag tag-2">
+                <a
+                    href="/links?t=git"
+                    style="font-size: 1.7142857"
+                    title="git Tag"
+                >
+                    git
+                </a>
+            </span>
+
+            <span key="github" class="tag tag-3">
+                <a
+                    href="/links?t=github"
+                    style="font-size: 1.7142857"
+                    title="github Tag"
+                >
+                    github
+                </a>
+            </span>
+
+            <span key="version control" class="tag tag-4">
+                <a
+                    href="/links?t=version+control"
+                    style="font-size: 1.7142857"
+                    title="version control Tag"
+                >
+                    version control
+                </a>
+            </span>
+
+            <span key="ci-cd" class="tag tag-5">
+                <a
+                    href="/links?t=ci-cd"
+                    style="font-size: 1.7142857"
+                    title="ci-cd Tag"
+                >
+                    ci-cd
+                </a>
+            </span>
+
+            <span key="csharp" class="tag tag-6">
+                <a
+                    href="/links?t=csharp"
+                    style="font-size: 1.7142857"
+                    title="csharp Tag"
+                >
+                    csharp
+                </a>
+            </span>
+
+            <span key="dotnet" class="tag tag-7">
+                <a
+                    href="/links?t=dotnet"
+                    style="font-size: 1.7142857"
+                    title="dotnet Tag"
+                >
+                    dotnet
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/000/fff"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link 1's Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <div class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a href="@Model.Href" style="font-size: 1em" title="Tag Name 1">
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/f20597/99bfa3"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 2 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/links/09de2201-414d-4d70-9d6c-f4d55a2f784e">
+        <img
+            src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+            class="card-img-top"
+            alt="SignalR/src/Microsoft.AspNetCore.SignalR.Core/M..."
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">
+                SignalR/src/Microsoft.AspNetCore.SignalR.Core/M...
+            </h5>
+            <p>via : <span>github.com</span></p>
+            <p class="link-card-description">
+                [Archived] Incredibly simple real-time web for ASP.NET Core.
+                Project moved to https://github.com/...
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="microsoft" class="tag tag-1">
+                <a
+                    href="/links?t=microsoft"
+                    style="font-size: 1.7142857"
+                    title="microsoft Tag"
+                >
+                    microsoft
+                </a>
+            </span>
+
+            <span key="git" class="tag tag-2">
+                <a
+                    href="/links?t=git"
+                    style="font-size: 1.7142857"
+                    title="git Tag"
+                >
+                    git
+                </a>
+            </span>
+
+            <span key="github" class="tag tag-3">
+                <a
+                    href="/links?t=github"
+                    style="font-size: 1.7142857"
+                    title="github Tag"
+                >
+                    github
+                </a>
+            </span>
+
+            <span key="version control" class="tag tag-4">
+                <a
+                    href="/links?t=version+control"
+                    style="font-size: 1.7142857"
+                    title="version control Tag"
+                >
+                    version control
+                </a>
+            </span>
+
+            <span key="ci-cd" class="tag tag-5">
+                <a
+                    href="/links?t=ci-cd"
+                    style="font-size: 1.7142857"
+                    title="ci-cd Tag"
+                >
+                    ci-cd
+                </a>
+            </span>
+
+            <span key="csharp" class="tag tag-6">
+                <a
+                    href="/links?t=csharp"
+                    style="font-size: 1.7142857"
+                    title="csharp Tag"
+                >
+                    csharp
+                </a>
+            </span>
+
+            <span key="dotnet" class="tag tag-7">
+                <a
+                    href="/links?t=dotnet"
+                    style="font-size: 1.7142857"
+                    title="dotnet Tag"
+                >
+                    dotnet
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/15b3d6/c91a46"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 4 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/ba7a22/3b2027"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 5 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOre ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/15b3d6/c91a46"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 4 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/f20597/99bfa3"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 2 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/links/09de2201-414d-4d70-9d6c-f4d55a2f784e">
+        <img
+            src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+            class="card-img-top"
+            alt="SignalR/src/Microsoft.AspNetCore.SignalR.Core/M..."
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">
+                SignalR/src/Microsoft.AspNetCore.SignalR.Core/M...
+            </h5>
+            <p>via : <span>github.com</span></p>
+            <p class="link-card-description">
+                [Archived] Incredibly simple real-time web for ASP.NET Core.
+                Project moved to https://github.com/...
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="microsoft" class="tag tag-1">
+                <a
+                    href="/links?t=microsoft"
+                    style="font-size: 1.7142857"
+                    title="microsoft Tag"
+                >
+                    microsoft
+                </a>
+            </span>
+
+            <span key="git" class="tag tag-2">
+                <a
+                    href="/links?t=git"
+                    style="font-size: 1.7142857"
+                    title="git Tag"
+                >
+                    git
+                </a>
+            </span>
+
+            <span key="github" class="tag tag-3">
+                <a
+                    href="/links?t=github"
+                    style="font-size: 1.7142857"
+                    title="github Tag"
+                >
+                    github
+                </a>
+            </span>
+
+            <span key="version control" class="tag tag-4">
+                <a
+                    href="/links?t=version+control"
+                    style="font-size: 1.7142857"
+                    title="version control Tag"
+                >
+                    version control
+                </a>
+            </span>
+
+            <span key="ci-cd" class="tag tag-5">
+                <a
+                    href="/links?t=ci-cd"
+                    style="font-size: 1.7142857"
+                    title="ci-cd Tag"
+                >
+                    ci-cd
+                </a>
+            </span>
+
+            <span key="csharp" class="tag tag-6">
+                <a
+                    href="/links?t=csharp"
+                    style="font-size: 1.7142857"
+                    title="csharp Tag"
+                >
+                    csharp
+                </a>
+            </span>
+
+            <span key="dotnet" class="tag tag-7">
+                <a
+                    href="/links?t=dotnet"
+                    style="font-size: 1.7142857"
+                    title="dotnet Tag"
+                >
+                    dotnet
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/000/fff"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link 1's Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <div class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a href="@Model.Href" style="font-size: 1em" title="Tag Name 1">
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/f20597/99bfa3"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 2 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/links/09de2201-414d-4d70-9d6c-f4d55a2f784e">
+        <img
+            src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+            class="card-img-top"
+            alt="SignalR/src/Microsoft.AspNetCore.SignalR.Core/M..."
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">
+                SignalR/src/Microsoft.AspNetCore.SignalR.Core/M...
+            </h5>
+            <p>via : <span>github.com</span></p>
+            <p class="link-card-description">
+                [Archived] Incredibly simple real-time web for ASP.NET Core.
+                Project moved to https://github.com/...
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="microsoft" class="tag tag-1">
+                <a
+                    href="/links?t=microsoft"
+                    style="font-size: 1.7142857"
+                    title="microsoft Tag"
+                >
+                    microsoft
+                </a>
+            </span>
+
+            <span key="git" class="tag tag-2">
+                <a
+                    href="/links?t=git"
+                    style="font-size: 1.7142857"
+                    title="git Tag"
+                >
+                    git
+                </a>
+            </span>
+
+            <span key="github" class="tag tag-3">
+                <a
+                    href="/links?t=github"
+                    style="font-size: 1.7142857"
+                    title="github Tag"
+                >
+                    github
+                </a>
+            </span>
+
+            <span key="version control" class="tag tag-4">
+                <a
+                    href="/links?t=version+control"
+                    style="font-size: 1.7142857"
+                    title="version control Tag"
+                >
+                    version control
+                </a>
+            </span>
+
+            <span key="ci-cd" class="tag tag-5">
+                <a
+                    href="/links?t=ci-cd"
+                    style="font-size: 1.7142857"
+                    title="ci-cd Tag"
+                >
+                    ci-cd
+                </a>
+            </span>
+
+            <span key="csharp" class="tag tag-6">
+                <a
+                    href="/links?t=csharp"
+                    style="font-size: 1.7142857"
+                    title="csharp Tag"
+                >
+                    csharp
+                </a>
+            </span>
+
+            <span key="dotnet" class="tag tag-7">
+                <a
+                    href="/links?t=dotnet"
+                    style="font-size: 1.7142857"
+                    title="dotnet Tag"
+                >
+                    dotnet
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/15b3d6/c91a46"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 4 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/ba7a22/3b2027"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 5 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOre ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/15b3d6/c91a46"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 4 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/f20597/99bfa3"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 2 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/links/09de2201-414d-4d70-9d6c-f4d55a2f784e">
+        <img
+            src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+            class="card-img-top"
+            alt="SignalR/src/Microsoft.AspNetCore.SignalR.Core/M..."
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">
+                SignalR/src/Microsoft.AspNetCore.SignalR.Core/M...
+            </h5>
+            <p>via : <span>github.com</span></p>
+            <p class="link-card-description">
+                [Archived] Incredibly simple real-time web for ASP.NET Core.
+                Project moved to https://github.com/...
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="microsoft" class="tag tag-1">
+                <a
+                    href="/links?t=microsoft"
+                    style="font-size: 1.7142857"
+                    title="microsoft Tag"
+                >
+                    microsoft
+                </a>
+            </span>
+
+            <span key="git" class="tag tag-2">
+                <a
+                    href="/links?t=git"
+                    style="font-size: 1.7142857"
+                    title="git Tag"
+                >
+                    git
+                </a>
+            </span>
+
+            <span key="github" class="tag tag-3">
+                <a
+                    href="/links?t=github"
+                    style="font-size: 1.7142857"
+                    title="github Tag"
+                >
+                    github
+                </a>
+            </span>
+
+            <span key="version control" class="tag tag-4">
+                <a
+                    href="/links?t=version+control"
+                    style="font-size: 1.7142857"
+                    title="version control Tag"
+                >
+                    version control
+                </a>
+            </span>
+
+            <span key="ci-cd" class="tag tag-5">
+                <a
+                    href="/links?t=ci-cd"
+                    style="font-size: 1.7142857"
+                    title="ci-cd Tag"
+                >
+                    ci-cd
+                </a>
+            </span>
+
+            <span key="csharp" class="tag tag-6">
+                <a
+                    href="/links?t=csharp"
+                    style="font-size: 1.7142857"
+                    title="csharp Tag"
+                >
+                    csharp
+                </a>
+            </span>
+
+            <span key="dotnet" class="tag tag-7">
+                <a
+                    href="/links?t=dotnet"
+                    style="font-size: 1.7142857"
+                    title="dotnet Tag"
+                >
+                    dotnet
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/000/fff"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link 1's Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <div class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a href="@Model.Href" style="font-size: 1em" title="Tag Name 1">
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/f20597/99bfa3"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 2 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/links/09de2201-414d-4d70-9d6c-f4d55a2f784e">
+        <img
+            src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+            class="card-img-top"
+            alt="SignalR/src/Microsoft.AspNetCore.SignalR.Core/M..."
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">
+                SignalR/src/Microsoft.AspNetCore.SignalR.Core/M...
+            </h5>
+            <p>via : <span>github.com</span></p>
+            <p class="link-card-description">
+                [Archived] Incredibly simple real-time web for ASP.NET Core.
+                Project moved to https://github.com/...
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="microsoft" class="tag tag-1">
+                <a
+                    href="/links?t=microsoft"
+                    style="font-size: 1.7142857"
+                    title="microsoft Tag"
+                >
+                    microsoft
+                </a>
+            </span>
+
+            <span key="git" class="tag tag-2">
+                <a
+                    href="/links?t=git"
+                    style="font-size: 1.7142857"
+                    title="git Tag"
+                >
+                    git
+                </a>
+            </span>
+
+            <span key="github" class="tag tag-3">
+                <a
+                    href="/links?t=github"
+                    style="font-size: 1.7142857"
+                    title="github Tag"
+                >
+                    github
+                </a>
+            </span>
+
+            <span key="version control" class="tag tag-4">
+                <a
+                    href="/links?t=version+control"
+                    style="font-size: 1.7142857"
+                    title="version control Tag"
+                >
+                    version control
+                </a>
+            </span>
+
+            <span key="ci-cd" class="tag tag-5">
+                <a
+                    href="/links?t=ci-cd"
+                    style="font-size: 1.7142857"
+                    title="ci-cd Tag"
+                >
+                    ci-cd
+                </a>
+            </span>
+
+            <span key="csharp" class="tag tag-6">
+                <a
+                    href="/links?t=csharp"
+                    style="font-size: 1.7142857"
+                    title="csharp Tag"
+                >
+                    csharp
+                </a>
+            </span>
+
+            <span key="dotnet" class="tag tag-7">
+                <a
+                    href="/links?t=dotnet"
+                    style="font-size: 1.7142857"
+                    title="dotnet Tag"
+                >
+                    dotnet
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/15b3d6/c91a46"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 4 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/ba7a22/3b2027"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 5 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOre ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/15b3d6/c91a46"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 4 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum.
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+    <div class="link-card">
+    <a href="/">
+        <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="card-img-top"
+            alt="Link's Title"
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://dummyimage.com/800x600/f20597/99bfa3"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">Link's 2 Title</h5>
+            <p>via: <span>DomainName.com</span></p>
+            <p class="link-card-description">
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum. LOrem ipsum.
+                LOrem ipsum. LOrem ipsum. LOrem ipsum. <br />
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="tag-name-1" class="tag tag-1">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 1
+                </a>
+            </span>
+            <span key="tag-name-2" class="tag tag-2">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 2"
+                >
+                    Tag Name 2
+                </a>
+            </span>
+            <span key="tag-name-3" class="tag tag-3">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 3
+                </a>
+            </span>
+            <span key="tag-name-4" class="tag tag-4">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 1"
+                >
+                    Tag Name 4
+                </a>
+            </span>
+            <span key="tag-name-5" class="tag tag-5">
+                <a
+                    href="@Model.Href"
+                    style="font-size: 1rem"
+                    title="Tag Name 5"
+                >
+                    Tag Name 5
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+ <div class="link-card">
+    <a href="/links/09de2201-414d-4d70-9d6c-f4d55a2f784e">
+        <img
+            src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+            class="card-img-top"
+            alt="SignalR/src/Microsoft.AspNetCore.SignalR.Core/M..."
+            width="0"
+            height="0"
+            sizes="100vw"
+            style="width: 100%; height: auto"
+            data-src="https://opengraph.githubassets.com/5be0a8e75b8663653027c3e9ec71bc28498fb409b4bd63cac54901f98bf3e569/aspnet/SignalR"
+        />
+        <div class="link-card-body">
+            <h5 class="link-card-title">
+                SignalR/src/Microsoft.AspNetCore.SignalR.Core/M...
+            </h5>
+            <p>via : <span>github.com</span></p>
+            <p class="link-card-description">
+                [Archived] Incredibly simple real-time web for ASP.NET Core.
+                Project moved to https://github.com/...
+            </p>
+        </div>
+    </a>
+    <div class="link-card-footer">
+        <span class="tag-pills">
+            <span key="microsoft" class="tag tag-1">
+                <a
+                    href="/links?t=microsoft"
+                    style="font-size: 1.7142857"
+                    title="microsoft Tag"
+                >
+                    microsoft
+                </a>
+            </span>
+
+            <span key="git" class="tag tag-2">
+                <a
+                    href="/links?t=git"
+                    style="font-size: 1.7142857"
+                    title="git Tag"
+                >
+                    git
+                </a>
+            </span>
+
+            <span key="github" class="tag tag-3">
+                <a
+                    href="/links?t=github"
+                    style="font-size: 1.7142857"
+                    title="github Tag"
+                >
+                    github
+                </a>
+            </span>
+
+            <span key="version control" class="tag tag-4">
+                <a
+                    href="/links?t=version+control"
+                    style="font-size: 1.7142857"
+                    title="version control Tag"
+                >
+                    version control
+                </a>
+            </span>
+
+            <span key="ci-cd" class="tag tag-5">
+                <a
+                    href="/links?t=ci-cd"
+                    style="font-size: 1.7142857"
+                    title="ci-cd Tag"
+                >
+                    ci-cd
+                </a>
+            </span>
+
+            <span key="csharp" class="tag tag-6">
+                <a
+                    href="/links?t=csharp"
+                    style="font-size: 1.7142857"
+                    title="csharp Tag"
+                >
+                    csharp
+                </a>
+            </span>
+
+            <span key="dotnet" class="tag tag-7">
+                <a
+                    href="/links?t=dotnet"
+                    style="font-size: 1.7142857"
+                    title="dotnet Tag"
+                >
+                    dotnet
+                </a>
+            </span>
+        </span>
+    </div>
+</div>
+
+</div>
+
+        <div id="pager-container" data-pageno="1" data-size="50" data-pages="100" data-results="5000" data-url="/links"></div>
+    </main>
+
+    <aside id="left-side" class="flex-shrink-0 pe-4" style="width: 30%; max-width: 400px">
+        <h4>Popular Tags</h4>
+<div id="tag-cloud-panel"><div class="tag-pills">
+    <span class="tag tag-1">
+        <a title="software Tag" href="/tags/software" style="font-size: 1.5rem"
+            >software</a
+        >
+    </span>
+    <span class="tag tag-2">
+        <a title="csharp Tag" href="/tags/csharp" style="font-size: 1.45rem"
+            >csharp</a
+        >
+    </span>
+    <span class="tag tag-3">
+        <a title="dotnet Tag" href="/tags/dotnet" style="font-size: 1.45rem"
+            >dotnet</a
+        >
+    </span>
+    <span class="tag tag-4">
+        <a title="frontend Tag" href="/tags/frontend" style="font-size: 1.6rem"
+            >frontend</a
+        >
+    </span>
+    <span class="tag tag-5">
+        <a title="git Tag" href="/tags/git" style="font-size: 1.23377rem"
+            >git</a
+        >
+    </span>
+    <span class="tag tag-6">
+        <a
+            title="development Tag"
+            href="/tags/development"
+            style="font-size: 1.2rem"
+            >development</a
+        >
+    </span>
+    <span class="tag tag-7">
+        <a
+            title="javascript Tag"
+            href="/tags/javascript"
+            style="font-size: 1.3rem"
+            >javascript</a
+        >
+    </span>
+    <span class="tag tag-8">
+        <a
+            title="technology Tag"
+            href="/tags/technology"
+            style="font-size: 1.4rem"
+            >technology</a
+        >
+    </span>
+    <span class="tag tag-9">
+        <a title="github Tag" href="/tags/github" style="font-size: 1rem"
+            >github</a
+        >
+    </span>
+    <span class="tag tag-10">
+        <a
+            title="version control Tag"
+            href="/tags/version+control"
+            style="font-size: 0.9rem"
+            >version control</a
+        >
+    </span>
+    <span class="tag tag-1">
+        <a title="ci-cd Tag" href="/tags/ci-cd" style="font-size: 1.25rem"
+            >ci-cd</a
+        >
+    </span>
+    <span class="tag tag-2">
+        <a title="web Tag" href="/tags/web" style="font-size: 1.15879rem"
+            >web</a
+        >
+    </span>
+    <span class="tag tag-3">
+        <a title="react Tag" href="/tags/react" style="font-size: 1.35rem"
+            >react</a
+        >
+    </span>
+    <span class="tag tag-4">
+        <a
+            title="microsoft Tag"
+            href="/tags/microsoft"
+            style="font-size: 1.5rem"
+            >microsoft</a
+        >
+    </span>
+    <span class="tag tag-5">
+        <a title="azure Tag" href="/tags/azure" style="font-size: 1.2rem"
+            >azure</a
+        >
+    </span>
+    <span class="tag tag-6">
+        <a title="cloud Tag" href="/tags/cloud" style="font-size: 1.1rem"
+            >cloud</a
+        >
+    </span>
+    <span class="tag tag-7">
+        <a title="docker Tag" href="/tags/docker" style="font-size: 1.0931rem"
+            >docker</a
+        >
+    </span>
+    <span class="tag tag-8">
+        <a
+            title="youtube Tag"
+            href="/tags/youtube"
+            style="font-size: 1.09197rem"
+            >youtube</a
+        >
+    </span>
+    <span class="tag tag-9">
+        <a title="video Tag" href="/tags/video" style="font-size: 1.09174rem"
+            >video</a
+        >
+    </span>
+    <span class="tag tag-10">
+        <a
+            title="containerization Tag"
+            href="/tags/containerization"
+            style="font-size: 1.09151rem"
+            >containerization</a
+        >
+    </span>
+    <span class="tag tag-1">
+        <a
+            title="deployment Tag"
+            href="/tags/deployment"
+            style="font-size: 1.09151rem"
+            >deployment</a
+        >
+    </span>
+    <span class="tag tag-2">
+        <a title="ui Tag" href="/tags/ui" style="font-size: 1.08948rem">ui</a>
+    </span>
+    <span class="tag tag-3">
+        <a title="aws Tag" href="/tags/aws" style="font-size: 1.07271rem"
+            >aws</a
+        >
+    </span>
+    <span class="tag tag-4">
+        <a title="c# Tag" href="/tags/c#" style="font-size: 1.06705rem">c#</a>
+    </span>
+    <span class="tag tag-5">
+        <a
+            title="cloud computing Tag"
+            href="/tags/cloud+computing"
+            style="font-size: 1.06637rem"
+            >cloud computing</a
+        >
+    </span>
+    <span class="tag tag-6">
+        <a
+            title="scalability Tag"
+            href="/tags/scalability"
+            style="font-size: 1.06637rem"
+            >scalability</a
+        >
+    </span>
+    <span class="tag tag-7">
+        <a
+            title="architecture Tag"
+            href="/tags/architecture"
+            style="font-size: 1.06546rem"
+            >architecture</a
+        >
+    </span>
+    <span class="tag tag-8">
+        <a title="ci-cd Tag" href="/tags/ci-cd" style="font-size: 1.06433rem"
+            >ci-cd</a
+        >
+    </span>
+    <span class="tag tag-1">
+        <a title="software Tag" href="/tags/software" style="font-size: 1.5rem"
+            >software</a
+        >
+    </span>
+    <span class="tag tag-2">
+        <a title="csharp Tag" href="/tags/csharp" style="font-size: 1.45rem"
+            >csharp</a
+        >
+    </span>
+    <span class="tag tag-3">
+        <a title="dotnet Tag" href="/tags/dotnet" style="font-size: 1.45rem"
+            >dotnet</a
+        >
+    </span>
+    <span class="tag tag-4">
+        <a title="frontend Tag" href="/tags/frontend" style="font-size: 1.6rem"
+            >frontend</a
+        >
+    </span>
+    <span class="tag tag-5">
+        <a title="git Tag" href="/tags/git" style="font-size: 1.23377rem"
+            >git</a
+        >
+    </span>
+    <span class="tag tag-6">
+        <a
+            title="development Tag"
+            href="/tags/development"
+            style="font-size: 1.2rem"
+            >development</a
+        >
+    </span>
+    <span class="tag tag-7">
+        <a
+            title="javascript Tag"
+            href="/tags/javascript"
+            style="font-size: 1.3rem"
+            >javascript</a
+        >
+    </span>
+    <span class="tag tag-8">
+        <a
+            title="technology Tag"
+            href="/tags/technology"
+            style="font-size: 1.4rem"
+            >technology</a
+        >
+    </span>
+    <span class="tag tag-9">
+        <a title="github Tag" href="/tags/github" style="font-size: 1rem"
+            >github</a
+        >
+    </span>
+    <span class="tag tag-10">
+        <a
+            title="version control Tag"
+            href="/tags/version+control"
+            style="font-size: 0.9rem"
+            >version control</a
+        >
+    </span>
+    <span class="tag tag-1">
+        <a title="ci-cd Tag" href="/tags/ci-cd" style="font-size: 1.25rem"
+            >ci-cd</a
+        >
+    </span>
+    <span class="tag tag-2">
+        <a title="web Tag" href="/tags/web" style="font-size: 1.15879rem"
+            >web</a
+        >
+    </span>
+    <span class="tag tag-3">
+        <a title="react Tag" href="/tags/react" style="font-size: 1.35rem"
+            >react</a
+        >
+    </span>
+    <span class="tag tag-4">
+        <a
+            title="microsoft Tag"
+            href="/tags/microsoft"
+            style="font-size: 1.5rem"
+            >microsoft</a
+        >
+    </span>
+    <span class="tag tag-5">
+        <a title="azure Tag" href="/tags/azure" style="font-size: 1.2rem"
+            >azure</a
+        >
+    </span>
+    <span class="tag tag-6">
+        <a title="cloud Tag" href="/tags/cloud" style="font-size: 1.1rem"
+            >cloud</a
+        >
+    </span>
+    <span class="tag tag-7">
+        <a title="docker Tag" href="/tags/docker" style="font-size: 1.0931rem"
+            >docker</a
+        >
+    </span>
+    <span class="tag tag-8">
+        <a
+            title="youtube Tag"
+            href="/tags/youtube"
+            style="font-size: 1.09197rem"
+            >youtube</a
+        >
+    </span>
+    <span class="tag tag-9">
+        <a title="video Tag" href="/tags/video" style="font-size: 1.09174rem"
+            >video</a
+        >
+    </span>
+    <span class="tag tag-10">
+        <a
+            title="containerization Tag"
+            href="/tags/containerization"
+            style="font-size: 1.09151rem"
+            >containerization</a
+        >
+    </span>
+    <span class="tag tag-1">
+        <a
+            title="deployment Tag"
+            href="/tags/deployment"
+            style="font-size: 1.09151rem"
+            >deployment</a
+        >
+    </span>
+    <span class="tag tag-2">
+        <a title="ui Tag" href="/tags/ui" style="font-size: 1.08948rem">ui</a>
+    </span>
+    <span class="tag tag-3">
+        <a title="aws Tag" href="/tags/aws" style="font-size: 1.07271rem"
+            >aws</a
+        >
+    </span>
+    <span class="tag tag-4">
+        <a title="c# Tag" href="/tags/c#" style="font-size: 1.06705rem">c#</a>
+    </span>
+    <span class="tag tag-5">
+        <a
+            title="cloud computing Tag"
+            href="/tags/cloud+computing"
+            style="font-size: 1.06637rem"
+            >cloud computing</a
+        >
+    </span>
+    <span class="tag tag-6">
+        <a
+            title="scalability Tag"
+            href="/tags/scalability"
+            style="font-size: 1.06637rem"
+            >scalability</a
+        >
+    </span>
+    <span class="tag tag-7">
+        <a
+            title="architecture Tag"
+            href="/tags/architecture"
+            style="font-size: 1.06546rem"
+            >architecture</a
+        >
+    </span>
+    <span class="tag tag-8">
+        <a title="ci-cd Tag" href="/tags/ci-cd" style="font-size: 1.06433rem"
+            >ci-cd</a
+        >
+    </span>
+    <span class="tag tag-1">
+        <a title="software Tag" href="/tags/software" style="font-size: 1.5rem"
+            >software</a
+        >
+    </span>
+    <span class="tag tag-2">
+        <a title="csharp Tag" href="/tags/csharp" style="font-size: 1.45rem"
+            >csharp</a
+        >
+    </span>
+    <span class="tag tag-3">
+        <a title="dotnet Tag" href="/tags/dotnet" style="font-size: 1.45rem"
+            >dotnet</a
+        >
+    </span>
+    <span class="tag tag-4">
+        <a title="frontend Tag" href="/tags/frontend" style="font-size: 1.6rem"
+            >frontend</a
+        >
+    </span>
+    <span class="tag tag-5">
+        <a title="git Tag" href="/tags/git" style="font-size: 1.23377rem"
+            >git</a
+        >
+    </span>
+    <span class="tag tag-6">
+        <a
+            title="development Tag"
+            href="/tags/development"
+            style="font-size: 1.2rem"
+            >development</a
+        >
+    </span>
+    <span class="tag tag-7">
+        <a
+            title="javascript Tag"
+            href="/tags/javascript"
+            style="font-size: 1.3rem"
+            >javascript</a
+        >
+    </span>
+    <span class="tag tag-8">
+        <a
+            title="technology Tag"
+            href="/tags/technology"
+            style="font-size: 1.4rem"
+            >technology</a
+        >
+    </span>
+    <span class="tag tag-9">
+        <a title="github Tag" href="/tags/github" style="font-size: 1rem"
+            >github</a
+        >
+    </span>
+    <span class="tag tag-10">
+        <a
+            title="version control Tag"
+            href="/tags/version+control"
+            style="font-size: 0.9rem"
+            >version control</a
+        >
+    </span>
+    <span class="tag tag-1">
+        <a title="ci-cd Tag" href="/tags/ci-cd" style="font-size: 1.25rem"
+            >ci-cd</a
+        >
+    </span>
+    <span class="tag tag-2">
+        <a title="web Tag" href="/tags/web" style="font-size: 1.15879rem"
+            >web</a
+        >
+    </span>
+    <span class="tag tag-3">
+        <a title="react Tag" href="/tags/react" style="font-size: 1.35rem"
+            >react</a
+        >
+    </span>
+    <span class="tag tag-4">
+        <a
+            title="microsoft Tag"
+            href="/tags/microsoft"
+            style="font-size: 1.5rem"
+            >microsoft</a
+        >
+    </span>
+    <span class="tag tag-5">
+        <a title="azure Tag" href="/tags/azure" style="font-size: 1.2rem"
+            >azure</a
+        >
+    </span>
+    <span class="tag tag-6">
+        <a title="cloud Tag" href="/tags/cloud" style="font-size: 1.1rem"
+            >cloud</a
+        >
+    </span>
+    <span class="tag tag-7">
+        <a title="docker Tag" href="/tags/docker" style="font-size: 1.0931rem"
+            >docker</a
+        >
+    </span>
+    <span class="tag tag-8">
+        <a
+            title="youtube Tag"
+            href="/tags/youtube"
+            style="font-size: 1.09197rem"
+            >youtube</a
+        >
+    </span>
+    <span class="tag tag-9">
+        <a title="video Tag" href="/tags/video" style="font-size: 1.09174rem"
+            >video</a
+        >
+    </span>
+    <span class="tag tag-10">
+        <a
+            title="containerization Tag"
+            href="/tags/containerization"
+            style="font-size: 1.09151rem"
+            >containerization</a
+        >
+    </span>
+    <span class="tag tag-1">
+        <a
+            title="deployment Tag"
+            href="/tags/deployment"
+            style="font-size: 1.09151rem"
+            >deployment</a
+        >
+    </span>
+    <span class="tag tag-2">
+        <a title="ui Tag" href="/tags/ui" style="font-size: 1.08948rem">ui</a>
+    </span>
+    <span class="tag tag-3">
+        <a title="aws Tag" href="/tags/aws" style="font-size: 1.07271rem"
+            >aws</a
+        >
+    </span>
+    <span class="tag tag-4">
+        <a title="c# Tag" href="/tags/c#" style="font-size: 1.06705rem">c#</a>
+    </span>
+    <span class="tag tag-5">
+        <a
+            title="cloud computing Tag"
+            href="/tags/cloud+computing"
+            style="font-size: 1.06637rem"
+            >cloud computing</a
+        >
+    </span>
+    <span class="tag tag-6">
+        <a
+            title="scalability Tag"
+            href="/tags/scalability"
+            style="font-size: 1.06637rem"
+            >scalability</a
+        >
+    </span>
+    <span class="tag tag-7">
+        <a
+            title="architecture Tag"
+            href="/tags/architecture"
+            style="font-size: 1.06546rem"
+            >architecture</a
+        >
+    </span>
+    <span class="tag tag-8">
+        <a title="ci-cd Tag" href="/tags/ci-cd" style="font-size: 1.06433rem"
+            >ci-cd</a
+        >
+    </span>
+    <span class="tag tag-1">
+        <a title="software Tag" href="/tags/software" style="font-size: 1.5rem"
+            >software</a
+        >
+    </span>
+    <span class="tag tag-2">
+        <a title="csharp Tag" href="/tags/csharp" style="font-size: 1.45rem"
+            >csharp</a
+        >
+    </span>
+    <span class="tag tag-3">
+        <a title="dotnet Tag" href="/tags/dotnet" style="font-size: 1.45rem"
+            >dotnet</a
+        >
+    </span>
+    <span class="tag tag-4">
+        <a title="frontend Tag" href="/tags/frontend" style="font-size: 1.6rem"
+            >frontend</a
+        >
+    </span>
+    <span class="tag tag-5">
+        <a title="git Tag" href="/tags/git" style="font-size: 1.23377rem"
+            >git</a
+        >
+    </span>
+    <span class="tag tag-6">
+        <a
+            title="development Tag"
+            href="/tags/development"
+            style="font-size: 1.2rem"
+            >development</a
+        >
+    </span>
+    <span class="tag tag-7">
+        <a
+            title="javascript Tag"
+            href="/tags/javascript"
+            style="font-size: 1.3rem"
+            >javascript</a
+        >
+    </span>
+    <span class="tag tag-8">
+        <a
+            title="technology Tag"
+            href="/tags/technology"
+            style="font-size: 1.4rem"
+            >technology</a
+        >
+    </span>
+    <span class="tag tag-9">
+        <a title="github Tag" href="/tags/github" style="font-size: 1rem"
+            >github</a
+        >
+    </span>
+    <span class="tag tag-10">
+        <a
+            title="version control Tag"
+            href="/tags/version+control"
+            style="font-size: 0.9rem"
+            >version control</a
+        >
+    </span>
+    <span class="tag tag-1">
+        <a title="ci-cd Tag" href="/tags/ci-cd" style="font-size: 1.25rem"
+            >ci-cd</a
+        >
+    </span>
+    <span class="tag tag-2">
+        <a title="web Tag" href="/tags/web" style="font-size: 1.15879rem"
+            >web</a
+        >
+    </span>
+    <span class="tag tag-3">
+        <a title="react Tag" href="/tags/react" style="font-size: 1.35rem"
+            >react</a
+        >
+    </span>
+    <span class="tag tag-4">
+        <a
+            title="microsoft Tag"
+            href="/tags/microsoft"
+            style="font-size: 1.5rem"
+            >microsoft</a
+        >
+    </span>
+    <span class="tag tag-5">
+        <a title="azure Tag" href="/tags/azure" style="font-size: 1.2rem"
+            >azure</a
+        >
+    </span>
+    <span class="tag tag-6">
+        <a title="cloud Tag" href="/tags/cloud" style="font-size: 1.1rem"
+            >cloud</a
+        >
+    </span>
+    <span class="tag tag-7">
+        <a title="docker Tag" href="/tags/docker" style="font-size: 1.0931rem"
+            >docker</a
+        >
+    </span>
+    <span class="tag tag-8">
+        <a
+            title="youtube Tag"
+            href="/tags/youtube"
+            style="font-size: 1.09197rem"
+            >youtube</a
+        >
+    </span>
+    <span class="tag tag-9">
+        <a title="video Tag" href="/tags/video" style="font-size: 1.09174rem"
+            >video</a
+        >
+    </span>
+    <span class="tag tag-10">
+        <a
+            title="containerization Tag"
+            href="/tags/containerization"
+            style="font-size: 1.09151rem"
+            >containerization</a
+        >
+    </span>
+    <span class="tag tag-1">
+        <a
+            title="deployment Tag"
+            href="/tags/deployment"
+            style="font-size: 1.09151rem"
+            >deployment</a
+        >
+    </span>
+    <span class="tag tag-2">
+        <a title="ui Tag" href="/tags/ui" style="font-size: 1.08948rem">ui</a>
+    </span>
+    <span class="tag tag-3">
+        <a title="aws Tag" href="/tags/aws" style="font-size: 1.07271rem"
+            >aws</a
+        >
+    </span>
+    <span class="tag tag-4">
+        <a title="c# Tag" href="/tags/c#" style="font-size: 1.06705rem">c#</a>
+    </span>
+    <span class="tag tag-5">
+        <a
+            title="cloud computing Tag"
+            href="/tags/cloud+computing"
+            style="font-size: 1.06637rem"
+            >cloud computing</a
+        >
+    </span>
+    <span class="tag tag-6">
+        <a
+            title="scalability Tag"
+            href="/tags/scalability"
+            style="font-size: 1.06637rem"
+            >scalability</a
+        >
+    </span>
+    <span class="tag tag-7">
+        <a
+            title="architecture Tag"
+            href="/tags/architecture"
+            style="font-size: 1.06546rem"
+            >architecture</a
+        >
+    </span>
+    <span class="tag tag-8">
+        <a title="ci-cd Tag" href="/tags/ci-cd" style="font-size: 1.06433rem"
+            >ci-cd</a
+        >
+    </span>
+</div>
+
+</div>
+
+    </aside>
+</div>
+
+<footer class="footer">
+    <p>
+        <span className="deliscio">Delisc.io</span>
+    </p>
+</footer>
+
+<script type="module" src="/assets/modules/home.mjs"></script>
+</body>
+</html>
+</html>

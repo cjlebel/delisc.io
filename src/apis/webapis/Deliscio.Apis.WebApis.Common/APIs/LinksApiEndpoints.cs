@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
-using SubmitLinkRequest = Deliscio.Apis.WebApi.Common.Requests.SubmitLinkRequest;
+using Deliscio.Apis.WebApi.Common.Requests;
 
 namespace Deliscio.Apis.WebApi.Common.APIs;
 
@@ -52,6 +52,7 @@ public class LinksApiEndpoints : BaseApiEndpoints
     /// <remarks>/v1/link/fa431c01-992b-4773-a504-05b9b672a3b2</remarks>
     private void MapGetLink(IEndpointRouteBuilder endpoints)
     {
+
         // Id is required, so this will never be hit if id is empty (it will go to the next endpoint that has an optional pageNo and pageSize)
         endpoints.MapGet("v1/link/{linkId}",
                 async ([FromRoute] string? linkId, CancellationToken cancellationToken) =>

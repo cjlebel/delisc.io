@@ -22,10 +22,10 @@ public class UserLinksApiEndpoints : BaseApiEndpoints
     private const string TAGS_CANNOT_BE_NULL_OR_EMPTY = "Tags cannot be null or empty";
     private const string TAGS_COUNT_CANNOT_BE_LESS_THAN_ONE = "TagsCount cannot be less than 1";
 
-    private const string USER_ID_CANNOT_BE_NULL_OR_WHITESPACE = "User's Id cannot be null or whitespace";
-    private const string USER_LINK_COULD_NOT_BE_FOUND = "The User's Link for Id {0} could not be found";
-    private const string USER_LINK_COULD_NOT_BE_SAVED = "Could not save the link to the user{0}User: {1}\n{0}Link: {2}";
-    private const string USER_LINK_ID_CANNOT_BE_NULL_OR_WHITESPACE = "User Link's Id cannot be null or whitespace";
+    private const string USER_ID_CANNOT_BE_NULL_OR_WHITESPACE = "AuthUser's Id cannot be null or whitespace";
+    private const string USER_LINK_COULD_NOT_BE_FOUND = "The AuthUser's Link for Id {0} could not be found";
+    private const string USER_LINK_COULD_NOT_BE_SAVED = "Could not save the link to the user{0}AuthUser: {1}\n{0}Link: {2}";
+    private const string USER_LINK_ID_CANNOT_BE_NULL_OR_WHITESPACE = "AuthUser Link's Id cannot be null or whitespace";
     private const string USER_LINKS_COULD_NOT_BE_FOUND = "The Links for Page {0} could not be found";
 
 

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.PageTitle</title>
+    <meta name="description" content="@ViewBag.PageDescription"/>
+
+    @if (!string.IsNullOrWhiteSpace(ViewBag.CanonicalUrl))
+    {
+        var canonicalUrl = Html.Raw(ViewBag.CanonicalUrl);
+
+        <link rel="canonical" href="@canonicalUrl" />
+
+        @if (ViewBag.AlternateUrls != null && ViewBag.AlternateUrls.Any())
+        {
+            @* foreach (var alternateUrl in ViewBag.AlternateUrls)
+            {
+                <link rel="alternate" href="@alternateUrl.Url" hreflang="@alternateUrl.Culture" />
+            } *@
+        }
+    }
+
+    @*     <link rel="stylesheet" href="~/libs/bootstrap/css/bootstrap.min.css" /> *@
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+</head>
+<body>
+
+    <vc:header></vc:header>
+
+    @{ await Html.RenderPartialAsync("Navigation/_Breadcrumbs"); }
+
+    <div class="container d-flex">
+    @RenderBody()
+    </div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+    @* <script src="~/js/Pager.bundle.js"></script> *@
+</body>
+</html>

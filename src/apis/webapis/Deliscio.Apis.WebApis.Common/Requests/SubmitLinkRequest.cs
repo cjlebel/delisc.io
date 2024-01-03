@@ -16,7 +16,7 @@ public sealed record SubmitLinkRequest
     [Required]
     public string SubmittedById { get; set; }
 
-    #region - User Optional Properties -
+    #region - AuthUser Optional Properties -
 
     /// <summary>
     /// A set of tags for the link. These will be added/appended to the central link and added to the user's link

@@ -1,0 +1,24 @@
+<html lang="en">
+    ##include('../partials/head.html')
+
+<body>
+##include('../partials/navigation/header.html')
+##include('../partials/navigation/breadcrumbs.html')
+
+
+<div class="container d-flex">
+    <main id="link-cards" class="flex-grow-1 me-4 flex-row">
+        ##include('../partials/links/link-cards.html')
+        <div id="pager-container" data-pageno="1" data-size="50" data-pages="100" data-results="5000" data-url="/links"></div>
+    </main>
+
+    <aside id="left-side" class="flex-shrink-0 pe-4" style="width: 30%; max-width: 400px">
+        ##include('../partials/panels/panel-tag-cloud.html')
+    </aside>
+</div>
+
+##include('../partials/navigation/footer.html')
+<script type="module" src="/assets/modules/home.mjs"></script>
+</body>
+</html>
+</html>

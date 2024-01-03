@@ -10,6 +10,7 @@ namespace Deliscio.Tests.Functional.Apis.WebApis.WebApi;
 // https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-7.0
 public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<WebApplicationFactory<Program>>
 {
+    #region - Endpoint Constants -
     private const string GET_LINK_ENDPOINT = "/{0}/link/{1}";
 
     private const string GET_LINKS_ENDPOINT = "/{0}/links";
@@ -21,11 +22,9 @@ public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<Web
 
     private const string GET_LINKS_RELATED_TAGS_ENDPOINT = "/{0}/links/tags?tags={1}";
     private const string GET_LINKS_RELATED_TAGS_WITH_COUNT_ENDPOINT = "/{0}/links/tags?tags={1}&count={2}";
+    #endregion
 
-    public LinksApiFunctionalTests(WebApplicationFactory<Program> factory) : base(factory)
-    {
-
-    }
+    public LinksApiFunctionalTests(WebApplicationFactory<Program> factory) : base(factory) { }
 
     #region - GetLinkById -
     [Fact]
@@ -231,19 +230,19 @@ public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<Web
         Assert.NotNull(actuals);
         Assert.NotEmpty(actuals);
 
-        decimal totalWeight = 0m;
+        float totalWeight = 0f;
 
         foreach (var actual in actuals)
         {
-            Assert.True(actual.Count > decimal.Zero);
+            Assert.True(actual.Count > float.Epsilon);
 
-            Assert.True(actual.Weight > decimal.Zero);
+            Assert.True(actual.Weight > float.Epsilon);
 
             totalWeight += actual.Weight;
         }
 
-        var delta = 0.00001m;
-        Assert.True(decimal.One - totalWeight <= delta);
+        var delta = 0.00001f;
+        Assert.True(1f - totalWeight <= delta);
     }
 
     [Theory]
@@ -268,19 +267,19 @@ public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<Web
         Assert.NotNull(actuals);
         Assert.NotEmpty(actuals);
         Assert.True(actuals.Length <= count);
-        decimal totalWeight = 0m;
+        var totalWeight = 0f;
 
         foreach (var actual in actuals)
         {
-            Assert.True(actual.Count > decimal.Zero);
+            Assert.True(actual.Count > float.Epsilon);
 
-            Assert.True(actual.Weight > decimal.Zero);
+            Assert.True(actual.Weight > float.Epsilon);
 
             totalWeight += actual.Weight;
         }
 
-        var delta = 0.00001m;
-        Assert.True(decimal.One - totalWeight <= delta);
+        var delta = 0.00001f;
+        Assert.True(1 - totalWeight <= delta);
     }
 
     [Theory]

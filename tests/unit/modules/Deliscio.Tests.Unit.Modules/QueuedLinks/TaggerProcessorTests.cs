@@ -1,12 +1,8 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Deliscio.Modules.QueuedLinks.Common.Models;
 using Deliscio.Modules.QueuedLinks.Tagger;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Xunit;
 
 namespace Deliscio.Tests.Unit.Modules.QueuedLinks;
 

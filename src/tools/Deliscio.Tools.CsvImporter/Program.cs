@@ -5,8 +5,10 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Deliscio.Apis.WebApi.Common.Requests;
+using Deliscio.Core.Data.Mongo;
 using Deliscio.Modules.BackLog;
 using Deliscio.Modules.BackLog.Models;
+using Microsoft.Extensions.Options;
 
 namespace Deliscio.Tools.CsvImporter;
 
@@ -24,7 +26,13 @@ internal partial class Program
         var connectionString = "mongodb://mongo:g%3F7%3CVd%3E9v4%3BZKk%3DJ@localhost:27018";
         var dbName = "deliscio";
 
-        var service = new BacklogService(connectionString, dbName);
+        IOptions<MongoDbOptions> options = Options.Create(new MongoDbOptions
+        {
+            ConnectionString = connectionString,
+            DatabaseName = dbName
+        });
+
+        var service = new BacklogService(options);
 
         await AddBacklogItems(service, userId);
 
@@ -43,11 +51,11 @@ internal partial class Program
         const string dataDir = "C:\\Temp\\MyFavs\\Data";
         const string outputDir = "C:\\Temp\\MyFavs\\Data\\Output";
 
-        //var files1 = Directory.GetFiles(dataDir, "all-links.csv");
+        var files1 = Directory.GetFiles(dataDir, "all-links.csv");
         var files2 = Directory.GetFiles(dataDir, "phone-tablet-links.txt");
 
-        // var files = files1.Concat(files2).ToArray();
-        var files = files2;
+        var files = files1.Concat(files2).ToArray();
+        //var files = files2;
 
         if (files.Length > 0)
         {
@@ -59,16 +67,17 @@ internal partial class Program
 
                 var lines = await File.ReadAllLinesAsync(file);
 
-                if (isFile2)
-                {
-                    var x = true;
-                }
+                //if (isFile2)
+                //{
+                //    var x = true;
+                //}
 
                 foreach (var line in lines)
                 {
                     if (!string.IsNullOrWhiteSpace(line) &&
                         !line.Equals("title,url", StringComparison.InvariantCultureIgnoreCase))
                     {
+                        // If it's the second file, then each line starts with a number and a ., so split on the .
                         string[] parts = !isFile2 ? SplitLineRegEx().Split(line) : line.Split(". ");
 
                         //var parts = SplitLineRegEx().Split(line);
