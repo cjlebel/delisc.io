@@ -38,6 +38,17 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         _queueService = queueService;
     }
 
+    public Task<PagedResults<LinkItem>> FindAsync(string search = "", string tags = "", int pageNo = 1, int pageSize = 50, CancellationToken token = default)
+    {
+        Guard.Against.NullOrWhiteSpace(search);
+        Guard.Against.NegativeOrZero(pageNo);
+        Guard.Against.NegativeOrZero(pageSize);
+
+        var query = new FindLinksQuery(search, pageNo, pageSize, 0, tags);
+
+        return _mediator.Send(query, token);
+    }
+
     /// <summary>
     /// Gets a single Link by its Id.
     /// </summary>
@@ -66,6 +77,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
     /// <remarks>
     /// No async/await is used here, because it's not needed.
     /// </remarks>
+    [Obsolete("Use FindAsync instead")]
     public Task<PagedResults<LinkItem>> GetLinksAsync(int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         Guard.Against.NegativeOrZero(pageNo);
@@ -76,8 +88,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         return _mediator.Send(query, token);
     }
 
-    public async Task<PagedResults<LinkItem>> GetLinksByDomainAsync(string domain, int pageNo = 1, int pageSize = 25,
-        CancellationToken token = default)
+    public async Task<PagedResults<LinkItem>> GetLinksByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(domain);
 
@@ -106,7 +117,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
     /// <returns>
     /// A page of links where each link contains all of the links that were given.
     /// </returns>
-    public async ValueTask<PagedResults<LinkItem>> GetLinksByTagsAsync(string[] tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async ValueTask<PagedResults<LinkItem>> GetLinksByTagsAsync(string tags = "", int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         if (tags.Length == 0)
             return new PagedResults<LinkItem>();
@@ -132,11 +143,14 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
     /// Gets a collection of tags that are related to the given tags.
     /// This is used to drill down into the links.
     /// </summary>
-    /// <param name="tags"></param>
+    /// <param name="tags">
+    /// The initial set of tags, that the results are based on.
+    /// If no tags are provided, then a collection of the top tags are returned
+    /// </param>
     /// <param name="count">The number of tags to return</param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public Task<LinkTag[]> GetTagsAsync(string[] tags, int? count = default, CancellationToken token = default)
+    public Task<LinkTag[]> GetTagsRelatedToTagsAsync(string tags, int? count = default, CancellationToken token = default)
     {
         var query = new GetRelatedTagsByTagsQuery(tags, count);
 

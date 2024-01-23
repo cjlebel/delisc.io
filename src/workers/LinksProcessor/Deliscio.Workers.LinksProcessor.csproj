@@ -7,6 +7,7 @@
 		<UserSecretsId>dotnet-Deliscio.Workers.LinksProcessor-6c561a17-0044-43d4-a19c-ffc536c6e507</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerfileContext>..\..\..</DockerfileContext>
+		<LangVersion>preview</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

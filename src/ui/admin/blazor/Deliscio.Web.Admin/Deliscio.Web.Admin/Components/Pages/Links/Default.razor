@@ -1,0 +1,208 @@
+@page "/links"
+
+@using MediatR
+@using Deliscio.Modules.Links.Common.Models
+@using Deliscio.Modules.Links.MediatR.Queries
+@using System.Net
+@using Microsoft.AspNetCore.WebUtilities
+
+@rendermode InteractiveServer
+
+@inject IMediator Mediator
+@inject NavigationManager NavManager
+
+<h3>Links</h3>
+
+@if (IsError)
+{
+    <div class="text-danger">@Message</div>
+}
+else if (IsError is false && !string.IsNullOrWhiteSpace(Message))
+{
+    <div class="text-success">@Message</div>
+}
+
+<div class="container">
+    @if (Links == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <div class="row">
+            @* Have Search go to /links?search=term instead *@
+            <form method="post" @onsubmit="Search" @formname="starship-plain-form">
+                <AntiforgeryToken />
+                <div class="input-group mb-3">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Search ..."
+                           @bind-value="SearchTerm"
+                           aria-label="Search ..."
+                           aria-describedby="button-search" />
+                    <button id="button-search" class="btn btn-outline-secondary" type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Domain</th>
+                    <th>DateCreated</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var link in Links)
+                {
+                    var domainEncoded = !string.IsNullOrWhiteSpace(link.Domain) ? WebUtility.UrlEncode(link.Domain) : string.Empty;
+                    var tags = string.Empty;
+
+                    foreach (var tag in link.Tags)
+                    {
+                        tags += $"<a href=\"/links?t={tag.Name}\">{tag.Name}</a>, ";
+                    }
+
+                    tags = tags.TrimEnd(',').TrimEnd(' ');
+
+                    var title = link.Title.Length > 50 ? link.Title.Substring(0, 47) + "..." : link.Title;
+
+                    <tr>
+                        <td>
+                            <a href="/links/details/@link.Id">@title</a>
+                        </td>
+                        <td>
+                            <a href="/links?d=@domainEncoded">@link.Domain</a>
+                        </td>
+                        <td>@link.DateCreated.ToLocalTime().DateTime</td>
+                    </tr>
+                    <tr style="border-bottom: 0px">
+                        <td colspan="4">
+                            Tags:
+                            @for (var t = 0; t < link.Tags.Count; t++)
+                            {
+                                var tag = link.Tags[t];
+                                <a href="/links?t=@tag.Name">@tag.Name</a>
+
+                                if (t < link.Tags.Count - 1)
+                                {
+                                    <span>, </span>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+
+@code {
+    #region - Properties -
+    private bool IsError { get; set; }
+    private string Message { get; set; } = "";
+
+    private LinkItem[]? Links { get; set; }
+
+    [Parameter]
+    public int PageNo { get; set; } = 1;
+
+    [SupplyParameterFromForm]
+    public string SearchTerm { get; set; } = "";
+
+    private int PageSize { get; set; } = 50;
+
+
+    private int TotalPages { get; set; }
+    #endregion
+
+    #region - Events -
+    async Task Search()
+    {
+        if (string.IsNullOrWhiteSpace(SearchTerm))
+            return;
+
+        var searchQuery = WebUtility.UrlEncode(SearchTerm);
+
+        // Redirect to /links?search=term so that we can preserve history
+        NavManager.NavigateTo($"/links?q={searchQuery}");
+    }
+    #endregion
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await SearchForLinks();
+        }
+        catch (Exception e)
+        {
+            IsError = true;
+            Message = e.Message;
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+
+        if (!string.IsNullOrWhiteSpace(uri.Query))
+        {
+            if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("q", out var query))
+            {
+                SearchTerm = query;
+            }
+
+            if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("p", out var page))
+            {
+                int.TryParse(page, out var pageNo);
+
+                PageNo = Math.Max(1, pageNo);
+            }
+        }
+
+        await base.SetParametersAsync(parameters);
+    }
+
+    #region - Privates -
+    private async Task OnPageChanged(int pageNo)
+    {
+        PageNo = pageNo;
+
+        await OnInitializedAsync();
+    }
+
+    private async Task SearchForLinks()
+    {
+        try
+        {
+            //rslts = apiClient.GetLinksSearchResultsAsync(SearchTerm, null, PageNo, PageSize).Result;
+            // var pageOfLinks = await apiClient!.GetLinksSearchResultsAsync(SearchTerm, null, PageNo, PageSize);
+
+            // rslts = await LinksService.FindAsync(SearchTerm, PageNo, PageSize);
+
+            var query = new FindLinksQuery(SearchTerm, 1, PageSize);
+            var rslts = await Mediator!.Send(query);
+
+            if (rslts.IsError)
+            {
+                IsError = true;
+                Message = rslts.Message;
+            }
+            else
+            {
+                Links = rslts.Results.ToArray();
+                TotalPages = rslts.TotalPages;
+            }
+        }
+        catch (Exception e)
+        {
+            IsError = true;
+            Message = e.Message;
+        }
+    }
+    #endregion
+}

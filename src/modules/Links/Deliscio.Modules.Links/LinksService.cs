@@ -97,6 +97,24 @@ public sealed class LinksService : ServiceBase, ILinksService
     }
 
     /// <summary>
+    /// Gets a collection of links from the central link repository.
+    /// </summary>
+    /// <param name="pageNo">The number of the page of results to be returned</param>
+    /// <param name="pageSize">The number of results per page</param>
+    /// <param name="token"></param>
+    /// <returns></returns>
+    public async Task<PagedResults<LinkItem>> FindAsync(string search, int pageNo = 1, int? pageSize = default, CancellationToken token = default)
+    {
+        var newPageSize = pageSize ?? _defaultLinksPageSize;
+
+        Guard.Against.NegativeOrZero(newPageSize, message: $"{nameof(pageSize)} must be greater than zero");
+
+        var rslts = await FindAsync(l => l.Title.Contains(search), pageNo, newPageSize, token);
+
+        return GetPageOfResults(rslts.Results, pageNo, newPageSize, rslts.TotalCount);
+    }
+
+    /// <summary>
     /// Gets a single link by its id from the central link repository
     /// </summary>
     /// <param name="linkId">The id of the link to retrieve</param>

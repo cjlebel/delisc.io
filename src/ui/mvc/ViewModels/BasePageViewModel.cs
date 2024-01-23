@@ -13,5 +13,5 @@ public record BasePageViewModel
 
 public record BasePagePagedViewModel<T> : BasePageViewModel
 {
-    public PagedResults<T> Results { get; init; } = new();
+    public PagedResults<T>? Results { get; init; } = new();
 }

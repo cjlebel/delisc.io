@@ -5,8 +5,10 @@ using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Queries;
 
-//TODO: This should be moved to GetLinksQuery
-[Obsolete("Use GetLinksQuery")]
+/// <summary>
+/// A specific query to deal with getting links ONLY by tags.
+/// This can be used with the tag cloud where no search terms are provided(?)
+/// </summary>
 public record GetLinksByTagsQuery : IRequest<PagedResults<LinkItem>>
 {
     public int PageNo { get; init; }
@@ -15,12 +17,14 @@ public record GetLinksByTagsQuery : IRequest<PagedResults<LinkItem>>
 
     public string[] Tags { get; init; }
 
-    public GetLinksByTagsQuery(int pageNo, int pageSize, string[] tags)
+    public GetLinksByTagsQuery(int pageNo, int pageSize, string tags = "")
     {
         Guard.Against.NegativeOrZero(pageNo);
         Guard.Against.NegativeOrZero(pageSize);
 
-        Tags = tags;
+        Tags = !string.IsNullOrWhiteSpace(tags) ?
+            tags.Split(',').OrderBy(t => t).ToArray() :
+            Array.Empty<string>();
 
         PageNo = pageNo;
         PageSize = pageSize;

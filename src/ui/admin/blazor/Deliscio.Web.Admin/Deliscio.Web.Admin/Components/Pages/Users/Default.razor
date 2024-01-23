@@ -1,0 +1,15 @@
+@page "/users"
+@using Deliscio.Modules.UserProfiles.Common.Models
+
+@if(users == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+}
+@code {
+    private UserProfileItem[]? users = null;
+}
+ 

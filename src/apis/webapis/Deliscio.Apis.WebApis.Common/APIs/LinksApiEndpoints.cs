@@ -39,10 +39,12 @@ public class LinksApiEndpoints : BaseApiEndpoints
     public void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         MapGetLink(endpoints);
-        MapLinksSearch(endpoints);
-        MapLinksRelated(endpoints);
+        MapGetLinksByTags(endpoints);
+        MapGetLinksSearch(endpoints);
+        MapGetLinksRelated(endpoints);
         MapGetTags(endpoints);
-        MapSubmitLink(endpoints);
+
+        MapPostSubmitLink(endpoints);
     }
 
     /// <summary>
@@ -71,10 +73,10 @@ public class LinksApiEndpoints : BaseApiEndpoints
             .Produces<Link>()
             .ProducesProblem((int)HttpStatusCode.OK)
             .ProducesProblem((int)HttpStatusCode.BadRequest)
-            .WithDisplayName("GetLink")
+            .WithDisplayName("GetLinkAsync")
             .WithSummary("Gets single link item")
             .WithDescription("This endpoint retrieves a single Link item based on the id provided. If none if found, then a NotFound is returned")
-            .WithName("GetLink")
+            .WithName("GetLinkAsync")
             //https://stackoverflow.com/questions/70800034/add-swagger-description-to-minimal-net-6-apis
             .WithMetadata("Meta data for /links/{id}");
     }
@@ -84,9 +86,10 @@ public class LinksApiEndpoints : BaseApiEndpoints
     /// </summary>
     /// <param name="endpoints"></param>
     /// <exception cref="NotImplementedException"></exception>
-    private void MapLinksSearch(IEndpointRouteBuilder endpoints)
+    private void MapGetLinksSearch(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("v1/links", async ([FromQuery] string? search, [FromQuery] string? tags, [FromQuery] int? page, [FromQuery] int? count, CancellationToken cancellationToken) =>
+        endpoints.MapGet("v1/links",
+                async ([FromQuery] string? search, [FromQuery] string? tags, [FromQuery] int? page, [FromQuery] int? count, CancellationToken cancellationToken) =>
         {
             var newPage = page ?? DEFAULT_PAGE_NO;
 
@@ -101,28 +104,8 @@ public class LinksApiEndpoints : BaseApiEndpoints
             var newSearch = search ?? string.Empty;
             var newTags = tags ?? string.Empty;
 
-            if (!string.IsNullOrWhiteSpace(newTags))
-            {
-                var tagsList = WebUtility.UrlDecode(newTags).Split(",").ToArray();
-
-                var resultsByTags = await _manager.GetLinksByTagsAsync(tagsList, newPage, newPageSize, cancellationToken);
-
-                return Results.Ok(resultsByTags);
-            }
-
-            if (!string.IsNullOrWhiteSpace(newSearch))
-            {
-                throw new NotImplementedException();
-            }
-
-            var results = await _manager.GetLinksAsync(newPage, newPageSize, cancellationToken);
+            var results = await _manager.FindAsync(newSearch, newTags, newPage, newPageSize, cancellationToken);
             return Results.Ok(results);
-
-            //var results = await _manager.SearchForLinksAsync(search, cancellationToken);
-
-            //return Results.Ok(results);
-
-            //return Results.Ok();
         })
         .Produces<PagedResults<LinkItem>>()
         .ProducesProblem((int)HttpStatusCode.OK)
@@ -132,7 +115,47 @@ public class LinksApiEndpoints : BaseApiEndpoints
         .WithDescription("This endpoint searches for links based on the search term provided. If the search term is null or whitespace, a BadRequest is returned");
     }
 
-    private void MapLinksRelated(IEndpointRouteBuilder endpoints)
+    /// <summary>
+    /// Maps the endpoints that gets a collection of Links as a page of results by the parameters that were populated.
+    /// </summary>
+    /// <param name="endpoints"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    private void MapGetLinksByTags(IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapGet("v1/links",
+                async ([FromQuery] string tags, [FromQuery] int? page, [FromQuery] int? count, CancellationToken cancellationToken) =>
+                {
+                    var newPage = page ?? DEFAULT_PAGE_NO;
+
+                    if (newPage < 1)
+                        return Results.BadRequest(PAGE_NO_CANNOT_BE_LESS_THAN_ONE);
+
+                    var newPageSize = count ?? DEFAULT_PAGE_SIZE;
+
+                    if (newPageSize < 1)
+                        return Results.BadRequest(PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
+
+                    var tagsList = WebUtility.UrlDecode(tags);
+
+                    if (!string.IsNullOrWhiteSpace(tags))
+                    {
+                        var resultsByTags = await _manager.GetLinksByTagsAsync(tagsList, newPage, newPageSize, cancellationToken);
+
+                        return Results.Ok(resultsByTags);
+                    }
+
+                    var results = await _manager.GetLinksAsync(newPage, newPageSize, cancellationToken);
+                    return Results.Ok(results);
+                })
+        .Produces<PagedResults<LinkItem>>()
+        .ProducesProblem((int)HttpStatusCode.OK)
+        .ProducesProblem((int)HttpStatusCode.BadRequest)
+        .WithDisplayName("SearchForLinks")
+        .WithSummary("Search for links")
+        .WithDescription("This endpoint searches for links based on the search term provided. If the search term is null or whitespace, a BadRequest is returned");
+    }
+
+    private void MapGetLinksRelated(IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("v1/links/{linkId}/related",
                 async ([FromRoute] string linkId, CancellationToken cancellationToken) =>
@@ -166,9 +189,8 @@ public class LinksApiEndpoints : BaseApiEndpoints
                     if (newCount < 1)
                         return Results.BadRequest(TAGS_COUNT_CANNOT_BE_LESS_THAN_ONE);
 
-                    var tagsArr = tags?.Split(",").ToArray() ?? Array.Empty<string>();
 
-                    var results = await _manager.GetTagsAsync(tagsArr, newCount, cancellationToken);
+                    var results = await _manager.GetTagsRelatedToTagsAsync(tags ?? string.Empty, newCount, cancellationToken);
 
                     return Results.Ok(results);
                 })
@@ -184,7 +206,7 @@ public class LinksApiEndpoints : BaseApiEndpoints
     /// Maps the endpoints that submits a new Link.
     /// </summary>
     /// <param name="endpoints"></param>
-    private void MapSubmitLink(IEndpointRouteBuilder endpoints)
+    private void MapPostSubmitLink(IEndpointRouteBuilder endpoints)
     {
         endpoints.MapPost("v1/links/",
             async (SubmitLinkRequest? request) =>

@@ -7,8 +7,11 @@ public interface ILinksService
 {
     Task<Guid> AddAsync(Link link, CancellationToken token = default);
 
+    Task<PagedResults<LinkItem>> FindAsync(string search, int pageNo = 1, int? pageSize = default, CancellationToken token = default);
+
     Task<Link?> GetAsync(Guid linkId, CancellationToken token = default);
 
+    [Obsolete("Use FindAsync instead")]
     Task<PagedResults<LinkItem>> GetAsync(int pageNo = 1, int? pageSize = default, CancellationToken token = default);
 
     Task<IEnumerable<LinkItem>> GetByIdsAsync(IEnumerable<Guid> linkIds, CancellationToken token = default);

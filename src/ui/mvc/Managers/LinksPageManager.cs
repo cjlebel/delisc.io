@@ -1,4 +1,6 @@
 using Ardalis.GuardClauses;
+using Deliscio.Apis.WebApi.Common.Clients;
+using Deliscio.Common.Extensions;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.MediatR.Queries;
@@ -29,7 +31,7 @@ public class LinksPageManager : BasePageManager, ILinksPageManager
 {
     public int DefaultPageSize => 50;
 
-    public LinksPageManager(IMediator mediator, ILogger<LinksPageManager>? logger) : base(mediator, logger) { }
+    public LinksPageManager(WebApiClient webClient, IMediator mediator, ILogger<LinksPageManager>? logger) : base(webClient, mediator, logger) { }
 
     public async Task<LinksPageViewModel?> GetLinksPageViewModelAsync(int? pageNo = 1, int? skip = 0, string? tags = default, CancellationToken token = default)
     {
@@ -41,19 +43,17 @@ public class LinksPageManager : BasePageManager, ILinksPageManager
 
         tags = tags?.Trim() ?? string.Empty;
 
-        var tagsArr = !string.IsNullOrWhiteSpace(tags) ?
-            tags.Split(',').OrderBy(t => t).ToArray() :
-            Array.Empty<string>();
+        var tagsArr = tags.GetArrayOrEmpty(',').OrderBy(t => t).ToArray();
 
-        IRequest<PagedResults<LinkItem>> query = tagsArr?.Length > 0 ?
-            new GetLinksByTagsQuery(page, DefaultPageSize, tagsArr) :
+        IRequest<PagedResults<LinkItem>> query = tags?.Length > 0 ?
+            new GetLinksByTagsQuery(page, DefaultPageSize, tags) :
             new GetLinksQuery(page, DefaultPageSize);
 
         var results = await MediatR!.Send(query, token);
 
         var queryString = GetLinksQueryString(pageNo, skipCount, tagsArr);
 
-        var pageTitle = tagsArr?.Length > 0 ?
+        var pageTitle = tagsArr.Length > 0 ?
             $"Links for {string.Join(", ", tagsArr)} - Page {results.PageNumber} of {results.TotalPages}" :
             $"Links - Page {results.PageNumber} of {results.TotalPages}";
 
@@ -77,9 +77,9 @@ public class LinksPageManager : BasePageManager, ILinksPageManager
         var result = await MediatR!.Send(query, token);
 
         if (result is null)
-            return default(LinksDetailsPageViewModel);
+            return default;
 
-        var model = new LinksDetailsPageViewModel()
+        var model = new LinksDetailsPageViewModel
         {
             PageTitle = result?.Title ?? string.Empty,
             PageDescription = result?.Description ?? string.Empty,

@@ -143,7 +143,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Tests.Integration"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{7C9F7B27-36BF-47C2-8A8F-12C6CBEB3CB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deliscio.Tests.Unit.Web", "tests\unit\web\Deliscio.Tests.Unit.Web\Deliscio.Tests.Unit.Web.csproj", "{96D44300-4377-4139-BC8C-277C0B6A31D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Tests.Unit.Web", "tests\unit\web\Deliscio.Tests.Unit.Web\Deliscio.Tests.Unit.Web.csproj", "{96D44300-4377-4139-BC8C-277C0B6A31D7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdminApis", "AdminApis", "{E116263E-AE49-40EA-8436-EA3C192C1D77}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Apis.AdminApi", "src\apis\adminapis\Deliscio.Apis.AdminApi\Deliscio.Apis.AdminApi.csproj", "{E14720E9-4C0A-45D2-A2E5-AB1D25D75DD8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Web.Admin", "src\ui\admin\blazor\Deliscio.Web.Admin\Deliscio.Web.Admin\Deliscio.Web.Admin.csproj", "{9785E74F-F2CE-4068-B9EF-4A81D376DDCB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -283,6 +289,14 @@ Global
 		{96D44300-4377-4139-BC8C-277C0B6A31D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96D44300-4377-4139-BC8C-277C0B6A31D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96D44300-4377-4139-BC8C-277C0B6A31D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E14720E9-4C0A-45D2-A2E5-AB1D25D75DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E14720E9-4C0A-45D2-A2E5-AB1D25D75DD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E14720E9-4C0A-45D2-A2E5-AB1D25D75DD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E14720E9-4C0A-45D2-A2E5-AB1D25D75DD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9785E74F-F2CE-4068-B9EF-4A81D376DDCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9785E74F-F2CE-4068-B9EF-4A81D376DDCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9785E74F-F2CE-4068-B9EF-4A81D376DDCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9785E74F-F2CE-4068-B9EF-4A81D376DDCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -345,6 +359,9 @@ Global
 		{8D676F9F-8EED-4628-ACFA-67AE6072C02F} = {AE15A452-342A-4CB0-AB71-7C2247F5E166}
 		{7C9F7B27-36BF-47C2-8A8F-12C6CBEB3CB6} = {7AFB3B2D-331A-47B3-A010-0C9F45FBC488}
 		{96D44300-4377-4139-BC8C-277C0B6A31D7} = {7C9F7B27-36BF-47C2-8A8F-12C6CBEB3CB6}
+		{E116263E-AE49-40EA-8436-EA3C192C1D77} = {6697FEF3-D741-40F8-B5A1-D6BDE2267103}
+		{E14720E9-4C0A-45D2-A2E5-AB1D25D75DD8} = {E116263E-AE49-40EA-8436-EA3C192C1D77}
+		{9785E74F-F2CE-4068-B9EF-4A81D376DDCB} = {EFBF74E7-FE8B-4E45-9806-DA1A2ECDFD11}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC98CF49-1486-4252-A157-DA1293256158}

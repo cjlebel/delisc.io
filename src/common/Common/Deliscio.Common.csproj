@@ -4,6 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +16,11 @@
 
   <ItemGroup>
     <Folder Include="Interfaces\" />
+    <Folder Include="Http\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
   </ItemGroup>
 
 </Project>

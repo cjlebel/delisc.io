@@ -1,3 +1,5 @@
+using Deliscio.Apis.WebApi.Common.Clients;
+using Deliscio.Common.Settings;
 using Deliscio.Core.Configuration;
 using Deliscio.Core.Data.Mongo;
 using Deliscio.Modules.Links;
@@ -12,20 +14,28 @@ namespace Deliscio.Tests.Integration.Web.Controllers;
 
 public class BaseControllerTests
 {
-    protected readonly IMediator MediatR;
+    protected IMediator MediatR { get; private set; }
+
+    protected WebApiClient WebClient { get; private set; }
 
     protected BaseControllerTests()
     {
-        MediatR = BuildMediator();
+        Init();
     }
 
     //TODO: Would like to make this common for web api, mvc, tests, ...
-    private static IMediator BuildMediator()
+    private void Init()
     {
         var config = ConfigSettingsManager.GetConfigs();
+
         var mongoConfig = config.GetSection(MongoDbOptions.SectionName);
 
         var services = new ServiceCollection();
+
+        services.Configure<WebApiSettings>(
+            config.GetSection(WebApiSettings.SectionName));
+
+        services.AddHttpClient<WebApiClient>();
 
         services.Configure<MongoDbOptions>(mongoConfig);
         services.AddLogging();
@@ -40,6 +50,6 @@ public class BaseControllerTests
 
         var provider = services.BuildServiceProvider();
 
-        return provider.GetRequiredService<IMediator>();
+        MediatR = provider.GetRequiredService<IMediator>();
     }
 }

@@ -1,0 +1,6 @@
+@Deliscio.Apis.AdminApi_HostAddress = http://localhost:5283
+
+GET {{Deliscio.Apis.AdminApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

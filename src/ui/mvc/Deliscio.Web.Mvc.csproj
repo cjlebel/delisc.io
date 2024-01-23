@@ -10,6 +10,7 @@
 		<AssemblyName>Deliscio.Web.Mvc</AssemblyName>
 		<RootNamespace>Deliscio.Web.Mvc</RootNamespace>
 		<IsPackable>false</IsPackable>
+		<LangVersion>preview</LangVersion>
 		<!--<ComponentsRoot>wwwroot\components\</ComponentsRoot>
 		<WWWRoot>wwwroot\</WWWRoot>
 		<DefaultItemExcludes>$(DefaultItemExcludes);node_modules\**</DefaultItemExcludes>-->
@@ -121,6 +122,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\apis\webapis\Deliscio.Apis.WebApis.Common\Deliscio.Apis.WebApi.Common.csproj" />
+		<ProjectReference Include="..\..\common\Common\Deliscio.Common.csproj" />
 		<ProjectReference Include="..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
 		<ProjectReference Include="..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
 		<ProjectReference Include="..\..\modules\Authentication\Deliscio.Modules.Authentication\Deliscio.Modules.Authentication.csproj" />

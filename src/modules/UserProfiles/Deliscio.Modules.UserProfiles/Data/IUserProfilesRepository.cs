@@ -14,4 +14,5 @@ public interface IUserProfilesRepository : IRepository<UserProfileEntity>
     /// </returns>
     Task<UserProfileEntity?> GetAync(Guid userId, CancellationToken token = default);
 
+    Task<(IEnumerable<UserProfileEntity> Results, int TotalPages, int TotalCount)> SearchAsync(string displayName = "", string email = "", int page = 1, int pageSize = 50, CancellationToken token = default);
 }

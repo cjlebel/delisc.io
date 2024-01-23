@@ -10,6 +10,7 @@
 		<DockerfileContext>..\..\..\..</DockerfileContext>
 		<AssemblyName>Deliscio.Apis.WebApi</AssemblyName>
 		<RootNamespace>Deliscio.Apis.WebApi</RootNamespace>
+		<LangVersion>preview</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

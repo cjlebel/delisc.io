@@ -30,10 +30,14 @@ public static class StartupExtensions
         builder.Services.AddSingleton<ILinksService, LinksService>();
         builder.Services.AddSingleton<ILinksRepository, LinksRepository>();
 
+        builder.Services.AddSingleton<IRequestHandler<FindLinksQuery, PagedResults<LinkItem>>, FindLinksQueryHandler>();
+
         builder.Services.AddSingleton<IRequestHandler<GetLinkByIdQuery, Link?>, GetsLinkByIdQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinkByUrlQuery, Link?>, GetLinkByUrlQueryHandler>();
 
         builder.Services.AddSingleton<IRequestHandler<GetLinksByIdsQuery, IEnumerable<LinkItem>>, GetLinksByIdsQueryHandler>();
+
+        //Obsolete - GetLinksQuery
         builder.Services.AddSingleton<IRequestHandler<GetLinksQuery, PagedResults<LinkItem>>, GetLinksQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinksByDomainQuery, PagedResults<LinkItem>>, GetLinksByDomainQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinksByTagsQuery, PagedResults<LinkItem>>, GetsLinksByTagsQueryHandler>();

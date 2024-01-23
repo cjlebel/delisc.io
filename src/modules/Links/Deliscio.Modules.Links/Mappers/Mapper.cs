@@ -52,7 +52,7 @@ internal static class Mapper
         if (typeof(T) != typeof(Link) && typeof(T) != typeof(LinkItem))
             throw new ArgumentException(string.Format(TYPE_NOT_SUPPORTED_ERROR, typeof(T).Name));
 
-        if (entity == null)
+        if (entity is null)
             return default;
 
         Uri.TryCreate(entity.ImageUrl, UriKind.Absolute, out var imgUri);
