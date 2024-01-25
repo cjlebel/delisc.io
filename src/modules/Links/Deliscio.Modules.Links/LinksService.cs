@@ -99,6 +99,7 @@ public sealed class LinksService : ServiceBase, ILinksService
     /// <summary>
     /// Gets a collection of links from the central link repository.
     /// </summary>
+    /// <param name="search">The search term to use to filter the results</param>
     /// <param name="pageNo">The number of the page of results to be returned</param>
     /// <param name="pageSize">The number of results per page</param>
     /// <param name="token"></param>
@@ -109,7 +110,7 @@ public sealed class LinksService : ServiceBase, ILinksService
 
         Guard.Against.NegativeOrZero(newPageSize, message: $"{nameof(pageSize)} must be greater than zero");
 
-        var rslts = await FindAsync(l => l.Title.Contains(search), pageNo, newPageSize, token);
+        var rslts = await FindAsync(l => string.IsNullOrWhiteSpace(search) || l.Title.Contains(search) || l.Description.Contains(search), pageNo, newPageSize, token);
 
         return GetPageOfResults(rslts.Results, pageNo, newPageSize, rslts.TotalCount);
     }

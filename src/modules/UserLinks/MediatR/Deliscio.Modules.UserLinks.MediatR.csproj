@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>preview</LangVersion>
@@ -14,9 +14,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Ardalis.GuardClauses" Version="4.1.1" />
-		<PackageReference Include="MediatR" Version="12.1.1" />
+		<PackageReference Include="Ardalis.GuardClauses" Version="4.4.0" />
+		<PackageReference Include="MediatR" Version="12.2.0" />
 		<PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.17.0.82934">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Structurizr.Annotations" Version="0.9.3" />
 	</ItemGroup>
 
 	<ItemGroup>
