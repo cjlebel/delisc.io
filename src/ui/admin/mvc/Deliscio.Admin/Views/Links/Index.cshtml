@@ -1,0 +1,115 @@
+@using Deliscio.Modules.Links.Common.Models
+@using System.Net
+@model Deliscio.Core.Models.PagedResults<LinkItem>
+@{
+    ViewData["Title"] = "Home Page";
+
+    var links = Model?.Results ?? new List<LinkItem>();
+}
+
+<div class="pl-3 pr-3">
+    <h1>Links</h1>
+
+    <div class="row">
+        <div class="col">
+            @* Have Search go to /links?search=term instead *@
+            <form method="get" action="" name="links-search-form">
+                <AntiforgeryToken />
+                <div class="input-group mb-3">
+                    <input id="txt-query"
+                           type="text"
+                           name="term"
+                           class="form-control"
+                           placeholder="Search Term..."
+                           aria-label="Search by term"
+                           aria-describedby="button-search" />
+                    <input id="txt-tags"
+                           type="text"
+                           name="tags"
+                           class="form-control"
+                           placeholder="Tags ..."
+                           aria-label="Search by tags"
+                           aria-describedby="button-search" />
+                    <input id="txt-domain"
+                           type="text"
+                           name="domain"
+                           class="form-control"
+                           placeholder="Domain ..."
+                           aria-label="Search by domain name"
+                           aria-describedby="button-search" />
+                    <button id="button-search" class="btn btn-outline-secondary" type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th data-sort="title" data-direction="asc">Title</th>
+                        <th data-sort="domain" data-direction="asc">Domain</th>
+                        <th data-sort="likes" data-direction="asc">Likes</th>
+                        <th data-sort="saves" data-direction="asc">Saves</th>
+                        <th data-sort="created" data-direction="asc">Created</th>
+                        <th data-sort="updated" data-direction="asc">Updated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var link in links)
+                    {
+                        var tags = string.Empty;
+
+                        foreach (var tag in link.Tags)
+                        {
+                            tags += $"<a href=\"/links?t={tag.Name}\">{tag.Name}</a>, ";
+                        }
+
+                        tags = tags.TrimEnd(',').TrimEnd(' ');
+
+                        var title = link.Title.Length > 50 ? link.Title.Substring(0, 47) + "..." : link.Title;
+
+                        <tr>
+                            <td>
+                                <a asp-controller="Links" asp-action="Details" target="_blank" asp-route-id="@link.Id">@title</a>
+                            </td>
+                            <td>
+                                <a asp-controller="Links" asp-action="Index" asp-route-domain="@WebUtility.UrlEncode(link.Domain)">@link.Domain</a>
+                            </td>
+                            <td>
+                                @link.Likes
+                            </td>
+                            <td>
+                                @link.Saves
+                            </td>
+
+                            <td>
+                                @link.DateCreated.ToLocalTime().DateTime
+                            </td>
+                            <td>
+                                @link.DateUpdated.ToLocalTime().DateTime
+                            </td>
+                        </tr>
+                        <tr style="border-bottom: 0px">
+                            <td colspan="6">
+                                Tags:
+                                @for (var t = 0; t < link.Tags.Count; t++)
+                                {
+                                    var tag = link.Tags[t];
+                                    @* var tagUrl = GetUrlForTag(tag.Name); *@
+
+                                    @* <a href="@tagUrl">
+                            <span class="badge bg-primary">@tag.Name</span>
+                            </a> *@
+                                    <span class="badge bg-primary">@tag.Name</span>
+                                    <text>&nbsp;</text>
+                                }
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

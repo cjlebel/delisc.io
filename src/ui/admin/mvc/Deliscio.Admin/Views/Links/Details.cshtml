@@ -1,0 +1,187 @@
+@using Deliscio.Modules.Links.Common.Models
+@model LinkEditDetailsModel
+@{
+    var link = Model?.Link ?? new Link();
+    var title = link?.Title ?? string.Empty;
+    ViewData["Title"] = $"Link Details - {title}";
+
+}
+
+<div id="breadcrumbs">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Links" asp-action="Index">Links</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Details</li>
+        </ol>
+    </nav>
+</div>
+
+<div id="links-edit-container" class="container-fluid pl-3 pr-3">
+    <div id="message" class="hide">XXXXXXX</div>
+
+    @if (link is null)
+    {
+        <h1>There's Nothing to See Here</h1>
+    }
+    else
+    {
+        <h1>@title</h1>
+        <div class="row g-3">
+            <!-- First Column -->
+            <div class="col-md-4">
+                <!-- Image -->
+                <div class="mb-3">
+                    <img src="@link.ImageUrl" alt="Link Image" class="img-fluid" style="border: 2px #c0c0c0; border-radius: 1rem" id="linkImage">
+                    <button type="button" class="btn btn-secondary mt-2" onclick="replaceImage()">Replace Image</button>
+                </div>
+
+                <!-- Additional Details -->
+                <div class="mb-3">
+                    <label for="submitDate" class="form-label">Submit Date</label>
+                    <input type="text" class="form-control" id="submitDate" name="submitDate" value="@link.DateCreated.ToLocalTime().DateTime" disabled>
+                </div>
+
+                <div class="mb-3">
+                    <label for="lastUpdate" class="form-label">Last Update</label>
+                    <input type="text" class="form-control" id="lastUpdate" name="lastUpdate" value="@link.DateUpdated.ToLocalTime().DateTime" disabled>
+                </div>
+
+                <div class="mb-3">
+                    <label for="submittedBy" class="form-label">Submitted By</label>
+                    <input type="text" class="form-control" id="submittedBy" name="submittedBy" value="@link.SubmittedById" disabled>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6 mb-3">
+                        <label for="likes" class="form-label">Likes</label>
+                        <input type="text" class="form-control" id="likes" name="likes" value="@link.LikesCount" disabled>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="saves" class="form-label">Saves</label>
+                        <input type="url" class="form-control" id="saves" name="saves" value="@link.SavesCount" disabled>
+                    </div>
+                </div>
+
+                <h4>Meta</h4>
+                <!-- Keywords -->
+                <div class="mb-3">
+                    <label for="keywords" class="form-label">Meta-Keywords (comma-separated)</label>
+                    @{
+                        var keywords = link.Keywords.Any() ? string.Join(", ", link.Keywords) : string.Empty;
+                    }
+                    <input type="text" class="form-control" id="keywords" value="@keywords" name="keywords" disabled>
+                </div>
+            </div>
+
+            <!-- Second Column -->
+            <div class="col-md-8">
+                <form id="linkForm" method="post" asp-controller="Links" asp-action="Edit">
+                    <!-- Editable Title -->
+                    <div class="row">
+                        <div class="col-12 mb-3">
+
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" value="@link.Title" required>
+
+                            @* <h1 class="h1 mb-0" id="editableTitle" onclick="enableEditTitle()">Title <i class="bi bi-pencil" style="cursor: pointer;"></i></h1>
+                        <input type="text" class="form-control d-none" id="titleInput" name="title" required> *@
+                        </div>
+                    </div>
+
+                    <!-- Domain and URL on the same line -->
+                    <div class="row g-3">
+                        <div class="col-md-3 mb-3">
+                            <label for="domain" class="form-label">Domain</label>
+                            <input type="text" class="form-control" id="domain" name="domain" value="@link.Domain" disabled>
+                        </div>
+                        <div class="col-md-9 mb-3">
+                            <label for="url" class="form-label">URL</label>
+                            <input type="url" class="form-control" id="url" name="url" value="@link.Url" tooltip="@link.Url" disabled>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Tags -->
+                    <div class="mb-3">
+                        <label for="tags" class="form-label">Tags (comma-separated)</label>
+                        @{
+                            var tagsArr = System.Text.Json.JsonSerializer.Serialize(link.Tags.Select(t => t.Name).ToArray());
+                            var friendlyTags = link.Tags.Any() ? string.Join(", ", link.Tags.Select(t => t.Name).ToArray()) : string.Empty;
+                        }
+                        <input id="tags" type="hidden" value="@tagsArr" name="tags" />
+                        <input type="text" class="form-control" id="tags" value="@friendlyTags">
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3">@link.Description</textarea>
+                    </div>
+
+                    <div id="edit-footer" class="d-flex flex-row w-100" style="justify-content: space-between">
+                        <div>
+                            <!-- Submit Button -->
+                            <button id="btnSave" type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                        <div>
+                            <!-- Cancel Button -->
+                            <button id="btnCancel" type="reset" class="btn btn-primary btn-warning">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <h3>Related Content</h3>
+            <div class="col">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Domain</th>
+                        <th>Created</th>
+                        <th>Updated</th>
+                    </tr>
+
+                    </thead>
+                    <tbody>
+                    @if (!Model.RelatedLinks!.Any())
+                    {
+                        <tr>
+                            <td colspan="4">No related links</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var relatedLink in Model.RelatedLinks!)
+                        {
+                            <tr>
+                                <td>
+                                    <a href="">@relatedLink.Title</a>
+                                </td>
+                                <td>
+                                    @relatedLink.Domain
+                                </td>
+                                <td>
+                                    @relatedLink.DateCreated.ToLocalTime().DateTime
+                                </td>
+                                <td>
+                                    @relatedLink.DateUpdated.ToLocalTime().DateTime
+                                </td>
+                            </tr>
+                        }
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script type="module" src="/js/pages/Links/details.mjs">
+    </script>
+}

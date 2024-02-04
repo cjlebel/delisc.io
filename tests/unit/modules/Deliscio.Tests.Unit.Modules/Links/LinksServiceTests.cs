@@ -110,13 +110,13 @@ public class LinksServiceTests
     public void GetAsync_CannotCall_With_Invalid_StringId(string value)
     {
         // GetAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
-        Assert.Multiple(() =>
+        async void Checks()
         {
-            Assert.ThrowsAsync<ArgumentException>(() =>
-                _testClass.GetAsync(value));
-            Assert.ThrowsAsync<ArgumentNullException>(() =>
-                _testClass.GetAsync(value));
-        });
+            await Assert.ThrowsAsync<ArgumentException>(() => _testClass.GetAsync(value));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => _testClass.GetAsync(value));
+        }
+
+        Assert.Multiple(Checks);
     }
 
     [Fact]
@@ -192,13 +192,15 @@ public class LinksServiceTests
     public void GetLinksByDomain_CannotCall_WithInvalid_Domain(string value)
     {
         // GetLinksByDomainAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
-        Assert.Multiple(() =>
+        async void Checks()
         {
-            Assert.ThrowsAsync<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(() =>
                 _testClass.GetLinksByDomainAsync(value, 1995334241, 501827622, CancellationToken.None));
-            Assert.ThrowsAsync<ArgumentNullException>(() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 _testClass.GetLinksByDomainAsync(value, 1995334241, 501827622, CancellationToken.None));
-        });
+        }
+
+        Assert.Multiple(Checks);
     }
 
     [Fact]
@@ -259,13 +261,15 @@ public class LinksServiceTests
     public void GetByUrlAsync_Cannot_Call_WithInvalid_Url(string value)
     {
         // GetLinksByDomainAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
-        Assert.Multiple(() =>
+        async void Checks()
         {
-            Assert.ThrowsAsync<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(() =>
                 _testClass.GetByUrlAsync(value));
-            Assert.ThrowsAsync<ArgumentNullException>(() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 _testClass.GetByUrlAsync(value));
-        });
+        }
+
+        Assert.Multiple(Checks);
     }
 
     [Fact]

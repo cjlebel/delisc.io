@@ -81,13 +81,15 @@ public class LinksManagerTests
     public async Task GetLinkAsync_Cannot_Call_WithInvalid_IdAsync(string value)
     {
         // GetAsync uses Guard, which will throw a ArgumentException is the string is empty, but will throw a ArgumentNullException if the string is null.
-        Assert.Multiple(() =>
+        async void Checks()
         {
-            Assert.ThrowsAsync<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(() =>
                 _testClass.GetLinkAsync(value, CancellationToken.None));
-            Assert.ThrowsAsync<ArgumentNullException>(() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 _testClass.GetLinkAsync(value, CancellationToken.None));
-        });
+        }
+
+        Assert.Multiple(Checks);
     }
 
     [Fact]
@@ -171,13 +173,15 @@ public class LinksManagerTests
     [InlineData("   ")]
     public void Cannot_Call_SubmitLinkAsync_WithInvalid_UrlAsync(string value)
     {
-        Assert.Multiple(() =>
+        async void Checks()
         {
-            Assert.ThrowsAsync<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(() =>
                 _testClass.SubmitLinkAsync(value, "UserId_TestValue324332177", "Title_TestValue1462936722", "Description_TestValue1143163502", new[] { "TestValue1550313992", "TestValue2081488401", "TestValue741571745" }, CancellationToken.None));
-            Assert.ThrowsAsync<ArgumentNullException>(() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 _testClass.SubmitLinkAsync(value, "UserId_TestValue324332177", "Title_TestValue1462936722", "Description_TestValue1143163502", new[] { "TestValue1550313992", "TestValue2081488401", "TestValue741571745" }, CancellationToken.None));
-        });
+        }
+
+        Assert.Multiple(Checks);
     }
 
     [Theory]
@@ -186,12 +190,14 @@ public class LinksManagerTests
     [InlineData("   ")]
     public void Cannot_Call_SubmitLinkAsync_WithInvalid_SubmittedByUserIdAsync(string value)
     {
-        Assert.Multiple(() =>
+        async void Checks()
         {
-            Assert.ThrowsAsync<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(() =>
                 _testClass.SubmitLinkAsync("http://www.TestValue17814585.com", value, "Title_TestValue1143163502", "Description_TestValue1462936722", new[] { "TestValue1569180359", "TestValue1765644044", "TestValue1590741572" }, CancellationToken.None));
-            Assert.ThrowsAsync<ArgumentNullException>(() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(() =>
                 _testClass.SubmitLinkAsync("http://www.TestValue17814585.com", value, "Title_TestValue1143163502", "Description_TestValue1462936722", new[] { "TestValue1569180359", "TestValue1765644044", "TestValue1590741572" }, CancellationToken.None));
-        });
+        }
+
+        Assert.Multiple(Checks);
     }
 }

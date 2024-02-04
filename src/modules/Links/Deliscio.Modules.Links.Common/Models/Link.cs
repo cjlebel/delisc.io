@@ -16,7 +16,15 @@ public sealed record Link
     /// </value>
     public string ImageUrl { get; set; } = string.Empty;
 
+    public bool IsActive { get; set; }
+
+    public bool IsFlagged { get; set; }
+
     public string[] Keywords { get; set; } = Array.Empty<string>();
+
+    public int LikesCount { get; set; }
+
+    public int SavesCount { get; set; }
 
     public List<LinkTag> Tags { get; set; } = new List<LinkTag>();
 
@@ -62,21 +70,17 @@ public sealed record Link
         Tags = tags?.ToList() ?? new List<LinkTag>();
     }
 
-    public static Link Create(string url, string submittedById)
-    {
-        return Create(url, submittedById, string.Empty, string.Empty, Enumerable.Empty<string>());
-    }
-
     /// <summary>
     /// Creates a instance of a NEW Link.
     /// </summary>
     /// <param name="url">The URL that the Link points to.</param>
+    /// <param name="submittedById">The Id of the user who first submitted this link</param>
     /// <param name="title">The title of the page for the Link.</param>
     /// <param name="description">The description of the Link.</param>
     /// <param name="tags">The tags that are associated with the Link.</param>
     /// <returns></returns>
     /// <exception cref="System.ArgumentNullException">url or title or tags </exception>
-    public static Link Create(string url, string submittedById, string title, string description, IEnumerable<string>? tags = null)
+    public static Link Create(string url, string submittedById, string title = "", string description = "", IEnumerable<string>? tags = null)
     {
         if (string.IsNullOrWhiteSpace(url))
             throw new ArgumentNullException(nameof(url));

@@ -17,9 +17,12 @@ internal static class Mapper
             Description = link.Description,
             Domain = link.Domain,
             ImageUrl = link.ImageUrl,
+            IsActive = link.IsActive,
+            IsFlagged = link.IsFlagged,
             Keywords = link.Keywords,
+            LikesCount = link.LikesCount,
             //IsExcluded = link.IsExcluded,
-            //IsFlagged = link.IsFlagged,
+
             Tags = Map(link.Tags).ToList(),
             Title = link.Title,
 
@@ -75,7 +78,10 @@ internal static class Mapper
                 Domain = entity.Domain,
                 ImageUrl = imgUrl, //entity.ImageUrl,
                 //IsExcluded = entity.IsExcluded,
-                //IsFlagged = entity.IsFlagged,
+                IsActive = entity.IsActive,
+                IsFlagged = entity.IsFlagged,
+                LikesCount = entity.LikesCount,
+                SavesCount = entity.SavesCount,
                 Tags = Map(entity.Tags).ToList(),
                 Title = entity.Title,
 
@@ -88,7 +94,11 @@ internal static class Mapper
 
         if (typeof(T) == typeof(LinkItem))
         {
-            var model = new LinkItem(entity.Id, entity.Url, entity.Title, entity.Description, entity.Domain, entity.ImageUrl, Map(entity.Tags), entity.DateCreated);
+            var model = new LinkItem(entity.Id, entity.Url, entity.Title, entity.Description, entity.Domain, entity.ImageUrl, Map(entity.Tags), entity.DateCreated, entity.DateUpdated)
+            {
+                Likes = entity.LikesCount,
+                Saves = entity.SavesCount
+            };
 
             return (T)(object)model;
         }
@@ -198,6 +208,4 @@ internal static class Mapper
 
         return rslts;
     }
-
-
 }

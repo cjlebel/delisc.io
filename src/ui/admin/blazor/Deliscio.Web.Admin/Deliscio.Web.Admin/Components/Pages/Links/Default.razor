@@ -4,6 +4,7 @@
 @using Deliscio.Modules.Links.Common.Models
 @using Deliscio.Modules.Links.MediatR.Queries
 @using System.Net
+@using Deliscio.Core.Models
 @using Microsoft.AspNetCore.WebUtilities
 
 @rendermode InteractiveServer
@@ -44,18 +45,18 @@ else if (IsError is false && !string.IsNullOrWhiteSpace(Message))
                 </div>
             </form>
         </div>
-        <table class="table">
-            <thead>
+        <table class="table table-bordered">
+            <thead class="thead-dark">
                 <tr>
                     <th>Title</th>
                     <th>Domain</th>
-                    <th>DateCreated</th>
+                    <th>Created</th>
+                    <th>Updated</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var link in Links)
                 {
-                    var domainEncoded = !string.IsNullOrWhiteSpace(link.Domain) ? WebUtility.UrlEncode(link.Domain) : string.Empty;
                     var tags = string.Empty;
 
                     foreach (var tag in link.Tags)
@@ -72,9 +73,14 @@ else if (IsError is false && !string.IsNullOrWhiteSpace(Message))
                             <a href="/links/details/@link.Id">@title</a>
                         </td>
                         <td>
-                            <a href="/links?d=@domainEncoded">@link.Domain</a>
+                            <a href="@GetUrlForDomain(link.Domain)">@link.Domain</a>
                         </td>
-                        <td>@link.DateCreated.ToLocalTime().DateTime</td>
+                        <td>
+                            @link.DateCreated.ToLocalTime().DateTime
+                        </td>
+                        <td>
+                            @link.DateUpdated.ToLocalTime().DateTime
+                        </td>
                     </tr>
                     <tr style="border-bottom: 0px">
                         <td colspan="4">
@@ -82,14 +88,15 @@ else if (IsError is false && !string.IsNullOrWhiteSpace(Message))
                             @for (var t = 0; t < link.Tags.Count; t++)
                             {
                                 var tag = link.Tags[t];
-                                <a href="/links?t=@tag.Name">@tag.Name</a>
+                                var tagUrl = GetUrlForTag(tag.Name);
 
-                                if (t < link.Tags.Count - 1)
-                                {
-                                    <span>, </span>
-                                }
+                                <a href="@tagUrl">
+                                    <span class="badge bg-primary">@tag.Name</span>
+                                </a>
+                                <text>&nbsp;</text>
                             }
                         </td>
+
                     </tr>
                 }
             </tbody>
@@ -108,17 +115,24 @@ else if (IsError is false && !string.IsNullOrWhiteSpace(Message))
     [Parameter]
     public int PageNo { get; set; } = 1;
 
-    [SupplyParameterFromForm]
-    public string SearchTerm { get; set; } = "";
-
     private int PageSize { get; set; } = 50;
 
 
     private int TotalPages { get; set; }
+
+    private int TotalResults { get; set; }
+
+
+
+    [SupplyParameterFromForm]
+    public string SearchTerm { get; set; } = "";
+
+    public string[] Tags { get; set; } = Array.Empty<string>();
+
     #endregion
 
     #region - Events -
-    async Task Search()
+    private void Search()
     {
         if (string.IsNullOrWhiteSpace(SearchTerm))
             return;
@@ -153,7 +167,16 @@ else if (IsError is false && !string.IsNullOrWhiteSpace(Message))
         {
             if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("q", out var query))
             {
-                SearchTerm = query;
+                SearchTerm = query.ToString();
+            }
+
+            if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("t", out var tags))
+            {
+                tags = WebUtility.UrlDecode(tags.ToString().Replace('+', ' '));
+
+                var tagsArray = tags.ToString().Split(',');
+
+                Tags = tagsArray.Distinct().Order().ToArray();
             }
 
             if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("p", out var page))
@@ -168,11 +191,37 @@ else if (IsError is false && !string.IsNullOrWhiteSpace(Message))
     }
 
     #region - Privates -
-    private async Task OnPageChanged(int pageNo)
+    private async Task PageChanged(int pageNo)
     {
         PageNo = pageNo;
 
         await OnInitializedAsync();
+    }
+
+    /// <summary>
+    /// Gets the search url with this domain.
+    /// </summary>
+    /// <param name="domain"></param>
+    /// <returns></returns>
+    private string GetUrlForDomain(string domain)
+    {
+        return $"/links?d={WebUtility.UrlEncode(domain)}";
+    }
+
+    /// <summary>
+    /// Gets the url for an individual tag.
+    /// If the user has already filtered by one or more tags, then there are used and this one is appended to that list.
+    /// </summary>
+    /// <param name="tag">The tag to create the url with</param>
+    /// <returns></returns>
+    private string GetUrlForTag(string tag)
+    {
+        var tagsArr = Tags.Concat(new[] { tag });
+        tagsArr = tagsArr.Distinct().Order().Select(t=>WebUtility.UrlEncode(t).Replace(' ', '+')).ToArray();
+
+        var tags = string.Join(',', tagsArr);
+
+        return $"/links?t={tags}";
     }
 
     private async Task SearchForLinks()
@@ -184,8 +233,25 @@ else if (IsError is false && !string.IsNullOrWhiteSpace(Message))
 
             // rslts = await LinksService.FindAsync(SearchTerm, PageNo, PageSize);
 
-            var query = new FindLinksQuery(SearchTerm, 1, PageSize);
-            var rslts = await Mediator!.Send(query);
+            var tags = string.Join(',', Tags);
+            var rslts = new PagedResults<LinkItem>();
+
+            if (!string.IsNullOrWhiteSpace(SearchTerm))
+            {
+                var query = new FindLinksQuery(SearchTerm, 1, PageSize);
+                rslts = await Mediator!.Send(query);
+            }
+            else if (Tags.Length > 0)
+            {
+                var query = new GetLinksByTagsQuery(PageNo, PageSize, tags);
+                rslts = await Mediator!.Send(query);
+            }
+            else
+            {
+                var query = new FindLinksQuery(string.Empty, 1, PageSize);
+                rslts = await Mediator!.Send(query);
+            }
+
 
             if (rslts.IsError)
             {
@@ -196,6 +262,7 @@ else if (IsError is false && !string.IsNullOrWhiteSpace(Message))
             {
                 Links = rslts.Results.ToArray();
                 TotalPages = rslts.TotalPages;
+                TotalResults = rslts.TotalResults;
             }
         }
         catch (Exception e)

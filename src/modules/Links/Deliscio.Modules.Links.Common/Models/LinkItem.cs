@@ -10,7 +10,11 @@ public sealed record LinkItem
 
     public string ImageUrl { get; set; } = string.Empty;
 
-    public List<LinkTag> Tags { get; set; } = new List<LinkTag>();
+    public int Likes { get; set; }
+
+    public int Saves { get; set; }
+
+    public List<LinkTag> Tags { get; set; } = new();
 
     public string Title { get; set; }
 
@@ -18,15 +22,17 @@ public sealed record LinkItem
 
     public DateTimeOffset DateCreated { get; set; }
 
+    public DateTimeOffset DateUpdated { get; set; }
+
     // Needed for deserialization
     public LinkItem() { }
 
     public LinkItem(Guid id, string url, string title, string description, string domain, string imageUrl,
-        IEnumerable<LinkTag>? tags, DateTimeOffset dateCreated) : this(id.ToString(), url, title, description, domain,
-        imageUrl, tags, dateCreated)
+        IEnumerable<LinkTag>? tags, DateTimeOffset dateCreated, DateTimeOffset dateUpdated) : this(id.ToString(), url, title, description, domain,
+        imageUrl, tags, dateCreated, dateUpdated)
     { }
 
-    public LinkItem(string id, string url, string title, string description, string domain, string imageUrl, IEnumerable<LinkTag>? tags, DateTimeOffset dateCreated)
+    public LinkItem(string id, string url, string title, string description, string domain, string imageUrl, IEnumerable<LinkTag>? tags, DateTimeOffset dateCreated, DateTimeOffset dateUpdated)
     {
         Id = id;
         Description = description;
@@ -36,5 +42,6 @@ public sealed record LinkItem
         Title = title;
         Url = url;
         DateCreated = dateCreated;
+        DateUpdated = dateUpdated;
     }
 }
