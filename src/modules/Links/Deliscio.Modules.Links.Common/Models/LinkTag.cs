@@ -18,7 +18,7 @@ public sealed record LinkTag
 
     public LinkTag(string name, int count, float weight)
     {
-        Name = name;
+        Name = name.Trim();
         Count = count;
         Weight = float.Round(weight, 6);
     }

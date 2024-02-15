@@ -1,6 +1,5 @@
-export default function EditLinks() {
-    console.log('Edit Links Loaded');
 
+export default function EditLinks() {
     const divMessage = document.querySelector('#links-edit-container #message');
     const frmEdit = document.querySelector('#links-edit-container form');
 
@@ -33,7 +32,7 @@ export default function EditLinks() {
             divMessage.classList.add('show');
         }
         else {
-            frmEdit.submit();
+            submitUpdate();
         }
     }
 
@@ -43,7 +42,7 @@ export default function EditLinks() {
 
     const validateForm = () => {
         const requiredElements = Array.from(frmEdit.elements)
-            .filter(element => element.tagName.toLowerCase() !== 'button' && element.hasAttribute('required'));
+            .filter(element => element.hasAttribute('required') && element.tagName.toLowerCase() !== 'button');
 
         let hasErrors = false;
         let errorMsg = '';
@@ -71,11 +70,60 @@ export default function EditLinks() {
         return { isSuccess: !hasErrors, message: errorMsg };
     }
 
-    const createLink = (title, description, tags) => {
-        return {
-            title: String(title),
-            description: String(description),
-            tags: tags.split(',').map(tag => tag.trim())
+    const submitUpdate = () => {
+        const antiForgeInput = document.getElementsByName('__RequestVerificationToken')[0];
+        const antiForgeToken = antiForgeInput ? antiForgeInput.value : null;
+
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('RequestVerificationToken', antiForgeToken);
+
+        const request = {
+            Id: frmEdit.id.value,
+            Title: frmEdit.title.value,
+            Description: frmEdit.description.value,
+            Tags: frmEdit.tags ? frmEdit.tags.value.split(',') : []
+        };
+
+        //console.log(request);
+
+        fetch('/links/edit', {
+            headers: headers,
+            method: 'POST',
+            body: JSON.stringify(request),
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .then(data => onEditSuccess(data))
+            .catch(error => console.error('Error:', error));
+    };
+
+    const onEditSuccess = (data) => {
+        const isSuccess = data.isSuccess ?? false;
+        const message = data.message.trim() != '' ? data.message.trim() : "Link successfully saved";
+
+        if(isSuccess) {
+            divMessage.innerHTML = message;
+            
+            divMessage.classList.remove('hide');            
+            divMessage.classList.remove('alert-danger');
+
+            divMessage.classList.add('alert-success');
+            divMessage.classList.add('show');
+        }
+        else {
+            divMessage.innerHTML = message ?? "Unable to save the link";
+
+            divMessage.classList.remove('show');
+            divMessage.classList.remove('alert-success');
+
+            divMessage.classList.add('alert-danger');
+            divMessage.classList.add('show');
         };
     };
 }

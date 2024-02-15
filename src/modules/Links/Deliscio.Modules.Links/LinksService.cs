@@ -363,6 +363,40 @@ public sealed class LinksService : ServiceBase, ILinksService
         return linkEntity.Id;
     }
 
+    public async ValueTask<(bool IsSuccess, string Message)> UpdateLinkAsync(Guid updatedById,
+        Guid id, string title, string description, string[]? tags = default, CancellationToken token = default)
+    {
+        if (updatedById == Guid.Empty)
+            return (false, "Must have a User Id to Update this Link");
+
+        if (id == Guid.Empty)
+            return (false, "Must have a Link Id to Update this Link");
+
+        if (string.IsNullOrWhiteSpace(title))
+            return (false, "Must have a Title to Update this Link");
+
+        var linkEntity = await _repository.GetAsync(id, token);
+
+        if (linkEntity == null)
+            return (false, "Link not found");
+
+        linkEntity.Title = title;
+        linkEntity.Description = description;
+        linkEntity.Tags = tags?.Select(LinkTagEntity.Create).ToList() ?? [];
+        linkEntity.DateUpdated = DateTime.UtcNow;
+
+        try
+        {
+            await _repository.UpdateAsync(linkEntity, token);
+        }
+        catch (Exception e)
+        {
+            return (false, e.Message);
+        }
+
+        return (true, string.Empty);
+    }
+
     private async Task UpdateLinkAsync(LinkEntity linkEntity, string[]? tags = default, CancellationToken token = default)
     {
         Guard.Against.Null(linkEntity);

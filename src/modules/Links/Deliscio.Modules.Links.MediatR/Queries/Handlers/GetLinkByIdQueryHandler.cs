@@ -7,11 +7,11 @@ namespace Deliscio.Modules.Links.MediatR.Queries.Handlers;
 /// <summary>
 /// Handles getting a single link from the central repository, by the link's id
 /// </summary>
-public class GetsLinkByIdQueryHandler : IRequestHandler<GetLinkByIdQuery, Link?>
+public class GetLinkByIdQueryHandler : IRequestHandler<GetLinkByIdQuery, Link?>
 {
     private readonly ILinksService _linksService;
 
-    public GetsLinkByIdQueryHandler(ILinksService linksService)
+    public GetLinkByIdQueryHandler(ILinksService linksService)
     {
         _linksService = linksService;
     }

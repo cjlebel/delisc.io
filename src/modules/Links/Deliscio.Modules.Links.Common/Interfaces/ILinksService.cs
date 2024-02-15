@@ -43,4 +43,6 @@ public interface ILinksService
     Task<LinkTag[]> GetRelatedTagsByDomainAsync(string domain, int? count = default, CancellationToken token = default);
 
     Task<Guid> SubmitLinkAsync(string url, Guid submittedByUserId, string[]? tags = default, CancellationToken token = default);
+
+    ValueTask<(bool IsSuccess, string Message)> UpdateLinkAsync(Guid updatedById, Guid id, string title, string description, string[]? tags = default, CancellationToken token = default);
 }

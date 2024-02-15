@@ -17,8 +17,8 @@
     </nav>
 </div>
 
-<div id="links-edit-container" class="container-fluid pl-3 pr-3">
-    <div id="message" class="hide">XXXXXXX</div>
+<div id="links-edit-container" class="container-fluid pl-3 pr-3" data-returnurl="@(Model?.ReturnUrl ?? string.Empty)">
+    <div id="message1" class="hide"></div>
 
     @if (link is null)
     {
@@ -33,7 +33,7 @@
                 <!-- Image -->
                 <div class="mb-3">
                     <img src="@link.ImageUrl" alt="Link Image" class="img-fluid" style="border: 2px #c0c0c0; border-radius: 1rem" id="linkImage">
-                    <button type="button" class="btn btn-secondary mt-2" onclick="replaceImage()">Replace Image</button>
+                    @* <button type="button" class="btn btn-secondary mt-2" onclick="replaceImage()">Replace Image</button> *@
                 </div>
 
                 <!-- Additional Details -->
@@ -77,6 +77,9 @@
             <!-- Second Column -->
             <div class="col-md-8">
                 <form id="linkForm" method="post" asp-controller="Links" asp-action="Edit">
+                    @* <form id="linkForm" method="post" action="/links/edit"> *@
+                    @* @Html.AntiForgeryToken() *@
+                    <input type="hidden" id="id" name="id" value="@link.Id" />
                     <!-- Editable Title -->
                     <div class="row">
                         <div class="col-12 mb-3">
@@ -107,10 +110,10 @@
                     <div class="mb-3">
                         <label for="tags" class="form-label">Tags (comma-separated)</label>
                         @{
-                            var tagsArr = System.Text.Json.JsonSerializer.Serialize(link.Tags.Select(t => t.Name).ToArray());
+                            //var tagsArr = System.Text.Json.JsonSerializer.Serialize(link.Tags.Select(t => t.Name).ToArray());
                             var friendlyTags = link.Tags.Any() ? string.Join(", ", link.Tags.Select(t => t.Name).ToArray()) : string.Empty;
                         }
-                        <input id="tags" type="hidden" value="@tagsArr" name="tags" />
+                        @* <input id="tags" type="hidden" value="@tagsArr" name="tags"/> *@
                         <input type="text" class="form-control" id="tags" value="@friendlyTags">
                     </div>
 
@@ -126,6 +129,9 @@
                             <button id="btnSave" type="submit" class="btn btn-primary">Save</button>
                         </div>
                         <div>
+                            <div id="message" class="d-flex w-100 justify-content-evenly alert hide"></div>
+                        </div>
+                        <div>
                             <!-- Cancel Button -->
                             <button id="btnCancel" type="reset" class="btn btn-primary btn-warning">Cancel</button>
                         </div>
@@ -139,41 +145,41 @@
             <div class="col">
                 <table class="table table-striped">
                     <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Domain</th>
-                        <th>Created</th>
-                        <th>Updated</th>
-                    </tr>
+                        <tr>
+                            <th>Title</th>
+                            <th>Domain</th>
+                            <th>Created</th>
+                            <th>Updated</th>
+                        </tr>
 
                     </thead>
                     <tbody>
-                    @if (!Model.RelatedLinks!.Any())
-                    {
-                        <tr>
-                            <td colspan="4">No related links</td>
-                        </tr>
-                    }
-                    else
-                    {
-                        @foreach (var relatedLink in Model.RelatedLinks!)
+                        @if (!Model.RelatedLinks!.Any())
                         {
                             <tr>
-                                <td>
-                                    <a href="">@relatedLink.Title</a>
-                                </td>
-                                <td>
-                                    @relatedLink.Domain
-                                </td>
-                                <td>
-                                    @relatedLink.DateCreated.ToLocalTime().DateTime
-                                </td>
-                                <td>
-                                    @relatedLink.DateUpdated.ToLocalTime().DateTime
-                                </td>
+                                <td colspan="4">No related links</td>
                             </tr>
                         }
-                    }
+                        else
+                        {
+                            @foreach (var relatedLink in Model.RelatedLinks!)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="">@relatedLink.Title</a>
+                                    </td>
+                                    <td>
+                                        @relatedLink.Domain
+                                    </td>
+                                    <td>
+                                        @relatedLink.DateCreated.ToLocalTime().DateTime
+                                    </td>
+                                    <td>
+                                        @relatedLink.DateUpdated.ToLocalTime().DateTime
+                                    </td>
+                                </tr>
+                            }
+                        }
                     </tbody>
                 </table>
             </div>
@@ -182,6 +188,5 @@
 </div>
 
 @section Scripts {
-    <script type="module" src="/js/pages/Links/details.mjs">
-    </script>
+    <script type="module" src="/js/pages/Links/details.mjs"></script>
 }

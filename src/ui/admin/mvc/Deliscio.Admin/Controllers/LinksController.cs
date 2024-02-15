@@ -1,6 +1,9 @@
 using Deliscio.Admin.Models;
+using Deliscio.Common.Helpers;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
+using Deliscio.Modules.Links.Common.Models.Requests;
+using Deliscio.Modules.Links.MediatR.Commands;
 using Deliscio.Modules.Links.MediatR.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +15,8 @@ public class LinksController : Controller
 
     private const int PAGE_SIZE = 50;
 
+    private const string ERROR_MISSING_ID = "The link ID is missing";
+    private const string ERROR_MISSING_TITLE = "The link title is missing";
 
     public LinksController(IMediator mediator)
     {
@@ -39,9 +44,9 @@ public class LinksController : Controller
         var model = LinkEditDetailsModel.Success(link, returnUrl, null);
 
         var queryRelated = new GetLinkRelatedLinksQuery(new Guid(link.Id));
-        var relateds = await _mediator.Send(queryRelated);
+        var relatedLinks = await _mediator.Send(queryRelated);
 
-        model.RelatedLinks = relateds;
+        model.RelatedLinks = relatedLinks;
 
         return View(model);
     }
@@ -49,13 +54,16 @@ public class LinksController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Route("/links/edit")]
-    public async Task<IActionResult> Edit([FromForm] LinkItem link)
+    public async Task<IActionResult> Edit([FromBody] LinkEditRequest model)
     {
-        if (link is null)
-            return BadRequest();
+        if (string.IsNullOrWhiteSpace(model.Id))
+            return BadRequest(ERROR_MISSING_ID);
 
-        //var cmd = new UpdateLinkCommand(model.Link);
-        //var rslt = await _mediator.Send(cmd);
+        if (string.IsNullOrWhiteSpace(model.Title))
+            return BadRequest(ERROR_MISSING_TITLE);
+
+        var cmd = new EditLinkCommand(GuidHelpers.GetMD5AsGuid("deliscio"), model.Id, model.Title, model.Description, model.Tags);
+        var rslt = await _mediator.Send(cmd);
 
         //if (rslt.IsSuccess)
         //    return Redirect(model.ReturnUrl);
@@ -63,7 +71,7 @@ public class LinksController : Controller
         //model = LinkEditDetailsModel.Failure(rslt.ErrorMessage);
         //return View(model);
 
-        return Ok();
+        return Ok(new { rslt.IsSuccess, rslt.Message });
     }
 
     private async Task<PagedResults<LinkItem>> SearchLinks(string term = "", string tags = "", string domain = "", int? page = 1, int? size = PAGE_SIZE)
