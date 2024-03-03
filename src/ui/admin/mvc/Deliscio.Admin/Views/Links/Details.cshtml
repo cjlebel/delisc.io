@@ -1,4 +1,5 @@
 @using Deliscio.Modules.Links.Common.Models
+
 @model LinkEditDetailsModel
 @{
     var link = Model?.Link ?? new Link();
@@ -26,7 +27,9 @@
     }
     else
     {
-        <h1>@title</h1>
+        var titleCss = link.IsFlagged ? "text-danger" : !link.IsActive ? "text-warning" : "text-success";
+
+        <h1 class="@titleCss">@title</h1>
         <div class="row g-3">
             <!-- First Column -->
             <div class="col-md-4">
@@ -79,11 +82,10 @@
                 <form id="linkForm" method="post" asp-controller="Links" asp-action="Edit">
                     @* <form id="linkForm" method="post" action="/links/edit"> *@
                     @* @Html.AntiForgeryToken() *@
-                    <input type="hidden" id="id" name="id" value="@link.Id" />
+                    <input id="id" name="id" type="hidden" value="@link.Id" />
                     <!-- Editable Title -->
                     <div class="row">
                         <div class="col-12 mb-3">
-
                             <label for="title" class="form-label">Title</label>
                             <input type="text" class="form-control" id="title" name="title" value="@link.Title" required>
 
@@ -100,7 +102,12 @@
                         </div>
                         <div class="col-md-9 mb-3">
                             <label for="url" class="form-label">URL</label>
-                            <input type="url" class="form-control" id="url" name="url" value="@link.Url" tooltip="@link.Url" disabled>
+                            <div class="input-group">
+                                <input type="url" class="form-control" id="url" name="url" value="@link.Url" tooltip="@link.Url" disabled>
+                                <div class="input-group-append">
+                                    <a href="@link.Url" class="btn btn-outline-secondary bg-success text-white" target="_blank"><i class="fa-solid fa-arrow-right"></i></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -123,13 +130,23 @@
                         <textarea class="form-control" id="description" name="description" rows="3">@link.Description</textarea>
                     </div>
 
+                    <div class="mb-3 d-flex w-100 justify-content-evenly">
+                        <div id="message" class="alert hide"></div>
+                    </div>
+
+
+
                     <div id="edit-footer" class="d-flex flex-row w-100" style="justify-content: space-between">
                         <div>
                             <!-- Submit Button -->
                             <button id="btnSave" type="submit" class="btn btn-primary">Save</button>
                         </div>
                         <div>
-                            <div id="message" class="d-flex w-100 justify-content-evenly alert hide"></div>
+                            <input id="isActive" name="isActive" type="hidden" value="@link.IsActive.ToString().ToLowerInvariant()" />
+                            <button id="btnActivate" type="button" class="btn btn-primary"></button>
+                        </div>
+                        <div>
+                            <button id="btnDelete" type="button" class="btn btn-primary btn-danger">Delete</button>
                         </div>
                         <div>
                             <!-- Cancel Button -->
@@ -166,7 +183,7 @@
                             {
                                 <tr>
                                     <td>
-                                        <a href="">@relatedLink.Title</a>
+                                        <a asp-controller="Links" asp-action="Details" asp-route-id="@relatedLink.Id">@relatedLink.Title</a>
                                     </td>
                                     <td>
                                         @relatedLink.Domain

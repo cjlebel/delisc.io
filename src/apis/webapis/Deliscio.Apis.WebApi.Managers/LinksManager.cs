@@ -44,6 +44,8 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         Guard.Against.NegativeOrZero(pageNo);
         Guard.Against.NegativeOrZero(pageSize);
 
+        var request = new FindLinksQueryRequest(search, pageNo, pageSize, 0, "")
+
         var query = new FindLinksQuery(search, pageNo, pageSize, 0, tags);
 
         return _mediator.Send(query, token);

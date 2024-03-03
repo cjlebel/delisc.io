@@ -4,7 +4,6 @@ using Deliscio.Modules.Links;
 using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Data.Mongo;
-using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Modules.Links.MediatR.Queries.Handlers;
 using Deliscio.Modules.QueuedLinks;

@@ -227,14 +227,18 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     }
 
 
-    public async Task RemoveAsync(Guid id, CancellationToken token = default)
+    public async Task<bool> RemoveAsync(Guid id, CancellationToken token = default)
     {
-        await Collection.DeleteOneAsync(d => d.Id == id, token);
+        var rslt = await Collection.DeleteOneAsync(d => d.Id == id, token);
+
+        var count = rslt.DeletedCount;
+
+        return rslt.IsAcknowledged;
     }
 
-    public async Task RemoveAsync(TDocument entity, CancellationToken token = default)
+    public async Task<bool> RemoveAsync(TDocument entity, CancellationToken token = default)
     {
-        await Collection.DeleteOneAsync(d => d.Id == entity.Id, token);
+        return await RemoveAsync(entity.Id, token);
     }
 
 

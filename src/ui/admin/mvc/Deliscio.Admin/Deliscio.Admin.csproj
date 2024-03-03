@@ -1,12 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
+    <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <TypeScriptTarget>ESNext</TypeScriptTarget>
+      <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+      <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+      <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+    </PropertyGroup>
+
+    <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <TypeScriptTarget>ESNext</TypeScriptTarget>
+      <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+      <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+      <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+    </PropertyGroup>
+
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
+        <!-- <TargetFramework>net8.0</TargetFramework> -->
+        <!-- <Nullable>enable</Nullable> -->
+        <!-- <ImplicitUsings>enable</ImplicitUsings> -->
         <UserSecretsId>fccf7ef1-6c81-4497-874e-f164ecd75fcc</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <DockerfileContext>..\..\..\..\..</DockerfileContext>
+        <TypeScriptJSXEmit>react</TypeScriptJSXEmit>
     </PropertyGroup>
 
     <ItemGroup>
@@ -25,10 +40,10 @@
         <Content Remove="wwwroot\scss\styles.scss" />
         <Content Remove="wwwroot\scss\_variables.scss" />
         <Content Remove="wwwroot\tsx\components\Pager\index-root.tsxx" />
-        <Content Remove="wwwroot\tsx\components\Pager\index.ts" />
+        <Content Remove="wwwroot\tsx\components\Pager\index.tsx" />
         <Content Remove="wwwroot\tsx\components\Pager\Pager.module.scss" />
         <Content Remove="wwwroot\tsx\components\Pager\Pager.module.scss.d.ts" />
-        <Content Remove="wwwroot\tsx\components\Pager\Pager.tsx" />
+        <Content Remove="wwwroot\tsx\components\Pager\PagerComponent.tsx" />
         <Content Remove="wwwroot\tsx\index.ts" />
     </ItemGroup>
 
@@ -39,7 +54,7 @@
         <None Include="wwwroot\tsx\components\Pager\index-root.tsxx" />
         <None Include="wwwroot\tsx\components\Pager\Pager.module.scss" />
         <None Include="wwwroot\tsx\components\Pager\Pager.module.scss.d.ts" />
-        <None Include="wwwroot\tsx\components\Pager\Pager.tsx" />
+        <None Include="wwwroot\tsx\components\Pager\PagerComponent.tsx" />
     </ItemGroup>
 
     <ItemGroup>
@@ -69,18 +84,19 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="wwwroot\js\components\Pager\" />
       <Folder Include="wwwroot\modules\" />
       <Folder Include="wwwroot\tsx\pages\" />
       <Folder Include="wwwroot\css\" />
     </ItemGroup>
 
     <ItemGroup>
-      <TypeScriptCompile Include="wwwroot\tsx\components\Pager\index.ts" />
+      <TypeScriptCompile Include="wwwroot\tsx\components\Pager\index.tsx" />
       <TypeScriptCompile Include="wwwroot\tsx\index.ts" />
     </ItemGroup>
 
     <Target Name="GitVersion" BeforeTargets="BeforeBuild">
-        <Exec Command="dotnet gitversion /output buildserver" />
+        <!-- <Exec Command="dotnet gitversion /output buildserver" /> -->
     </Target>
 
 </Project>

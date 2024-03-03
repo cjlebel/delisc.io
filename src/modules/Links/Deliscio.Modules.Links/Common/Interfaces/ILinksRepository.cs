@@ -1,11 +1,19 @@
 using Deliscio.Core.Data.Interfaces;
 using Deliscio.Modules.Links.Data.Entities;
 
-namespace Deliscio.Modules.Links.Interfaces;
+namespace Deliscio.Modules.Links.Common.Interfaces;
 
 public interface ILinksRepository : IRepository<LinkEntity>
 {
     #region - Links -
+
+    Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> FindAsync(string term, string tags, string domain, int pageNo, int pageSize,
+        int skip = 0, bool? isActive = default, bool? isFlagged = default, bool? isDeleted = false,
+        CancellationToken token = default);
+
+    Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> FindAsync(string term, string[] tags, string domain, int pageNo, int pageSize,
+        int skip = 0, bool? isActive = default, bool? isFlagged = default, bool? isDeleted = false,
+        CancellationToken token = default);
 
     Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> GetLinksByDomainAsync(string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
 

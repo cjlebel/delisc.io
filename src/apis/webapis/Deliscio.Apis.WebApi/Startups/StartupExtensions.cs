@@ -1,9 +1,7 @@
 using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Apis.WebApi.Managers;
 using Deliscio.Core.Models;
-using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
-using Deliscio.Modules.Links.MediatR.Commands.Handlers;
 using Deliscio.Modules.Links.MediatR.Commands;
 using Deliscio.Modules.Links.MediatR.Queries.Handlers;
 using Deliscio.Modules.Links.MediatR.Queries;
@@ -17,7 +15,7 @@ using Deliscio.Modules.UserLinks.MediatR.Queries.Handlers;
 using Deliscio.Modules.UserLinks.MediatR.Queries;
 using Deliscio.Modules.UserLinks;
 using Deliscio.Modules.Links.Data.Mongo;
-using Deliscio.Modules.Links.Interfaces;
+using Deliscio.Modules.Links.Common.Interfaces;
 
 namespace Deliscio.Apis.WebApi.Startups;
 
@@ -46,7 +44,7 @@ public static class StartupExtensions
         builder.Services.AddSingleton<IRequestHandler<GetRelatedTagsByTagsQuery, LinkTag[]>, GetRelatedTagsByTagsQueryHandler>();
 
         builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkCommandHandler>();
-        builder.Services.AddSingleton<IRequestHandler<SubmitLinkCommand, Guid>, SubmitLinkCommandHandler>();
+        builder.Services.AddSingleton<IRequestHandler<SubmitLinkByUserCommand, Guid>, SubmitLinkByUserCommandHandler>();
 
     }
 

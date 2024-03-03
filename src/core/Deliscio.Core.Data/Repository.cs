@@ -56,9 +56,9 @@ public abstract class BaseRepositoryWithTypedId<T, TId> : IRepositoryWithTypedId
 
     public abstract void Remove(T entity, CancellationToken token = default);
 
-    public abstract Task RemoveAsync(TId id, CancellationToken token = default);
+    public abstract Task<bool> RemoveAsync(TId id, CancellationToken token = default);
 
-    public abstract Task RemoveAsync(T entity, CancellationToken token = default);
+    public abstract Task<bool> RemoveAsync(T entity, CancellationToken token = default);
 
     public abstract void RemoveRange(IEnumerable<TId> ids, CancellationToken token = default);
 

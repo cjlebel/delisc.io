@@ -7,7 +7,7 @@ type Props = {
     totalResults?: number;
 };
 
-export default function Pager(props: Props) {
+export default function PagerComponent(props: Props) {
     const baseUrl = '/';
 
     const firstPage =

@@ -24,7 +24,7 @@ internal static class Mapper
             //IsExcluded = link.IsExcluded,
 
             Tags = Map(link.Tags).ToList(),
-            Title = link.Title,
+            Title = link.Title.Trim(),
 
             DateCreated = link.DateCreated,
             DateUpdated = link.DateUpdated
@@ -83,7 +83,7 @@ internal static class Mapper
                 LikesCount = entity.LikesCount,
                 SavesCount = entity.SavesCount,
                 Tags = Map(entity.Tags).ToList(),
-                Title = entity.Title,
+                Title = entity.Title.Trim(),
 
                 DateCreated = entity.DateCreated,
                 DateUpdated = entity.DateUpdated,
@@ -96,6 +96,10 @@ internal static class Mapper
         {
             var model = new LinkItem(entity.Id, entity.Url, entity.Title, entity.Description, entity.Domain, entity.ImageUrl, Map(entity.Tags), entity.DateCreated, entity.DateUpdated)
             {
+                IsActive = entity.IsActive,
+                IsDeleted = entity.IsDeleted,
+                IsFlagged = entity.IsFlagged,
+
                 Likes = entity.LikesCount,
                 Saves = entity.SavesCount
             };

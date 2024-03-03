@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<LangVersion>preview</LangVersion>
+		<!-- <TargetFramework>net8.0</TargetFramework> -->
+		<!-- <ImplicitUsings>enable</ImplicitUsings> -->
+		<!-- <Nullable>enable</Nullable> -->
+		<!-- <LangVersion>preview</LangVersion> -->
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -20,7 +20,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\modules\Links\Deliscio.Modules.Links.Common\Deliscio.Modules.Links.Common.csproj" />
 		<ProjectReference Include="..\..\..\modules\Links\Deliscio.Modules.Links.MediatR\Deliscio.Modules.Links.MediatR.csproj" />
 		<ProjectReference Include="..\..\..\modules\QueuedLink\Common\Deliscio.Modules.QueuedLinks.Common.csproj" />
 		<ProjectReference Include="..\..\..\modules\QueuedLink\QueuedLinks\Deliscio.Modules.QueuedLinks.csproj" />

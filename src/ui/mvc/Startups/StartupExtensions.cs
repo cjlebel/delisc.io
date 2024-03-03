@@ -3,9 +3,7 @@ using Deliscio.Modules.Links;
 using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Data.Mongo;
-using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Modules.Links.MediatR.Commands;
-using Deliscio.Modules.Links.MediatR.Commands.Handlers;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Modules.Links.MediatR.Queries.Handlers;
 using Deliscio.Web.Mvc.Managers;
@@ -45,7 +43,7 @@ public static class StartupExtensions
         builder.Services.AddSingleton<IRequestHandler<GetRelatedTagsByTagsQuery, LinkTag[]>, GetRelatedTagsByTagsQueryHandler>();
 
         builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkCommandHandler>();
-        builder.Services.AddSingleton<IRequestHandler<SubmitLinkCommand, Guid>, SubmitLinkCommandHandler>();
+        builder.Services.AddSingleton<IRequestHandler<SubmitLinkByUserCommand, Guid>, SubmitLinkByUserCommandHandler>();
 
     }
 

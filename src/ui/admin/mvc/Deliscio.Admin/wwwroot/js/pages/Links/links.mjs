@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styles from './Home.module.scss';
+import {Pager } from '../../components/Pager';
 
-export default function Links() {
-
+export default function LinksPage() {
+    const pager = new Pager();
 }
+
+const linksPage = new LinksPage();

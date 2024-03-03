@@ -1,5 +1,3 @@
-using Ardalis.GuardClauses;
-
 using Deliscio.Core.Models;
 
 namespace Deliscio.Core.Abstracts;
@@ -17,9 +15,10 @@ public abstract class ServiceBase
     /// <returns></returns>
     protected static PagedResults<T> GetPageOfResults<T>(IEnumerable<T> items, int pageNo, int pageSize, int totalCount)
     {
-        var array = items.ToArray();
+        if (items.TryGetNonEnumeratedCount(out var count) && count == 0)
+            return new PagedResults<T>(Array.Empty<T>(), pageNo, pageSize, totalCount);
 
-        Guard.Against.NullOrEmpty(array);
+        var array = items.ToArray();
 
         var pager = new PagedResults<T>(array, pageNo, pageSize, totalCount);
 

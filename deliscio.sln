@@ -49,6 +49,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		.unitTestGeneratorConfig = .unitTestGeneratorConfig
+		Directory.Build.props = Directory.Build.props
 		docker-compose-mongo.yml = docker-compose-mongo.yml
 		env.txt = env.txt
 		GitVersion.yml = GitVersion.yml
@@ -84,8 +85,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Workers.LinksProcessor", "src\workers\LinksProcessor\Deliscio.Workers.LinksProcessor.csproj", "{6B06CE26-A9E8-439C-9C5D-1E1AC748E4B1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Common", "src\common\Common\Deliscio.Common.csproj", "{D0834B2E-4784-41EF-89A7-4BD9AF5F8B71}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.Links.Common", "src\modules\Links\Deliscio.Modules.Links.Common\Deliscio.Modules.Links.Common.csproj", "{796E9353-4158-4CBF-926B-52A8BECDBEC0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.Links.MediatR", "src\modules\Links\Deliscio.Modules.Links.MediatR\Deliscio.Modules.Links.MediatR.csproj", "{721DAD79-1B1B-454D-A21B-F55C15300CF3}"
 EndProject
@@ -149,9 +148,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AdminApis", "AdminApis", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Apis.AdminApi", "src\apis\adminapis\Deliscio.Apis.AdminApi\Deliscio.Apis.AdminApi.csproj", "{E14720E9-4C0A-45D2-A2E5-AB1D25D75DD8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Web.Admin", "src\ui\admin\blazor\Deliscio.Web.Admin\Deliscio.Web.Admin\Deliscio.Web.Admin.csproj", "{9785E74F-F2CE-4068-B9EF-4A81D376DDCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Admin", "src\ui\admin\mvc\Deliscio.Admin\Deliscio.Admin.csproj", "{F8F1CF1C-36A4-4A31-8973-4FBD23E03839}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deliscio.Admin", "src\ui\admin\mvc\Deliscio.Admin\Deliscio.Admin.csproj", "{F8F1CF1C-36A4-4A31-8973-4FBD23E03839}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Containers", "Containers", "{79B91636-9526-4B47-8A04-C7026E10691F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{3CEA80FB-4DCD-4569-98FC-0BF4E6AF9EA0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Admin", "Admin", "{B04EF100-C21C-4B97-B3BF-85B81FC1777A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web + Admin", "Web + Admin", "{36DE16F6-9371-421D-8F6D-AFD4AB13A985}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deliscio.Containers.Admin", "src\containers\Deliscio.Containers.Admin\Deliscio.Containers.Admin.csproj", "{E48E2279-7111-4EEC-BC0B-F11A8866F79C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Delsicio.Containers.Common", "src\containers\Delsicio.Containers.Common\Delsicio.Containers.Common.csproj", "{3F6C2320-E607-476D-9CE9-36EFE51A9D54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -207,10 +216,6 @@ Global
 		{D0834B2E-4784-41EF-89A7-4BD9AF5F8B71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0834B2E-4784-41EF-89A7-4BD9AF5F8B71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0834B2E-4784-41EF-89A7-4BD9AF5F8B71}.Release|Any CPU.Build.0 = Release|Any CPU
-		{796E9353-4158-4CBF-926B-52A8BECDBEC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{796E9353-4158-4CBF-926B-52A8BECDBEC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{796E9353-4158-4CBF-926B-52A8BECDBEC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{796E9353-4158-4CBF-926B-52A8BECDBEC0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{721DAD79-1B1B-454D-A21B-F55C15300CF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{721DAD79-1B1B-454D-A21B-F55C15300CF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{721DAD79-1B1B-454D-A21B-F55C15300CF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -295,14 +300,18 @@ Global
 		{E14720E9-4C0A-45D2-A2E5-AB1D25D75DD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E14720E9-4C0A-45D2-A2E5-AB1D25D75DD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E14720E9-4C0A-45D2-A2E5-AB1D25D75DD8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9785E74F-F2CE-4068-B9EF-4A81D376DDCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9785E74F-F2CE-4068-B9EF-4A81D376DDCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9785E74F-F2CE-4068-B9EF-4A81D376DDCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9785E74F-F2CE-4068-B9EF-4A81D376DDCB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F8F1CF1C-36A4-4A31-8973-4FBD23E03839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F8F1CF1C-36A4-4A31-8973-4FBD23E03839}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8F1CF1C-36A4-4A31-8973-4FBD23E03839}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8F1CF1C-36A4-4A31-8973-4FBD23E03839}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E48E2279-7111-4EEC-BC0B-F11A8866F79C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E48E2279-7111-4EEC-BC0B-F11A8866F79C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E48E2279-7111-4EEC-BC0B-F11A8866F79C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E48E2279-7111-4EEC-BC0B-F11A8866F79C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F6C2320-E607-476D-9CE9-36EFE51A9D54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F6C2320-E607-476D-9CE9-36EFE51A9D54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F6C2320-E607-476D-9CE9-36EFE51A9D54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F6C2320-E607-476D-9CE9-36EFE51A9D54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -335,7 +344,6 @@ Global
 		{807B60C0-B77B-4D11-97FF-867DACA3EA51} = {4B060D42-9CBB-451B-905D-2A3F096489A6}
 		{6B06CE26-A9E8-439C-9C5D-1E1AC748E4B1} = {807B60C0-B77B-4D11-97FF-867DACA3EA51}
 		{D0834B2E-4784-41EF-89A7-4BD9AF5F8B71} = {CD657082-621C-4259-BFBB-86719BE0EE27}
-		{796E9353-4158-4CBF-926B-52A8BECDBEC0} = {CBFF9B23-59F5-4117-9AC6-6A5D496BDD72}
 		{721DAD79-1B1B-454D-A21B-F55C15300CF3} = {CBFF9B23-59F5-4117-9AC6-6A5D496BDD72}
 		{A8321F1A-CA91-463E-93A1-224A1DB1C73B} = {9164AB74-9390-4531-BB35-A7A78141B393}
 		{A59C2A25-663D-45C4-B18C-1F8F80D98D4C} = {9164AB74-9390-4531-BB35-A7A78141B393}
@@ -367,8 +375,12 @@ Global
 		{96D44300-4377-4139-BC8C-277C0B6A31D7} = {7C9F7B27-36BF-47C2-8A8F-12C6CBEB3CB6}
 		{E116263E-AE49-40EA-8436-EA3C192C1D77} = {6697FEF3-D741-40F8-B5A1-D6BDE2267103}
 		{E14720E9-4C0A-45D2-A2E5-AB1D25D75DD8} = {E116263E-AE49-40EA-8436-EA3C192C1D77}
-		{9785E74F-F2CE-4068-B9EF-4A81D376DDCB} = {EFBF74E7-FE8B-4E45-9806-DA1A2ECDFD11}
 		{F8F1CF1C-36A4-4A31-8973-4FBD23E03839} = {EFBF74E7-FE8B-4E45-9806-DA1A2ECDFD11}
+		{3CEA80FB-4DCD-4569-98FC-0BF4E6AF9EA0} = {79B91636-9526-4B47-8A04-C7026E10691F}
+		{B04EF100-C21C-4B97-B3BF-85B81FC1777A} = {79B91636-9526-4B47-8A04-C7026E10691F}
+		{36DE16F6-9371-421D-8F6D-AFD4AB13A985} = {79B91636-9526-4B47-8A04-C7026E10691F}
+		{E48E2279-7111-4EEC-BC0B-F11A8866F79C} = {B04EF100-C21C-4B97-B3BF-85B81FC1777A}
+		{3F6C2320-E607-476D-9CE9-36EFE51A9D54} = {79B91636-9526-4B47-8A04-C7026E10691F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC98CF49-1486-4252-A157-DA1293256158}

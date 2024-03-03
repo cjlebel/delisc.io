@@ -13,20 +13,28 @@ public class LinksController : Controller
 {
     private readonly IMediator _mediator;
 
-    private const int PAGE_SIZE = 50;
+    private readonly Guid _deliscioUserId;
 
-    private const string ERROR_MISSING_ID = "The link ID is missing";
+    private const int DEFAULT_PAGE_SIZE = 50;
+
+    private const string ERROR_MISSING_LINK_ID = "The link ID is missing";
     private const string ERROR_MISSING_TITLE = "The link title is missing";
+    private const string ERROR_NULL_REQUEST = "The request is null";
 
     public LinksController(IMediator mediator)
     {
         _mediator = mediator;
+
+        _deliscioUserId = GuidHelpers.GetMD5AsGuid("deliscio");
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index([FromQuery] string term = "", [FromQuery] string tags = "", [FromQuery] string domain = "", [FromQuery] int page = 1, [FromQuery] int size = PAGE_SIZE)
+    public async Task<IActionResult> Index([FromQuery] string? term = "", [FromQuery] string? tags = "", [FromQuery] string? domain = "", [FromQuery] int? page = 1)
     {
-        var rslts = await SearchLinks(term: term, tags: tags, domain: domain, page: page, size: size);
+        var rslts = await SearchLinks(term: term ?? string.Empty, domain: domain ?? string.Empty, page: page, size: DEFAULT_PAGE_SIZE);
+
+        ViewBag.SelectedTags = tags;
+        //ViewBag.SelectedTags = !string.IsNullOrWhiteSpace(tags?.Trim()) ? tags.Split(',') : Array.Empty<string>();
 
         return View(rslts);
     }
@@ -53,16 +61,19 @@ public class LinksController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Route("/links/edit")]
-    public async Task<IActionResult> Edit([FromBody] LinkEditRequest model)
+    [Route("/links/{linkId}/edit")]
+    public async Task<IActionResult> Edit([FromRoute] string linkId, [FromBody] LinkEditRequest request)
     {
-        if (string.IsNullOrWhiteSpace(model.Id))
-            return BadRequest(ERROR_MISSING_ID);
+        if (request! is null)
+            return BadRequest(ERROR_NULL_REQUEST);
 
-        if (string.IsNullOrWhiteSpace(model.Title))
+        if (string.IsNullOrWhiteSpace(request.Id))
+            return BadRequest(ERROR_MISSING_LINK_ID);
+
+        if (string.IsNullOrWhiteSpace(request.Title))
             return BadRequest(ERROR_MISSING_TITLE);
 
-        var cmd = new EditLinkCommand(GuidHelpers.GetMD5AsGuid("deliscio"), model.Id, model.Title, model.Description, model.Tags);
+        var cmd = new EditLinkCommand(request, _deliscioUserId);
         var rslt = await _mediator.Send(cmd);
 
         //if (rslt.IsSuccess)
@@ -74,13 +85,60 @@ public class LinksController : Controller
         return Ok(new { rslt.IsSuccess, rslt.Message });
     }
 
-    private async Task<PagedResults<LinkItem>> SearchLinks(string term = "", string tags = "", string domain = "", int? page = 1, int? size = PAGE_SIZE)
+    [HttpDelete]
+    [ValidateAntiForgeryToken]
+    [Route("/links/{linkId}/delete")]
+    public async Task<IActionResult> Delete([FromRoute] string linkId)
+    {
+        if (string.IsNullOrWhiteSpace(linkId))
+            return BadRequest(ERROR_MISSING_LINK_ID);
+
+        var cmd = new DeleteLinkCommand(new Guid(linkId), _deliscioUserId);
+        var rslt = await _mediator.Send(cmd);
+
+        return Ok(new { IsSuccess = rslt, Message = $"Link Id {linkId} was deleted" });
+    }
+
+    private async Task<PagedResults<LinkItem>> SearchLinks(string term = "", string tags = "", string domain = "", bool? isActive = true, bool? isFlagged = true, bool? isDeleted = false, int? page = 1, int? size = DEFAULT_PAGE_SIZE)
     {
         var newPageNo = Math.Max(1, page ?? 1);
-        var newPageSize = size.GetValueOrDefault() <= 10 ? PAGE_SIZE : size.GetValueOrDefault();
+        var newPageSize = size.GetValueOrDefault() <= 10 ? DEFAULT_PAGE_SIZE : size.GetValueOrDefault();
 
-        var query = new FindLinksQuery(term, newPageNo, newPageSize);
-        var rslts = await _mediator.Send(query);
+        IRequest<PagedResults<LinkItem>> query;
+        PagedResults<LinkItem> rslts;
+
+        var request = new FindLinksAdminRequest(newPageNo, term, domain, tags, newPageSize, 0, isActive, isFlagged, isDeleted);
+
+        query = new FindLinksAdminQuery(request);
+        rslts = await _mediator.Send(query);
+
+        // Because search term takes priority, can't let it fall to default
+        //if (!string.IsNullOrWhiteSpace(term))
+        //{
+        //    var request = new FindLinksAdminRequest(newPageNo, term, string.Empty, tags, newPageSize, 0, isActive, isFlagged, isDeleted);
+
+        //    query = new FindLinksAdminQuery(request);
+        //    rslts = await _mediator.Send(query);
+        //}
+        //else if (!string.IsNullOrWhiteSpace(tags))
+        //{
+        //    query = new GetLinksByTagsQuery(newPageNo, newPageSize, tags);
+        //    rslts = await _mediator.Send(query);
+        //}
+        //else if (!string.IsNullOrWhiteSpace(domain))
+        //{
+        //    query = new GetLinksByDomainQuery(domain, newPageNo, newPageSize);
+        //    rslts = await _mediator.Send(query);
+        //}
+        //else
+        //{
+        //    // When all else fails, ...
+        //    var request = new FindLinksAdminRequest(newPageNo, string.Empty, string.Empty, tags, newPageSize, 0, isActive, isFlagged, isDeleted);
+
+        //    query = new FindLinksQuery(request);
+        //    rslts = await _mediator.Send(query);
+        //}
+
 
         return rslts;
     }

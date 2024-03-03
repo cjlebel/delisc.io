@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
+		<!-- <TargetFramework>net8.0</TargetFramework> -->
+		<!-- <Nullable>enable</Nullable> -->
+		<!-- <ImplicitUsings>enable</ImplicitUsings> -->
 		<UserSecretsId>8b21c4b1-7af3-448d-8d0d-7e73cd2b0378</UserSecretsId>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerfileContext>..\..\..\..</DockerfileContext>
 		<AssemblyName>Deliscio.Apis.WebApi</AssemblyName>
 		<RootNamespace>Deliscio.Apis.WebApi</RootNamespace>
-		<LangVersion>preview</LangVersion>
+		<!-- <LangVersion>preview</LangVersion> -->
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -1,7 +1,14 @@
 
-export default function EditLinks() {
-    const divMessage = document.querySelector('#links-edit-container #message');
+export default function EditLink() {
     const frmEdit = document.querySelector('#links-edit-container form');
+
+    const fldIsActive = frmEdit.isActive;
+    const btnActive = document.querySelector('#links-edit-container #btnActivate');
+    const divMessage = document.querySelector('#links-edit-container #message');
+
+    let isLinkActive = false;
+
+    const linkId = frmEdit.id.value;
 
     const txtTags = document.querySelector('#tags');
 
@@ -12,6 +19,20 @@ export default function EditLinks() {
     if (txtTags) {
         txtTags.addEventListener('blur', (e) => onTagsBlur(e), false);
     }
+
+    if (fldIsActive && btnActive) {
+        isLinkActive = fldIsActive.value === 'true';
+
+        setActiveButton(isLinkActive);
+
+        btnActive.addEventListener('click', (e) => onActiveClick(e), false);
+    }
+
+    const onActiveClick = (e) => {
+        isLinkActive = !isLinkActive;
+
+        setActiveButton(isLinkActive);
+    };
 
     const onSubmitForm = (e) => {
         e.preventDefault();
@@ -79,15 +100,16 @@ export default function EditLinks() {
         headers.append('RequestVerificationToken', antiForgeToken);
 
         const request = {
-            Id: frmEdit.id.value,
+            Id: linkId,
             Title: frmEdit.title.value,
             Description: frmEdit.description.value,
-            Tags: frmEdit.tags ? frmEdit.tags.value.split(',') : []
+            Tags: frmEdit.tags ? frmEdit.tags.value.split(',') : [],
+            isActive: isLinkActive,
         };
 
         //console.log(request);
 
-        fetch('/links/edit', {
+        fetch(`/links/${linkId}/edit`, {
             headers: headers,
             method: 'POST',
             body: JSON.stringify(request),
@@ -107,10 +129,10 @@ export default function EditLinks() {
         const isSuccess = data.isSuccess ?? false;
         const message = data.message.trim() != '' ? data.message.trim() : "Link successfully saved";
 
-        if(isSuccess) {
+        if (isSuccess) {
             divMessage.innerHTML = message;
-            
-            divMessage.classList.remove('hide');            
+
+            divMessage.classList.remove('hide');
             divMessage.classList.remove('alert-danger');
 
             divMessage.classList.add('alert-success');
@@ -125,5 +147,13 @@ export default function EditLinks() {
             divMessage.classList.add('alert-danger');
             divMessage.classList.add('show');
         };
+    };
+
+    function setActiveButton(isActive) {
+        fldIsActive.value = isLinkActive;
+
+        btnActive.innerHTML = isLinkActive ? 'Deactivate' : 'Activate';
+        btnActive.classList.remove(isLinkActive ? 'btn-success' : 'btn-danger');
+        btnActive.classList.add(isLinkActive ? 'btn-danger' : 'btn-success');
     };
 }

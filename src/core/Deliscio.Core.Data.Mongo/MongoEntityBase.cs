@@ -7,16 +7,28 @@ namespace Deliscio.Core.Data.Mongo;
 public class MongoEntityBase : IEntityWithTypedId<Guid>
 {
     [BsonId]
-    public Guid Id { get; set;}
+    public Guid Id { get; set; }
 
     public bool IsDeleted { get; set; }
+
 
     // Allows for using DateTimeOffset as a property type (without it, it would be an Array of two values)
     [BsonRepresentation(BsonType.DateTime)]
     public DateTimeOffset DateCreated { get; set; }
 
+    public Guid CreatedById { get; set; }
+
+
+    [BsonRepresentation(BsonType.DateTime)]
+    public DateTimeOffset DateDeleted { get; set; }
+
+    public Guid DeletedById { get; set; }
+
+
     [BsonRepresentation(BsonType.DateTime)]
     public DateTimeOffset DateUpdated { get; set; }
+
+    public Guid UpdatedById { get; set; }
 
     protected MongoEntityBase()
     {

@@ -1,3 +1,3 @@
-import { Pager } from './components/Pager';
+//import { Pager } from './components/Pager';
 
-export { Pager }
+//export { Pager }

@@ -7,7 +7,7 @@ namespace Deliscio.Modules.Links.MediatR.Commands;
 /// <summary>
 /// Represents a command to submit a link for verification, before attempting to add to the central repository
 /// </summary>
-public sealed record SubmitLinkCommand : IRequest<Guid>
+public sealed record SubmitLinkByUserCommand : IRequest<Guid>
 {
     public string[] Tags { get; }
 
@@ -15,9 +15,9 @@ public sealed record SubmitLinkCommand : IRequest<Guid>
 
     public Guid SubmittedById { get; }
 
-    public SubmitLinkCommand(string url, string submittedById, string[]? tags = default) : this(url, new Guid(submittedById), tags) { }
+    public SubmitLinkByUserCommand(string url, string submittedById, string[]? tags = default) : this(url, new Guid(submittedById), tags) { }
 
-    public SubmitLinkCommand(string url, Guid submittedById, string[]? tags = default)
+    public SubmitLinkByUserCommand(string url, Guid submittedById, string[]? tags = default)
     {
         Guard.Against.NullOrEmpty(url);
         Guard.Against.NullOrEmpty(submittedById);
@@ -31,16 +31,16 @@ public sealed record SubmitLinkCommand : IRequest<Guid>
 /// <summary>
 /// Represents a MediatR command handler that submits a link for verification.
 /// </summary>
-public sealed class SubmitLinkCommandHandler : IRequestHandler<SubmitLinkCommand, Guid>
+public sealed class SubmitLinkByUserCommandHandler : IRequestHandler<SubmitLinkByUserCommand, Guid>
 {
     private readonly ILinksService _linksService;
 
-    public SubmitLinkCommandHandler(ILinksService linksService)
+    public SubmitLinkByUserCommandHandler(ILinksService linksService)
     {
         _linksService = linksService;
     }
 
-    public async Task<Guid> Handle(SubmitLinkCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(SubmitLinkByUserCommand command, CancellationToken cancellationToken)
     {
         var link = await _linksService.SubmitLinkAsync(command.Url, command.SubmittedById, command.Tags, cancellationToken);
 

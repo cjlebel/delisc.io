@@ -20,6 +20,13 @@ public sealed record LinkItem
 
     public string Url { get; set; }
 
+    // These "Is" properties are temporary. Needs to refactor services/models to accommodate Admin
+    public bool IsActive { get; set; }
+
+    public bool IsDeleted { get; set; }
+
+    public bool IsFlagged { get; set; }
+
     public DateTimeOffset DateCreated { get; set; }
 
     public DateTimeOffset DateUpdated { get; set; }

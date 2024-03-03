@@ -2,9 +2,9 @@ using AutoFixture;
 using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links;
+using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Data.Entities;
-using Deliscio.Modules.Links.Interfaces;
 
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

@@ -5,7 +5,6 @@ using Deliscio.Core.Data.Mongo;
 using Deliscio.Modules.Links;
 using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Data.Mongo;
-using Deliscio.Modules.Links.Interfaces;
 using Deliscio.Modules.Links.MediatR.Queries;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

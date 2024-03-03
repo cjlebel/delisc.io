@@ -1,43 +1,86 @@
 using Ardalis.GuardClauses;
 using Deliscio.Core.Models;
+using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
+using Deliscio.Modules.Links.Common.Models.Requests;
 using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Queries;
 
 public sealed record FindLinksQuery : IRequest<PagedResults<LinkItem>>
 {
-    /// <summary>
-    /// The current page number of results
-    /// </summary>
-    public int PageNo { get; init; } = 1;
+    public FindLinksRequest Request { get; init; }
 
-    /// <summary>
-    /// The size of the collection to be returned
-    /// </summary>
-    public int PageSize { get; init; } = 50;
 
-    public string SearchTerm { get; init; } = string.Empty;
-
-    /// <summary>
-    /// The number of items to skip before returning results
-    /// </summary>
-    public int Skip { get; init; } = 0;
-
-    public string[] Tags { get; init; }
-
-    public FindLinksQuery(string search, int pageNo, int pageSize, int? skip = 0, string? tags = "")
+    public FindLinksQuery(FindLinksRequest request)
     {
-        Guard.Against.NegativeOrZero(pageNo);
-        Guard.Against.NegativeOrZero(pageSize);
-        Guard.Against.Negative(skip.GetValueOrDefault());
+        Request = request;
+    }
+}
 
-        PageNo = pageNo;
-        PageSize = pageSize;
-        SearchTerm = search;
+/// <summary>
+/// Handles getting a page of links from the central repository where each link contains all of the tags
+/// </summary>
+public class FindLinksQueryHandler : IRequestHandler<FindLinksQuery, PagedResults<LinkItem>>
+{
+    private readonly ILinksService _linksService;
 
-        Tags = !string.IsNullOrWhiteSpace(tags) ?
-            tags.Split(',').OrderBy(t => t).ToArray() :
-            Array.Empty<string>();
+    public FindLinksQueryHandler(ILinksService linksService)
+    {
+        Guard.Against.Null(linksService);
+
+        _linksService = linksService;
+    }
+
+    public async Task<PagedResults<LinkItem>> Handle(FindLinksQuery command, CancellationToken cancellationToken)
+    {
+        var results = await _linksService.FindAsync(command.Request, token: cancellationToken);
+
+        //return results;
+
+        return default;
+    }
+}
+
+public sealed record FindLinksAdminQuery : IRequest<PagedResults<LinkItem>>
+{
+    public FindLinksAdminRequest Request { get; init; }
+
+    public FindLinksAdminQuery(FindLinksAdminRequest request)
+    {
+        Request = request;
+    }
+}
+
+/// <summary>
+/// Handles getting a page of links from the central repository where each link contains all of the tags
+/// </summary>
+public class FindLinksAdminQueryHandler : IRequestHandler<FindLinksAdminQuery, PagedResults<LinkItem>>
+{
+    private readonly ILinksAdminService _linksService;
+
+    public FindLinksAdminQueryHandler(ILinksAdminService linksService)
+    {
+        Guard.Against.Null(linksService);
+
+        _linksService = linksService;
+    }
+
+    public async Task<PagedResults<LinkItem>> Handle(FindLinksAdminQuery command, CancellationToken cancellationToken)
+    {
+        var results = await _linksService.FindAsync(command.Request, token: cancellationToken);
+
+        if (results is null)
+            return new PagedResults<LinkItem>()
+            {
+                IsError = false,
+                Message = "No results found",
+                PageNumber = command.Request.PageNo,
+                PageSize = command.Request.PageSize,
+                Results = Enumerable.Empty<LinkItem>(),
+                TotalResults = 0
+            };
+
+        return results;
     }
 }

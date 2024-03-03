@@ -2,7 +2,6 @@ using Deliscio.Apis.WebApi.Common.Clients;
 using Deliscio.Common.Settings;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
-using Deliscio.Modules.Links.MediatR.Commands.Handlers;
 using Deliscio.Modules.Links.MediatR.Commands;
 using Deliscio.Modules.Links.MediatR.Queries.Handlers;
 using Deliscio.Modules.Links.MediatR.Queries;

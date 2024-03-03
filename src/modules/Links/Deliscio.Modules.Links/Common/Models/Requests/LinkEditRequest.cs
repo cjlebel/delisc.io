@@ -10,7 +10,7 @@ public class LinkEditRequest
 
     public string[]? Tags { get; set; } = Array.Empty<string>();
 
-    public bool? IsActive { get; set; }
+    public bool IsActive { get; set; }
 
     public bool? IsFlagged { get; set; }
 
@@ -18,9 +18,10 @@ public class LinkEditRequest
 
     public LinkEditRequest() { }
 
-    public LinkEditRequest(string id, string title, string description, string[]? tags = default)
+    public LinkEditRequest(string id, string title, string description, bool isActive = false, string[]? tags = default)
     {
         Id = id;
+        IsActive = isActive;
         Title = title;
         Description = description;
         Tags = tags;

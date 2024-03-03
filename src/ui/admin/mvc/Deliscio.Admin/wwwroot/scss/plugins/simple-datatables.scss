@@ -1,13 +1,13 @@
-// 
+//
 // Simple DataTables
-// 
+//
 
-// 
+//
 // Simple DataTables is a third party plugin included with this
 // theme to create functional data tables
-// 
+//
 // Plugin docs: https://github.com/fiduswriter/Simple-DataTables
-// 
+//
 
 // Override the Simple DataTables Styling
 
@@ -34,17 +34,17 @@
     padding: 0;
 }
 
-.datatable-top>nav:first-child,
-.datatable-top>div:first-child,
-.datatable-bottom>nav:first-child,
-.datatable-bottom>div:first-child {
+.datatable-top > nav:first-child,
+.datatable-top > div:first-child,
+.datatable-bottom > nav:first-child,
+.datatable-bottom > div:first-child {
     float: left;
 }
 
-.datatable-top>nav:last-child,
-.datatable-top>div:last-child,
-.datatable-bottom>nav:last-child,
-.datatable-bottom>div:last-child {
+.datatable-top > nav:last-child,
+.datatable-top > div:last-child,
+.datatable-bottom > nav:last-child,
+.datatable-bottom > div:last-child {
     float: right;
 }
 
@@ -116,23 +116,23 @@
     border-collapse: collapse;
 }
 
-.datatable-table>tbody>tr>td,
-.datatable-table>tbody>tr>th,
-.datatable-table>tfoot>tr>td,
-.datatable-table>tfoot>tr>th,
-.datatable-table>thead>tr>td,
-.datatable-table>thead>tr>th {
+.datatable-table > tbody > tr > td,
+.datatable-table > tbody > tr > th,
+.datatable-table > tfoot > tr > td,
+.datatable-table > tfoot > tr > th,
+.datatable-table > thead > tr > td,
+.datatable-table > thead > tr > th {
     vertical-align: top;
     padding: $table-cell-padding-y $table-cell-padding-x;
 }
 
-.datatable-table>thead>tr>th {
+.datatable-table > thead > tr > th {
     vertical-align: bottom;
     text-align: left;
     border-bottom: none;
 }
 
-.datatable-table>tfoot>tr>th {
+.datatable-table > tfoot > tr > th {
     vertical-align: bottom;
     text-align: left;
 }

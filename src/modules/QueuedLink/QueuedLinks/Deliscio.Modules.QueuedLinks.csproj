@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<LangVersion>preview</LangVersion>
+		<!-- <TargetFramework>net8.0</TargetFramework> -->
+		<!-- <ImplicitUsings>enable</ImplicitUsings> -->
+		<!-- <Nullable>enable</Nullable> -->
+		<!-- <LangVersion>preview</LangVersion> -->
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -41,6 +41,6 @@
 		<ProjectReference Include="..\Verifier\Deliscio.Modules.QueuedLinks.Verifier.csproj" />
 	</ItemGroup>
 	<Target Name="GitVersion" BeforeTargets="BeforeBuild">
-		<Exec Command="dotnet gitversion /output buildserver" />
+		<!-- <Exec Command="dotnet gitversion /output buildserver" /> -->
 	</Target>
 </Project>

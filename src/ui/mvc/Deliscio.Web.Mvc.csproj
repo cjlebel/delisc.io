@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
+		<!-- <TargetFramework>net8.0</TargetFramework> -->
+		<!-- <Nullable>enable</Nullable> -->
+		<!-- <ImplicitUsings>enable</ImplicitUsings> -->
 		<UserSecretsId>86cfe758-0e06-4a53-a9ee-7276717d1b2b</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<DockerfileContext>..\..\..</DockerfileContext>
 		<AssemblyName>Deliscio.Web.Mvc</AssemblyName>
 		<RootNamespace>Deliscio.Web.Mvc</RootNamespace>
 		<IsPackable>false</IsPackable>
-		<LangVersion>preview</LangVersion>
+		<!-- <LangVersion>preview</LangVersion> -->
 		<!--<ComponentsRoot>wwwroot\components\</ComponentsRoot>
 		<WWWRoot>wwwroot\</WWWRoot>
 		<DefaultItemExcludes>$(DefaultItemExcludes);node_modules\**</DefaultItemExcludes>-->
@@ -109,6 +109,7 @@
 
 	<ItemGroup>
 		<Folder Include="ViewComponents\Header\" />
+		<Folder Include="wwwroot\modules\components\" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -131,12 +132,11 @@
 		<ProjectReference Include="..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
 		<ProjectReference Include="..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
 		<ProjectReference Include="..\..\modules\Authentication\Deliscio.Modules.Authentication\Deliscio.Modules.Authentication.csproj" />
-		<ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links.Common\Deliscio.Modules.Links.Common.csproj" />
 		<ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links.MediatR\Deliscio.Modules.Links.MediatR.csproj" />
 		<ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
 	</ItemGroup>
 
 	<Target Name="GitVersion" BeforeTargets="BeforeBuild">
-		<Exec Command="dotnet gitversion /output buildserver" />
+		<!-- <Exec Command="dotnet gitversion /output buildserver" /> -->
 	</Target>
 </Project>
