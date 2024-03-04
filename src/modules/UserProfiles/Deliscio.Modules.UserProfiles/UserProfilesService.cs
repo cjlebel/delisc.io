@@ -1,5 +1,5 @@
 using Ardalis.GuardClauses;
-using Deliscio.Core.Abstracts;
+using Deliscio.Common.Abstracts;
 using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Models;
 using Deliscio.Modules.UserProfiles.Common.Interfaces;

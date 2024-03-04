@@ -1,4 +1,6 @@
-
+/**
+ * Responsible for editing a link in the Links > Details page
+ */
 export default function EditLink() {
     const frmEdit = document.querySelector('#links-edit-container form');
 

@@ -1,3 +1,6 @@
+/**
+ * Responsible for deleting a link in the Links > Details page
+ */
 export default function DeleteLink() {
     const frmEdit = document.querySelector('#links-edit-container form');
     const btnDelete = document.querySelector('#links-edit-container #btnDelete');

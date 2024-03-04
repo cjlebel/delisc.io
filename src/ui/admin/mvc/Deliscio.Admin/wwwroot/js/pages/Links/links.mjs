@@ -1,7 +1,10 @@
-import {Pager } from '../../components/Pager';
+/**
+ * Responsible for managing the Links > Index page
+ */
+import DeleteLinks from "./components/links-delete.mjs";
 
-export default function LinksPage() {
-    const pager = new Pager();
-}
+export default function LinksIndex() {
+    const deleteLinks = new DeleteLinks();
+};
 
-const linksPage = new LinksPage();
+const linksIndexInstance = new LinksIndex();

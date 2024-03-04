@@ -18,6 +18,7 @@ public class LinksController : Controller
     private const int DEFAULT_PAGE_SIZE = 50;
 
     private const string ERROR_MISSING_LINK_ID = "The link ID is missing";
+    private const string ERROR_MISSING_LINK_IDS = "The link IDs are null or empty";
     private const string ERROR_MISSING_TITLE = "The link title is missing";
     private const string ERROR_NULL_REQUEST = "The request is null";
 
@@ -29,11 +30,14 @@ public class LinksController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index([FromQuery] string? term = "", [FromQuery] string? tags = "", [FromQuery] string? domain = "", [FromQuery] int? page = 1)
+    public async Task<IActionResult> Index([FromQuery] int? page = 1,
+        [FromQuery] string? term = "", [FromQuery] string? tags = "", [FromQuery] string? domain = "",
+        [FromQuery] bool? isActive = null, [FromQuery] bool? isFlagged = null, [FromQuery] bool? isDeleted = null)
     {
+        /*FindLinksAdminRequest*/
         var rslts = await SearchLinks(term: term ?? string.Empty, domain: domain ?? string.Empty, page: page, size: DEFAULT_PAGE_SIZE);
 
-        ViewBag.SelectedTags = tags;
+        ViewBag.SelectedTags = tags ?? string.Empty;
         //ViewBag.SelectedTags = !string.IsNullOrWhiteSpace(tags?.Trim()) ? tags.Split(',') : Array.Empty<string>();
 
         return View(rslts);
@@ -97,6 +101,37 @@ public class LinksController : Controller
         var rslt = await _mediator.Send(cmd);
 
         return Ok(new { IsSuccess = rslt, Message = $"Link Id {linkId} was deleted" });
+    }
+
+    [HttpDelete]
+    [ValidateAntiForgeryToken]
+    [Route("/links/deletes")]
+    //[ProducesResponseType(StatusCodes.Status200OK)]
+    //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Deletes([FromBody] string[] linkIds)
+    {
+        if (linkIds.Length == 0)
+            return BadRequest(ERROR_MISSING_LINK_IDS);
+
+        var count = 0;
+        var deletedLinkIds = new List<string>();
+
+        // Should pass the collection to a command and let the repo handle it?
+        // Parallel ForEach?
+        foreach (var linkId in linkIds)
+        {
+            var cmd = new DeleteLinkCommand(new Guid(linkId), _deliscioUserId);
+            if (await _mediator.Send(cmd))
+            {
+                deletedLinkIds.Add(linkId);
+                count++;
+            }
+        }
+
+        if (count == 0)
+            return BadRequest(new { IsSuccess = false, LinkIds = Array.Empty<string>(), Message = "No links were deleted" });
+
+        return Ok(new { IsSuccess = true, LinkIds = deletedLinkIds.ToArray(), Message = $"{count} of {linkIds.Length} links were deleted" });
     }
 
     private async Task<PagedResults<LinkItem>> SearchLinks(string term = "", string tags = "", string domain = "", bool? isActive = true, bool? isFlagged = true, bool? isDeleted = false, int? page = 1, int? size = DEFAULT_PAGE_SIZE)

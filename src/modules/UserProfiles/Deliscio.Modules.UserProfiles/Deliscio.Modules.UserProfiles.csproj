@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\common\Common\Deliscio.Common.csproj" />
     <ProjectReference Include="..\..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
     <ProjectReference Include="..\..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
   </ItemGroup>

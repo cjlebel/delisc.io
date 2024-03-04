@@ -52,17 +52,27 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
 
         var x = isDeleted == default;
 
-        var filter =
-            Builders<LinkEntity>.Filter.Where(
-                l => (string.IsNullOrWhiteSpace(term) || l.Title.Contains(term, StringComparison.InvariantCultureIgnoreCase)) &&
-                     (string.IsNullOrWhiteSpace(domain) || l.Domain.ToLowerInvariant() == domain.ToLowerInvariant()) &&
-                     (isDeleted == default || (l.IsDeleted == isDeleted.Value))
-               //(isActive == default || l.IsActive == isActive.Value) &&
-               //(isFlagged == default || l.IsFlagged == isFlagged.Value) &&
-               //(isDeleted == default || (l.IsDeleted == isDeleted.Value))
-               );
-        //.All(link => link.Tags.Select(tag => tag.Name), arrTags)
+        //var filter = Builders<LinkEntity>.Filter.Where(
+        //        l => (string.IsNullOrWhiteSpace(term) || l.Title.Contains(term, StringComparison.InvariantCultureIgnoreCase)) &&
+        //             (string.IsNullOrWhiteSpace(domain) || l.Domain.ToLowerInvariant() == domain.ToLowerInvariant()) &&
+        //             (isDeleted == default || l.IsDeleted == isDeleted.Value)
+        //       //(isActive == default || l.IsActive == isActive.Value) &&
+        //       //(isFlagged == default || l.IsFlagged == isFlagged.Value) &&
+        //       //(isDeleted == default || (l.IsDeleted == isDeleted.Value))
+        //       );
+        ////.All(link => link.Tags.Select(tag => tag.Name), arrTags)
 
+        var filter = Builders<LinkEntity>.Filter.Where(
+            l => (string.IsNullOrWhiteSpace(term) || l.Title.ToUpperInvariant().Contains(term.ToUpperInvariant()))
+            && (isActive == default || l.IsActive == isActive.Value)
+            //&& (isFlagged == default || l.IsFlagged == isFlagged.Value)
+            && (isDeleted == default || l.IsDeleted == isDeleted.Value)
+        //&&
+        //(string.IsNullOrWhiteSpace(domain) || l.Domain.ToUpperInvariant().Contains(domain.ToUpperInvariant())) &&
+        //(isActive == default || l.IsActive == isActive.Value) &&
+        //(isFlagged == default || l.IsFlagged == isFlagged.Value) &&
+        //(isDeleted == default || l.IsDeleted == isDeleted.Value)
+        );
 
         var rslts = await FindAsync(filter, pageNo, pageSize, token);
 

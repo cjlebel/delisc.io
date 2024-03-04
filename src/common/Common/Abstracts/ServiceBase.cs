@@ -1,6 +1,6 @@
 using Deliscio.Core.Models;
 
-namespace Deliscio.Core.Abstracts;
+namespace Deliscio.Common.Abstracts;
 
 public abstract class ServiceBase
 {
