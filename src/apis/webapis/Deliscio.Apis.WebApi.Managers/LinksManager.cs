@@ -4,6 +4,7 @@ using Deliscio.Apis.WebApi.Common.Abstracts;
 using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
+using Deliscio.Modules.Links.Common.Models.Requests;
 using Deliscio.Modules.Links.MediatR.Commands;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Modules.QueuedLinks.Common.Enums;
@@ -44,9 +45,9 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         Guard.Against.NegativeOrZero(pageNo);
         Guard.Against.NegativeOrZero(pageSize);
 
-        var request = new FindLinksQueryRequest(search, pageNo, pageSize, 0, "")
+        var request = new FindLinksRequest(pageNo, search, "", Array.Empty<string>(), pageSize, 0);
 
-        var query = new FindLinksQuery(search, pageNo, pageSize, 0, tags);
+        var query = new FindLinksQuery(request);
 
         return _mediator.Send(query, token);
     }

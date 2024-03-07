@@ -1,17 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <TypeScriptTarget>ESNext</TypeScriptTarget>
-      <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
-      <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
-      <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+        <TypeScriptTarget>ESNext</TypeScriptTarget>
+        <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+        <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+        <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
     </PropertyGroup>
 
     <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <TypeScriptTarget>ESNext</TypeScriptTarget>
-      <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
-      <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
-      <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+        <TypeScriptTarget>ESNext</TypeScriptTarget>
+        <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+        <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+        <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -25,14 +25,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="Library\**" />
-      <Compile Remove="wwwroot\lib\**" />
-      <Content Remove="Library\**" />
-      <Content Remove="wwwroot\lib\**" />
-      <EmbeddedResource Remove="Library\**" />
-      <EmbeddedResource Remove="wwwroot\lib\**" />
-      <None Remove="Library\**" />
-      <None Remove="wwwroot\lib\**" />
+        <Compile Remove="Library\**" />
+        <Compile Remove="wwwroot\lib\**" />
+        <Content Remove="Library\**" />
+        <Content Remove="wwwroot\lib\**" />
+        <EmbeddedResource Remove="Library\**" />
+        <EmbeddedResource Remove="wwwroot\lib\**" />
+        <None Remove="Library\**" />
+        <None Remove="wwwroot\lib\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -58,6 +58,8 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Aspire.RabbitMQ.Client" Version="8.0.0-preview.3.24105.21" />
+        <PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" Version="8.0.0-preview.3.24105.21" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.2" />
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
     </ItemGroup>
@@ -65,6 +67,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\..\apis\webapis\Deliscio.Apis.WebApis.Common\Deliscio.Apis.WebApi.Common.csproj" />
         <ProjectReference Include="..\..\..\..\common\Common\Deliscio.Common.csproj" />
+        <ProjectReference Include="..\..\..\..\containers\Delsicio.Containers.Common\Delisicio.Containers.Common.csproj" />
         <ProjectReference Include="..\..\..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
         <ProjectReference Include="..\..\..\..\modules\Links\Deliscio.Modules.Links.MediatR\Deliscio.Modules.Links.MediatR.csproj" />
         <ProjectReference Include="..\..\..\..\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
@@ -84,15 +87,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="wwwroot\js\components\Pager\" />
-      <Folder Include="wwwroot\modules\" />
-      <Folder Include="wwwroot\tsx\pages\" />
-      <Folder Include="wwwroot\css\" />
+        <Folder Include="wwwroot\js\components\Pager\" />
+        <Folder Include="wwwroot\modules\" />
+        <Folder Include="wwwroot\tsx\pages\" />
+        <Folder Include="wwwroot\css\" />
     </ItemGroup>
 
     <ItemGroup>
-      <TypeScriptCompile Include="wwwroot\tsx\components\Pager\index.tsx" />
-      <TypeScriptCompile Include="wwwroot\tsx\index.ts" />
+        <TypeScriptCompile Include="wwwroot\tsx\components\Pager\index.tsx" />
+        <TypeScriptCompile Include="wwwroot\tsx\index.ts" />
     </ItemGroup>
 
     <Target Name="GitVersion" BeforeTargets="BeforeBuild">

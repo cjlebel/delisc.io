@@ -94,6 +94,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" Version="8.0.0-preview.3.24105.21" />
 		<PackageReference Include="AspNetCore.Identity.MongoDbCore" Version="3.1.2" />
 		<PackageReference Include="MassTransit.Abstractions" Version="8.1.3" />
 		<PackageReference Include="MediatR" Version="12.2.0" />
@@ -129,6 +130,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\apis\webapis\Deliscio.Apis.WebApis.Common\Deliscio.Apis.WebApi.Common.csproj" />
 		<ProjectReference Include="..\..\common\Common\Deliscio.Common.csproj" />
+		<ProjectReference Include="..\..\containers\Delsicio.Containers.Common\Delisicio.Containers.Common.csproj" />
 		<ProjectReference Include="..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
 		<ProjectReference Include="..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
 		<ProjectReference Include="..\..\modules\Authentication\Deliscio.Modules.Authentication\Deliscio.Modules.Authentication.csproj" />

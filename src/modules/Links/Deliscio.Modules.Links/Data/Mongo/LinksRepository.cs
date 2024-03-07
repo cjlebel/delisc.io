@@ -64,6 +64,7 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
 
         var filter = Builders<LinkEntity>.Filter.Where(
             l => (string.IsNullOrWhiteSpace(term) || l.Title.ToUpperInvariant().Contains(term.ToUpperInvariant()))
+                 && (string.IsNullOrWhiteSpace(domain) || l.Domain.ToUpperInvariant().Contains(domain.ToUpperInvariant()))
             && (isActive == default || l.IsActive == isActive.Value)
             //&& (isFlagged == default || l.IsFlagged == isFlagged.Value)
             && (isDeleted == default || l.IsDeleted == isDeleted.Value)

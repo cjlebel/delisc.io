@@ -1,7 +1,6 @@
 using System.Net;
 using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Core.Models;
-using Deliscio.Modules.Links.Common.Models;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +9,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
 using Deliscio.Apis.WebApi.Common.Requests;
+using Deliscio.Modules.Links.Common.Models;
 
 namespace Deliscio.Apis.WebApi.Common.APIs;
 

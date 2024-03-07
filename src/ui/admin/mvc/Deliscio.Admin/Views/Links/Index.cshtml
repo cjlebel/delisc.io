@@ -1,44 +1,56 @@
 @using Deliscio.Modules.Links.Common.Models
 @using System.Net
 
-@model Deliscio.Core.Models.PagedResults<LinkItem>
+@model Deliscio.Admin.Models.Responses.LinksSearchResponse<LinkItem>
 @{
     ViewData["Title"] = "Links";
 
     var links = Model?.Results?.ToArray() ?? Array.Empty<LinkItem>();
+
+    var searchTerm = Model?.SearchTerm ?? string.Empty;
+    var tags = string.Join(',', Model?.Tags ?? Array.Empty<string>());
+    var domain = Model?.Domain ?? string.Empty;
+
+    var isActive = (Model?.IsActive ?? true).ToString().ToLower();
+    var isFlagged = (Model?.IsFlagged ?? false).ToString().ToLower();
+    var isDeleted = (Model?.IsDeleted ?? false).ToString().ToLower();
 }
 
 <div id="links-list-container" class="pl-3 pr-3">
     <h1>Links</h1>
 
-    <form method="get" action="" name="links-search-form" class="">
+    <form id="frmSearch" method="get" action="" name="links-search-form" class="">
         <div class="row">
             <div class="col">
                 @* Have Search go to /links?search=term instead *@
                 <div class="d-flex justify-content-evenly gap-1 px-1 py-2">
                     @* <div class="input-group mb-3"> *@
-                    <input id="txt-query"
+                    <input id="txt-term"
                            type="text"
                            name="term"
                            class="form-control"
                            placeholder="Search Term..."
                            aria-label="Search by term"
-                           aria-describedby="button-search" />
+                           aria-describedby="button-search"
+                           value="@searchTerm" />
                     <input id="txt-tags"
                            type="text"
                            name="tags"
                            class="form-control"
                            placeholder="Tags ..."
                            aria-label="Search by tags"
-                           aria-describedby="button-search" />
+                           aria-describedby="button-search"
+                           value="@tags" />
                     <input id="txt-domain"
                            type="text"
                            name="domain"
                            class="form-control"
                            placeholder="Domain ..."
                            aria-label="Search by domain name"
-                           aria-describedby="button-search" />
-                    <button id="button-search" class="btn btn-outline-secondary" type="submit">Search</button>
+                           aria-describedby="button-search"
+                           value="@domain" />
+                    <button id="btn-search" class="btn btn-primary" type="submit">Search</button>
+                    <button id="btn-clear" class="btn btn-secondary" type="reset">Clear</button>
                     @* </div> *@
                 </div>
 
@@ -48,18 +60,18 @@
             <div class="col">
                 <div class="d-flex justify-content-evenly gap-1 px-1 py-2">
                     <div class="form-check form-check-inline">
-                        <input id="check-isactive" class="form-check-input" type="checkbox" name="isActive" value="" />
-                        <label class="form-check-label" for="check-isactive">Is Active</label>
+                        <input id="chk-is-active" class="form-check-input" type="checkbox" name="isActive" value="@isActive.ToLower()" />
+                        <label class="form-check-label" for="chk-is-active">Is Active</label>
                     </div>
 
                     <div class="form-check form-check-inline">
-                        <input id="check-isflagged" class="form-check-input" type="checkbox" name="isFlagged" value="" />
-                        <label class="form-check-label" for="check-isflagged">Is Flagged</label>
+                        <input id="chk-is-flagged" class="form-check-input" type="checkbox" name="isFlagged" value="@isFlagged.ToLower()" />
+                        <label class="form-check-label" for="chk-is-flagged">Is Flagged</label>
                     </div>
 
                     <div class="form-check form-check-inline">
-                        <input id="check-isdeleted" class="form-check-input" type="checkbox" name="isDeleted" value="false" />
-                        <label class="form-check-label" for="check-isdeleted">Is Deleted</label>
+                        <input id="chk-is-deleted" class="form-check-input" type="checkbox" name="isDeleted" value="@isDeleted.ToLower()" />
+                        <label class="form-check-label" for="chk-is-deleted">Is Deleted</label>
                     </div>
                 </div>
             </div>
@@ -67,19 +79,19 @@
     </form>
     <div class="row">
         <div class="col">
-                <form id="frmLinks" asp-controller="Links" asp-action="Deletes" method="Post" name="links-mass-updates">
-                    <AntiforgeryToken/>
-                    <div class="d-flex justify-content-evenly gap-1 px-1 py-2 justify-content-evenly">
-                        <div>
-                            <button id="btnSelectAll" type="button" class="btn btn-primary btn-success">Select All</button>
-                        </div>
-                        <div>
-                        </div>
-                        <div>
-                            <button id="btnDeleteSelected" type="Submit" class="btn btn-primary btn-danger">Delete</button>
-                        </div>
+            <form id="frmLinks" asp-controller="Links" asp-action="Deletes" method="Post" name="links-mass-updates">
+                <AntiforgeryToken />
+                <div class="d-flex justify-content-evenly gap-1 px-1 py-2 justify-content-evenly">
+                    <div>
+                        <button id="btnSelectAll" type="button" class="btn btn-primary btn-success">Select All</button>
                     </div>
-                </form>
+                    <div>
+                    </div>
+                    <div>
+                        <button id="btnDeleteSelected" type="Submit" class="btn btn-primary btn-danger">Delete</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
     <div class="row">

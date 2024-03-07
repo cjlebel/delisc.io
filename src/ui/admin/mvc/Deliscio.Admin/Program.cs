@@ -15,6 +15,14 @@ using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add service defaults & Aspire components.
+builder.AddServiceDefaults();
+builder.AddRedisOutputCache("cache-admin");
+
+// Add services to the container.
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
 // Add services to the container.
 // Note: Need to add 'Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation
 //       and then add .AddRazorRuntimeCompilation();

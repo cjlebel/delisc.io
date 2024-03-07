@@ -15,6 +15,14 @@ public class Program
 
         var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
+        // Add service defaults & Aspire components.
+        builder.AddServiceDefaults();
+        builder.AddRedisOutputCache("cache-web");
+
+        // Add services to the container.
+        builder.Services.AddRazorComponents()
+            .AddInteractiveServerComponents();
+
         var config = ConfigSettingsManager.GetConfigs();
 
         builder.Services.Configure<WebApiSettings>(
