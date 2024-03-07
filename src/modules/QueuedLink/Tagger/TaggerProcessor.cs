@@ -27,7 +27,7 @@ public class TaggerProcessor : ITaggerProcessor
         {"atlassian", new [] { "atlassian", "ci-cd", "cloud"}},
         {"aws", new [] { "aws", "amazon", "cloud"}},
         { "bdd", new[] { "bdd", "development", "software", "architecture" } },
-        {"blazor", new []{"b;azor", "dotnet", "frontend"}},
+        {"blazor", new []{"blazor", "dotnet", "frontend"}},
         { "best practices", new[] { "best practices", "development", "coding" } },
         { "blockchain", new [] { "blockchain", "cryptocurrency", "smart contracts" }},
         { "bootstrap", new [] { "bootstrap", "ui", "frameworks" }},

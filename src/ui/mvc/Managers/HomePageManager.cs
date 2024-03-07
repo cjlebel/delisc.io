@@ -1,4 +1,5 @@
 using Ardalis.GuardClauses;
+using Deliscio.Apis.WebApi.Common.Clients;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Web.Mvc.ViewModels.Home;
@@ -18,9 +19,10 @@ public class HomePagePageManager : BasePageManager, IHomePageManager
     private readonly int _defaultPageSize;
     private readonly int _defaultTagsSize;
 
-    public HomePagePageManager(IMediator mediator, ILogger<HomePagePageManager>? logger) : base(mediator, logger)
+    public HomePagePageManager(WebApiClient webClient, IMediator mediator, ILogger<HomePagePageManager>? logger) : base(webClient, mediator, logger)
     {
         Guard.Against.Null(mediator);
+        Guard.Against.Null(webClient);
 
         // This can come from a settings file
         _defaultPageSize = 50;
@@ -39,6 +41,8 @@ public class HomePagePageManager : BasePageManager, IHomePageManager
 
         var results = await MediatR!.Send(query, token);
 
+        //var results = await WebClient.GetLinksSearchResultsAsync(page: 1, pageSize: _defaultPageSize, token: token);
+
         var model = new HomePageViewModel
         {
             CanonicalUrl = "https://deliscio.com",
@@ -53,14 +57,12 @@ public class HomePagePageManager : BasePageManager, IHomePageManager
 
     public async Task<LinkTag[]> GetTagsPageViewModelAsync(string? tags = default, CancellationToken token = default)
     {
-        var tagsArr = !string.IsNullOrWhiteSpace(tags) ?
-            tags.Split(',').OrderBy(t => t).ToArray() :
-            Array.Empty<string>();
-
-        var query = new GetRelatedTagsByTagsQuery(tagsArr, _defaultTagsSize);
+        var query = new GetRelatedTagsByTagsQuery(tags, _defaultTagsSize);
 
         var results = await MediatR!.Send(query, token);
 
-        return results;
+        //var results = (await WebClient.GetRelatedTagsByTagsAsync(tags, _defaultTagsSize, token));
+
+        return results?.ToArray() ?? Array.Empty<LinkTag>();
     }
 }

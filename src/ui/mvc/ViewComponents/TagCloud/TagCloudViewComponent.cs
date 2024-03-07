@@ -19,13 +19,15 @@ public class TagCloudViewComponent : ViewComponent
         var q1 = Request.Query["t"];
         var q2 = Request.Query["d"];
 
+        var newTags = string.Empty;
+
         // Querystring takes precedence over the tags parameter. The results need to match the url
         if (!string.IsNullOrWhiteSpace(q1))
-            tags = q1.ToString().Split(',');
+            newTags = q1;
+        else if (!string.IsNullOrWhiteSpace(q2))
+            newTags = string.Join(',', tags ?? Array.Empty<string>());
 
-        tags ??= Array.Empty<string>();
-
-        var command = new GetRelatedTagsByTagsQuery(tags, count: count);
+        var command = new GetRelatedTagsByTagsQuery(newTags, count: count);
 
         var results = await _mediator.Send(command);
 

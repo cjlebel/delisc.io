@@ -9,7 +9,7 @@ public class ApiKeyMiddleware
     private readonly RequestDelegate _next;
     private readonly IConfiguration _config;
 
-    private const string API_KEY_NAME = "x-api-key";
+    private const string API_KEY_NAME = "deliscio-api-key";
 
     public ApiKeyMiddleware(IConfiguration config, RequestDelegate next)
     {

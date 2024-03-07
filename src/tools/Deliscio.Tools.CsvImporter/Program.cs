@@ -1,10 +1,9 @@
 using System.Diagnostics;
 using System.Net.Http.Json;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Deliscio.Apis.WebApi.Common.Requests;
+using Deliscio.Common.Helpers;
 using Deliscio.Core.Data.Mongo;
 using Deliscio.Modules.BackLog;
 using Deliscio.Modules.BackLog.Models;
@@ -21,7 +20,7 @@ internal partial class Program
         Console.ReadKey();
 #endif
         var username = "deliscio";
-        var userId = GetUserId(username);
+        var userId = GuidHelpers.GetMD5AsGuid(username).ToString();
 
         var connectionString = "mongodb://mongo:g%3F7%3CVd%3E9v4%3BZKk%3DJ@localhost:27018";
         var dbName = "deliscio";
@@ -232,15 +231,6 @@ internal partial class Program
     /// </summary>
     /// <param name="username">The name of the user to create the string for.</param>
     /// <returns>A GUID as a string</returns>
-    private static string GetUserId(string username)
-    {
-        // Create a new instance of the MD5CryptoServiceProvider object.
-
-        // Convert the input string to a byte array and compute the hash.
-        byte[] data = MD5.HashData(Encoding.Default.GetBytes(username));
-
-        return new Guid(data).ToString();
-    }
 
     [GeneratedRegex(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)")]
     private static partial Regex SplitLineRegEx();

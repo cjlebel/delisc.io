@@ -1,0 +1,197 @@
+@using Deliscio.Modules.Links.Common.Models
+@using System.Net
+
+@model Deliscio.Admin.Models.Responses.LinksSearchResponse<LinkItem>
+@{
+    ViewData["Title"] = "Links";
+
+    var links = Model?.Results?.ToArray() ?? Array.Empty<LinkItem>();
+
+    var searchTerm = Model?.SearchTerm ?? string.Empty;
+    var tags = string.Join(',', Model?.Tags ?? Array.Empty<string>());
+    var domain = Model?.Domain ?? string.Empty;
+
+    var isActive = (Model?.IsActive ?? true).ToString().ToLower();
+    var isFlagged = (Model?.IsFlagged ?? false).ToString().ToLower();
+    var isDeleted = (Model?.IsDeleted ?? false).ToString().ToLower();
+}
+
+<div id="links-list-container" class="pl-3 pr-3">
+    <h1>Links</h1>
+
+    <form id="frmSearch" method="get" action="" name="links-search-form" class="">
+        <div class="row">
+            <div class="col">
+                @* Have Search go to /links?search=term instead *@
+                <div class="d-flex justify-content-evenly gap-1 px-1 py-2">
+                    @* <div class="input-group mb-3"> *@
+                    <input id="txt-term"
+                           type="text"
+                           name="term"
+                           class="form-control"
+                           placeholder="Search Term..."
+                           aria-label="Search by term"
+                           aria-describedby="button-search"
+                           value="@searchTerm" />
+                    <input id="txt-tags"
+                           type="text"
+                           name="tags"
+                           class="form-control"
+                           placeholder="Tags ..."
+                           aria-label="Search by tags"
+                           aria-describedby="button-search"
+                           value="@tags" />
+                    <input id="txt-domain"
+                           type="text"
+                           name="domain"
+                           class="form-control"
+                           placeholder="Domain ..."
+                           aria-label="Search by domain name"
+                           aria-describedby="button-search"
+                           value="@domain" />
+                    <button id="btn-search" class="btn btn-primary" type="submit">Search</button>
+                    <button id="btn-clear" class="btn btn-secondary" type="reset">Clear</button>
+                    @* </div> *@
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="d-flex justify-content-evenly gap-1 px-1 py-2">
+                    <div class="form-check form-check-inline">
+                        <input id="chk-is-active" class="form-check-input" type="checkbox" name="isActive" value="@isActive.ToLower()" />
+                        <label class="form-check-label" for="chk-is-active">Is Active</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input id="chk-is-flagged" class="form-check-input" type="checkbox" name="isFlagged" value="@isFlagged.ToLower()" />
+                        <label class="form-check-label" for="chk-is-flagged">Is Flagged</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input id="chk-is-deleted" class="form-check-input" type="checkbox" name="isDeleted" value="@isDeleted.ToLower()" />
+                        <label class="form-check-label" for="chk-is-deleted">Is Deleted</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col">
+            <form id="frmLinks" asp-controller="Links" asp-action="Deletes" method="Post" name="links-mass-updates">
+                <AntiforgeryToken />
+                <div class="d-flex justify-content-evenly gap-1 px-1 py-2 justify-content-evenly">
+                    <div>
+                        <button id="btnSelectAll" type="button" class="btn btn-primary btn-success">Select All</button>
+                    </div>
+                    <div>
+                    </div>
+                    <div>
+                        <button id="btnDeleteSelected" type="Submit" class="btn btn-primary btn-danger">Delete</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table id="links-table" class="table table-bordered" style="border: 2px;">
+                <thead class="thead-dark bg-secondary">
+                    <tr>
+                        <th class="bg-secondary-subtle" data-sort="title" data-direction="asc">Title</th>
+                        <th class="bg-secondary-subtle" data-sort="domain" data-direction="asc">Domain</th>
+                        <th class="bg-secondary-subtle" data-sort="likes" data-direction="asc">Likes</th>
+                        <th class="bg-secondary-subtle" data-sort="saves" data-direction="asc">Saves</th>
+                        <th class="bg-secondary-subtle" data-sort="created" data-direction="asc">Created</th>
+                        <th class="bg-secondary-subtle" data-sort="updated" data-direction="asc">Updated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < links.Length; i++)
+                    {
+                        var link = links[i];
+
+                        var title = link.Title.Length > 50 ? link.Title.Substring(0, 47) + "..." : link.Title;
+
+                        var bgColor = link.IsDeleted || link.IsFlagged ? "bg-danger-subtle" : !link.IsActive ? "bg-warning-subtle" : "bg-success-subtle";
+                        var strike = link.IsDeleted ? "text-decoration-line-through" : string.Empty;
+                        <tr class="link-row" data-rowid="@link.Id">
+                            <td class="@bgColor @strike">
+                                <input type="checkbox" id="chkDelete" data-id="@link.Id" />
+                                <a asp-controller="Links" asp-action="Details" target="_blank" asp-route-id="@link.Id">@title</a>
+                            </td>
+                            <td class="@bgColor @strike">
+                                <a asp-controller="Links" asp-action="Index" asp-route-domain="@WebUtility.UrlEncode(link.Domain)">@link.Domain</a>
+                            </td>
+                            <td class="@bgColor @strike">
+                                @link.Likes
+                            </td>
+                            <td class="@bgColor @strike">
+                                @link.Saves
+                            </td>
+
+                            <td class="@bgColor @strike">
+                                @link.DateCreated.ToLocalTime().DateTime
+                            </td>
+                            <td class="@bgColor @strike">
+                                @link.DateUpdated.ToLocalTime().DateTime
+                            </td>
+                        </tr>
+                        <tr class="link-row" data-rowid="@link.Id">
+                            <td colspan="6" class="@bgColor">
+                                Tags:
+                                @for (var t = 0; t < link.Tags.Count; t++)
+                                {
+                                    var tag = link.Tags[t];
+
+                                    var tagUrl = $"/links?tags={tag.Name}";
+
+                                    var selectedTags = ViewBag.SelectedTags as List<string>;
+                                    var isSelected = selectedTags?.FirstOrDefault() != null;
+
+                                    <a href="@tagUrl">
+                                        <span class="badge @(isSelected ? "bg-danger" : "bg-primary")">@tag.Name</span>
+                                    </a>
+
+                                    @* var tagUrl = GetUrlForTag(tag.Name); *@
+
+                                    @* <a href="@tagUrl">
+                            <span class="badge bg-primary">@tag.Name</span>
+                            </a> *@
+
+                                    <text>&nbsp;</text>
+                                }
+                            </td>
+                        </tr>
+
+                        if (i < links.Length - 1)
+                        {
+                            @* Leaves a 'gap' between rows *@
+                            <tr class="link-row">
+                                <td colspan="6" style="border-left: 0; border-right: 0"></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <pager page="@Model.PageNumber" total-pages="@Model.TotalPages" total-results="@Model.TotalResults" />
+            @* <div id="pager-container"
+            data-pageno="@Model.PageNumber"
+            data-size="@Model.PageSize"
+            data-pages="@Model.TotalPages"
+            data-results="@Model.TotalResults"
+            data-url="/links">
+            </div> *@
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module" src="/js/pages/Links/links.mjs"></script>
+}

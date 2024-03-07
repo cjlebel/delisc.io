@@ -1,0 +1,83 @@
+@page "/links/details/{id}"
+
+@using MediatR
+@using Deliscio.Modules.Links.MediatR.Queries
+@using Deliscio.Modules.Links.Common.Models
+
+@rendermode InteractiveServer
+
+@inject IMediator Mediator
+
+<h3>Details</h3>
+
+@if (IsError)
+{
+    <div class="text-danger">@Message</div>
+}
+else if (IsError is false && !string.IsNullOrWhiteSpace(Message))
+{
+    <div class="text-success">@Message</div>
+}
+
+@if (Link is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="container">
+        @Link.Title
+    </div>
+}
+
+@code {
+    private bool IsError { get; set; }
+    private string Message { get; set; } = "";
+
+    [Parameter] public string Id { get; set; }
+
+    private Link? Link { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        Guid guidId = Guid.Empty;
+
+        if (Guid.TryParse(Id, out guidId) is false)
+        {
+            IsError = true;
+            Message = $"Could not parse the Id {Id} to a Guid";
+            return;
+        }
+
+        try
+        {
+            var query = new GetLinkByIdQuery(guidId);
+            Link = await Mediator!.Send(query);
+
+            if (Link is null)
+            {
+                IsError = true;
+                Message = $"Could not find the link with the Id {Id}";
+            }
+        }
+        catch (Exception e)
+        {
+            IsError = true;
+            Message = e.Message;
+        }
+    }
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        // if (Guid.TryParse(Id, out guidId) is false)
+        // {
+        //     IsError = true;
+        //     Message = $"Could not parse the Id {Id} to a Guid";
+        //     return;
+        // }
+
+        await base.SetParametersAsync(parameters);
+    }
+}

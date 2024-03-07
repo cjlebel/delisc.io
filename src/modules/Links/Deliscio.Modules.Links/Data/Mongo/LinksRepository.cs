@@ -1,7 +1,7 @@
 using Ardalis.GuardClauses;
 using Deliscio.Core.Data.Mongo;
+using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Data.Entities;
-using Deliscio.Modules.Links.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -20,6 +20,65 @@ public sealed class LinksRepository : MongoRepository<LinkEntity>, ILinksReposit
     #endregion
 
     #region - Links
+
+    public async Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> FindAsync(string term, string tags, string domain,
+        int pageNo, int pageSize, int skip = 0,
+        bool? isActive = default, bool? isFlagged = default, bool? isDeleted = false,
+        CancellationToken token = default)
+    {
+        if (pageNo < 1)
+            throw new ArgumentOutOfRangeException(nameof(pageNo));
+
+        if (pageSize < 1)
+            throw new ArgumentOutOfRangeException(nameof(pageSize));
+
+        var tagsArr = tags?.Trim().Split(',') ?? [];
+
+        var rslts = await FindAsync(term, tagsArr, domain, pageNo, pageSize, skip, isActive, isFlagged, isDeleted, token);
+
+        return rslts;
+    }
+
+    public async Task<(IEnumerable<LinkEntity> Results, int TotalPages, int TotalCount)> FindAsync(string term, string[] tags, string domain,
+        int pageNo, int pageSize, int skip = 0,
+        bool? isActive = default, bool? isFlagged = default, bool? isDeleted = false,
+        CancellationToken token = default)
+    {
+        if (pageNo < 1)
+            throw new ArgumentOutOfRangeException(nameof(pageNo));
+
+        if (pageSize < 1)
+            throw new ArgumentOutOfRangeException(nameof(pageSize));
+
+        var x = isDeleted == default;
+
+        //var filter = Builders<LinkEntity>.Filter.Where(
+        //        l => (string.IsNullOrWhiteSpace(term) || l.Title.Contains(term, StringComparison.InvariantCultureIgnoreCase)) &&
+        //             (string.IsNullOrWhiteSpace(domain) || l.Domain.ToLowerInvariant() == domain.ToLowerInvariant()) &&
+        //             (isDeleted == default || l.IsDeleted == isDeleted.Value)
+        //       //(isActive == default || l.IsActive == isActive.Value) &&
+        //       //(isFlagged == default || l.IsFlagged == isFlagged.Value) &&
+        //       //(isDeleted == default || (l.IsDeleted == isDeleted.Value))
+        //       );
+        ////.All(link => link.Tags.Select(tag => tag.Name), arrTags)
+
+        var filter = Builders<LinkEntity>.Filter.Where(
+            l => (string.IsNullOrWhiteSpace(term) || l.Title.ToUpperInvariant().Contains(term.ToUpperInvariant()))
+                 && (string.IsNullOrWhiteSpace(domain) || l.Domain.ToUpperInvariant().Contains(domain.ToUpperInvariant()))
+            && (isActive == default || l.IsActive == isActive.Value)
+            //&& (isFlagged == default || l.IsFlagged == isFlagged.Value)
+            && (isDeleted == default || l.IsDeleted == isDeleted.Value)
+        //&&
+        //(string.IsNullOrWhiteSpace(domain) || l.Domain.ToUpperInvariant().Contains(domain.ToUpperInvariant())) &&
+        //(isActive == default || l.IsActive == isActive.Value) &&
+        //(isFlagged == default || l.IsFlagged == isFlagged.Value) &&
+        //(isDeleted == default || l.IsDeleted == isDeleted.Value)
+        );
+
+        var rslts = await FindAsync(filter, pageNo, pageSize, token);
+
+        return rslts;
+    }
 
     public async Task<LinkEntity?> GetLinkByUrlAsync(string url, CancellationToken token = default)
     {

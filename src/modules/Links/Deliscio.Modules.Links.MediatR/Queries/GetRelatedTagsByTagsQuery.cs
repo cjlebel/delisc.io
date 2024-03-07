@@ -8,9 +8,11 @@ public record GetRelatedTagsByTagsQuery : IRequest<LinkTag[]>
     public int? Count { get; init; }
     public string[] Tags { get; init; }
 
-    public GetRelatedTagsByTagsQuery(string[]? tags = default, int? count = 100)
+    public GetRelatedTagsByTagsQuery(string? tags = default, int? count = 100)
     {
         Count = count;
-        Tags = tags ?? Array.Empty<string>();
+        Tags = !string.IsNullOrWhiteSpace(tags) ?
+            tags.Split(',').OrderBy(t => t).ToArray() :
+            Array.Empty<string>();
     }
 }

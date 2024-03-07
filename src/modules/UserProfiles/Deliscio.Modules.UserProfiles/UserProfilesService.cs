@@ -1,5 +1,7 @@
 using Ardalis.GuardClauses;
+using Deliscio.Common.Abstracts;
 using Deliscio.Core.Data.Mongo;
+using Deliscio.Core.Models;
 using Deliscio.Modules.UserProfiles.Common.Interfaces;
 using Deliscio.Modules.UserProfiles.Common.Models;
 using Deliscio.Modules.UserProfiles.Data;
@@ -13,7 +15,7 @@ namespace Deliscio.Modules.UserProfiles;
 [Component(Description = "Deliscio service that deals with the User Profiles", Technology = "C#")]
 [UsedBySoftwareSystem("Deliscio.Apis.WebApi", Description = "User Profiles Service")]
 
-public sealed class UserProfilesService : IUserProfilesService
+public sealed class UserProfilesService : ServiceBase, IUserProfilesService
 {
     private readonly ILogger<UserProfilesService> _logger;
     private readonly IUserProfilesRepository _repository;
@@ -65,5 +67,27 @@ public sealed class UserProfilesService : IUserProfilesService
             return null;
 
         return Mapper.Map(user);
+    }
+
+    /// <summary>
+    /// Searches for user's based on their display name and/or email address.
+    /// If neither are provided, all users are returned.
+    /// </summary>
+    /// <param name="displayName">The user's display Name</param>
+    /// <param name="email">The user's email address</param>
+    /// <param name="pageNo">The number of the page of results.</param>
+    /// <param name="pageSize">The size of the page - max number of items to return</param>
+    /// <param name="token"></param>
+    /// <returns>A PagedResults object of UserProfileItems</returns>
+    public async Task<PagedResults<UserProfileItem>> SearchAsync(string displayName = "", string email = "", int pageNo = 1, int pageSize = 50, CancellationToken token = default)
+    {
+        Guard.Against.NegativeOrZero(pageNo);
+        Guard.Against.NegativeOrZero(pageSize);
+
+        var rslts = await _repository.SearchAsync(displayName, email, pageNo, pageSize, token);
+
+        var items = Mapper.Map<UserProfileItem>(rslts.Results);
+
+        return GetPageOfResults(items, pageNo, pageNo, rslts.TotalCount);
     }
 }

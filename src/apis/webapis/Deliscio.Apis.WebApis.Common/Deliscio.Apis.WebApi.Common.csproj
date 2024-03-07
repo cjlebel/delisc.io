@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
+		<!-- <TargetFramework>net8.0</TargetFramework> -->
+		<!-- <ImplicitUsings>enable</ImplicitUsings> -->
+		<!-- <Nullable>enable</Nullable> -->
+		<!-- <LangVersion>preview</LangVersion> -->
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -14,10 +15,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="AspNetCore.Identity.Mongo" Version="8.3.3" />
-		<PackageReference Include="Carter" Version="7.2.0" />
-		<PackageReference Include="MassTransit.Abstractions" Version="8.1.1" />
+		<PackageReference Include="Carter" Version="8.0.0" />
+		<PackageReference Include="MassTransit.Abstractions" Version="8.1.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.12.0.78982">
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.19.0.84025">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -27,8 +28,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\..\common\Common\Deliscio.Common.csproj" />
 	  <ProjectReference Include="..\..\..\modules\Authentication\Deliscio.Modules.Authentication\Deliscio.Modules.Authentication.csproj" />
-	  <ProjectReference Include="..\..\..\modules\Links\Deliscio.Modules.Links.Common\Deliscio.Modules.Links.Common.csproj" />
+	  <ProjectReference Include="..\..\..\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
 	  <ProjectReference Include="..\..\..\modules\UserLinks\Common\Deliscio.Modules.UserLinks.Common.csproj" />
 	  <ProjectReference Include="..\..\..\modules\UserProfiles\Deliscio.Modules.UserProfiles\Deliscio.Modules.UserProfiles.csproj" />
 	</ItemGroup>

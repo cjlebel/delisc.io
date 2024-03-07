@@ -70,9 +70,9 @@ public interface IRepositoryWithTypedId<T, TId> where T : IEntityWithTypedId<TId
     /// <param name="entity">The entity.</param>
     void Remove(T entity, CancellationToken token = default);
 
-    Task RemoveAsync(TId id, CancellationToken token = default);
+    Task<bool> RemoveAsync(TId id, CancellationToken token = default);
 
-    Task RemoveAsync(T entity, CancellationToken token = default);
+    Task<bool> RemoveAsync(T entity, CancellationToken token = default);
 
     /// <summary>
     /// Removes a collection of entities.

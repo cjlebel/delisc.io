@@ -5,6 +5,7 @@ using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Queries;
 
+[Obsolete("Use FindLinksQuery instead")]
 public sealed record GetLinksQuery : IRequest<PagedResults<LinkItem>>
 {
     /// <summary>
@@ -28,7 +29,7 @@ public sealed record GetLinksQuery : IRequest<PagedResults<LinkItem>>
     {
         Guard.Against.NegativeOrZero(pageNo);
         Guard.Against.NegativeOrZero(pageSize);
-        Guard.Against.Negative(skip.Value);
+        Guard.Against.Negative(skip.GetValueOrDefault());
 
         PageNo = pageNo;
         PageSize = pageSize;

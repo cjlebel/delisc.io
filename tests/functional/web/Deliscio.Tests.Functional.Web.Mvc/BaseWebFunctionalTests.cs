@@ -34,7 +34,7 @@ public class BaseWebFunctionalTests
         Config = ConfigSettingsManager.GetConfigs();
         var apiKey = Config.GetValue<string>("ApiKey");
 
-        HttpClient.DefaultRequestHeaders.Add("x-api-key", apiKey);
+        HttpClient.DefaultRequestHeaders.Add("deliscio-api-key", apiKey);
     }
 
     protected static string GetUserId(string username)
