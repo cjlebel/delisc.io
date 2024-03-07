@@ -1,9 +1,7 @@
 using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Apis.WebApi.Managers;
 using Deliscio.Core.Models;
-using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
-using Deliscio.Modules.Links.MediatR.Commands.Handlers;
 using Deliscio.Modules.Links.MediatR.Commands;
 using Deliscio.Modules.Links.MediatR.Queries.Handlers;
 using Deliscio.Modules.Links.MediatR.Queries;
@@ -17,7 +15,7 @@ using Deliscio.Modules.UserLinks.MediatR.Queries.Handlers;
 using Deliscio.Modules.UserLinks.MediatR.Queries;
 using Deliscio.Modules.UserLinks;
 using Deliscio.Modules.Links.Data.Mongo;
-using Deliscio.Modules.Links.Interfaces;
+using Deliscio.Modules.Links.Common.Interfaces;
 
 namespace Deliscio.Apis.WebApi.Startups;
 
@@ -35,18 +33,18 @@ public static class StartupExtensions
         builder.Services.AddSingleton<ILinksService, LinksService>();
         builder.Services.AddSingleton<ILinksRepository, LinksRepository>();
 
-        builder.Services.AddSingleton<IRequestHandler<GetLinkByIdQuery, Link?>, GetsLinkByIdQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetLinkByIdQuery, Link?>, GetLinkByIdQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinkByUrlQuery, Link?>, GetLinkByUrlQueryHandler>();
 
         builder.Services.AddSingleton<IRequestHandler<GetLinksByIdsQuery, IEnumerable<LinkItem>>, GetLinksByIdsQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinksQuery, PagedResults<LinkItem>>, GetLinksQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinksByDomainQuery, PagedResults<LinkItem>>, GetLinksByDomainQueryHandler>();
-        builder.Services.AddSingleton<IRequestHandler<GetLinksByTagsQuery, PagedResults<LinkItem>>, GetsLinksByTagsQueryHandler>();
+        builder.Services.AddSingleton<IRequestHandler<GetLinksByTagsQuery, PagedResults<LinkItem>>, GetLinksByTagsQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetLinkRelatedLinksQuery, LinkItem[]>, GetLinkRelatedLinksQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetRelatedTagsByTagsQuery, LinkTag[]>, GetRelatedTagsByTagsQueryHandler>();
 
         builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkCommandHandler>();
-        builder.Services.AddSingleton<IRequestHandler<SubmitLinkCommand, Guid>, SubmitLinkCommandHandler>();
+        builder.Services.AddSingleton<IRequestHandler<SubmitLinkByUserCommand, Guid>, SubmitLinkByUserCommandHandler>();
 
     }
 

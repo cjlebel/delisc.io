@@ -1,19 +1,26 @@
+assembly-versioning-scheme: MajorMinor
 mode: ContinuousDeployment
 tag-prefix: v
-
+next-version: 0.0.1
 branches:
   feature:
-    regex: ^feature\/
     mode: ContinuousDeployment
     prevent-increment-of-merged-branch-version: true
-
+    regex: ^feature\/
   develop:
+    mode: ContinuousDeployment
+    prevent-increment-of-merged-branch-version: false
     regex: ^dev(elop)?(\/|$)
-    mode: ContinuousDeployment
-    prevent-increment-of-merged-branch-version: false
-    source-branches: ['main', 'master']
+    source-branches:
+    - main
+    - master
   rc:
-    regex: ^rc
     mode: ContinuousDeployment
     prevent-increment-of-merged-branch-version: false
-    source-branches: ['main', 'master']
+    regex: ^rc
+    source-branches:
+    - main
+    - master
+ignore:
+  sha: []
+merge-message-formats: {}

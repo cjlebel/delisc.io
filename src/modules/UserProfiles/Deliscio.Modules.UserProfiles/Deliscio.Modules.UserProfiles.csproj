@@ -1,18 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <!-- <TargetFramework>net8.0</TargetFramework> -->
+    <!-- <ImplicitUsings>enable</ImplicitUsings> -->
+    <!-- <Nullable>enable</Nullable> -->
+    <!-- <LangVersion>preview</LangVersion> -->
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Common\Models\" />
     <Folder Include="Mappers\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.19.0.84025">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Structurizr.Annotations" Version="0.9.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\common\Common\Deliscio.Common.csproj" />
     <ProjectReference Include="..\..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
+    <ProjectReference Include="..\..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
   </ItemGroup>
 
 </Project>

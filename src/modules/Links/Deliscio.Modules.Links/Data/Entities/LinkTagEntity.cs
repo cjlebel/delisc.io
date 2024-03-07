@@ -1,3 +1,4 @@
+using Deliscio.Core.Data.Interfaces;
 using Deliscio.Core.Data.Mongo;
 
 namespace Deliscio.Modules.Links.Data.Entities;
@@ -5,9 +6,13 @@ namespace Deliscio.Modules.Links.Data.Entities;
 // Note: LinkTagEntity and UserLinkTagEntity are identical.
 //       Not sure how to share them nicely, while also keeping the domains separate.
 //       I could create a shared library in Modules, but, then things will be spread out more so than they are now.
-public class LinkTagEntity : MongoEntityBase
+public class LinkTagEntity : MongoEntityBase, IIsSoftDeletableBy<Guid>
 {
     private string _name = string.Empty;
+
+    public bool IsDeleted { get; set; }
+    public DateTimeOffset DateDeleted { get; set; }
+    public Guid DeletedById { get; set; }
 
     public string Name
     {
@@ -27,7 +32,7 @@ public class LinkTagEntity : MongoEntityBase
 
     public LinkTagEntity(string name, int count = 1, float weight = 0)
     {
-        Name = name.Replace('/', '-');
+        Name = name.Replace('/', '-').ToLowerInvariant().Trim();
         Count = count;
         Weight = weight;
     }

@@ -3,7 +3,7 @@ public interface IEntityWithTypedId<out TId>
 {
     TId Id { get; }
 
-    bool IsDeleted { get; set; }
+    //bool IsDeleted { get; set; }
 
     DateTimeOffset DateCreated { get; set; }
 

@@ -1,6 +1,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Deliscio.Core.Data.Interfaces;
 using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Data.Mongo.Attributes;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 
 namespace Deliscio.Modules.Links.Data.Entities;
 
@@ -10,7 +13,7 @@ namespace Deliscio.Modules.Links.Data.Entities;
 /// <seealso cref="MongoEntityBase" />
 [Table("Link")]
 [BsonCollection("links")]
-public sealed class LinkEntity : MongoEntityBase
+public sealed class LinkEntity : MongoEntityBase, IIsSoftDeletableBy<Guid>
 {
     /// <summary>
     /// The title of the page, from the page itself, that the link points to.
@@ -70,6 +73,13 @@ public sealed class LinkEntity : MongoEntityBase
     public string Url { get; set; }
 
     public Guid SubmittedById { get; set; }
+
+    public bool IsDeleted { get; set; }
+
+    [BsonRepresentation(BsonType.DateTime)]
+    public DateTimeOffset DateDeleted { get; set; }
+
+    public Guid DeletedById { get; set; }
 
     private LinkEntity()
     {

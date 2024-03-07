@@ -1,15 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
+		<!-- <TargetFramework>net8.0</TargetFramework> -->
+		<!-- <ImplicitUsings>enable</ImplicitUsings> -->
+		<!-- <Nullable>enable</Nullable> -->
+		<!-- <LangVersion>preview</LangVersion> -->
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.19.0.84025">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="Structurizr.Annotations" Version="0.9.3" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
 	</ItemGroup>
 	<Target Name="GitVersion" BeforeTargets="BeforeBuild">
-		<Exec Command="dotnet gitversion /output buildserver" />
+		<!-- <Exec Command="dotnet gitversion /output buildserver" /> -->
 	</Target>
 </Project>

@@ -75,7 +75,7 @@ public class Program
             {
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.ApiKey,
-                Name = "x-api-key",
+                Name = "deliscio-api-key",
                 Description = apiKey,
 
             });
@@ -120,7 +120,7 @@ public class Program
         builder.Services.AddMassTransit(x =>
         {
             QueuedLinksSettingsOptions options;
-            
+
             x.UsingRabbitMq((context, cfg) =>
             {
                 options = context.GetRequiredService<IOptions<QueuedLinksSettingsOptions>>().Value;
