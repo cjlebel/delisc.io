@@ -18,7 +18,7 @@
 		<PackageReference Include="Carter" Version="8.0.0" />
 		<PackageReference Include="MassTransit.Abstractions" Version="8.1.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.19.0.84025">
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.21.0.86780">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
