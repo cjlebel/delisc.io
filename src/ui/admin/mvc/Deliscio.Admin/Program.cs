@@ -32,8 +32,8 @@ var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
 var config = ConfigSettingsManager.GetConfigs();
 
-builder.Services.Configure<WebApiSettings>(
-    builder.Configuration.GetSection(WebApiSettings.SectionName));
+//builder.Services.Configure<WebApiSettings>(
+//    builder.Configuration.GetSection(WebApiSettings.SectionName));
 
 builder.Services.AddHttpClient<AdminApiClient>();
 

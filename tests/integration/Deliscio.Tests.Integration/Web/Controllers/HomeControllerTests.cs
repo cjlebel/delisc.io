@@ -15,7 +15,8 @@ public class HomeControllerTests : BaseControllerTests
     public HomeControllerTests() : base()
     {
         _logger = new Logger<HomeController>(new LoggerFactory());
-        _homePageManager = new HomePagePageManager(WebClient, MediatR, default);
+        //_homePageManager = new HomePagePageManager(WebClient, MediatR, default);
+        _homePageManager = new HomePagePageManager(MediatR, default);
         _controller = new HomeController(_homePageManager, _logger);
     }
 

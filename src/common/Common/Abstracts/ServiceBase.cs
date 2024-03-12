@@ -18,9 +18,7 @@ public abstract class ServiceBase
         if (items.TryGetNonEnumeratedCount(out var count) && count == 0)
             return new PagedResults<T>(Array.Empty<T>(), pageNo, pageSize, totalCount);
 
-        var array = items.ToArray();
-
-        var pager = new PagedResults<T>(array, pageNo, pageSize, totalCount);
+        var pager = new PagedResults<T>(items, pageNo, pageSize, totalCount);
 
         return pager;
     }

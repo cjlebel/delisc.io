@@ -31,7 +31,7 @@ public class LinksPageManager : BasePageManager, ILinksPageManager
 {
     public int DefaultPageSize => 50;
 
-    public LinksPageManager(WebApiClient webClient, IMediator mediator, ILogger<LinksPageManager>? logger) : base(webClient, mediator, logger) { }
+    public LinksPageManager(IMediator mediator, ILogger<LinksPageManager>? logger) : base(mediator, logger) { }
 
     public async Task<LinksPageViewModel?> GetLinksPageViewModelAsync(int? pageNo = 1, int? skip = 0, string? tags = default, CancellationToken token = default)
     {
@@ -57,13 +57,12 @@ public class LinksPageManager : BasePageManager, ILinksPageManager
             $"Links for {string.Join(", ", tagsArr)} - Page {results.PageNumber} of {results.TotalPages}" :
             $"Links - Page {results.PageNumber} of {results.TotalPages}";
 
-        var model = new LinksPageViewModel
+        var model = new LinksPageViewModel(results)
         {
             PageTitle = pageTitle,
             PageDescription = "Links to useful resources",
             CanonicalUrl = $"https://deliscio.com/links{queryString}",
 
-            Results = results,
             Tags = tagsArr!,
         };
 

@@ -25,10 +25,10 @@ public class Program
 
         var config = ConfigSettingsManager.GetConfigs();
 
-        builder.Services.Configure<WebApiSettings>(
-            builder.Configuration.GetSection(WebApiSettings.SectionName));
+        //builder.Services.Configure<WebApiSettings>(
+        //    builder.Configuration.GetSection(WebApiSettings.SectionName));
 
-        builder.Services.AddHttpClient<WebApiClient>();
+        //builder.Services.AddHttpClient<WebApiClient>();
 
         builder.Services.AddOptions<MongoDbOptions>()
             .BindConfiguration(MongoDbOptions.SectionName);

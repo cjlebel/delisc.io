@@ -31,10 +31,10 @@ public class BaseControllerTests
 
         var services = new ServiceCollection();
 
-        services.Configure<WebApiSettings>(
-            config.GetSection(WebApiSettings.SectionName));
+        //services.Configure<WebApiSettings>(
+        //    config.GetSection(WebApiSettings.SectionName));
 
-        services.AddHttpClient<WebApiClient>();
+        //services.AddHttpClient<WebApiClient>();
 
         services.Configure<MongoDbOptions>(mongoConfig);
         services.AddLogging();
