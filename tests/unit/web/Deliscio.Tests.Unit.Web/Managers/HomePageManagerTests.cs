@@ -13,20 +13,20 @@ public class HomePagePageManagerTests
     private readonly IFixture _fixture;
     private readonly Mock<IMediator> _mediator;
     private readonly Mock<ILogger<HomePagePageManager>> _logger;
-    private readonly Mock<WebApiClient> _webClient;
+
     public HomePagePageManagerTests()
     {
         _fixture = new Fixture().Customize(new AutoMoqCustomization());
         _mediator = _fixture.Freeze<Mock<IMediator>>();
         _logger = _fixture.Freeze<Mock<ILogger<HomePagePageManager>>>();
-        _testClass = new HomePagePageManager(_webClient.Object, _mediator.Object, _logger.Object);
+        _testClass = new HomePagePageManager(_mediator.Object, _logger.Object);
     }
 
     [Fact]
     public void Can_Construct()
     {
         // Act
-        var instance = new HomePagePageManager(_webClient.Object, _mediator.Object, _logger.Object);
+        var instance = new HomePagePageManager(_mediator.Object, _logger.Object);
 
         // Assert
         Assert.NotNull(instance);
@@ -35,13 +35,13 @@ public class HomePagePageManagerTests
     [Fact]
     public void Cannot_Construct_WithNull_Mediator()
     {
-        Assert.Throws<ArgumentNullException>(() => new HomePagePageManager(_webClient.Object, default(IMediator), _logger.Object));
+        Assert.Throws<ArgumentNullException>(() => new HomePagePageManager(default(IMediator), _logger.Object));
     }
 
     [Fact]
     public void Cannot_Construct_WithNull_Logger()
     {
-        Assert.Throws<ArgumentNullException>(() => new HomePagePageManager(_webClient.Object, _mediator.Object, default(ILogger<HomePagePageManager>)));
+        Assert.Throws<ArgumentNullException>(() => new HomePagePageManager(_mediator.Object, default(ILogger<HomePagePageManager>)));
     }
 
     [Fact]

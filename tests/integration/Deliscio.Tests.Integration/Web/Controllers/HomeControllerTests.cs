@@ -50,7 +50,7 @@ public class HomeControllerTests : BaseControllerTests
         Assert.NotEqual(string.Empty, model.PageDescription);
         Assert.NotEqual(string.Empty, model.PageTitle);
 
-        var links = model.Results;
+        var links = model;
 
         Assert.Equal(1, links.PageNumber);
         Assert.Equal(50, links.PageSize);

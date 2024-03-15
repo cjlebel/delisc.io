@@ -1,6 +1,4 @@
 using System.Reflection;
-using Deliscio.Apis.WebApi.Common.Clients;
-using Deliscio.Common.Settings;
 using Deliscio.Core.Configuration;
 using Deliscio.Core.Data.Mongo;
 using Deliscio.Web.Mvc.Startups;

@@ -3,6 +3,7 @@ using Deliscio.Apis.WebApi.Common.Clients;
 using Deliscio.Common.Extensions;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
+using Deliscio.Modules.Links.Common.Models.Requests;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Web.Mvc.ViewModels.Links;
 using MediatR;
@@ -45,9 +46,8 @@ public class LinksPageManager : BasePageManager, ILinksPageManager
 
         var tagsArr = tags.GetArrayOrEmpty(',').OrderBy(t => t).ToArray();
 
-        IRequest<PagedResults<LinkItem>> query = tags?.Length > 0 ?
-            new GetLinksByTagsQuery(page, DefaultPageSize, tags) :
-            new GetLinksQuery(page, DefaultPageSize);
+        var request = new FindLinksRequest(page, string.Empty, string.Empty, tags);
+        var query = new FindLinksQuery(request);
 
         var results = await MediatR!.Send(query, token);
 
