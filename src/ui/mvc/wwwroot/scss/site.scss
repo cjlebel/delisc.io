@@ -1,4 +1,4 @@
-@use "../../../node_modules/bootstrap/scss/bootstrap";
+@use "./vendors/bootstrap-5.3.2/bootstrap.scss";
 
 @use "variables.scss";
 
@@ -6,8 +6,8 @@
 
 @use "global.scss";
 
-@use "navigation.scss";
+@use "./components/navigation.scss";
 
-@use "tags.scss";
+@use "./components/tags.scss";
 
-@use "link-cards.scss";
+@use "./components/link-cards.scss";

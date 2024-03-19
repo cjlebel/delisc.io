@@ -49,11 +49,11 @@ public sealed class LinksService : LinksBaseService<LinksService>, ILinksService
     /// <param name="linkId">The id of the link to retrieve</param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public async Task<Link?> GetAsync(string linkId, CancellationToken token = default)
+    public override async Task<Link?> GetAsync(string linkId, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(linkId);
 
-        return await GetAsync(new Guid(linkId), token);
+        return await base.GetAsync(new Guid(linkId), token);
     }
 
     /// <summary>
@@ -62,15 +62,11 @@ public sealed class LinksService : LinksBaseService<LinksService>, ILinksService
     /// <param name="linkId">The id of the link to retrieve</param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public async Task<Link?> GetAsync(Guid linkId, CancellationToken token = default)
+    public override Task<Link?> GetAsync(Guid linkId, CancellationToken token = default)
     {
         Guard.Against.NullOrEmpty(linkId);
 
-        var result = await LinksRepository.GetAsync(linkId, token);
-
-        var link = Mapper.Map(result);
-
-        return link;
+        return base.GetAsync(linkId, token);
     }
 
     /// <summary>
@@ -80,18 +76,16 @@ public sealed class LinksService : LinksBaseService<LinksService>, ILinksService
     /// <param name="pageSize">The number of results per page</param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public async Task<PagedResults<LinkItem>> GetAsync(int pageNo = 1, int? pageSize = default, CancellationToken token = default)
+    public override Task<PagedResults<LinkItem>> GetAsync(int pageNo = 1, int? pageSize = default, CancellationToken token = default)
     {
         var newPageSize = pageSize ?? DEFAULT_LINKS_PAGE_SIZE;
 
         Guard.Against.NegativeOrZero(newPageSize, message: $"{nameof(pageSize)} must be greater than zero");
 
-        var rslts = await FindAsync(_ => true, pageNo, newPageSize, token);
-
-        return GetPageOfResults(rslts.Results, pageNo, newPageSize, rslts.TotalCount);
+        return base.GetAsync(pageNo, pageSize, token);
     }
 
-    public async Task<IEnumerable<LinkItem>> GetByIdsAsync(IEnumerable<Guid> linkIds, CancellationToken token = default)
+    public override async Task<IEnumerable<LinkItem>> GetByIdsAsync(IEnumerable<Guid> linkIds, CancellationToken token = default)
     {
         var rslts = await LinksRepository.GetAsync(linkIds, token);
 
@@ -109,7 +103,7 @@ public sealed class LinksService : LinksBaseService<LinksService>, ILinksService
     /// <param name="token"></param>
     /// /// <exception cref="ArgumentNullException">If the domain is null or empty</exception>
     /// <returns></returns>
-    public async Task<PagedResults<LinkItem>> GetLinksByDomainAsync(string domain, int pageNo = 1, int? pageSize = default, CancellationToken token = default)
+    public override async Task<PagedResults<LinkItem>> GetLinksByDomainAsync(string domain, int pageNo = 1, int? pageSize = default, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(domain);
 
@@ -133,23 +127,9 @@ public sealed class LinksService : LinksBaseService<LinksService>, ILinksService
     /// <param name="token"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public async Task<PagedResults<LinkItem>> GetLinksByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int? pageSize = default, CancellationToken token = default)
+    public override Task<PagedResults<LinkItem>> GetLinksByTagsAsync(IEnumerable<string> tags, int pageNo = 1, int? pageSize = default, CancellationToken token = default)
     {
-        var array = tags.ToArray();
-
-        Guard.Against.NullOrEmpty(array, message: $"{nameof(tags)} cannot be null or empty");
-
-        var newPageSize = pageSize ?? DEFAULT_LINKS_PAGE_SIZE;
-
-        Guard.Against.NegativeOrZero(newPageSize, message: $"{nameof(pageSize)} must be greater than zero");
-
-        array = array.Select(t => WebUtility.UrlDecode(t).ToLowerInvariant()).ToArray();
-
-        var rslts = await LinksRepository.GetLinksByTagsAsync(array, pageNo, newPageSize, token);
-
-        var links = Mapper.Map<LinkItem>(rslts.Results);
-
-        return GetPageOfResults(links, pageNo, newPageSize, rslts.TotalCount);
+        return GetLinksByTagsAsync(tags, pageNo, pageSize, token);
     }
 
     /// <summary>
@@ -159,7 +139,7 @@ public sealed class LinksService : LinksBaseService<LinksService>, ILinksService
     /// <param name="url">The url to use to perform the search</param>
     /// <param name="token">The cancellation token</param>
     /// <returns></returns>
-    public async Task<Link?> GetByUrlAsync(string url, CancellationToken token = default)
+    public override async Task<Link?> GetByUrlAsync(string url, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(url);
 
@@ -175,7 +155,7 @@ public sealed class LinksService : LinksBaseService<LinksService>, ILinksService
     /// <param name="count">The max number of related links to return</param>
     /// <param name="token"></param>
     /// <returns>An array of link items</returns>
-    public async Task<LinkItem[]> GetRelatedLinksAsync(Guid linkId, int? count = default, CancellationToken token = default)
+    public override async Task<LinkItem[]> GetRelatedLinksAsync(Guid linkId, int? count = default, CancellationToken token = default)
     {
         Guard.Against.NullOrEmpty(linkId);
 

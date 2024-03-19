@@ -55,8 +55,6 @@ public sealed class BacklogItemEntity : MongoEntityBase
     /// </value>
     public string Url { get; set; }
 
-    public Guid CreatedById { get; set; }
-
     public BacklogItemEntity(string url, string title, string createById)
     {
         Title = title;

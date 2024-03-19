@@ -12,19 +12,19 @@
 
     <!--<ItemGroup>
         <DotNetCliToolReference Include="GitVersion.Tool" Version="5.12.0" />
-    </ItemGroup>-->
+    </ItemGroup>
 
-    <!--<Target Name="GitVersion" BeforeTargets="BeforeBuild">
+    <Target Name="GitVersion" BeforeTargets="BeforeBuild">
         <Exec Command="dotnet-gitversion /output buildserver" />
-    </Target>-->
+    </Target>
 
-    <!--<Target Name="GitVersion" BeforeTargets="BeforeBuild">
-        <Exec Command="dotnet-gitversion - version" ContinueOnError="true">
+    <Target Name="GitVersion" BeforeTargets="BeforeBuild">
+        <Exec Command="dotnet-gitversion -version" ContinueOnError="true">
             <Output TaskParameter="ExitCode" PropertyName="GitVersionExitCode" />
         </Exec>
 
-        <Exec Condition="'$(GitVersionExitCode)' != '0'" Command="echo GitVersion.Tool is not installed. Please run the following command to install it: &amp; dotnet tool install -g GitVersion.Tool - - version 5.*" />
+        <Exec Condition="'$(GitVersionExitCode)' != '0'" Command="echo GitVersion.Tool is not installed. Please run the following command to install it: &amp; dotnet tool install -g GitVersion.Tool - -version 5.*" />
         <Exec Condition="'$(GitVersionExitCode)' == '0'" Command="dotnet-gitversion /output buildserver" />
-    </Target>-->
-
+    </Target>
+-->
 </Project>

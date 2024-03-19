@@ -1,3 +1,4 @@
+using Amazon.Runtime.Internal.Transform;
 using Ardalis.GuardClauses;
 
 namespace Deliscio.Modules.Links.Common.Models.Requests;
@@ -23,7 +24,7 @@ public record FindLinksRequest
 
     public bool? IsActive => true;
 
-    public bool? IsFlagged => false;
+    public bool? IsFlagged => null;
 
     public bool? IsDeleted => false;
 

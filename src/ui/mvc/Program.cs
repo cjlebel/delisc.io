@@ -1,6 +1,4 @@
 using System.Reflection;
-using Deliscio.Apis.WebApi.Common.Clients;
-using Deliscio.Common.Settings;
 using Deliscio.Core.Configuration;
 using Deliscio.Core.Data.Mongo;
 using Deliscio.Web.Mvc.Startups;
@@ -44,10 +42,10 @@ public class Program
         builder.Services.AddSingleton<IRedisCaching, RedisCaching.RedisCaching>();
 
 
-        builder.Services.Configure<WebApiSettings>(
-            builder.Configuration.GetSection(WebApiSettings.SectionName));
+        //builder.Services.Configure<WebApiSettings>(
+        //    builder.Configuration.GetSection(WebApiSettings.SectionName));
 
-        builder.Services.AddHttpClient<WebApiClient>();
+        //builder.Services.AddHttpClient<WebApiClient>();
 
         builder.Services.AddOptions<MongoDbOptions>()
             .BindConfiguration(MongoDbOptions.SectionName);

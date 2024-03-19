@@ -16,11 +16,9 @@ public abstract class ServiceBase
     protected static PagedResults<T> GetPageOfResults<T>(IEnumerable<T> items, int pageNo, int pageSize, int totalCount)
     {
         if (items.TryGetNonEnumeratedCount(out var count) && count == 0)
-            return new PagedResults<T>(Array.Empty<T>(), pageNo, pageSize, totalCount);
+            return new PagedResults<T>([], pageNo, pageSize, totalCount);
 
-        var array = items.ToArray();
-
-        var pager = new PagedResults<T>(array, pageNo, pageSize, totalCount);
+        var pager = new PagedResults<T>(items, pageNo, pageSize, totalCount);
 
         return pager;
     }

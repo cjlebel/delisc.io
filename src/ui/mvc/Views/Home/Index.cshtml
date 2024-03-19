@@ -6,7 +6,7 @@
     ViewBag.PageDescription = Model.PageDescription;
     ViewBag.CanonicalUrl = Model.CanonicalUrl;
 
-    var links = Model.Results;
+    var links = Model?.Results;
 }
 
 <div id="home-page" class="d-flex flex-grow-1" style="outline: 1px solid red;">

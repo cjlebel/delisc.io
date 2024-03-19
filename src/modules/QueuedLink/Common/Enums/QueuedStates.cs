@@ -67,8 +67,8 @@ public sealed class QueuedStates
     /// </summary>
     public static readonly State Finished = new(999, "Finished", 999);
 
-    private readonly State[] _newStates = { New, Verifying, VerifyingCompleted, FetchingData, FetchingDataCompleted, Tagging, TaggingCompleted, Rejected, Finished };
-    private readonly State[] _updateStates = { Update, FetchingData, FetchingDataCompleted, Tagging, TaggingCompleted, Rejected, Finished };
+    private readonly State[] _newStates = [New, Verifying, VerifyingCompleted, FetchingData, FetchingDataCompleted, Tagging, TaggingCompleted, Rejected, Finished];
+    private readonly State[] _updateStates = [Update, FetchingData, FetchingDataCompleted, Tagging, TaggingCompleted, Rejected, Finished];
 
     /// <summary>
     /// List of all states related to when a new link is submitted

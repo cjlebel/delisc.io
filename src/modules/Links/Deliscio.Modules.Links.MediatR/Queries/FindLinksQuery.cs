@@ -36,9 +36,7 @@ public class FindLinksQueryHandler : IRequestHandler<FindLinksQuery, PagedResult
     {
         var results = await _linksService.FindAsync(command.Request, token: cancellationToken);
 
-        //return results;
-
-        return default;
+        return results;
     }
 }
 

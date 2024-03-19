@@ -3,6 +3,7 @@ using Deliscio.Apis.WebApi.Common.Clients;
 using Deliscio.Common.Extensions;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Models;
+using Deliscio.Modules.Links.Common.Models.Requests;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Web.Mvc.ViewModels.Links;
 using MediatR;
@@ -31,7 +32,7 @@ public class LinksPageManager : BasePageManager, ILinksPageManager
 {
     public int DefaultPageSize => 50;
 
-    public LinksPageManager(WebApiClient webClient, IMediator mediator, ILogger<LinksPageManager>? logger) : base(webClient, mediator, logger) { }
+    public LinksPageManager(IMediator mediator, ILogger<LinksPageManager>? logger) : base(mediator, logger) { }
 
     public async Task<LinksPageViewModel?> GetLinksPageViewModelAsync(int? pageNo = 1, int? skip = 0, string? tags = default, CancellationToken token = default)
     {
@@ -45,9 +46,8 @@ public class LinksPageManager : BasePageManager, ILinksPageManager
 
         var tagsArr = tags.GetArrayOrEmpty(',').OrderBy(t => t).ToArray();
 
-        IRequest<PagedResults<LinkItem>> query = tags?.Length > 0 ?
-            new GetLinksByTagsQuery(page, DefaultPageSize, tags) :
-            new GetLinksQuery(page, DefaultPageSize);
+        var request = new FindLinksRequest(page, string.Empty, string.Empty, tags);
+        var query = new FindLinksQuery(request);
 
         var results = await MediatR!.Send(query, token);
 
@@ -57,13 +57,12 @@ public class LinksPageManager : BasePageManager, ILinksPageManager
             $"Links for {string.Join(", ", tagsArr)} - Page {results.PageNumber} of {results.TotalPages}" :
             $"Links - Page {results.PageNumber} of {results.TotalPages}";
 
-        var model = new LinksPageViewModel
+        var model = new LinksPageViewModel(results)
         {
             PageTitle = pageTitle,
             PageDescription = "Links to useful resources",
             CanonicalUrl = $"https://deliscio.com/links{queryString}",
 
-            Results = results,
             Tags = tagsArr!,
         };
 

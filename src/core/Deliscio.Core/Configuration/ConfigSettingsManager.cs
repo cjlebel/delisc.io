@@ -60,7 +60,7 @@ public static class ConfigSettingsManager
 
             }
 
-            return environmentName;
+            return environmentName ?? string.Empty;
         }
     }
 
@@ -95,7 +95,7 @@ public static class ConfigSettingsManager
     /// </summary>
     /// <typeparam name="T">The type to be retrieved and returned</typeparam>
     /// <returns>A settings object of type T</returns>
-    public static T GetSection<T>() where T : IBaseConfigSettings
+    public static T? GetSection<T>() where T : IBaseConfigSettings
     {
         var nameOfT = typeof(T).Name;
 
@@ -112,11 +112,11 @@ public static class ConfigSettingsManager
     /// <typeparam name="T">The type of the settings</typeparam>
     /// <param name="name">The name of the section of the settings.</param>
     /// <returns>A settings object of type T</returns>
-    public static T GetSection<T>(string name)
+    public static T? GetSection<T>(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentNullException(nameof(name));
 
-        return Configs.GetSection(name).Get<T>();
+        return Configs.GetSection(name).Get<T>() ?? default;
     }
 }

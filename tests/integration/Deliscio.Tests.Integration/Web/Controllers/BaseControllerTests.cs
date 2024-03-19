@@ -1,5 +1,3 @@
-using Deliscio.Apis.WebApi.Common.Clients;
-using Deliscio.Common.Settings;
 using Deliscio.Core.Configuration;
 using Deliscio.Core.Data.Mongo;
 using Deliscio.Modules.Links;
@@ -15,8 +13,6 @@ public class BaseControllerTests
 {
     protected IMediator MediatR { get; private set; }
 
-    protected WebApiClient WebClient { get; private set; }
-
     protected BaseControllerTests()
     {
         Init();
@@ -31,10 +27,10 @@ public class BaseControllerTests
 
         var services = new ServiceCollection();
 
-        services.Configure<WebApiSettings>(
-            config.GetSection(WebApiSettings.SectionName));
+        //services.Configure<WebApiSettings>(
+        //    config.GetSection(WebApiSettings.SectionName));
 
-        services.AddHttpClient<WebApiClient>();
+        //services.AddHttpClient<WebApiClient>();
 
         services.Configure<MongoDbOptions>(mongoConfig);
         services.AddLogging();

@@ -20,7 +20,7 @@ public class PagerTagHelper : TagHelper
     /// <summary>
     /// Collection of query string parameters to use when generating the pager links
     /// </summary>
-    private Dictionary<string, string> QueryParams { get; set; } = new();
+    private Dictionary<string, string?> QueryParams { get; set; } = new();
 
     /// <summary>
     /// Used to get the current request (can't access HttpContext without it)
@@ -41,12 +41,12 @@ public class PagerTagHelper : TagHelper
 
         if (HttpRequest?.Query is { Count: > 0 })
         {
+            /* Ignore 'page' and 'size' */
             QueryParams = HttpRequest.Query?.Where(
-                    /* Ignore 'page' and 'size' */
                     kvp => !kvp.Key.Equals("page", StringComparison.CurrentCultureIgnoreCase) &&
                           !kvp.Key.Equals("size", StringComparison.CurrentCultureIgnoreCase))
                 .Select(kvp => kvp).ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString()) ??
-                new();
+                new Dictionary<string, string?>();
         }
 
         output.TagName = "div";
@@ -83,7 +83,7 @@ public class PagerTagHelper : TagHelper
     {
         if (Page > 1)
         {
-            var qs = new Dictionary<string, string>(QueryParams);
+            var qs = new Dictionary<string, string?>(QueryParams);
             qs.Add("page", (Page - 1).ToString());
 
             var url = QueryHelpers.AddQueryString(TargetPage, qs);
@@ -100,7 +100,7 @@ public class PagerTagHelper : TagHelper
     {
         if (Page < TotalPages)
         {
-            var qs = new Dictionary<string, string>(QueryParams);
+            var qs = new Dictionary<string, string?>(QueryParams);
             qs.Add("page", (Page + 1).ToString());
 
             var url = QueryHelpers.AddQueryString(TargetPage, qs);
@@ -115,7 +115,7 @@ public class PagerTagHelper : TagHelper
 
     private void AddLastPage(StringBuilder sb)
     {
-        var qs = new Dictionary<string, string>(QueryParams);
+        var qs = new Dictionary<string, string?>(QueryParams);
         qs.Add("page", (TotalPages).ToString());
 
         var url = QueryHelpers.AddQueryString(TargetPage, qs);
