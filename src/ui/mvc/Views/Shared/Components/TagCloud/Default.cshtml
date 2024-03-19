@@ -1,4 +1,5 @@
-@using Deliscio.Web.Mvc.Models.Tags
+@using Deliscio.Web.Mvc.ViewModels.Models.Tags
+
 @model TagsModel
 
 @{
@@ -10,7 +11,7 @@
     <h2>Tag Cloud</h2>
 }
 
-<div id="tag-cloud">
+<div id="tag-cloud" class="w-100">
     @for (var i = 0; i < tags.Count; i++)
     {
         var idx = (i % 10) + 1;

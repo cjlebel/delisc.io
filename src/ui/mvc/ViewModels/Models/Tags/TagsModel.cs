@@ -1,6 +1,6 @@
 using Deliscio.Modules.Links.Common.Models;
 
-namespace Deliscio.Web.Mvc.Models.Tags;
+namespace Deliscio.Web.Mvc.ViewModels.Models.Tags;
 
 /// <summary>
 /// Represents a collection of individual tag pills that are displayed to the user

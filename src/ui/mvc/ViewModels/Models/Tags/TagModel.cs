@@ -1,4 +1,4 @@
-namespace Deliscio.Web.Mvc.Models.Tags;
+namespace Deliscio.Web.Mvc.ViewModels.Models.Tags;
 
 /// <summary>
 /// Represents an individual tag pill that is displayed to the user

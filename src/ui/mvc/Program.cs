@@ -4,6 +4,7 @@ using Deliscio.Common.Settings;
 using Deliscio.Core.Configuration;
 using Deliscio.Core.Data.Mongo;
 using Deliscio.Web.Mvc.Startups;
+using RedisCaching;
 
 namespace Deliscio.Web.Mvc;
 
@@ -17,13 +18,31 @@ public class Program
 
         // Add service defaults & Aspire components.
         builder.AddServiceDefaults();
-        builder.AddRedisOutputCache("cache-web");
+        builder.AddRedisOutputCache("cache");
+        builder.AddKeyedRedisDistributedCache("cache");
+
+        // Add services to the container.
+        // Note: Need to add 'Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation
+        //       and then add .AddRazorRuntimeCompilation();
+        builder.Services.AddControllersWithViews()
+            .AddRazorRuntimeCompilation();
+
+        builder.Services.AddRouting(options =>
+        {
+            options.LowercaseUrls = true;
+            options.AppendTrailingSlash = false;
+            options.LowercaseQueryStrings = true;
+        });
 
         // Add services to the container.
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
 
         var config = ConfigSettingsManager.GetConfigs();
+        builder.Services.AddSingleton(config);
+
+        builder.Services.AddSingleton<IRedisCaching, RedisCaching.RedisCaching>();
+
 
         builder.Services.Configure<WebApiSettings>(
             builder.Configuration.GetSection(WebApiSettings.SectionName));
@@ -33,14 +52,8 @@ public class Program
         builder.Services.AddOptions<MongoDbOptions>()
             .BindConfiguration(MongoDbOptions.SectionName);
 
-        // Add services to the container.
-        // Note: Need to add 'Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation
-        //       and then add .AddRazorRuntimeCompilation();
-        builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-
-        builder.Services.AddSingleton(config);
 
         // Links
         builder.ConfigureLinksDependencies();
