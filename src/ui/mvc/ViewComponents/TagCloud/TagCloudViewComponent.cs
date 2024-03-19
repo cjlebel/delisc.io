@@ -1,5 +1,5 @@
 using Deliscio.Modules.Links.MediatR.Queries;
-using Deliscio.Web.Mvc.Models.Tags;
+using Deliscio.Web.Mvc.ViewModels.Models.Tags;
 using Microsoft.AspNetCore.Mvc;
 using IMediator = MediatR.IMediator;
 

@@ -3,6 +3,7 @@ using Ardalis.GuardClauses;
 using Deliscio.Web.Mvc.Managers;
 using Deliscio.Web.Mvc.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using RedisCaching;
 using Structurizr.Annotations;
 
 namespace Deliscio.Web.Mvc.Controllers;
@@ -13,7 +14,14 @@ public class HomeController : BaseController<HomeController>
 {
     private readonly IHomePageManager _pageManager;
 
-    public HomeController(IHomePageManager pageManager, ILogger<HomeController> logger) : base(logger)
+    //public HomeController(IHomePageManager pageManager, ILogger<HomeController> logger) : base(logger)
+    //{
+    //    Guard.Against.Null(pageManager);
+
+    //    _pageManager = pageManager;
+    //}
+
+    public HomeController(IHomePageManager pageManager, ILogger<HomeController> logger, IRedisCaching caching) : base(logger, caching)
     {
         Guard.Against.Null(pageManager);
 

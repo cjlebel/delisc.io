@@ -1,13 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
+using RedisCaching;
 
 namespace Deliscio.Web.Mvc.Controllers;
 public class BaseController<T> : Controller
 {
     protected ILogger<T>? Logger { get; }
+    protected IRedisCaching? Redis { get; }
 
     protected BaseController(ILogger<T>? logger)
     {
         Logger = logger;
+    }
+
+    protected BaseController(ILogger<T>? logger, IRedisCaching caching)
+    {
+        Logger = logger;
+        Redis = caching;
     }
 
     /// <summary>

@@ -1,7 +1,14 @@
 {
     "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@components": [ "wwwroot/src/tsx/components/*" ],
+            "@images": [ "wwwroot/imgs/*" ],
+            "@pages/*": [ "wwwroot/src/tsx/pages/*" ],
+            "@/*": [ "wwwroot/src/*" ]
+        },
         "diagnostics": true,
-        "target": "es6",
+        "target": "es2022",
         "lib": [
             "dom",
             "dom.iterable",
@@ -14,12 +21,12 @@
         "strict": true,
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": true,
-        "module": "es6",
+        "module": "es2022",
         "moduleResolution": "node",
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
-        "jsx": "react"
+        "jsx": "react-jsx"
     },
     "exclude": [ "node_modules" ]
 }

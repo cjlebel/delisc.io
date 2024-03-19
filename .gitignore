@@ -410,3 +410,7 @@ FodyWeavers.xsd
 /tests/functional/apis/webapis/Deliscio.Tests.Functional.Apis.WebApis/appsettings.json
 /tests/integration/Deliscio.Tests.Integration/appsettings.json
 /tests/functional/web/Deliscio.Tests.Functional.Web.Mvc/appsettings.json
+/src/ui/mvc/wwwroot/client/app.js
+/src/ui/mvc/wwwroot/client/home.js
+/src/ui/mvc/wwwroot/client/no-image-found.js
+/src/ui/mvc/wwwroot/client
