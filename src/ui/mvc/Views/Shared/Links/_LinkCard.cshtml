@@ -1,4 +1,4 @@
-@using Deliscio.Web.Mvc.Models.Tags
+@using Deliscio.Web.Mvc.ViewModels.Models.Tags
 @model Deliscio.Modules.Links.Common.Models.LinkItem
 
 @{
@@ -14,16 +14,16 @@
 
 <div class="link-card">
     <a href='@linkHref'>
-        <img src="@blankImage"
-             class="card-img-top"
+        <img class="card-img-top"
              alt="@title"
              width="0"
              height="0"
              sizes="100vw"
              style="width: 100%; height: auto"
-             data-src="@Model.ImageUrl"
-             @* priority={priority} *@
-             @* onError={(e) => onImgError(e)} *@ />
+             src="@Model.ImageUrl"
+             lazyload="lazy"
+        @* priority={priority} *@
+        @* onError={(e) => onImgError(e)} *@ />
         <div class="link-card-body">
             <h5 class="link-card-title">@title</h5>
             <p>
@@ -41,5 +41,5 @@
             }
         }
     </div>
-   
+
 </div>

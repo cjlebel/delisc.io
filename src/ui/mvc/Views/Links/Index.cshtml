@@ -10,7 +10,7 @@
     var links = Model.Results?.ToArray() ?? Array.Empty<LinkItem>();
 }
 
-<div class="d-flex flex-grow-1 me-4">
+<div id="links-page" class="d-flex flex-grow-1">
     <div id="links-container">
         @{
             await Html.RenderPartialAsync("Links/_LinkCards", links);

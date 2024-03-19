@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<!-- <TargetFramework>net8.0</TargetFramework> -->
-		<!-- <ImplicitUsings>enable</ImplicitUsings> -->
-		<!-- <Nullable>enable</Nullable> -->
-		<!-- <LangVersion>preview</LangVersion> -->
-	</PropertyGroup>
+    <PropertyGroup>
+        <!-- <TargetFramework>net8.0</TargetFramework> -->
+        <!-- <ImplicitUsings>enable</ImplicitUsings> -->
+        <!-- <Nullable>enable</Nullable> -->
+        <!-- <LangVersion>preview</LangVersion> -->
+    </PropertyGroup>
 
-	<ItemGroup>
-		<Compile Remove="Models\LinksQueueSettingsOptions.cs" />
-	</ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Models\LinksQueueSettingsOptions.cs" />
+    </ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="MassTransit" Version="8.1.3" />
@@ -21,15 +21,15 @@
 		<PackageReference Include="Structurizr.Annotations" Version="0.9.3" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Common\Deliscio.Modules.QueuedLinks.Common.csproj" />
-		<ProjectReference Include="..\QueuedLinks\Deliscio.Modules.QueuedLinks.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Common\Deliscio.Modules.QueuedLinks.Common.csproj" />
+        <ProjectReference Include="..\QueuedLinks\Deliscio.Modules.QueuedLinks.csproj" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Models\" />
-	</ItemGroup>
-	<Target Name="GitVersion" BeforeTargets="BeforeBuild">
-		<!-- <Exec Command="dotnet gitversion /output buildserver" /> -->
-	</Target>
+    <ItemGroup>
+        <Folder Include="Models\" />
+    </ItemGroup>
+    <!--<Target Name="GitVersion" BeforeTargets="BeforeBuild">
+		 <Exec Command="dotnet gitversion /output buildserver" />
+	</Target>-->
 </Project>
