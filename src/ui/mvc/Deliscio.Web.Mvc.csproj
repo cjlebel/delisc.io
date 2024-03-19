@@ -101,7 +101,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.2" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
-		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.19.0.84025">
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.21.0.86780">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -111,11 +111,104 @@
 	<ItemGroup>
 		<Folder Include="ViewComponents\Header\" />
 		<Folder Include="wwwroot\modules\components\" />
+		<Folder Include="wwwroot\scss\pages\" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="compilerconfig.json" />
 		<None Include="wwwroot\modules\images\ImageCollection.mjs" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\bootstrap-grid.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\bootstrap-reboot.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\bootstrap-utilities.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\bootstrap.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\forms\_floating-labels.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\forms\_form-check.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\forms\_form-control.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\forms\_form-range.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\forms\_form-select.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\forms\_form-text.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\forms\_input-group.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\forms\_labels.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\forms\_validation.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\helpers\_clearfix.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\helpers\_color-bg.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\helpers\_colored-links.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\helpers\_focus-ring.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\helpers\_icon-link.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\helpers\_position.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\helpers\_ratio.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\helpers\_stacks.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\helpers\_stretched-link.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\helpers\_text-truncation.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\helpers\_visually-hidden.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\helpers\_vr.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_alert.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_backdrop.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_banner.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_border-radius.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_box-shadow.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_breakpoints.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_buttons.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_caret.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_clearfix.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_color-mode.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_color-scheme.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_container.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_deprecate.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_forms.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_gradients.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_grid.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_image.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_list-group.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_lists.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_pagination.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_reset-text.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_resize.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_table-variants.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_text-truncate.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_transition.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_utilities.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\mixins\_visually-hidden.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\utilities\_api.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\vendor\_rfs.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_accordion.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_alert.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_badge.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_breadcrumb.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_button-group.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_buttons.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_card.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_carousel.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_close.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_containers.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_dropdown.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_forms.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_functions.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_grid.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_helpers.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_images.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_list-group.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_maps.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_mixins.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_modal.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_nav.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_navbar.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_offcanvas.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_pagination.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_placeholders.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_popover.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_progress.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_reboot.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_root.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_spinners.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_tables.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_toasts.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_tooltip.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_transitions.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_type.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_utilities.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_variables-dark.scss" />
+		<None Include="wwwroot\scss\vendors\bootstrap-5.3.2\_variables.scss" />
 		<None Include="wwwroot\scss\_variables.scss" />
 		<None Include="wwwroot\tsx\Pager\bak\index.xtsx" />
 		<None Include="wwwroot\tsx\Pager\bak\Pager.module.scss.d.xts" />

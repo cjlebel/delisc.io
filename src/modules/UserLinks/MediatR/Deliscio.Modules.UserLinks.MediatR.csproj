@@ -14,10 +14,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Ardalis.GuardClauses" Version="4.4.0" />
+        <PackageReference Include="Ardalis.GuardClauses" Version="4.5.0" />
         <PackageReference Include="MediatR" Version="12.2.0" />
         <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="9.19.0.84025">
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="9.21.0.86780">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

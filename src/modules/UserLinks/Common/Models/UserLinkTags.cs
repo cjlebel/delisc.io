@@ -28,7 +28,7 @@ public class UserLinkTags : IEnumerable<UserLinkTag>
 
     public UserLinkTags(IEnumerable tags)
     {
-        _tags = tags as List<UserLinkTag> ?? new List<UserLinkTag>();
+        _tags = tags as List<UserLinkTag> ?? [];
     }
 
     private void RecalculateWeight()

@@ -86,7 +86,8 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
         Guard.Against.NegativeOrZero(pageNo);
         Guard.Against.NegativeOrZero(pageSize);
 
-        var query = new GetLinksQuery(pageNo, pageSize);
+        var request = new FindLinksRequest(pageNo: pageNo, pageSize: pageSize, tags: Array.Empty<string>());
+        var query = new FindLinksQuery(request);
 
         return _mediator.Send(query, token);
     }

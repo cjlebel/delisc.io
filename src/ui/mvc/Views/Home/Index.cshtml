@@ -6,24 +6,33 @@
     ViewBag.PageDescription = Model.PageDescription;
     ViewBag.CanonicalUrl = Model.CanonicalUrl;
 
-    var links = Model.Results;
+    var links = Model?.Results;
 }
 
 <div class="d-flex flex-grow-1 me-4">
     <div id="links-container">
-        @{
-            await Html.RenderPartialAsync("Links/_LinkCards", links.Results);
+        @if (links != null && links.Any())
+        {
+            await Html.RenderPartialAsync("Links/_LinkCards", links);
+
+            <div id="pager-container"
+                 data-pageno="@Model.PageNumber"
+                 data-size="@Model.PageSize"
+                 data-pages="@Model.TotalPages"
+                 data-results="@Model.TotalResults"
+                 data-url="/links">
+            </div>
         }
-        <div id="pager-container"
-             data-pageno="@links.PageNumber"
-             data-size="@links.PageSize"
-             data-pages="@links.TotalPages"
-             data-results="@links.TotalResults"
-             data-url="/links">
-        </div>
+        else
+        {
+            <div class="alert alert-info" role="alert">
+                No links found.
+            </div>
+        }
+
     </div>
     <div class="flex-shrink-0 pe-4" style="width: 30%; max-width: 400px">
-       <vc:tag-cloud count="100"></vc:tag-cloud>
+        <vc:tag-cloud count="100"></vc:tag-cloud>
     </div>
 </div>
 
@@ -70,7 +79,7 @@
                     }
                     else {
                         newSrc = dataSrc;
-                    }  
+                    }
                 }
             }
 
@@ -81,7 +90,7 @@
                 console.log(`Error loading image from ${dataSrc}`);
 
                 img.setAttribute("src", noImage);
-            };   
+            };
 
             //img.setAttribute("data-src", "");
 

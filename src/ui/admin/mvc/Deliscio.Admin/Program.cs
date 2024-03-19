@@ -32,8 +32,8 @@ var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
 var config = ConfigSettingsManager.GetConfigs();
 
-builder.Services.Configure<WebApiSettings>(
-    builder.Configuration.GetSection(WebApiSettings.SectionName));
+//builder.Services.Configure<WebApiSettings>(
+//    builder.Configuration.GetSection(WebApiSettings.SectionName));
 
 builder.Services.AddHttpClient<AdminApiClient>();
 
@@ -57,8 +57,6 @@ builder.Services.AddSingleton<IRequestHandler<GetLinkByUrlQuery, Link?>, GetLink
 
 builder.Services.AddSingleton<IRequestHandler<GetLinksByIdsQuery, IEnumerable<LinkItem>>, GetLinksByIdsQueryHandler>();
 
-//Obsolete - GetLinksQuery
-builder.Services.AddSingleton<IRequestHandler<GetLinksQuery, PagedResults<LinkItem>>, GetLinksQueryHandler>();
 builder.Services.AddSingleton<IRequestHandler<GetLinksByDomainQuery, PagedResults<LinkItem>>, GetLinksByDomainQueryHandler>();
 builder.Services.AddSingleton<IRequestHandler<GetLinksByTagsQuery, PagedResults<LinkItem>>, GetLinksByTagsQueryHandler>();
 builder.Services.AddSingleton<IRequestHandler<GetLinkRelatedLinksQuery, LinkItem[]>, GetLinkRelatedLinksQueryHandler>();

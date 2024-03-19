@@ -11,7 +11,7 @@ public static class CollectionsExtensions
 
     public static List<T> GetListOrEmpty<T>(this IEnumerable<T>? enumerable)
     {
-        var list = enumerable?.ToList() ?? new List<T>();
+        var list = enumerable?.ToList() ?? [];
 
         return list;
     }

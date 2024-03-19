@@ -1,6 +1,5 @@
-using Ardalis.GuardClauses;
-using Deliscio.Apis.WebApi.Common.Clients;
 using Deliscio.Modules.Links.Common.Models;
+using Deliscio.Modules.Links.Common.Models.Requests;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Web.Mvc.ViewModels.Home;
 using MediatR;
@@ -19,11 +18,8 @@ public class HomePagePageManager : BasePageManager, IHomePageManager
     private readonly int _defaultPageSize;
     private readonly int _defaultTagsSize;
 
-    public HomePagePageManager(WebApiClient webClient, IMediator mediator, ILogger<HomePagePageManager>? logger) : base(webClient, mediator, logger)
+    public HomePagePageManager(IMediator mediator, ILogger<HomePagePageManager>? logger) : base(mediator, logger)
     {
-        Guard.Against.Null(mediator);
-        Guard.Against.Null(webClient);
-
         // This can come from a settings file
         _defaultPageSize = 50;
         _defaultTagsSize = 100;
@@ -37,19 +33,26 @@ public class HomePagePageManager : BasePageManager, IHomePageManager
     /// <returns>A view model with the page's title, description, canonical url, and data</returns>
     public async Task<HomePageViewModel> GetHomePageViewModelAsync(CancellationToken token = default)
     {
-        var query = new GetLinksQuery(1, _defaultPageSize);
+        var request = new FindLinksRequest(1, string.Empty, string.Empty, Array.Empty<string>(), _defaultPageSize, 0);
+        var query = new FindLinksQuery(request);
+        //GetLinksQuery(1, _defaultPageSize);
 
         var results = await MediatR!.Send(query, token);
 
         //var results = await WebClient.GetLinksSearchResultsAsync(page: 1, pageSize: _defaultPageSize, token: token);
 
-        var model = new HomePageViewModel
+        if (results is null)
+        {
+            Logger.LogError("No results were found in {Name}", this.GetType().Name);
+
+            return null;
+        }
+
+        var model = new HomePageViewModel(results)
         {
             CanonicalUrl = "https://deliscio.com",
             PageTitle = "Deliscio - Home",
-            PageDescription = "Deliscio - Home",
-
-            Results = results
+            PageDescription = "Deliscio - Home"
         };
 
         return model;
