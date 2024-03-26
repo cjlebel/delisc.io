@@ -98,8 +98,8 @@
         <TypeScriptCompile Include="wwwroot\tsx\index.ts" />
     </ItemGroup>
 
-    <Target Name="GitVersion" BeforeTargets="BeforeBuild">
-        <!-- <Exec Command="dotnet gitversion /output buildserver" /> -->
-    </Target>
+    <!--<Target Name="GitVersion" BeforeTargets="BeforeBuild">
+         <Exec Command="dotnet gitversion /output buildserver" /> 
+    </Target>-->
 
 </Project>

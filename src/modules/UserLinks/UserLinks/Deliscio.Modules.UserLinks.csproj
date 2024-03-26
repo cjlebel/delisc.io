@@ -1,39 +1,40 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<!-- <TargetFramework>net8.0</TargetFramework> -->
-		<!-- <ImplicitUsings>enable</ImplicitUsings> -->
-		<!-- <Nullable>enable</Nullable> -->
-		<!-- <LangVersion>preview</LangVersion> -->
-	</PropertyGroup>
+    <PropertyGroup>
+        <!-- <TargetFramework>net8.0</TargetFramework> -->
+        <!-- <ImplicitUsings>enable</ImplicitUsings> -->
+        <!-- <Nullable>enable</Nullable> -->
+        <!-- <LangVersion>preview</LangVersion> -->
+    </PropertyGroup>
 
-	<ItemGroup>
-		<Compile Remove="Requests\**" />
-		<Compile Remove="Responses\**" />
-		<EmbeddedResource Remove="Requests\**" />
-		<EmbeddedResource Remove="Responses\**" />
-		<None Remove="Requests\**" />
-		<None Remove="Responses\**" />
-	</ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Requests\**" />
+        <Compile Remove="Responses\**" />
+        <EmbeddedResource Remove="Requests\**" />
+        <EmbeddedResource Remove="Responses\**" />
+        <None Remove="Requests\**" />
+        <None Remove="Responses\**" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\..\..\common\Common\Deliscio.Common.csproj" />
-		<ProjectReference Include="..\..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
-		<ProjectReference Include="..\Common\Deliscio.Modules.UserLinks.Common.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\common\Common\Deliscio.Common.csproj" />
+        <ProjectReference Include="..\..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
+        <ProjectReference Include="..\Common\Deliscio.Modules.UserLinks.Common.csproj" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Mappers\" />
-	</ItemGroup>
+    <ItemGroup>
+        <Folder Include="Mappers\" />
+    </ItemGroup>
 
-	<ItemGroup>
-	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.21.0.86780">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
-	  <PackageReference Include="Structurizr.Annotations" Version="0.9.3" />
-	</ItemGroup>
-	<Target Name="GitVersion" BeforeTargets="BeforeBuild">
-		<!-- <Exec Command="dotnet gitversion /output buildserver" /> -->
-	</Target>
+    <ItemGroup>
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="9.21.0.86780">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Structurizr.Annotations" Version="0.9.3" />
+    </ItemGroup>
+
+    <!--<Target Name="GitVersion" BeforeTargets="BeforeBuild">
+         <Exec Command="dotnet gitversion /output buildserver" /> 
+    </Target>-->
 </Project>
