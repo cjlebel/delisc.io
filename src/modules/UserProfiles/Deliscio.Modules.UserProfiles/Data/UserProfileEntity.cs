@@ -28,7 +28,7 @@ public class UserProfileEntity : MongoEntityBase
 
     public UserProfileEntity(Guid id, string email, string displayName)
     {
-        Id = id;
+        Id = id.ToObjectId();
         Email = email;
         DisplayName = displayName;
     }

@@ -72,7 +72,7 @@ internal static class Mapper
 
         if (typeof(T) == typeof(Link))
         {
-            var model = new Link(entity.Id, entity.Url, entity.SubmittedById)
+            var model = new Link(entity.Id.ToString(), entity.Url, entity.SubmittedById.ToString())
             {
                 Description = entity.Description,
                 Domain = entity.Domain,
@@ -94,7 +94,7 @@ internal static class Mapper
 
         if (typeof(T) == typeof(LinkItem))
         {
-            var model = new LinkItem(entity.Id, entity.Url, entity.Title, entity.Description, entity.Domain, entity.ImageUrl, Map(entity.Tags), entity.DateCreated, entity.DateUpdated)
+            var model = new LinkItem(entity.Id.ToString(), entity.Url, entity.Title, entity.Description, entity.Domain, entity.ImageUrl, Map(entity.Tags), entity.DateCreated, entity.DateUpdated)
             {
                 IsActive = entity.IsActive,
                 IsDeleted = entity.IsDeleted,

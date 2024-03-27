@@ -1,9 +1,10 @@
 using Deliscio.Core.Data.Interfaces;
 using Deliscio.Modules.UserLinks.Data.Entities;
+using MongoDB.Bson;
 
 namespace Deliscio.Modules.UserLinks.Interfaces;
 
-public interface IUserLinksRepository : IRepository<UserLinkEntity>
+public interface IUserLinksRepository : IRepository<UserLinkEntity, ObjectId>
 {
     Task<UserLinkEntity?> GetAsync(Guid userId, Guid linkId, CancellationToken token = default);
 

@@ -1,9 +1,15 @@
 using Deliscio.Core.Data.Interfaces;
 using Deliscio.Modules.BackLog.Data.Entities;
+using MongoDB.Bson;
 
 namespace Deliscio.Modules.BackLog.Interfaces;
 
-public interface IBacklogRepository : IRepository<BacklogItemEntity>
+//public interface IBacklogMongoRepository : IBacklogRepository<ObjectId>
+//{
+
+//}
+
+public interface IBacklogRepository : IRepository<BacklogItemEntity, ObjectId>
 {
     ///// <summary>
     ///// Gets a collection of one or more backlinks by their id.
@@ -27,7 +33,7 @@ public interface IBacklogRepository : IRepository<BacklogItemEntity>
     /// <param name="createById">The id of the user who is creating the link</param>
     /// <param name="token">The token.</param>
     /// <returns>The Id of the new backlink is returned</returns>
-    ValueTask<Guid> AddAsync(string url, string title, string createById, CancellationToken token = default);
+    ValueTask<ObjectId> AddAsync(string url, string title, string createById, CancellationToken token = default);
 
     //ValueTask<IEnumerable<Guid>> AddRangeAsync(IEnumerable<BacklogItemEntity> entities, CancellationToken token);
 
@@ -47,7 +53,7 @@ public interface IBacklogRepository : IRepository<BacklogItemEntity>
     /// <param name="url"></param>
     /// <param name="token"></param>
     /// <returns>If the url can be found, then its Id is returned, else, Guid.Empty</returns>
-    ValueTask<Guid> Exists(string url, CancellationToken token);
+    ValueTask<ObjectId> Exists(string url, CancellationToken token);
 
     ///// <summary>
     ///// Gets a collection of backlinks by page and size.

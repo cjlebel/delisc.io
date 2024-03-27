@@ -12,7 +12,7 @@ public class BaseController<T> : Controller
         Logger = logger;
     }
 
-    protected BaseController(ILogger<T>? logger, IRedisCaching caching)
+    protected BaseController(ILogger<T>? logger, IRedisCaching? caching = default)
     {
         Logger = logger;
         Redis = caching;

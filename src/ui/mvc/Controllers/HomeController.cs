@@ -21,7 +21,7 @@ public class HomeController : BaseController<HomeController>
     //    _pageManager = pageManager;
     //}
 
-    public HomeController(IHomePageManager pageManager, ILogger<HomeController> logger, IRedisCaching caching) : base(logger, caching)
+    public HomeController(IHomePageManager pageManager, ILogger<HomeController> logger, IRedisCaching? caching = default) : base(logger, caching)
     {
         Guard.Against.Null(pageManager);
 

@@ -48,7 +48,7 @@ internal static class Mappers
         if (entity == null)
             return null;
 
-        var model = new BacklogItem(entity.Id, entity.Title, entity.Url, entity.CreatedById, entity.DateCreated, entity.DateUpdated, entity.IsProcessed);
+        var model = new BacklogItem(entity.Id.ToString(), entity.Title, entity.Url, entity.CreatedById.ToString(), entity.DateCreated, entity.DateUpdated, entity.IsProcessed);
 
         return model;
     }

@@ -170,7 +170,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Website", "Website", "{7769
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Caching", "Caching", "{3C736E50-46AB-4BE1-95F1-F5AF8958447B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedisCaching", "src\modules\Common\Caching\RedisCaching\RedisCaching.csproj", "{D3C24BBD-8577-417A-AA3A-5F093FBEB1B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedisCaching", "src\modules\Common\Caching\RedisCaching\RedisCaching.csproj", "{D3C24BBD-8577-417A-AA3A-5F093FBEB1B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

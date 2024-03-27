@@ -73,7 +73,7 @@ public class UserLinksService : ServiceBase, IUserLinksService
 
         await _repository.AddAsync(userLink, token);
 
-        return userLink.Id;
+        return Guid.Parse(userLink.Id.ToString());
     }
 
     //public async Task<Guid> AddAsync(Guid userId, UserLink link, CancellationToken token = default)

@@ -4,8 +4,8 @@ namespace Deliscio.Core.Data.Interfaces;
 /// For entities that are soft deletable by a specific user.
 /// Requires a property called DeletedById.
 /// </summary>
-/// <typeparam name="T"></typeparam>
-public interface IIsSoftDeletableBy<T> : IIsSoftDeletable
+/// <typeparam name="TId"></typeparam>
+public interface IIsSoftDeletableBy<TId> : IIsSoftDeletable
 {
-    T DeletedById { get; set; }
+    TId DeletedById { get; set; }
 }

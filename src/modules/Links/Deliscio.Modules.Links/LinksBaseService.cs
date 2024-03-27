@@ -2,12 +2,14 @@ using System.Linq.Expressions;
 using System.Net;
 using Ardalis.GuardClauses;
 using Deliscio.Common.Abstracts;
+using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Data.Entities;
 using Deliscio.Modules.Links.Mappers;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Deliscio.Modules.Links;
@@ -88,7 +90,7 @@ public abstract class LinksBaseService<T> : ServiceBase
     {
         Guard.Against.NullOrEmpty(linkId);
 
-        var result = await LinksRepository.GetAsync(linkId, token);
+        var result = await LinksRepository.GetAsync(linkId.ToObjectId(), token);
 
         var link = Mapper.Map(result);
 
@@ -115,7 +117,7 @@ public abstract class LinksBaseService<T> : ServiceBase
 
     public virtual async Task<IEnumerable<LinkItem>> GetByIdsAsync(IEnumerable<Guid> linkIds, CancellationToken token = default)
     {
-        var rslts = await LinksRepository.GetAsync(linkIds, token);
+        var rslts = await LinksRepository.GetAsync(linkIds.ToObjectIds(), token);
 
         var links = Mapper.Map<LinkItem>(rslts);
 
@@ -311,8 +313,7 @@ public abstract class LinksBaseService<T> : ServiceBase
         //await LinksRepository.AddAsync(link, token);
 
         //return link.Id;
-
-        return linkEntity.Id;
+        return linkEntity.Id.ToGuid();
     }
 
     private async Task UpdateExistingLinkAsync(LinkEntity linkEntity, string[]? tags = default, CancellationToken token = default)
@@ -320,7 +321,7 @@ public abstract class LinksBaseService<T> : ServiceBase
         Guard.Against.Null(linkEntity);
         Guard.Against.NullOrWhiteSpace(linkEntity.Url);
         Guard.Against.NullOrWhiteSpace(linkEntity.Title);
-        Guard.Against.NullOrEmpty(linkEntity.SubmittedById);
+        Guard.Against.NullOrEmpty(linkEntity.SubmittedById.ToString());
 
         if (tags is { Length: > 0 })
         {

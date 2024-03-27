@@ -61,7 +61,7 @@ public sealed class UserProfilesService : ServiceBase, IUserProfilesService
     {
         Guard.Against.Default(userId);
 
-        var user = await _repository.GetAync(userId, token);
+        var user = await _repository.GetAsync(userId, token);
 
         if (user is null)
             return null;

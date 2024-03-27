@@ -1,9 +1,9 @@
 using Ardalis.GuardClauses;
 using Deliscio.Core.Data.Mongo;
-using Deliscio.Core.Data.Mongo.Interfaces;
 using Deliscio.Modules.UserLinks.Data.Entities;
 using Deliscio.Modules.UserLinks.Interfaces;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Deliscio.Modules.UserLinks.Data.Mongo;
@@ -36,7 +36,9 @@ public sealed class UserLinksRepository : MongoRepository<UserLinkEntity>, IUser
         Guard.Against.NullOrEmpty(userId);
         Guard.Against.NullOrEmpty(linkId);
 
-        return await FirstOrDefaultAsync(x => x.UserId == userId && x.Id == linkId, token);
+        var linkObjectId = ObjectId.Parse(linkId.ToString());
+
+        return await FirstOrDefaultAsync(x => x.UserId == userId && x.Id == linkObjectId, token);
     }
 
     /// <summary>

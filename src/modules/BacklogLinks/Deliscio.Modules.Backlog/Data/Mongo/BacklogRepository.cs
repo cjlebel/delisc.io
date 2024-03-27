@@ -1,11 +1,8 @@
 using Deliscio.Core.Data.Mongo;
-using Deliscio.Core.Data.Mongo.Interfaces;
 using Deliscio.Modules.BackLog.Data.Entities;
 using Deliscio.Modules.BackLog.Interfaces;
-
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Deliscio.Modules.BackLog.Data.Mongo;
@@ -20,7 +17,7 @@ internal sealed class BacklogRepository : MongoRepository<BacklogItemEntity>, IB
 
     #endregion
 
-    public async ValueTask<Guid> AddAsync(string url, string title, string createById, CancellationToken token = default)
+    public async ValueTask<ObjectId> AddAsync(string url, string title, string createById, CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(url))
             throw new ArgumentNullException(nameof(url));
@@ -33,7 +30,7 @@ internal sealed class BacklogRepository : MongoRepository<BacklogItemEntity>, IB
 
         var existingId = await Exists(url, token);
 
-        if (existingId != Guid.Empty)
+        if (existingId != ObjectId.Empty)
             return existingId;
 
         var entity = BacklogItemEntity.Create(url, title, createById);
@@ -48,7 +45,7 @@ internal sealed class BacklogRepository : MongoRepository<BacklogItemEntity>, IB
 
             //TODO: Log and continue
 
-            return Guid.Empty;
+            return ObjectId.Empty;
         }
 
         return entity.Id;
@@ -128,7 +125,7 @@ internal sealed class BacklogRepository : MongoRepository<BacklogItemEntity>, IB
         return result.IsAcknowledged;
     }
 
-    public async ValueTask<Guid> Exists(string url, CancellationToken token)
+    public async ValueTask<ObjectId> Exists(string url, CancellationToken token)
     {
         var builder = Builders<BacklogItemEntity>.Filter;
 
@@ -142,7 +139,7 @@ internal sealed class BacklogRepository : MongoRepository<BacklogItemEntity>, IB
 
         var entity = (await Collection.FindAsync(filter, new FindOptions<BacklogItemEntity>() { Limit = 1 }, token)).Single(CancellationToken.None);
 
-        return entity?.Id ?? Guid.Empty;
+        return entity?.Id ?? ObjectId.Empty;
     }
 
 
