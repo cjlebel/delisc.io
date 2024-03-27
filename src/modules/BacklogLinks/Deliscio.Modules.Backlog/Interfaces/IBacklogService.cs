@@ -26,7 +26,7 @@ public interface IBacklogService
     /// </summary>
     /// <param name="backlogItems"></param>
     /// <returns>The number of items that were successfully or failed to be saved</returns>
-    ValueTask<(int Success, int Failed)> AddBacklogItemsAsync(IEnumerable<BacklogItem> backlogItems, CancellationToken token);
+    ValueTask<(int Success, int Failed)> AddBacklogItemsAsync(IEnumerable<BacklogItem> backlogItems, CancellationToken token = default);
 
     /// <summary>
     /// Gets a backlog item by its id in the data storage.
@@ -40,7 +40,7 @@ public interface IBacklogService
     /// </summary>
     /// <param name="ids">A collection of ids for the backlog items to be returned.</param>
     /// <returns></returns>
-    Task<IEnumerable<BacklogItem>> GetBacklogItemsAsync(IEnumerable<string> ids, CancellationToken token);
+    Task<IEnumerable<BacklogItem>> GetBacklogItemsAsync(IEnumerable<string> ids, CancellationToken token = default);
 
     /// <summary>
     /// Gets an IEnumerable of BacklogItems along with the total count of items in the data storage.

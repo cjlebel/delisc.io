@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Data.Mongo.Attributes;
+using MongoDB.Bson;
 
 namespace Deliscio.Modules.UserLinks.Data.Entities;
 
@@ -55,7 +56,7 @@ public class UserLinkEntity : MongoEntityBase
 
     public UserLinkEntity(Guid id, Guid userId, Guid linkId, DateTimeOffset dateCreated, DateTimeOffset dateUpdated, UserLinkTagEntity[]? tags = default, bool isPrivate = false) : this()
     {
-        Id = id;
+        Id = ObjectId.Parse(id.ToString());
         LinkId = linkId;
         UserId = userId;
 

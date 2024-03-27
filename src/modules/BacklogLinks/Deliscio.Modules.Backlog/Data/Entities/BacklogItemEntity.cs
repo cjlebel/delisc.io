@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
-
+using Deliscio.Core.Data;
 using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Data.Mongo.Attributes;
-using Deliscio.Core.Data;
+using MongoDB.Bson;
 
 
 namespace Deliscio.Modules.BackLog.Data.Entities;
@@ -59,16 +59,16 @@ public sealed class BacklogItemEntity : MongoEntityBase
     {
         Title = title;
         Url = url;
-        CreatedById = Guid.Parse(createById);
+        CreatedById = ObjectId.Parse(createById);
     }
 
     //public BackLinkEntity(string title, string url, string createById, bool isProcessed, IEnumerable<string>? tags)
     public BacklogItemEntity(string id, string url, string title, string createById)
     {
-        Id = string.IsNullOrWhiteSpace(id) ? Guid.Empty : Guid.Parse(id);
+        Id = string.IsNullOrWhiteSpace(id) ? ObjectId.Empty : ObjectId.Parse(id);
         Title = title;
         Url = url;
-        CreatedById = Guid.Parse(createById);
+        CreatedById = ObjectId.Parse(createById);
     }
 
     public static BacklogItemEntity Create(string url, string title, string createById)

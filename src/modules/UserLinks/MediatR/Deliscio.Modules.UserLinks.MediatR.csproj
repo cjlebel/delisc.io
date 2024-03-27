@@ -32,7 +32,7 @@
     <ItemGroup>
         <Folder Include="Commands\Handlers\" />
     </ItemGroup>
-    <Target Name="GitVersion" BeforeTargets="BeforeBuild">
-        <!-- <Exec Command="dotnet gitversion /output buildserver" /> -->
-    </Target>
+    <!--<Target Name="GitVersion" BeforeTargets="BeforeBuild">
+         <Exec Command="dotnet gitversion /output buildserver" /> 
+    </Target>-->
 </Project>

@@ -12,11 +12,11 @@ internal class UserProfilesRepository : MongoRepository<UserProfileEntity>, IUse
     //public UserProfilesRepository(IMongoDbClient client) : base(client) { }
     #endregion
 
-    public Task<UserProfileEntity?> GetAync(Guid userId, CancellationToken token = default)
+    public Task<UserProfileEntity?> GetAsync(Guid userId, CancellationToken token = default)
     {
         Guard.Against.Default(userId);
 
-        return FirstOrDefaultAsync(x => x.Id == userId, token);
+        return FirstOrDefaultAsync(x => x.Id == userId.ToObjectId(), token);
     }
 
     //Note: Need to rethink this. I only want to return parts of the user profile, not all of the details for each one.

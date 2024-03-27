@@ -4,8 +4,8 @@ using Deliscio.Core.Data.Interfaces;
 
 namespace Deliscio.Core.Data;
 
-public abstract class BaseRepository<T> : BaseRepositoryWithTypedId<T, Guid>, IRepository<T>
-    where T : class, IEntityWithTypedId<Guid>
+public abstract class BaseRepository<T, TId> : BaseRepositoryWithTypedId<T, TId>, IRepository<T, TId>
+    where T : class, IEntityWithTypedId<TId>
 {
     //public Repository(MsSqlDbContext context) : base(context) { }
 }

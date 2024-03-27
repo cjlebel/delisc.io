@@ -1,7 +1,8 @@
 using System.Linq.Expressions;
+using System.Security.Cryptography;
 
 namespace Deliscio.Core.Data.Interfaces;
-public interface IRepositoryWithTypedId<T, TId> where T : IEntityWithTypedId<TId>
+public interface IRepositoryWithTypedId<T, in TId> where T : IEntityWithTypedId<TId>
 {
     Task<(IEnumerable<T> Results, int TotalPages, int TotalCount)> FindAsync(Expression<Func<T, bool>> predicate, int pageNo = 1, int pageSize = 25,
         CancellationToken token = default);
@@ -95,6 +96,6 @@ public interface IRepositoryWithTypedId<T, TId> where T : IEntityWithTypedId<TId
 
 }
 
-public interface IRepository<T> : IRepositoryWithTypedId<T, Guid> where T : IEntityWithTypedId<Guid>
+public interface IRepository<T, in TId> : IRepositoryWithTypedId<T, TId> where T : IEntityWithTypedId<TId>
 {
 }

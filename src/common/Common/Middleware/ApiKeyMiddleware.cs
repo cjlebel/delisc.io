@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Http;
-
 using Microsoft.Extensions.Configuration;
 
-namespace Deliscio.Core.Middleware;
+namespace Deliscio.Common.Middleware;
 
 public class ApiKeyMiddleware
 {

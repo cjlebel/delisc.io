@@ -13,7 +13,7 @@ namespace Deliscio.Modules.Links.Data.Entities;
 /// <seealso cref="MongoEntityBase" />
 [Table("Link")]
 [BsonCollection("links")]
-public sealed class LinkEntity : MongoEntityBase, IIsSoftDeletableBy<Guid>
+public sealed class LinkEntity : MongoEntityBase, IIsSoftDeletableBy<ObjectId>
 {
     /// <summary>
     /// The title of the page, from the page itself, that the link points to.
@@ -32,7 +32,7 @@ public sealed class LinkEntity : MongoEntityBase, IIsSoftDeletableBy<Guid>
     public string Domain { get; set; } = string.Empty;
 
     /// <summary>
-    /// Whether or not this link has a screen shot.
+    /// Whether this link has a screenshot.
     /// If it does, then the name of the file will be the same as the ID of the link*.
     /// </summary>
     public bool HasScreenshot { get; set; } = false;
@@ -60,7 +60,7 @@ public sealed class LinkEntity : MongoEntityBase, IIsSoftDeletableBy<Guid>
     public int LikesCount { get; set; }
 
     /// <summary>
-    /// Represents all of the tags that are associated with this link, as well as the number of times they've been used.
+    /// Represents all the tags that are associated with this link, as well as the number of times they've been used.
     /// </summary>
     /// <value>
     /// The tags.
@@ -72,14 +72,14 @@ public sealed class LinkEntity : MongoEntityBase, IIsSoftDeletableBy<Guid>
     /// </summary>
     public string Url { get; set; }
 
-    public Guid SubmittedById { get; set; }
+    public ObjectId SubmittedById { get; set; }
 
     public bool IsDeleted { get; set; }
 
     [BsonRepresentation(BsonType.DateTime)]
     public DateTimeOffset DateDeleted { get; set; }
 
-    public Guid DeletedById { get; set; }
+    public ObjectId DeletedById { get; set; }
 
     private LinkEntity()
     {
@@ -89,8 +89,9 @@ public sealed class LinkEntity : MongoEntityBase, IIsSoftDeletableBy<Guid>
 
     public LinkEntity(Guid id, string url, string title, Guid submittedById)
     {
-        Id = id;
-        SubmittedById = submittedById;
+        Id = ObjectId.Parse(id.ToString());
+        SubmittedById = ObjectId.Parse(submittedById.ToString());
+
         Title = title;
         Url = url;
 
@@ -117,7 +118,7 @@ public sealed class LinkEntity : MongoEntityBase, IIsSoftDeletableBy<Guid>
         return new LinkEntity
         {
             IsActive = true,
-            SubmittedById = submittedById,
+            SubmittedById = ObjectId.Parse(submittedById.ToString()),
             Tags = tags?.Select(x => new LinkTagEntity(x)).ToList() ?? new List<LinkTagEntity>(),
             Title = title,
             Url = url,

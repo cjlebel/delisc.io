@@ -17,8 +17,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Interfaces\ILinksAdminService.cs" />
-      <Compile Remove="Interfaces\ILinksService.cs" />
+        <Compile Remove="Interfaces\ILinksAdminService.cs" />
+        <Compile Remove="Interfaces\ILinksService.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -39,9 +39,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Interfaces\" />
+        <Folder Include="Interfaces\" />
     </ItemGroup>
-    <Target Name="GitVersion" BeforeTargets="BeforeBuild">
-        <!-- <Exec Command="dotnet gitversion /output buildserver" /> -->
-    </Target>
+    <!--<Target Name="GitVersion" BeforeTargets="BeforeBuild">
+         <Exec Command="dotnet gitversion /output buildserver" /> 
+    </Target>-->
 </Project>

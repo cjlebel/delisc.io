@@ -1,9 +1,10 @@
 using Deliscio.Core.Data.Interfaces;
 using Deliscio.Modules.Links.Data.Entities;
+using MongoDB.Bson;
 
 namespace Deliscio.Modules.Links.Common.Interfaces;
 
-public interface ILinksRepository : IRepository<LinkEntity>
+public interface ILinksRepository : IRepository<LinkEntity, ObjectId>
 {
     #region - Links -
 

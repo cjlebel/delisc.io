@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using System.Net;
 using Ardalis.GuardClauses;
+using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Models;
 using Deliscio.Modules.Links.Common.Interfaces;
 using Deliscio.Modules.Links.Common.Models;
@@ -87,7 +88,7 @@ public sealed class LinksService : LinksBaseService<LinksService>, ILinksService
 
     public override async Task<IEnumerable<LinkItem>> GetByIdsAsync(IEnumerable<Guid> linkIds, CancellationToken token = default)
     {
-        var rslts = await LinksRepository.GetAsync(linkIds, token);
+        var rslts = await LinksRepository.GetAsync(linkIds.ToObjectIds(), token);
 
         var links = Mapper.Map<LinkItem>(rslts);
 
@@ -268,7 +269,7 @@ public sealed class LinksService : LinksBaseService<LinksService>, ILinksService
 
         //return link.Id;
 
-        return linkEntity.Id;
+        return linkEntity.Id.ToGuid();
     }
 
     #region - CRUD -
@@ -290,7 +291,7 @@ public sealed class LinksService : LinksBaseService<LinksService>, ILinksService
 
         await LinksRepository.AddAsync(entity, token);
 
-        return entity.Id;
+        return entity.Id.ToGuid();
     }
 
     /// <summary>
@@ -312,7 +313,7 @@ public sealed class LinksService : LinksBaseService<LinksService>, ILinksService
 
         await LinksRepository.AddAsync(entity, token);
 
-        return entity.Id;
+        return entity.Id.ToGuid();
     }
 
     public async Task<bool> DeleteAsync(Guid linkId, Guid deletedById, CancellationToken token = default)
@@ -322,7 +323,7 @@ public sealed class LinksService : LinksBaseService<LinksService>, ILinksService
 
         try
         {
-            var link = await LinksRepository.GetAsync(linkId, token);
+            var link = await LinksRepository.GetAsync(linkId.ToObjectId(), token);
 
             if (link is null)
                 return false;
@@ -330,10 +331,10 @@ public sealed class LinksService : LinksBaseService<LinksService>, ILinksService
             // Temporarily mark the link as deleted
             // Have task delete it at a later time
             link.IsDeleted = true;
-            link.DeletedById = deletedById;
+            link.DeletedById = deletedById.ToObjectId();
 
             link.IsActive = false;
-            link.UpdatedById = deletedById;
+            link.UpdatedById = deletedById.ToObjectId();
             link.DateUpdated = DateTime.UtcNow;
 
             await LinksRepository.UpdateAsync(link, token);
@@ -360,7 +361,7 @@ public sealed class LinksService : LinksBaseService<LinksService>, ILinksService
         if (string.IsNullOrWhiteSpace(title))
             return (false, "Must have a Title to Update this Link");
 
-        var linkEntity = await LinksRepository.GetAsync(id, token);
+        var linkEntity = await LinksRepository.GetAsync(id.ToObjectId(), token);
 
         if (linkEntity == null)
             return (false, "Link not found");
@@ -390,7 +391,7 @@ public sealed class LinksService : LinksBaseService<LinksService>, ILinksService
         Guard.Against.Null(linkEntity);
         Guard.Against.NullOrWhiteSpace(linkEntity.Url);
         Guard.Against.NullOrWhiteSpace(linkEntity.Title);
-        Guard.Against.NullOrEmpty(linkEntity.SubmittedById);
+        Guard.Against.NullOrEmpty(linkEntity.SubmittedById.ToString());
 
         if (tags is { Length: > 0 })
         {

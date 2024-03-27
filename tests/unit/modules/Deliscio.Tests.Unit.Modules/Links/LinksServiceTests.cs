@@ -8,6 +8,7 @@ using Deliscio.Modules.Links.Data.Entities;
 
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using Moq;
 
 namespace Deliscio.Tests.Unit.Modules.Links;
@@ -133,7 +134,7 @@ public class LinksServiceTests
         _linksRepository.Setup(repo => repo.GetAsync(linkEntity.Id, It.IsAny<CancellationToken>())).ReturnsAsync(linkEntity);
 
         // Act
-        var actual = await _testClass.GetAsync(id, token);
+        var actual = await _testClass.GetAsync(id.ToGuid(), token);
 
         // Assert
         Assert.NotNull(actual);
@@ -316,7 +317,7 @@ public class LinksServiceTests
         // Assert
         _linksRepository.Verify(mock => mock.GetLinkByUrlAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()));
 
-        Assert.Equal(expected.Id, result);
+        Assert.Equal(expected.Id.ToGuid(), result);
         Assert.Equal(tags.Length, expected.Tags.Count);
 
         foreach (var tag in tags)
@@ -401,7 +402,7 @@ public class LinksServiceTests
 
         foreach (var link in links)
         {
-            var entity = entities.FirstOrDefault(x => x.Id == new Guid(link.Id));
+            var entity = entities.FirstOrDefault(x => x.Id == new ObjectId(link.Id));
 
             Assert.NotNull(entity);
 
@@ -415,7 +416,7 @@ public class LinksServiceTests
 
         foreach (var link in links)
         {
-            var entity = entities.FirstOrDefault(x => x.Id == new Guid(link.Id));
+            var entity = entities.FirstOrDefault(x => x.Id == new ObjectId(link.Id));
 
             Assert.NotNull(entity);
 

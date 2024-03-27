@@ -6,6 +6,7 @@ using Deliscio.Modules.Links.Common.Models.Requests;
 using Deliscio.Modules.Links.Data.Entities;
 using Deliscio.Modules.Links.Mappers;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 
 namespace Deliscio.Modules.Links;
 
@@ -40,7 +41,7 @@ public class LinksAdminService : LinksBaseService<LinksAdminService>, ILinksAdmi
 
         await LinksRepository.AddAsync(entity, token);
 
-        return entity.Id;
+        return Guid.Parse(entity.Id.ToString());
     }
 
     /// <summary>
@@ -62,7 +63,7 @@ public class LinksAdminService : LinksBaseService<LinksAdminService>, ILinksAdmi
 
         await LinksRepository.AddAsync(entity, token);
 
-        return entity.Id;
+        return Guid.Parse(entity.Id.ToString());
     }
 
     public async Task<bool> DeleteAsync(Guid linkId, Guid deletedById, CancellationToken token = default)
@@ -72,7 +73,7 @@ public class LinksAdminService : LinksBaseService<LinksAdminService>, ILinksAdmi
 
         try
         {
-            var link = await LinksRepository.GetAsync(linkId, token);
+            var link = await LinksRepository.GetAsync(ObjectId.Parse(linkId.ToString()), token);
 
             if (link is null)
                 return false;
@@ -80,10 +81,10 @@ public class LinksAdminService : LinksBaseService<LinksAdminService>, ILinksAdmi
             // Temporarily mark the link as deleted
             // Have task delete it at a later time
             link.IsDeleted = true;
-            link.DeletedById = deletedById;
+            link.DeletedById = ObjectId.Parse(deletedById.ToString());
 
             link.IsActive = false;
-            link.UpdatedById = deletedById;
+            link.UpdatedById = ObjectId.Parse(deletedById.ToString());
             link.DateUpdated = DateTime.UtcNow;
 
             await LinksRepository.UpdateAsync(link, token);
@@ -110,7 +111,7 @@ public class LinksAdminService : LinksBaseService<LinksAdminService>, ILinksAdmi
         if (string.IsNullOrWhiteSpace(title))
             return (false, "Must have a Title to Update this Link");
 
-        var linkEntity = await LinksRepository.GetAsync(id, token);
+        var linkEntity = await LinksRepository.GetAsync(ObjectId.Parse(id.ToString()), token);
 
         if (linkEntity == null)
             return (false, "Link not found");
@@ -140,7 +141,7 @@ public class LinksAdminService : LinksBaseService<LinksAdminService>, ILinksAdmi
         Guard.Against.Null(linkEntity);
         Guard.Against.NullOrWhiteSpace(linkEntity.Url);
         Guard.Against.NullOrWhiteSpace(linkEntity.Title);
-        Guard.Against.NullOrEmpty(linkEntity.SubmittedById);
+        Guard.Against.NullOrEmpty(linkEntity.SubmittedById.ToString());
 
         if (tags is { Length: > 0 })
         {

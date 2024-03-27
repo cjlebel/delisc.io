@@ -9,7 +9,7 @@ using Deliscio.Modules.BackLog.Models;
 
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-
+using MongoDB.Bson;
 using Structurizr.Annotations;
 
 namespace Deliscio.Modules.BackLog;
@@ -75,7 +75,7 @@ public sealed class BacklogService : IBacklogService
     /// <returns>The number of successful and failed items</returns>
     /// <exception cref="ArgumentNullException">If the collection of backlogItems is null or empty</exception>
     /// <exception cref="InvalidOperationException">If the collection of backlogItems could not be mapped</exception>
-    public async ValueTask<(int Success, int Failed)> AddBacklogItemsAsync(IEnumerable<BacklogItem> backlogItems, CancellationToken token)
+    public async ValueTask<(int Success, int Failed)> AddBacklogItemsAsync(IEnumerable<BacklogItem> backlogItems, CancellationToken token = default)
     {
         // Attempt to cast the IEnumerable to an array (need an instance before checking length).
         var items = (backlogItems as List<BacklogItem> ?? Enumerable.Empty<BacklogItem>())
@@ -95,7 +95,7 @@ public sealed class BacklogService : IBacklogService
 
         await _repository.AddRangeAsync(entities, token);
 
-        successCount = entities.Count(b => b.Id != Guid.Empty);
+        successCount = entities.Count(b => b.Id != ObjectId.Empty);
 
         //await Parallel.ForEachAsync(items, new ParallelOptions { MaxDegreeOfParallelism = 3 },
         //    async (item, token) =>
@@ -161,7 +161,7 @@ public sealed class BacklogService : IBacklogService
         if (string.IsNullOrWhiteSpace(id))
             throw new ArgumentNullException(nameof(id), ITEM_ID_CANNOT_BE_EMPTY);
 
-        var entity = await _repository.GetAsync(Guid.Parse(id));
+        var entity = await _repository.GetAsync(ObjectId.Parse(id));
 
         return entity != null ? Mappers.Map(entity) : null;
     }
@@ -176,12 +176,12 @@ public sealed class BacklogService : IBacklogService
     /// If ids are empty then an empty IEnumerable of Backlog items will be returned instead
     /// </returns>
     /// <exception cref="System.ArgumentNullException">If ids are null</exception>
-    public async Task<IEnumerable<BacklogItem>> GetBacklogItemsAsync(IEnumerable<string> ids, CancellationToken token)
+    public async Task<IEnumerable<BacklogItem>> GetBacklogItemsAsync(IEnumerable<string> ids, CancellationToken token = default)
     {
         if (ids == null)
             throw new ArgumentNullException(nameof(ids));
 
-        var guidIds = ids.Select(Guid.Parse).ToList();
+        var guidIds = ids.Select(ObjectId.Parse).ToList();
 
         if (!guidIds.Any())
             return Enumerable.Empty<BacklogItem>();

@@ -3,13 +3,14 @@ using Ardalis.GuardClauses;
 using Deliscio.Core.Data.Interfaces;
 using Deliscio.Core.Data.Mongo.Interfaces;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Structurizr.Annotations;
 
 namespace Deliscio.Core.Data.Mongo;
 
 [CodeElement("MongoRepository", Description = "Base Mongo Repository")]
-public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument : IEntityWithTypedId<Guid>
+public class MongoRepository<TDocument> : IRepository<TDocument, ObjectId> where TDocument : IEntityWithTypedId<ObjectId>
 {
     private readonly IMongoDbContext<TDocument> _context;
 
@@ -131,9 +132,9 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     /// <param name="id">The id of the record to be returned.</param>
     /// <returns>An individual TDocument</returns>
     /// <exception cref="System.ArgumentException">id</exception>
-    public TDocument? Get(Guid id)
+    public TDocument? Get(ObjectId id)
     {
-        if (id == Guid.Empty)
+        if (id == ObjectId.Empty)
         {
             throw new ArgumentException(EXCEPTION_ID_CANT_BE_EMPTY, nameof(id));
         }
@@ -149,7 +150,7 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     /// <param name="ids">The collection of ids of the records to be returned.</param>
     /// <returns>An IEnumerable of TDocument</returns>
     /// <exception cref="System.ArgumentException">ids</exception>
-    public IEnumerable<TDocument> Get(IEnumerable<Guid> ids)
+    public IEnumerable<TDocument> Get(IEnumerable<ObjectId> ids)
     {
         if (!ids.TryGetNonEnumeratedCount(out var count) || count == 0)
             throw new ArgumentException(EXCEPTION_ID_CANT_BE_EMPTY, nameof(ids));
@@ -169,9 +170,9 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     /// <param name="token"></param>
     /// <returns>An individual TDocument</returns>
     /// <exception cref="System.ArgumentException">id</exception>
-    public async Task<TDocument?> GetAsync(Guid id, CancellationToken token = default)
+    public async Task<TDocument?> GetAsync(ObjectId id, CancellationToken token = default)
     {
-        Guard.Against.NullOrEmpty(id, message: EXCEPTION_ID_CANT_BE_EMPTY);
+        Guard.Against.NullOrEmpty(id.ToString() ?? string.Empty, message: EXCEPTION_ID_CANT_BE_EMPTY);
 
         var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, id);
 
@@ -186,7 +187,7 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     /// <param name="token"></param>
     /// <returns>An IEnumerable of TDocument</returns>
     /// <exception cref="System.ArgumentException">ids</exception>
-    public async Task<IEnumerable<TDocument>> GetAsync(IEnumerable<Guid> ids, CancellationToken token = default)
+    public async Task<IEnumerable<TDocument>> GetAsync(IEnumerable<ObjectId> ids, CancellationToken token = default)
     {
         if (!ids.TryGetNonEnumeratedCount(out var count) || count == 0)
             return await Task.FromException<IEnumerable<TDocument>>(new ArgumentException(EXCEPTION_ID_CANT_BE_EMPTY, nameof(ids)));
@@ -216,7 +217,7 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
         return cursor;
     }
 
-    public void Remove(Guid id, CancellationToken token = default)
+    public void Remove(ObjectId id, CancellationToken token = default)
     {
         Collection.DeleteOne(d => d.Id == id, cancellationToken: token);
     }
@@ -227,7 +228,7 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     }
 
 
-    public async Task<bool> RemoveAsync(Guid id, CancellationToken token = default)
+    public async Task<bool> RemoveAsync(ObjectId id, CancellationToken token = default)
     {
         var rslt = await Collection.DeleteOneAsync(d => d.Id == id, token);
 
@@ -242,7 +243,7 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     }
 
 
-    public void RemoveRange(IEnumerable<Guid> ids, CancellationToken token = default)
+    public void RemoveRange(IEnumerable<ObjectId> ids, CancellationToken token = default)
     {
         var filter = Builders<TDocument>.Filter.In(doc => doc.Id, ids);
 
@@ -259,7 +260,7 @@ public class MongoRepository<TDocument> : IRepository<TDocument> where TDocument
     }
 
 
-    public Task RemoveRangeAsync(IEnumerable<Guid> ids, CancellationToken token = default)
+    public Task RemoveRangeAsync(IEnumerable<ObjectId> ids, CancellationToken token = default)
     {
         var filter = Builders<TDocument>.Filter.In(doc => doc.Id, ids);
 
