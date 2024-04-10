@@ -83,7 +83,7 @@ namespace Deliscio.Apis.WebApi.Common.APIs;
 
 //    //        (bool IsSuccess, string Message) result;
 
-//    //        result = await _authManager.RegisterAsync(request);
+//    //        result = await _authManager.UserRegisterAsync(request);
 
 
 //    //        if (result.IsSuccess)
@@ -116,7 +116,7 @@ namespace Deliscio.Apis.WebApi.Common.APIs;
 //    //            return;
 //    //        }
 
-//    //        var result = await _authManager.SignInAsync(request);
+//    //        var result = await _authManager.UserSignInAsync(request);
 
 //    //        string message;
 
@@ -143,7 +143,7 @@ namespace Deliscio.Apis.WebApi.Common.APIs;
 //    //{
 //    //    endpoints.MapPost("/v1/auth/signout", async context =>
 //    //    {
-//    //        await _authManager.SignOutAsync();
+//    //        await _authManager.UserSignOutAsync();
 
 //    //        await context.Response.WriteAsJsonAsync("Successfully signed out!");
 //    //    });

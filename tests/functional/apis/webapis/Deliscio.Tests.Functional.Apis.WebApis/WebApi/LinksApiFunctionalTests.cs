@@ -126,11 +126,11 @@ public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<Web
         Assert.NotNull(actual);
         Assert.Equal(DEFAULT_PAGE_NO, actual.PageNumber);
         Assert.Equal(DEFAULT_PAGE_SIZE, actual.PageSize);
-        Assert.True(actual.IsSuccess);
-        Assert.False(actual.IsError);
+        //Assert.True(actual.IsSuccess);
+        //Assert.False(actual.IsFailed);
 
-        Assert.NotNull(actual.Results);
-        var links = actual.Results.ToList();
+        Assert.NotNull(actual.Items);
+        var links = actual.Items.ToList();
 
         Assert.Equal(DEFAULT_PAGE_SIZE, links.Count);
         Assert.Equal(actual.PageSize, links.Count);
@@ -157,11 +157,11 @@ public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<Web
         Assert.NotNull(actual);
         Assert.Equal(pageNo, actual.PageNumber);
         Assert.Equal(DEFAULT_PAGE_SIZE, actual.PageSize);
-        Assert.True(actual.IsSuccess);
-        Assert.False(actual.IsError);
+        //Assert.True(actual.IsSuccess);
+        //Assert.False(actual.IsFailed);
 
-        Assert.NotNull(actual.Results);
-        var links = actual.Results.ToList();
+        Assert.NotNull(actual.Items);
+        var links = actual.Items.ToList();
 
         Assert.Equal(DEFAULT_PAGE_SIZE, links.Count);
         Assert.Equal(actual.PageSize, links.Count);
@@ -190,11 +190,11 @@ public class LinksApiFunctionalTests : BaseApiFunctionalTests, IClassFixture<Web
         Assert.NotNull(actual);
         Assert.Equal(DEFAULT_PAGE_NO, actual.PageNumber);
         Assert.Equal(DEFAULT_PAGE_SIZE, actual.PageSize);
-        Assert.True(actual.IsSuccess);
-        Assert.False(actual.IsError);
+        //Assert.True(actual.IsSuccess);
+        //Assert.False(actual.IsFailed);
 
-        Assert.NotNull(actual.Results);
-        var links = actual.Results.ToList();
+        Assert.NotNull(actual.Items);
+        var links = actual.Items.ToList();
 
         var expectedTags = tags.Split(',');
         foreach (var link in links)

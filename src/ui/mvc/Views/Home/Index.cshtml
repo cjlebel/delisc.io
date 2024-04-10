@@ -7,21 +7,23 @@
     ViewBag.PageTitle = Model.PageTitle;
     ViewBag.PageDescription = Model.PageDescription;
     ViewBag.CanonicalUrl = Model.CanonicalUrl;
+
+    var results = Model.Results;
 }
 
 <div id="home-page" class="d-flex flex-grow-1" style="outline: 1px solid red;">
     <div id="links-container" style="outline: 1px solid green;">
         @{
-            await Html.RenderPartialAsync("Links/_LinkCards", Model.Results);
+            await Html.RenderPartialAsync("Links/_LinkCards", results.Items);
         }
 
         <a asp-controller="Links" asp-action="Index" asp-route-p="1" class="btn btn-primary">More</a>
 
         <div id="pager-container"
-             data-pageno="@Model.PageNumber"
-             data-size="@Model.PageSize"
-             data-pages="@Model.TotalPages"
-             data-total-results="@Model.TotalResults"
+             data-pageno="@results.PageNumber"
+             data-size="@results.PageSize"
+             data-pages="@results.TotalPages"
+             data-total-results="@results.TotalResults"
              data-base-url="/links">
         </div>
     </div>

@@ -1,4 +1,4 @@
-import NoImage from '@images/no-image-found.png';
+//import NoImage from '@images/no-image-found.png';
 
 export default function LazyLoad() {
 
@@ -30,7 +30,7 @@ export default function LazyLoad() {
                     } catch (err) {
 
                         console.error(`Error loading image from ${dataSrc}\n${err}`);
-                        image.setAttribute("src", NoImage);
+                        image.setAttribute("src", "");
 
                     }
 

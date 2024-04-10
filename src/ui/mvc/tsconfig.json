@@ -2,8 +2,8 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
-            "@components": [ "wwwroot/src/tsx/components/*" ],
-            "@images": [ "wwwroot/imgs/*" ],
+            "@components/*": [ "wwwroot/src/tsx/components/*" ],
+            "@images/*": [ "wwwroot/imgs/*" ],
             "@pages/*": [ "wwwroot/src/tsx/pages/*" ],
             "@/*": [ "wwwroot/src/*" ]
         },
@@ -21,12 +21,16 @@
         "strict": true,
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": true,
-        "module": "es2022",
+        "module": "es6",
         "moduleResolution": "node",
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
-        "jsx": "react-jsx"
+        "jsx": "react-jsx",
+        "outDir": "wwwroot/src/client"
     },
-    "exclude": [ "node_modules" ]
+    "exclude": [
+        "node_modules", // Exclude the 'node_modules' directory
+        "**/*.spec.ts" // Exclude all files with the '.spec.ts' extension
+    ]
 }

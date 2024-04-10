@@ -3,6 +3,7 @@ using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Apis.WebApi.Common.Requests;
 using Deliscio.Apis.WebApi.Common.Responses;
 using Deliscio.Modules.Authentication.Common.Models;
+using Deliscio.Modules.Authentication.Data.Entities;
 using Deliscio.Modules.Authentication.MediatR.Commands;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -21,9 +22,9 @@ public class UsersManager : ManagerBase<UsersManager>, IUsersManager
         _logger = logger;
     }
 
-    public async Task<(bool IsSuccess, string Message, string[] ErrorMessages)> RegisterAsync(RegisterRequest request)
+    public async Task<FluentResults.Result<AuthUser?>> RegisterAsync(RegisterRequest request)
     {
-        var command = new RegisterCommand(request.Email, request.Password, request.UserName);
+        var command = new RegisterUserCommand(request.Email, request.Password, request.UserName);
 
         return await _mediator.Send(command);
     }
@@ -32,29 +33,32 @@ public class UsersManager : ManagerBase<UsersManager>, IUsersManager
     {
         var signinResponse = new SignInResponse();
 
-        var signinCommand = new SignInCommand(request.EmailOrUserName, request.Password);
+        var signinCommand = new LoginCommand(request.EmailOrUserName, request.Password);
 
         var signinResult = await _mediator.Send(signinCommand);
 
-        if (signinResult.IsSuccess || signinResult.User == null)
+        if (!signinResult.IsSuccess || signinResult.Value == null)
         {
             signinResponse.IsSuccess = false;
-            signinResponse.Message = signinResult.Message;
+            //signinResponse.Message = signinResult.Errors;
+
             return signinResponse;
         }
+
+        var user = signinResult.Value;
 
         return new SignInResponse
         {
             IsSuccess = true,
-            Message = signinResult.Message,
-            User = new SignInResponse.UserInfo(signinResult.User.Id.ToString(),
-                signinResult.User.UserName ?? string.Empty, signinResult.User.Email ?? string.Empty,
+            Message = string.Empty,
+            User = new SignInResponse.UserInfo(user.Id.ToString(),
+                user.UserName ?? string.Empty, user.Email ?? string.Empty,
                 new[] { "User" })
         };
     }
 
     public async Task SignOutAsync()
     {
-        //await _signInManager.SignOutAsync();
+        //await _signInManager.UserSignOutAsync();
     }
 }

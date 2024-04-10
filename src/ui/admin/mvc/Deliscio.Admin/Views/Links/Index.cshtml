@@ -5,7 +5,7 @@
 @{
     ViewData["Title"] = "Links";
 
-    var links = Model?.Results?.ToArray() ?? Array.Empty<LinkItem>();
+    var links = Model?.Results?.Items.ToArray() ?? Array.Empty<LinkItem>();
 
     var searchTerm = Model?.SearchTerm ?? string.Empty;
     var tags = string.Join(',', Model?.Tags ?? Array.Empty<string>());
@@ -179,7 +179,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <pager page="@Model.PageNumber" total-pages="@Model.TotalPages" total-results="@Model.TotalResults" />
+            <pager page="@Model.Results.PageNumber" total-pages="@Model.Results.TotalPages" total-results="@Model.Results.TotalResults" />
             @* <div id="pager-container"
             data-pageno="@Model.PageNumber"
             data-size="@Model.PageSize"

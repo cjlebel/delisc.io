@@ -1,5 +1,5 @@
-import { LinkCards } from '@components/link-cards/index.ts';
-import { ReactPager } from '@components/pager/index.ts';
+import { LinkCards } from '../../components/link-cards';
+import { ReactPager } from '../../components/pager';
 
 export default function Home() {
     const home = document.getElementById('home-page');

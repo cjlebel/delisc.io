@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 
 using Deliscio.Apis.WebApi.Common.Requests;
 using Deliscio.Modules.Links.Common.Models;
+using Results = Microsoft.AspNetCore.Http.Results;
 
 namespace Deliscio.Apis.WebApi.Common.APIs;
 

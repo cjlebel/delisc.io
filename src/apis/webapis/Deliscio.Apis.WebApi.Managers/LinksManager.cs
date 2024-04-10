@@ -123,11 +123,11 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
     /// </returns>
     public async ValueTask<PagedResults<LinkItem>> GetLinksByTagsAsync(string tags = "", int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
-        if (tags.Length == 0)
-            return new PagedResults<LinkItem>();
-
         Guard.Against.NegativeOrZero(pageNo);
         Guard.Against.NegativeOrZero(pageSize);
+
+        if (tags.Length == 0)
+            return new PagedResults<LinkItem>([], pageNo, pageSize, 0);
 
         var query = new GetLinksByTagsQuery(pageNo, pageSize, tags);
 

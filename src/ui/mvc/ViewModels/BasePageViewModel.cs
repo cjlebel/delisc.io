@@ -12,7 +12,7 @@ public record BasePageViewModel
     public string PageDescription { get; init; } = string.Empty;
 }
 
-public record BasePagePagedViewModel<T> : PagedResults<T>
+public record BasePagePagedViewModel<T> where T : class?
 {
     public string CanonicalUrl { get; init; } = string.Empty;
 
@@ -20,13 +20,12 @@ public record BasePagePagedViewModel<T> : PagedResults<T>
 
     public string PageDescription { get; init; } = string.Empty;
 
-    public BasePagePagedViewModel(PagedResults<T> results) : base(results)
+    public PagedResults<T> Results { get; init; }
+
+    public BasePagePagedViewModel(PagedResults<T> results)
     {
         Guard.Against.Null(results);
 
-        Results = results.Results;
-        PageNumber = results.PageNumber;
-        PageSize = results.PageSize;
-        TotalResults = results.TotalResults;
+        Results = results;
     }
 }

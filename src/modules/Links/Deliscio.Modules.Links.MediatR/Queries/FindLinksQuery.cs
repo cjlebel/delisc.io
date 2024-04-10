@@ -69,15 +69,7 @@ public class FindLinksAdminQueryHandler : IRequestHandler<FindLinksAdminQuery, P
         var results = await _linksService.FindAsync(command.Request, token: cancellationToken);
 
         if (results is null)
-            return new PagedResults<LinkItem>()
-            {
-                IsError = false,
-                Message = "No results found",
-                PageNumber = command.Request.PageNo,
-                PageSize = command.Request.PageSize,
-                Results = Enumerable.Empty<LinkItem>(),
-                TotalResults = 0
-            };
+            return new PagedResults<LinkItem>();
 
         return results;
     }
