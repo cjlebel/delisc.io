@@ -1,18 +1,11 @@
 using System.Reflection;
-using AspNetCore.Identity.MongoDbCore.Models;
 using Deliscio.Apis.WebApi.Common.APIs;
 using Deliscio.Apis.WebApi.Common.Interfaces;
-using Deliscio.Apis.WebApi.Common.Requests;
 using Deliscio.Apis.WebApi.Managers;
 using Deliscio.Apis.WebApi.Startups;
 using Deliscio.Common.Middleware;
 using Deliscio.Core.Configuration;
 using Deliscio.Core.Data.Mongo;
-using Deliscio.Modules.Authentication;
-using Deliscio.Modules.Authentication.Common.Interfaces;
-using Deliscio.Modules.Authentication.Common.Models;
-using Deliscio.Modules.Authentication.MediatR.Commands;
-using Deliscio.Modules.Authentication.MediatR.Commands.Handlers;
 using Deliscio.Modules.QueuedLinks;
 using Deliscio.Modules.QueuedLinks.Common.Models;
 using Deliscio.Modules.QueuedLinks.Harvester;
@@ -23,15 +16,9 @@ using Deliscio.Modules.QueuedLinks.Tagger;
 using Deliscio.Modules.QueuedLinks.Verifier;
 using MassTransit;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson;
 using Structurizr.Annotations;
 
 namespace Deliscio.Apis.WebApi;
@@ -180,12 +167,12 @@ public class Program
         #endregion
 
         // Authentication 
-        //builder.Services.AddScoped<IUsersManager, UsersManager>();
+        builder.Services.AddScoped<IUsersManager, UsersManager>();
         //builder.Services.AddScoped<IAuthService, AuthService>();
 
 
         //builder.Services.AddScoped<IRequestHandler<RegisterCommand, (bool IsSuccess, string Message, string[] ErrorMessages)>, RegisterCommandHandler>();
-        //builder.Services.AddScoped<IRequestHandler<SignInCommand, (bool IsSuccess, string Message, AuthUser? User)>, SignInCommandHandler>();
+        //builder.Services.AddScoped<IRequestHandler<SignInCommand, (bool IsSuccess, string Message, AuthUser? User)>, LoginCommandHandler>();
 
         // Links
         builder.ConfigureLinksDependencies();
@@ -220,7 +207,7 @@ public class Program
         //    IUsersManager manager
         //    ) =>
         //{
-        //    await manager.RegisterAsync(register);
+        //    await manager.UserRegisterAsync(register);
         //}).AllowAnonymous();
 
         //app.MapPost("/v1/auth/signin",
@@ -230,7 +217,7 @@ public class Program
         //        HttpResponse res,
         //        IUsersManager manager) =>
         //{
-        //    await manager.SignInAsync(signIn);
+        //    await manager.UserSignInAsync(signIn);
         //}).AllowAnonymous();
 
         var linksApiEndpoints = app.Services.GetRequiredService<LinksApiEndpoints>();

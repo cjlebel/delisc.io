@@ -1,5 +1,5 @@
 namespace Deliscio.Core.Data.Mongo;
-public class MongoDbOptions
+public record MongoDbOptions
 {
     /// <summary>
     /// The name of the section in the config file that contains the MongoDb settings.

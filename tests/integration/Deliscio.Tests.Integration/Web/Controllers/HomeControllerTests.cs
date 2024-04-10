@@ -50,12 +50,12 @@ public class HomeControllerTests : BaseControllerTests
         Assert.NotEqual(string.Empty, model.PageDescription);
         Assert.NotEqual(string.Empty, model.PageTitle);
 
-        var links = model;
+        var links = model.Results;
 
         Assert.Equal(1, links.PageNumber);
         Assert.Equal(50, links.PageSize);
-        Assert.NotNull(links.Results);
-        Assert.True(links.Results.TryGetNonEnumeratedCount(out var count) && count <= 50);
+        Assert.NotNull(links.Items);
+        Assert.True(links.Items.TryGetNonEnumeratedCount(out var count) && count <= 50);
         Assert.True(links.TotalResults > 50);
     }
 }

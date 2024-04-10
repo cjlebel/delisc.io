@@ -1,8 +1,6 @@
-
-
 import LinkCard from './link-card';
 
-import NoImage from '@images/no-image-found.png';
+//import NoImage from '../../../../imgs/no-image-found.png';
 
 export default function LinkCards() {
 
@@ -39,7 +37,7 @@ export default function LinkCards() {
 
         console.log(`Cleansing ${images.length} images`);
 
-        let newSrc = NoImage;
+        let newSrc = "";// NoImage;
 
         images.forEach(image => {
 

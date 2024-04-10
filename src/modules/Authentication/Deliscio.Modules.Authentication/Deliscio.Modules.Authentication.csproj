@@ -8,12 +8,23 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="MediatR\Queries\**" />
+	  <EmbeddedResource Remove="MediatR\Queries\**" />
+	  <None Remove="MediatR\Queries\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <PackageReference Include="AspNetCore.Identity.MongoDbCore" Version="3.1.2" />
 	  <PackageReference Include="MediatR" Version="12.2.0" />
 	  <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+	  <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.3" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-	  <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.2" />
-	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.21.0.86780">
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+	  <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.3" />
+	  <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+	  <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.23.1.88495">
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
@@ -22,11 +33,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="MediatR\Commands\Handlers\" />
-	  <Folder Include="MediatR\Queries\" />
+	  <ProjectReference Include="..\..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

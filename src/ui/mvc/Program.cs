@@ -1,7 +1,14 @@
 using System.Reflection;
+using AspNetCore.Identity.MongoDbCore.Models;
 using Deliscio.Core.Configuration;
 using Deliscio.Core.Data.Mongo;
+using Deliscio.Modules.Authentication.Common;
+using Deliscio.Modules.Authentication.Common.Models;
+using Deliscio.Modules.Authentication.Data.Entities;
 using Deliscio.Web.Mvc.Startups;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using MongoDB.Bson;
 using RedisCaching;
 
 namespace Deliscio.Web.Mvc;
@@ -13,6 +20,13 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+        var config = ConfigSettingsManager.GetConfigs();
+        builder.Services.AddSingleton(config);
+
+        var mongoConfig = config.GetSection(MongoDbOptions.SectionName);
+        var mongoConfigConnectionString = config.GetSection($"{MongoDbOptions.SectionName}:ConnectionString").Value;
+        var mongoConfigDatabaseName = config.GetSection($"{MongoDbOptions.SectionName}:DatabaseName").Value;
 
         // Add service defaults & Aspire components.
         builder.AddServiceDefaults();
@@ -36,8 +50,7 @@ public class Program
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
 
-        var config = ConfigSettingsManager.GetConfigs();
-        builder.Services.AddSingleton(config);
+
 
         builder.Services.AddSingleton<IRedisCaching, RedisCaching.RedisCaching>();
 
@@ -49,6 +62,53 @@ public class Program
 
         builder.Services.AddOptions<MongoDbOptions>()
             .BindConfiguration(MongoDbOptions.SectionName);
+
+
+
+
+
+        builder.Services.AddOptions<MongoDbAuthOptions>()
+            .BindConfiguration(MongoDbAuthOptions.SectionName);
+
+        #region - Authentication / Authorization -
+        builder.Services.AddIdentity<AuthUser, AuthRole>()
+            .AddMongoDbStores<AuthUser, AuthRole, ObjectId>(mongoConfigConnectionString, mongoConfigDatabaseName)
+            .AddDefaultTokenProviders();
+
+        builder.Services.Configure<IdentityOptions>(options =>
+        {
+            options.Password.RequiredLength = 6;
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequiredUniqueChars = 1;
+
+            //options.AuthUser.AllowedUserNameCharacters 
+            options.User.RequireUniqueEmail = true;
+
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+            options.Lockout.MaxFailedAccessAttempts = 5;
+            options.Lockout.AllowedForNewUsers = true;
+        });
+
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.Cookie.Name = "DeliscioTastyCookie";
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromDays(30); // Adjust the expiration time as needed
+                options.SlidingExpiration = true;
+                options.LoginPath = "/account/login"; // Specify your login path
+            });
+
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
+        });
+        #endregion
+
 
 
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));

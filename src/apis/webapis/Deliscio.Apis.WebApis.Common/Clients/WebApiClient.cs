@@ -38,13 +38,13 @@ public class WebApiClient : BaseApiClient, IWebApiClient
         return null;
     }
 
-    public virtual async Task<PagedResults<LinkItem>?> GetLinksSearchResultsAsync(string? search = default, string? tags = default, int page = 1, int pageSize = 10, CancellationToken token = default)
+    public virtual async Task<PagedResults<LinkItem>?> GetLinksSearchResultsAsync(string? search = default, string? tags = default, int pageNo = 1, int pageSize = 10, CancellationToken token = default)
     {
         var queryString = new Dictionary<string, string?>
         {
             { "search", search ?? string.Empty },
             { "tags", tags ?? string.Empty },
-            { "page", page.ToString() },
+            { "page", pageNo.ToString() },
             { "count", pageSize.ToString() }
                                        };
 
@@ -63,7 +63,7 @@ public class WebApiClient : BaseApiClient, IWebApiClient
             }
         }
 
-        return results ?? new PagedResults<LinkItem>();
+        return results ?? new PagedResults<LinkItem>([], pageNo, pageSize, 0);
     }
 
     public virtual async Task<IEnumerable<LinkTag>> GetRelatedTagsByTagsAsync(string? tags = default, int count = 100, CancellationToken token = default)
@@ -82,6 +82,6 @@ public class WebApiClient : BaseApiClient, IWebApiClient
             }
         }
 
-        return results ?? Array.Empty<LinkTag>();
+        return results ?? [];
     }
 }

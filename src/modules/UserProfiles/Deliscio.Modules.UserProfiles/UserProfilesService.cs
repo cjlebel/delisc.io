@@ -6,6 +6,7 @@ using Deliscio.Modules.UserProfiles.Common.Interfaces;
 using Deliscio.Modules.UserProfiles.Common.Models;
 using Deliscio.Modules.UserProfiles.Data;
 using Deliscio.Modules.UserProfiles.Mappers;
+using FluentResults;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Structurizr.Annotations;
@@ -57,16 +58,16 @@ public sealed class UserProfilesService : ServiceBase, IUserProfilesService
         return entity.Id.ToString();
     }
 
-    public async Task<UserProfile?> GetAsync(Guid userId, CancellationToken token = default)
+    public async Task<Results<UserProfile?>> GetAsync(Guid userId, CancellationToken token = default)
     {
         Guard.Against.Default(userId);
 
         var user = await _repository.GetAsync(userId, token);
 
         if (user is null)
-            return null;
+            return Results<UserProfile?>.Fail("User not found");
 
-        return Mapper.Map(user);
+        return Results<UserProfile?>.Ok(Mapper.Map(user));
     }
 
     /// <summary>
@@ -88,6 +89,6 @@ public sealed class UserProfilesService : ServiceBase, IUserProfilesService
 
         var items = Mapper.Map<UserProfileItem>(rslts.Results);
 
-        return GetPageOfResults(items, pageNo, pageNo, rslts.TotalCount);
+        return new PagedResults<UserProfileItem>(items, pageNo, pageNo, rslts.TotalCount);
     }
 }

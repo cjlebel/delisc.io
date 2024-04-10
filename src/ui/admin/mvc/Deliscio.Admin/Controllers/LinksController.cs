@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Deliscio.Admin.Controllers;
 public class LinksController : Controller
 {
+    private readonly ILogger<LinksController> _logger;
     private readonly IMediator _mediator;
 
     private readonly Guid _deliscioUserId;
@@ -25,11 +26,12 @@ public class LinksController : Controller
     private const string ERROR_PAGE_NO_LESS_THAN_ONE = "The page number must be greater than 0";
     private const string ERROR_PAGE_SIZE_LESS_THAN_ONE = "The page size must be greater than 0";
 
-    public LinksController(IMediator mediator)
+    public LinksController(IMediator mediator, ILogger<LinksController> logger)
     {
         _mediator = mediator;
 
         _deliscioUserId = GuidHelpers.GetMD5AsGuid("deliscio");
+        _logger = logger;
     }
 
     //[HttpGet]

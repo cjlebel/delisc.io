@@ -116,7 +116,7 @@ public sealed class LinksService : LinksBaseService<LinksService>, ILinksService
 
         var links = Mapper.Map<LinkItem>(rslts.Results);
 
-        return GetPageOfResults(links, pageNo, newPageSize, rslts.TotalCount);
+        return new PagedResults<LinkItem>(links, pageNo, newPageSize, rslts.TotalCount);
     }
 
     /// <summary>

@@ -1,0 +1,59 @@
+@using Deliscio.Modules.Authentication.Common.Models
+@{
+    var roles = ViewData["AvailableRoles"] as Role[] ?? [];
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <form id="frmCreate" method="post" asp-controller="Users" asp-action="Create" name="users-creaete-form" class="">
+                <AntiForgeryToken />
+                <div class="row">
+                    <div class="col">
+
+                        <div class="d-flex flex-md-column justify-content-evenly gap-1 px-1 py-2">
+
+                            <input id="txt-username"
+                                   type="text"
+                                   name="username"
+                                   class="form-control"
+                                   placeholder="Username"
+                                   aria-label="Username"
+                                   value="" />
+                            <input id="txt-email"
+                                   type="email"
+                                   name="email"
+                                   class="form-control"
+                                   placeholder="Email"
+                                   aria-label="Email"
+                                   value="" />
+                            <input id="txt-password"
+                                   type="text"
+                                   name="password"
+                                   class="form-control"
+                                   placeholder="Password"
+                                   aria-label="Password"
+                                   value="" />
+
+                            @if (roles.Any())
+                            {
+                                foreach (var role in roles)
+                                {
+                                    <label>
+                                        <input type="checkbox" name="roles" value="@role.Id" />
+                                        @role.Name
+                                    </label>
+                                }
+                            }
+
+                            <button id="btn-create" class="btn btn-primary" type="submit">Create</button>
+                            <button id="btn-clear" class="btn btn-secondary" type="reset">Clear</button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

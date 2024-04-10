@@ -414,3 +414,4 @@ FodyWeavers.xsd
 /src/ui/mvc/wwwroot/client/home.js
 /src/ui/mvc/wwwroot/client/no-image-found.js
 /src/ui/mvc/wwwroot/client
+/src/ui/**/wwwroot/libs/*

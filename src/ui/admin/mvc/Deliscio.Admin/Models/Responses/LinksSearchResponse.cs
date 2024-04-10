@@ -2,7 +2,7 @@ using Deliscio.Core.Models;
 
 namespace Deliscio.Admin.Models.Responses;
 
-public record LinksSearchResponse<T> : PagedResults<T> where T : class
+public class LinksSearchResponse<T>
 {
     public string SearchTerm { get; set; } = "";
 
@@ -16,6 +16,8 @@ public record LinksSearchResponse<T> : PagedResults<T> where T : class
 
     public bool IsDeleted { get; set; } = false;
 
+    public PagedResults<T> Results { get; set; } = new PagedResults<T>();
+
     public static LinksSearchResponse<T> Create(PagedResults<T> pagedResults, string searchTerm, string domain, string tags,
         bool isActive, bool isFlagged, bool isDeleted)
     {
@@ -25,11 +27,7 @@ public record LinksSearchResponse<T> : PagedResults<T> where T : class
             Domain = domain,
             Tags = tags?.Split(',') ?? [],
 
-            PageNumber = pagedResults.PageNumber,
-            PageSize = pagedResults.PageSize,
-            TotalResults = pagedResults.TotalResults,
-
-            Results = pagedResults.Results,
+            Results = pagedResults,
 
             IsActive = isActive,
             IsFlagged = isFlagged,

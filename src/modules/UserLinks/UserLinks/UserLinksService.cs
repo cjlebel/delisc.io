@@ -126,7 +126,7 @@ public class UserLinksService : ServiceBase, IUserLinksService
         // TODO: Refactor so that we can use the Find method throughout the application.
         var rslts = await Find(l => l.UserId == userId, pageNo, pageSize, token);
 
-        return GetPageOfResults(rslts.Results, pageNo, pageSize, rslts.TotalCount);
+        return new PagedResults<UserLink>(rslts.Results, pageNo, pageSize, rslts.TotalCount);
     }
 
     public Task<PagedResults<UserLink>> GetByDomainAsync(Guid userId, string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)

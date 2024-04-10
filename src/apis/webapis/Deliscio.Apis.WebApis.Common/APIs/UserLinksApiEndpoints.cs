@@ -99,7 +99,7 @@ public class UserLinksApiEndpoints : BaseApiEndpoints
 
                     var results = await _manager.GetUserLinksAsync(userId, newPageNo, newPageSize, cancellationToken);
 
-                    if (!results.Results.Any())
+                    if (!results.Items.Any())
                         return Results.NotFound(string.Format(USER_LINKS_COULD_NOT_BE_FOUND, pageNo));
 
                     return Results.Ok(results);

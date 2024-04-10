@@ -385,7 +385,7 @@ public class LinksServiceTests
     private void AssertPageResultsOfLinkItems(IEnumerable<LinkEntity>? expecteds, PagedResults<LinkItem> actuals, int expectedPageNo, int expectedPageSize, int expectedTotalResults)
     {
         Assert.NotNull(actuals);
-        Assert.NotNull(actuals.Results);
+        Assert.NotNull(actuals.Items);
         Assert.Equal(expectedPageNo, actuals.PageNumber);
         Assert.Equal(expectedPageSize, actuals.PageSize);
 
@@ -393,7 +393,7 @@ public class LinksServiceTests
         Assert.Equal(expectedPages, actuals.TotalPages);
         Assert.Equal(expectedTotalResults, actuals.TotalResults);
 
-        AssertEntitiesToLinkItemModels(expecteds, actuals.Results);
+        AssertEntitiesToLinkItemModels(expecteds, actuals.Items);
     }
 
     private void AssertEntitiesToLinkModels(IEnumerable<LinkEntity> entities, IEnumerable<Link> links)

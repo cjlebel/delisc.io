@@ -60,7 +60,7 @@ internal static class Mapper
                 IsActivated = true,
                 IsOnline = true,
                 Roles = Array.Empty<string>(),
-                DateLastSeen = DateTime.Now
+                DateLastSeen = entity.DateLastSeen,
             };
 
             return (T)(object)model;

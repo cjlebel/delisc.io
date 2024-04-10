@@ -9,8 +9,6 @@ using Deliscio.Modules.Links.Common.Models;
 using Deliscio.Modules.Links.Data.Entities;
 using Deliscio.Modules.Links.Mappers;
 using Microsoft.Extensions.Logging;
-using MongoDB.Bson;
-using MongoDB.Driver;
 
 namespace Deliscio.Modules.Links;
 
@@ -62,7 +60,7 @@ public abstract class LinksBaseService<T> : ServiceBase
 
         var links = Mapper.Map<LinkItem>(rslts.Results);
 
-        var page = GetPageOfResults(links, pageNo, pageSize, rslts.TotalCount);
+        var page = new PagedResults<LinkItem>(links, pageNo, pageSize, rslts.TotalCount);
 
         return page;
     }
@@ -145,7 +143,7 @@ public abstract class LinksBaseService<T> : ServiceBase
 
         var links = Mapper.Map<LinkItem>(rslts.Results);
 
-        return GetPageOfResults(links, pageNo, newPageSize, rslts.TotalCount);
+        return new PagedResults<LinkItem>(links, pageNo, newPageSize, rslts.TotalCount);
     }
 
     /// <summary>
@@ -173,7 +171,7 @@ public abstract class LinksBaseService<T> : ServiceBase
 
         var links = Mapper.Map<LinkItem>(rslts.Results);
 
-        return GetPageOfResults(links, pageNo, newPageSize, rslts.TotalCount);
+        return new PagedResults<LinkItem>(links, pageNo, newPageSize, rslts.TotalCount);
     }
 
     /// <summary>
@@ -287,11 +285,11 @@ public abstract class LinksBaseService<T> : ServiceBase
         var results = await LinksRepository.FindAsync(predicate, pageNo, pageSize, token);
 
         if (!results.Results.Any())
-            return new PagedResults<LinkItem>();
+            return new PagedResults<LinkItem>(Enumerable.Empty<LinkItem>(), pageNo, pageSize, 0);
 
         var links = Mapper.Map<LinkItem>(results.Results);
 
-        var rslts = GetPageOfResults(links, pageNo, pageSize, results.TotalCount);
+        var rslts = new PagedResults<LinkItem>(links, pageNo, pageSize, results.TotalCount);
 
         return rslts;
     }
