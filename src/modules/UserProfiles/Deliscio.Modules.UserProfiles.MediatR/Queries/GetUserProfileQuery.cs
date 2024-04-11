@@ -1,15 +1,13 @@
 using Ardalis.GuardClauses;
-using Deliscio.Core.Models;
 using Deliscio.Modules.UserProfiles.Common.Interfaces;
 using Deliscio.Modules.UserProfiles.Common.Models;
-using FluentResults;
 using MediatR;
 
 namespace Deliscio.Modules.UserProfiles.MediatR.Queries;
 
 public class GetUserProfileQuery : IRequest<FluentResults.Result<UserProfile?>>
 {
-    public Guid UserId { get; init; }
+    public string UserId { get; init; }
 
     public GetUserProfileQuery(int pageNo = 1, int pageSize = 50, bool? isOnline = null)
     {
@@ -21,7 +19,7 @@ public class GetUserProfileQuery : IRequest<FluentResults.Result<UserProfile?>>
     {
         Guard.Against.NullOrEmpty(userId);
 
-        UserId = Guid.Parse(userId);
+        UserId = userId;
     }
 }
 

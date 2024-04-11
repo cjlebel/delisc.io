@@ -66,9 +66,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.RabbitMQ.Client" Version="8.0.0-preview.3.24105.21" />
-        <PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" Version="8.0.0-preview.3.24105.21" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.3" />
+        <PackageReference Include="Aspire.RabbitMQ.Client" Version="8.0.0-preview.5.24201.12" />
+        <PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" Version="8.0.0-preview.5.24201.12" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.4" />
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
         <PackageReference Include="SonarAnalyzer.CSharp" Version="9.23.1.88495">

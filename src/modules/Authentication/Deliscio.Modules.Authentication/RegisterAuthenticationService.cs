@@ -1,68 +1,84 @@
-using Deliscio.Core.Data.Mongo;
+using Deliscio.Core.Models;
 using Deliscio.Modules.Authentication.Common;
+using Deliscio.Modules.Authentication.Common.Interfaces;
+using Deliscio.Modules.Authentication.Common.Models;
 using Deliscio.Modules.Authentication.Data.Entities;
+using Deliscio.Modules.Authentication.MediatR.Commands;
+using Deliscio.Modules.Authentication.MediatR.Requests;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 
 namespace Deliscio.Modules.Authentication;
 
-public class RegisterAuthenticationService
+public static class AuthenticationServiceExtensions
 {
-    private readonly string _connectionString;
-    private readonly string _dbName;
-
-    public RegisterAuthenticationService(IOptions<MongoDbAuthOptions> options)
+    public static IServiceCollection RegisterAuthenticationServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var opts = options.Value ?? throw new ArgumentNullException(nameof(options));
+        var mongoDbAuthOptions = new MongoDbAuthOptions();
+       configuration.Bind(MongoDbAuthOptions.SectionName, mongoDbAuthOptions);
 
-        _connectionString = opts.ConnectionString;
-        _dbName = opts.DatabaseName;
-    }
-
-    public void RegisterConfigureServices(IServiceCollection services)
-    {
         services.AddOptions<MongoDbAuthOptions>()
-            .BindConfiguration(MongoDbAuthOptions.SectionName);
+            .BindConfiguration(MongoDbAuthOptions.SectionName)
+            .ValidateDataAnnotations();
+
 
         services.AddIdentity<AuthUser, AuthRole>()
-            .AddMongoDbStores<AuthUser, AuthRole, ObjectId>(_connectionString, _dbName)
+            .AddMongoDbStores<AuthUser, AuthRole, ObjectId>(mongoDbAuthOptions.ConnectionString, mongoDbAuthOptions.DatabaseName)
             .AddDefaultTokenProviders();
 
-        services.Configure<IdentityOptions>(options =>
+        services.Configure<IdentityOptions>(o =>
         {
-            options.Password.RequiredLength = 6;
-            options.Password.RequireDigit = true;
-            options.Password.RequireLowercase = true;
-            options.Password.RequireNonAlphanumeric = true;
-            options.Password.RequireUppercase = true;
-            options.Password.RequiredUniqueChars = 1;
+            o.Password.RequiredLength = 6;
+            o.Password.RequireDigit = true;
+            o.Password.RequireLowercase = true;
+            o.Password.RequireNonAlphanumeric = true;
+            o.Password.RequireUppercase = true;
+            o.Password.RequiredUniqueChars = 1;
 
             //options.AuthUser.AllowedUserNameCharacters 
-            options.User.RequireUniqueEmail = true;
+            o.User.RequireUniqueEmail = true;
 
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-            options.Lockout.MaxFailedAccessAttempts = 5;
-            options.Lockout.AllowedForNewUsers = true;
+            o.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+            o.Lockout.MaxFailedAccessAttempts = 5;
+            o.Lockout.AllowedForNewUsers = true;
         });
 
+        var loginPath = !string.IsNullOrEmpty(mongoDbAuthOptions.LoginPath) ? mongoDbAuthOptions.LoginPath : "/account/login";
+
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(options =>
+            .AddCookie(o =>
             {
-                options.Cookie.Name = "DeliscioTastyCookie";
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromDays(30); // Adjust the expiration time as needed
-                options.SlidingExpiration = true;
-                options.LoginPath = "/account/login"; // Specify your login path
+                o.Cookie.Name = "DeliscioTastyCookie";
+                o.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                o.Cookie.HttpOnly = true;
+                o.ExpireTimeSpan = TimeSpan.FromDays(30); // Adjust the expiration time as needed
+                o.SlidingExpiration = true;
+                o.LoginPath = loginPath; // Specify your login path
             });
 
-        //services.AddAuthorization(options =>
+        //services.AddAuthorization(o =>
         //{
-        //    options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
+        //    o.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
         //});
+
+        services.AddScoped<UserManager<AuthUser>>();
+        services.AddScoped<RoleManager<AuthRole>>();
+
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IRequestHandler<CreateUserCommand, FluentResults.Result<User?>>, CreateCommandHandler>();
+        services.AddScoped<IRequestHandler<LoginCommand, FluentResults.Result<SignInResult>>, LoginCommandHandler>();
+        services.AddScoped<IRequestHandler<RegisterUserCommand, FluentResults.Result<AuthUser?>>, RegisterCommandHandler>();
+
+        services.AddScoped<IRequestHandler<GetUsersQuery, FluentResults.Result<PagedResults<User>>>, GetUsersQueryHandler>();
+
+
+        services.AddScoped<IRequestHandler<GetRolesQuery, FluentResults.Result<Role[]>>, GetRolesQueryHandler>();
+
+        return services;
     }
 }
