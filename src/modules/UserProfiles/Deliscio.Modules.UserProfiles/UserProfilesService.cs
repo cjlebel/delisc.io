@@ -30,12 +30,12 @@ public sealed class UserProfilesService : ServiceBase, IUserProfilesService
     //    _logger = logger;
     //}
 
-    public UserProfilesService(IOptions<MongoDbOptions> options, ILogger<UserProfilesService> logger)
+    public UserProfilesService(IUserProfilesRepository repository, ILogger<UserProfilesService> logger)
     {
-        Guard.Against.Null(options);
+        Guard.Against.Null(repository);
         Guard.Against.Null(logger);
 
-        _repository = new UserProfilesRepository(options);
+        _repository = repository;
         _logger = logger;
     }
 
@@ -58,9 +58,9 @@ public sealed class UserProfilesService : ServiceBase, IUserProfilesService
         return entity.Id.ToString();
     }
 
-    public async Task<Results<UserProfile?>> GetAsync(Guid userId, CancellationToken token = default)
+    public async Task<Results<UserProfile?>> GetAsync(string userId, CancellationToken token = default)
     {
-        Guard.Against.Default(userId);
+        Guard.Against.NullOrWhiteSpace(userId);
 
         var user = await _repository.GetAsync(userId, token);
 

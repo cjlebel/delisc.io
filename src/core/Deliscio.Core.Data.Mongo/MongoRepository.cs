@@ -101,7 +101,7 @@ public class MongoRepository<TDocument> : IRepository<TDocument, ObjectId> where
         return await FindAsync(filter, pageNo, pageSize, token);
     }
 
-    protected async Task<(IEnumerable<TDocument> Results, int TotalPages, int TotalCount)> FindAsync(FilterDefinition<TDocument> filter, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    protected async ValueTask<(IEnumerable<TDocument> Results, int TotalPages, int TotalCount)> FindAsync(FilterDefinition<TDocument> filter, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         Guard.Against.Null(filter);
         Guard.Against.NegativeOrZero(pageNo);
@@ -200,7 +200,7 @@ public class MongoRepository<TDocument> : IRepository<TDocument, ObjectId> where
     }
 
 
-    //TODO: public async Task<IEnumerable<TDocument>> GetAsync(int pageNo, int pageSize, string sortBy,       /* The field to sort by */ SortDirection sortDirection, /* The sort direction (ascending or descending) */ CancellationToken cancellationToken = default)
+    //TODO: public async ValueTask<IEnumerable<TDocument>> GetAsync(int pageNo, int pageSize, string sortBy,       /* The field to sort by */ SortDirection sortDirection, /* The sort direction (ascending or descending) */ CancellationToken cancellationToken = default)
     public async Task<(IEnumerable<TDocument> Results, int TotalPages, int TotalCount)> GetAsync(int pageNo, int pageSize, CancellationToken token = default)
     {
         return await FindAsync(_ => true, pageNo, pageSize, token);

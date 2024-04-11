@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting" Version="8.0.0-preview.3.24105.21" />
+    <PackageReference Include="Aspire.Hosting" Version="8.0.0-preview.5.24201.12" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="9.23.1.88495">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

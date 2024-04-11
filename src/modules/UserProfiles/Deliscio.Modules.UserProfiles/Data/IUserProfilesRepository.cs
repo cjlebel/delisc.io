@@ -13,7 +13,7 @@ public interface IUserProfilesRepository : IRepository<UserProfileEntity, Object
     /// <returns>
     /// A <see cref="UserProfileEntity"/> if the user exists, otherwise default(UserProfileEntity).
     /// </returns>
-    Task<UserProfileEntity?> GetAsync(Guid userId, CancellationToken token = default);
+    Task<UserProfileEntity?> GetAsync(string userId, CancellationToken token = default);
 
     Task<(IEnumerable<UserProfileEntity> Results, int TotalPages, int TotalCount)> SearchAsync(string displayName = "", string email = "", int page = 1, int pageSize = 50, CancellationToken token = default);
 }
