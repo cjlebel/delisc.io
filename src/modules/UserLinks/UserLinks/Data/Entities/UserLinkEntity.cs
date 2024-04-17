@@ -54,7 +54,7 @@ public class UserLinkEntity : MongoEntityBase
 
     private UserLinkEntity() { }
 
-    public UserLinkEntity(Guid id, Guid userId, Guid linkId, DateTimeOffset dateCreated, DateTimeOffset dateUpdated, UserLinkTagEntity[]? tags = default, bool isPrivate = false) : this()
+    public UserLinkEntity(Guid id, Guid userId, Guid linkId, DateTimeOffset dateCreated, DateTimeOffset? dateUpdated, UserLinkTagEntity[]? tags = default, bool isPrivate = false) : this()
     {
         Id = ObjectId.Parse(id.ToString());
         LinkId = linkId;

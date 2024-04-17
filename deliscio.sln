@@ -172,7 +172,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{72A77728
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.Common.Utils", "src\modules\Common\Deliscio.Modules.Common.Utils\Deliscio.Modules.Common.Utils.csproj", "{CC738F19-917F-4C0C-84A4-26E6D4121A71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deliscio.Containers.Admin_Web", "src\containers\Deliscio.Containers.Admin_Web\Deliscio.Containers.Admin_Web.csproj", "{6875927A-0498-4811-9425-BB44D0B984FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Containers.Admin_Web", "src\containers\Deliscio.Containers.Admin_Web\Deliscio.Containers.Admin_Web.csproj", "{6875927A-0498-4811-9425-BB44D0B984FB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.Settings", "src\modules\Settings\Deliscio.Modules.Settings\Deliscio.Modules.Settings.csproj", "{245E4E60-AFC3-4E0E-9394-156C3F4279FA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deliscio.Modules.Settings.MediatR", "src\modules\Settings\Deliscio.Modules.Settings.MediatR\Deliscio.Modules.Settings.MediatR.csproj", "{365BCA52-6BCF-46D3-B158-3A236583587E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deliscio.Modules.Settings.Common", "src\modules\Settings\Deliscio.Modules.Settings.Common\Deliscio.Modules.Settings.Common.csproj", "{97239CF0-CD10-4554-89B5-9544371F7C6E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -336,6 +342,18 @@ Global
 		{6875927A-0498-4811-9425-BB44D0B984FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6875927A-0498-4811-9425-BB44D0B984FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6875927A-0498-4811-9425-BB44D0B984FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{245E4E60-AFC3-4E0E-9394-156C3F4279FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{245E4E60-AFC3-4E0E-9394-156C3F4279FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{245E4E60-AFC3-4E0E-9394-156C3F4279FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{245E4E60-AFC3-4E0E-9394-156C3F4279FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{365BCA52-6BCF-46D3-B158-3A236583587E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{365BCA52-6BCF-46D3-B158-3A236583587E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{365BCA52-6BCF-46D3-B158-3A236583587E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{365BCA52-6BCF-46D3-B158-3A236583587E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97239CF0-CD10-4554-89B5-9544371F7C6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97239CF0-CD10-4554-89B5-9544371F7C6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97239CF0-CD10-4554-89B5-9544371F7C6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97239CF0-CD10-4554-89B5-9544371F7C6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -411,6 +429,9 @@ Global
 		{72A77728-3A20-4194-BCE7-ED5BB1D35223} = {6F46F840-7BA4-4C33-94B8-BB86C3624EC5}
 		{CC738F19-917F-4C0C-84A4-26E6D4121A71} = {72A77728-3A20-4194-BCE7-ED5BB1D35223}
 		{6875927A-0498-4811-9425-BB44D0B984FB} = {36DE16F6-9371-421D-8F6D-AFD4AB13A985}
+		{245E4E60-AFC3-4E0E-9394-156C3F4279FA} = {BEB01BDD-B29E-41E1-9022-A6F1D8CBC4E7}
+		{365BCA52-6BCF-46D3-B158-3A236583587E} = {BEB01BDD-B29E-41E1-9022-A6F1D8CBC4E7}
+		{97239CF0-CD10-4554-89B5-9544371F7C6E} = {BEB01BDD-B29E-41E1-9022-A6F1D8CBC4E7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CC98CF49-1486-4252-A157-DA1293256158}

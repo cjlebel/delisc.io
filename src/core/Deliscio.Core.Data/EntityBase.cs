@@ -10,7 +10,7 @@ public class EntityBase : IEntityWithTypedId<Guid>
 
     public DateTimeOffset DateCreated { get; set; }
 
-    public DateTimeOffset DateUpdated { get; set; }
+    public DateTimeOffset? DateUpdated { get; set; }
 
     protected EntityBase()
     {

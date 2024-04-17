@@ -29,17 +29,17 @@ public sealed record LinkItem
 
     public DateTimeOffset DateCreated { get; set; }
 
-    public DateTimeOffset DateUpdated { get; set; }
+    public DateTimeOffset? DateUpdated { get; set; }
 
     // Needed for deserialization
     public LinkItem() { }
 
-    public LinkItem(Guid id, string url, string title, string description, string domain, string imageUrl,
-        IEnumerable<LinkTag>? tags, DateTimeOffset dateCreated, DateTimeOffset dateUpdated) : this(id.ToString(), url, title, description, domain,
-        imageUrl, tags, dateCreated, dateUpdated)
-    { }
+    //public LinkItem(Guid id, string url, string title, string description, string domain, string imageUrl,
+    //    IEnumerable<LinkTag>? tags, DateTimeOffset dateCreated, DateTimeOffset dateUpdated) : this(id.ToString(), url, title, description, domain,
+    //    imageUrl, tags, dateCreated, dateUpdated)
+    //{ }
 
-    public LinkItem(string id, string url, string title, string description, string domain, string imageUrl, IEnumerable<LinkTag>? tags, DateTimeOffset dateCreated, DateTimeOffset dateUpdated)
+    public LinkItem(string id, string url, string title, string description, string domain, string imageUrl, IEnumerable<LinkTag>? tags, DateTimeOffset dateCreated, DateTimeOffset? dateUpdated)
     {
         Id = id;
         Description = description;

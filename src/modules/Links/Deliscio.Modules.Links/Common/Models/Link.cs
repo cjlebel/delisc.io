@@ -35,7 +35,7 @@ public sealed record Link
     public string SubmittedById { get; set; } = Guid.Empty.ToString();
 
     public DateTimeOffset DateCreated { get; set; }
-    public DateTimeOffset DateUpdated { get; set; }
+    public DateTimeOffset? DateUpdated { get; set; }
 
     // Needed for deserialization
     public Link() { }

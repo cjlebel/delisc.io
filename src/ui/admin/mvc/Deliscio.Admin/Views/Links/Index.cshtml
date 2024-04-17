@@ -135,7 +135,7 @@
                                 @link.DateCreated.ToLocalTime().DateTime
                             </td>
                             <td class="@bgColor @strike">
-                                @link.DateUpdated.ToLocalTime().DateTime
+                                @link.DateUpdated?.ToLocalTime().DateTime
                             </td>
                         </tr>
                         <tr class="link-row" data-rowid="@link.Id">

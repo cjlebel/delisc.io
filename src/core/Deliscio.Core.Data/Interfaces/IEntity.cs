@@ -7,5 +7,5 @@ public interface IEntityWithTypedId<out TId>
 
     DateTimeOffset DateCreated { get; set; }
 
-    DateTimeOffset DateUpdated { get; set; }
+    DateTimeOffset? DateUpdated { get; set; }
 }

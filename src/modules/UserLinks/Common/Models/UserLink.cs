@@ -22,7 +22,7 @@ public sealed record UserLink
 
     public DateTimeOffset DateCreated { get; set; }
 
-    public DateTimeOffset DateUpdated { get; set; }
+    public DateTimeOffset? DateUpdated { get; set; }
 
     public UserLink() { }
 
@@ -38,8 +38,7 @@ public sealed record UserLink
     /// <param name="dateUpdated">The date when the already existing link was last updated</param>
     /// <param name="tags">One or more tags that the user would like to associate with their user link. This is optional, and will not change the underlying link's title</param>
     /// <param name="isPrivate">Whether or not the user would like to hide their link from anyone other than themselves</param>
-    public UserLink(string id, string linkId, string userId, string title, DateTimeOffset dateCreated, DateTimeOffset dateUpdated,
-        UserLinkTag[]? tags = default, bool isPrivate = false)
+    public UserLink(string id, string linkId, string userId, string title, DateTimeOffset dateCreated, DateTimeOffset? dateUpdated, UserLinkTag[]? tags = default, bool isPrivate = false)
     {
         Id = id;
         UserId = userId;

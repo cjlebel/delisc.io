@@ -16,9 +16,15 @@ public class MongoEntityBase : IEntityWithTypedId<ObjectId>
     public ObjectId CreatedById { get; set; }
 
     [BsonRepresentation(BsonType.DateTime)]
-    public DateTimeOffset DateUpdated { get; set; }
+    public DateTimeOffset? DateUpdated { get; set; }
 
-    public ObjectId UpdatedById { get; set; }
+    public ObjectId? UpdatedById { get; set; }
+
+    public MongoEntityBase(ObjectId id, ObjectId createdById)
+    {
+        Id = id;
+        CreatedById = createdById;
+    }
 
     protected MongoEntityBase()
     {

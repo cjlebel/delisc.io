@@ -77,7 +77,7 @@ public sealed class LinkEntity : MongoEntityBase, IIsSoftDeletableBy<ObjectId>
     public bool IsDeleted { get; set; }
 
     [BsonRepresentation(BsonType.DateTime)]
-    public DateTimeOffset DateDeleted { get; set; }
+    public DateTimeOffset? DateDeleted { get; set; }
 
     public ObjectId DeletedById { get; set; }
 

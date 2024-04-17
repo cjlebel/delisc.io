@@ -1,0 +1,34 @@
+@model Deliscio.Modules.Settings.Common.SettingsClassInfo?
+
+@if (Model is null)
+{
+
+}
+else
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Setting Details</h3>
+                </div>
+                <div class="panel-body">
+
+                    @{
+                        var properties = Model.GetType().GetProperties();
+
+                        foreach (var property in properties)
+                        {
+                            <div class="form-group">
+                                <label for="@property.Name">@property.Name</label>
+                                <input type="text" class="form-control" id="@property.Name" value="" />
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

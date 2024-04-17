@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\common\Common\Deliscio.Common.csproj" />
+    <ProjectReference Include="..\..\..\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
+    <ProjectReference Include="..\..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\" />
+  </ItemGroup>
+
+</Project>

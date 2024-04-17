@@ -1,4 +1,3 @@
-using System;
 using Ardalis.GuardClauses;
 using Deliscio.Core.Models;
 using Deliscio.Modules.UserProfiles.Common.Interfaces;

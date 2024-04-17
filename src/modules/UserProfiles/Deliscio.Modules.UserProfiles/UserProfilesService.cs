@@ -1,14 +1,11 @@
 using Ardalis.GuardClauses;
 using Deliscio.Common.Abstracts;
-using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Models;
 using Deliscio.Modules.UserProfiles.Common.Interfaces;
 using Deliscio.Modules.UserProfiles.Common.Models;
 using Deliscio.Modules.UserProfiles.Data;
 using Deliscio.Modules.UserProfiles.Mappers;
-using FluentResults;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Structurizr.Annotations;
 
 namespace Deliscio.Modules.UserProfiles;

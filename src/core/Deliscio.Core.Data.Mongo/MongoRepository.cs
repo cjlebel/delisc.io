@@ -37,14 +37,18 @@ public class MongoRepository<TDocument> : IRepository<TDocument, ObjectId> where
 
     #endregion
 
-    public void Add(TDocument entity)
+    public ObjectId Add(TDocument entity)
     {
         Collection.InsertOne(entity);
+
+        return entity.Id;
     }
 
-    public async Task AddAsync(TDocument entity, CancellationToken token = default)
+    public async Task<ObjectId> AddAsync(TDocument entity, CancellationToken token = default)
     {
         await Collection.InsertOneAsync(entity, new InsertOneOptions(), token);
+
+        return entity.Id;
     }
 
     public void AddRange(IEnumerable<TDocument> entities, CancellationToken token = default)
@@ -287,16 +291,20 @@ public class MongoRepository<TDocument> : IRepository<TDocument, ObjectId> where
     }
 
 
-    public void Update(TDocument entity, CancellationToken token = default)
+    public bool Update(TDocument entity, CancellationToken token = default)
     {
         entity.DateUpdated = DateTimeOffset.UtcNow;
-        Collection.ReplaceOne(d => d.Id == entity.Id, entity, cancellationToken: token);
+        var rslt = Collection.ReplaceOne(d => d.Id == entity.Id, entity, cancellationToken: token);
+
+        return rslt.IsModifiedCountAvailable && rslt.ModifiedCount > 0;
     }
 
-    public async Task UpdateAsync(TDocument entity, CancellationToken token = default)
+    public async Task<bool> UpdateAsync(TDocument entity, CancellationToken token = default)
     {
         entity.DateUpdated = DateTime.UtcNow;
-        await Collection.ReplaceOneAsync(d => d.Id == entity.Id, entity, cancellationToken: token);
+        var rslt = await Collection.ReplaceOneAsync(d => d.Id == entity.Id, entity, cancellationToken: token);
+
+        return rslt.IsModifiedCountAvailable && rslt.ModifiedCount > 0;
     }
 
     #region - Privates -

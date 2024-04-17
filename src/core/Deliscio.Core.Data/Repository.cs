@@ -28,9 +28,9 @@ public abstract class BaseRepositoryWithTypedId<T, TId> : IRepositoryWithTypedId
     //protected DbContext Context { get; }
 
     //protected DbSet<T> DbSet { get; }
-    public abstract void Add(T entity);
+    public abstract TId Add(T entity);
 
-    public abstract Task AddAsync(T entity, CancellationToken token = default);
+    public abstract Task<TId> AddAsync(T entity, CancellationToken token = default);
 
     public abstract void AddRange(IEnumerable<T> entities, CancellationToken token = default);
 
@@ -71,7 +71,7 @@ public abstract class BaseRepositoryWithTypedId<T, TId> : IRepositoryWithTypedId
     public abstract void Save();
     public abstract Task SaveAsync(CancellationToken token = default);
 
-    public abstract void Update(T entity, CancellationToken token = default);
+    public abstract bool Update(T entity, CancellationToken token = default);
 
-    public abstract Task UpdateAsync(T entity, CancellationToken token = default);
+    public abstract Task<bool> UpdateAsync(T entity, CancellationToken token = default);
 }

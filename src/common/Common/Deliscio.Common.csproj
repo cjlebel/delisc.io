@@ -22,12 +22,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Interfaces\" />
         <Folder Include="Helpers\" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
+        <ProjectReference Include="..\..\modules\Settings\Deliscio.Modules.Settings.Common\Deliscio.Modules.Settings.Common.csproj" />
     </ItemGroup>
 
 </Project>

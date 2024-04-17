@@ -13,7 +13,7 @@ public class LinkTagEntity : MongoEntityBase, IIsSoftDeletableBy<ObjectId>
 
     public bool IsDeleted { get; set; }
 
-    public DateTimeOffset DateDeleted { get; set; }
+    public DateTimeOffset? DateDeleted { get; set; }
 
     public ObjectId DeletedById { get; set; }
 

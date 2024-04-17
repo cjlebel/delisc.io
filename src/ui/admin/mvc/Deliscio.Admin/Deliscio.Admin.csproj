@@ -25,18 +25,22 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Remove="Areas\**" />
         <Compile Remove="Library\**" />
         <Compile Remove="wwwroot\js\components\**" />
         <Compile Remove="wwwroot\lib\**" />
         <Compile Remove="wwwroot\modules\**" />
+        <Content Remove="Areas\**" />
         <Content Remove="Library\**" />
         <Content Remove="wwwroot\js\components\**" />
         <Content Remove="wwwroot\lib\**" />
         <Content Remove="wwwroot\modules\**" />
+        <EmbeddedResource Remove="Areas\**" />
         <EmbeddedResource Remove="Library\**" />
         <EmbeddedResource Remove="wwwroot\js\components\**" />
         <EmbeddedResource Remove="wwwroot\lib\**" />
         <EmbeddedResource Remove="wwwroot\modules\**" />
+        <None Remove="Areas\**" />
         <None Remove="Library\**" />
         <None Remove="wwwroot\js\components\**" />
         <None Remove="wwwroot\lib\**" />
@@ -84,6 +88,7 @@
         <ProjectReference Include="..\..\..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
         <ProjectReference Include="..\..\..\..\modules\Links\Deliscio.Modules.Links.MediatR\Deliscio.Modules.Links.MediatR.csproj" />
         <ProjectReference Include="..\..\..\..\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
+        <ProjectReference Include="..\..\..\..\modules\Settings\Deliscio.Modules.Settings\Deliscio.Modules.Settings.csproj" />
         <ProjectReference Include="..\..\..\..\modules\UserProfiles\Deliscio.Modules.UserProfiles.MediatR\Deliscio.Modules.UserProfiles.MediatR.csproj" />
     </ItemGroup>
 
@@ -101,7 +106,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Areas\" />
         <Folder Include="wwwroot\tsx\pages\" />
         <Folder Include="wwwroot\css\" />
     </ItemGroup>

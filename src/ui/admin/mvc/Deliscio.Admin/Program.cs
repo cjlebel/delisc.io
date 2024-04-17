@@ -12,6 +12,8 @@ using Deliscio.Modules.Links.Data.Mongo;
 using Deliscio.Modules.Links.MediatR.Commands;
 using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Modules.Links.MediatR.Queries.Handlers;
+using Deliscio.Modules.Settings.Interfaces;
+using Deliscio.Modules.Settings;
 using Deliscio.Modules.UserProfiles;
 using Deliscio.Modules.UserProfiles.Common.Interfaces;
 using Deliscio.Modules.UserProfiles.Common.Models;
@@ -93,6 +95,8 @@ builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkComm
 builder.Services.AddSingleton<IRequestHandler<SubmitLinkByUserCommand, Guid>, SubmitLinkByUserCommandHandler>();
 builder.Services.AddSingleton<IRequestHandler<DeleteLinkCommand, bool>, DeleteLinkCommandHandler>();
 builder.Services.AddSingleton<IRequestHandler<EditLinkCommand, (bool IsSuccess, string Message)>, EditLinkCommandHandler>();
+
+//builder.Services.AddSingleton<ISettingsService, SettingsService>();
 
 var app = builder.Build();
 

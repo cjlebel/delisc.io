@@ -47,7 +47,7 @@
 
                 <div class="mb-3">
                     <label for="lastUpdate" class="form-label">Last Update</label>
-                    <input type="text" class="form-control" id="lastUpdate" name="lastUpdate" value="@link.DateUpdated.ToLocalTime().DateTime" disabled>
+                    <input type="text" class="form-control" id="lastUpdate" name="lastUpdate" value="@link.DateUpdated?.ToLocalTime().DateTime" disabled>
                 </div>
 
                 <div class="mb-3">
@@ -192,7 +192,7 @@
                                         @relatedLink.DateCreated.ToLocalTime().DateTime
                                     </td>
                                     <td>
-                                        @relatedLink.DateUpdated.ToLocalTime().DateTime
+                                        @relatedLink.DateUpdated?.ToLocalTime().DateTime
                                     </td>
                                 </tr>
                             }
