@@ -1,7 +1,7 @@
-using Deliscio.Web.Mvc;
+using Deliscio.Web.Site;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace Deliscio.Tests.Functional.Web.Mvc;
+namespace Deliscio.Tests.Functional.Web.Site;
 
 public class HomeFunctionalTests : BaseWebFunctionalTests, IClassFixture<WebApplicationFactory<Program>>
 {

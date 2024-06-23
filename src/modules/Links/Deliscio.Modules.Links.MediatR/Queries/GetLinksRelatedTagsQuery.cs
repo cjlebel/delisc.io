@@ -1,9 +1,9 @@
-using Deliscio.Modules.Links.Common.Models;
+using Deliscio.Modules.Links.Application.Dtos;
 using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Queries;
 
-public record GetLinksRelatedTagsQuery : IRequest<LinkTag[]>
+public record GetLinksRelatedTagsQuery : IRequest<LinkTagDto[]>
 {
     public int? Count { get; init; }
     public string[] Tags { get; init; }

@@ -1,4 +1,4 @@
-using FluentResults;
+using System.Collections.Immutable;
 
 namespace Deliscio.Core.Models;
 
@@ -8,19 +8,24 @@ public class PagedResults<TValue>
 
     public int PageSize { get; set; }
 
+    public int Offset { get; set; }
+
     public int TotalResults { get; set; }
 
     public int TotalPages => PageSize > 0 ? (int)Math.Ceiling((double)TotalResults / PageSize) : 0;
 
-    public IEnumerable<TValue> Items { get; set; } = [];
+    public IReadOnlyList<TValue> Items { get; set; } = [];
 
     public PagedResults() { }
 
-    public PagedResults(IEnumerable<TValue>? items, int pageNo, int pageSize, int totalResults)
+    public PagedResults(IEnumerable<TValue> items, int pageNo, int pageSize, int totalResults, int offset = 0)
     {
-        Items = items ?? Enumerable.Empty<TValue>();
+        Items = items.ToImmutableList();
+        
         PageNumber = pageNo;
         PageSize = pageSize;
+        Offset = offset;
+
         TotalResults = totalResults;
     }
 

@@ -9,14 +9,16 @@ public class MongoEntityBase : IEntityWithTypedId<ObjectId>
     [BsonId]
     public ObjectId Id { get; set; }
 
+
     // Allows for using DateTimeOffset as a property type (without it, it would be an Array of two values)
     [BsonRepresentation(BsonType.DateTime)]
     public DateTimeOffset DateCreated { get; set; }
 
     public ObjectId CreatedById { get; set; }
 
+
     [BsonRepresentation(BsonType.DateTime)]
-    public DateTimeOffset DateUpdated { get; set; }
+    public DateTimeOffset? DateUpdated { get; set; }
 
     public ObjectId UpdatedById { get; set; }
 
@@ -25,6 +27,5 @@ public class MongoEntityBase : IEntityWithTypedId<ObjectId>
         var now = DateTimeOffset.UtcNow;
 
         DateCreated = now;
-        DateUpdated = now;
     }
 }

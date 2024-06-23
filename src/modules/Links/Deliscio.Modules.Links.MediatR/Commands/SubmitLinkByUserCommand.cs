@@ -7,17 +7,15 @@ namespace Deliscio.Modules.Links.MediatR.Commands;
 /// <summary>
 /// Represents a command to submit a link for verification, before attempting to add to the central repository
 /// </summary>
-public sealed record SubmitLinkByUserCommand : IRequest<Guid>
+public sealed record SubmitLinkByUserCommand : IRequest<string>
 {
     public string[] Tags { get; }
 
     public string Url { get; }
 
-    public Guid SubmittedById { get; }
+    public string SubmittedById { get; }
 
-    public SubmitLinkByUserCommand(string url, string submittedById, string[]? tags = default) : this(url, new Guid(submittedById), tags) { }
-
-    public SubmitLinkByUserCommand(string url, Guid submittedById, string[]? tags = default)
+    public SubmitLinkByUserCommand(string url, string submittedById, string[]? tags = default)
     {
         Guard.Against.NullOrEmpty(url);
         Guard.Against.NullOrEmpty(submittedById);
@@ -31,7 +29,7 @@ public sealed record SubmitLinkByUserCommand : IRequest<Guid>
 /// <summary>
 /// Represents a MediatR command handler that submits a link for verification.
 /// </summary>
-public sealed class SubmitLinkByUserCommandHandler : IRequestHandler<SubmitLinkByUserCommand, Guid>
+public sealed class SubmitLinkByUserCommandHandler : IRequestHandler<SubmitLinkByUserCommand, string>
 {
     private readonly ILinksService _linksService;
 
@@ -40,10 +38,12 @@ public sealed class SubmitLinkByUserCommandHandler : IRequestHandler<SubmitLinkB
         _linksService = linksService;
     }
 
-    public async Task<Guid> Handle(SubmitLinkByUserCommand command, CancellationToken cancellationToken)
+    public async Task<string> Handle(SubmitLinkByUserCommand command, CancellationToken cancellationToken)
     {
-        var link = await _linksService.SubmitLinkAsync(command.Url, command.SubmittedById, command.Tags, cancellationToken);
+        throw new NotImplementedException();
 
-        return link;
+        var linkId = await _linksService.SubmitLinkAsync(command.Url, command.SubmittedById, command.Tags, cancellationToken);
+
+        return linkId;
     }
 }

@@ -6,7 +6,7 @@ public record QueuedLink
 {
     public string Url { get; set; }
 
-    public Guid SubmittedById { get; set; }
+    public string SubmittedById { get; set; }
 
     public string Title { get; set; }
 
@@ -14,7 +14,7 @@ public record QueuedLink
 
     public string Domain { get; set; }
 
-    public Guid LinkId { get; set; } = Guid.NewGuid();
+    public string LinkId { get; set; } = string.Empty;
 
     public string[]? Tags { get; set; }
 
@@ -54,7 +54,7 @@ public record QueuedLink
         var link = new QueuedLink
         {
             Url = url.OriginalString,
-            SubmittedById = new Guid(submittedById),
+            SubmittedById = submittedById,
             UsersData = usersData ?? new UsersData()
         };
 

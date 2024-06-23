@@ -24,10 +24,10 @@ public class UserLinkEntity : MongoEntityBase
     /// since Get takes in the user link's id, and not the base link id.
     /// </remarks>
     //[BsonId]
-    public Guid LinkId { get; set; }
+    public ObjectId LinkId { get; set; }
 
     //[BsonId]
-    public Guid UserId { get; set; }
+    public ObjectId UserId { get; set; }
 
     /// <summary>
     /// The description/summary of the page that the link points to.
@@ -54,11 +54,11 @@ public class UserLinkEntity : MongoEntityBase
 
     private UserLinkEntity() { }
 
-    public UserLinkEntity(Guid id, Guid userId, Guid linkId, DateTimeOffset dateCreated, DateTimeOffset dateUpdated, UserLinkTagEntity[]? tags = default, bool isPrivate = false) : this()
+    public UserLinkEntity(string id, string userId, string linkId, DateTimeOffset dateCreated, DateTimeOffset dateUpdated, UserLinkTagEntity[]? tags = default, bool isPrivate = false) : this()
     {
-        Id = ObjectId.Parse(id.ToString());
-        LinkId = linkId;
-        UserId = userId;
+        Id = id.ToObjectId();
+        LinkId = linkId.ToObjectId();
+        UserId = userId.ToObjectId();
 
         IsPrivate = isPrivate;
         Tags = tags ?? Array.Empty<UserLinkTagEntity>();
@@ -76,14 +76,14 @@ public class UserLinkEntity : MongoEntityBase
     /// <param name="tags"></param>
     /// <param name="isPrivate"></param>
     /// <returns></returns>
-    public static UserLinkEntity Create(Guid userId, Guid linkId, string title = "", UserLinkTagEntity[]? tags = default, bool isPrivate = false)
+    public static UserLinkEntity Create(string userId, string linkId, string title = "", UserLinkTagEntity[]? tags = default, bool isPrivate = false)
     {
         var now = DateTimeOffset.UtcNow;
 
         return new UserLinkEntity
         {
-            UserId = userId,
-            LinkId = linkId,
+            UserId = userId.ToObjectId(),
+            LinkId = linkId.ToObjectId(),
 
             IsPrivate = isPrivate,
             Tags = tags ?? Array.Empty<UserLinkTagEntity>(),

@@ -414,6 +414,5 @@ FodyWeavers.xsd
 /src/ui/mvc/wwwroot/client/home.js
 /src/ui/mvc/wwwroot/client/no-image-found.js
 /src/ui/mvc/wwwroot/client
-/**//wwwroot/libs/*
-/src/web.admin/Deliscio.Web.Admin/wwwroot/libs
-/package-lock.json
+/**/wwwroot/libs/*
+/**/package-lock.json

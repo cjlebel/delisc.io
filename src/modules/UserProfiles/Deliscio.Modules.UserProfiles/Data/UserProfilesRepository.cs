@@ -30,9 +30,9 @@ public class UserProfilesRepository : MongoRepository<UserProfileEntity>, IUserP
             return FirstOrDefaultAsync(x => x.Id == userObjectId, token);
         }
 
-        _logger.LogWarning("Could not find profile for user id {userId}", userId);
+        _logger.LogWarning("Could not find profile for user id {UserId}", userId);
 
-        return default;
+        return Task.FromResult<UserProfileEntity?>(default);
     }
 
     //Note: Need to rethink this. I only want to return parts of the user profile, not all of the details for each one.

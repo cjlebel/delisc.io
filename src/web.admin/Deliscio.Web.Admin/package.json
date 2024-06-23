@@ -1,0 +1,49 @@
+{
+    "name": "delisc.io - admin",
+    "version": "0.1.0",
+    "description": "",
+    "main": "app.ts",
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite",
+        "preview": "vite preview",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "watch": "vite build --watch"
+    },
+    "keywords": [],
+    "author": "Jay L @ Habaner.io",
+    "license": "ISC",
+    "devDependencies": {
+        "@eslint/eslintrc": "^3.0.2",
+        "@eslint/js": "^9.1.1",
+        "@types/aria-query": "^5.0.4",
+        "@types/node": "20.12.7",
+        "@types/react": "^18.2.36",
+        "@types/react-dom": "^18.2.14",
+        "@typescript-eslint/eslint-plugin": "^6.21.0",
+        "eslint": "^8.57.0",
+        "eslint-config-standard-with-typescript": "^43.0.1",
+        "eslint-plugin-import": "^2.29.1",
+        "eslint-plugin-jsx-a11y": "6.8.0",
+        "eslint-plugin-n": "^16.6.2",
+        "eslint-plugin-promise": "^6.1.1",
+        "eslint-plugin-react": "^7.34.1",
+        "globals": "^15.0.0",
+        "jquery": "4.0.0-beta",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "swiper": "6.8.4",
+        "typescript": "^5.4.5",
+        "vite": "^5.2.0",
+        "vite-plugin-mkcert": "^1.17.5"
+    },
+    "-vs-binding": {
+        "ProjectOpened": [
+            "i"
+        ],
+        "BeforeBuild": [
+            "build"
+        ]
+    }
+}

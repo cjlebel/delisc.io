@@ -1,6 +1,6 @@
 using Ardalis.GuardClauses;
 using Deliscio.Core.Models;
-using Deliscio.Modules.Links.Common.Models;
+using Deliscio.Modules.Links.Application.Dtos;
 using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Queries;
@@ -9,7 +9,7 @@ namespace Deliscio.Modules.Links.MediatR.Queries;
 /// A specific query to deal with getting links ONLY by tags.
 /// This can be used with the tag cloud where no search terms are provided(?)
 /// </summary>
-public record GetLinksByTagsQuery : IRequest<PagedResults<LinkItem>>
+public record GetLinksByTagsQuery : IRequest<PagedResults<LinkItemDto>>
 {
     public int PageNo { get; init; }
 

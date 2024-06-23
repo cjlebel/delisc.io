@@ -9,5 +9,5 @@ public interface IIsSoftDeletable
 {
     bool IsDeleted { get; set; }
 
-    DateTimeOffset DateDeleted { get; set; }
+    DateTimeOffset? DateDeleted { get; set; }
 }

@@ -1,21 +1,20 @@
 using Deliscio.Apis.WebApi.Common.Interfaces;
 using Deliscio.Apis.WebApi.Managers;
 using Deliscio.Core.Models;
-using Deliscio.Modules.Links.Common.Models;
-using Deliscio.Modules.Links.MediatR.Commands;
-using Deliscio.Modules.Links.MediatR.Queries.Handlers;
-using Deliscio.Modules.Links.MediatR.Queries;
 using Deliscio.Modules.Links;
-using MediatR;
+using Deliscio.Modules.Links.Common.Interfaces;
+using Deliscio.Modules.Links.Common.Models;
+using Deliscio.Modules.Links.Data.Mongo;
+using Deliscio.Modules.Links.MediatR.Commands;
+using Deliscio.Modules.Links.MediatR.Queries;
+using Deliscio.Modules.Links.MediatR.Queries.Handlers;
+using Deliscio.Modules.UserLinks;
 using Deliscio.Modules.UserLinks.Common.Interfaces;
 using Deliscio.Modules.UserLinks.Common.Models;
-using Deliscio.Modules.UserLinks.MediatR.Commands.Handlers;
 using Deliscio.Modules.UserLinks.MediatR.Commands;
-using Deliscio.Modules.UserLinks.MediatR.Queries.Handlers;
 using Deliscio.Modules.UserLinks.MediatR.Queries;
-using Deliscio.Modules.UserLinks;
-using Deliscio.Modules.Links.Data.Mongo;
-using Deliscio.Modules.Links.Common.Interfaces;
+using Deliscio.Modules.UserLinks.MediatR.Queries.Handlers;
+using MediatR;
 
 namespace Deliscio.Apis.WebApi.Startups;
 
@@ -42,8 +41,8 @@ public static class StartupExtensions
         builder.Services.AddSingleton<IRequestHandler<GetLinkRelatedLinksQuery, LinkItem[]>, GetLinkRelatedLinksQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetRelatedTagsByTagsQuery, LinkTag[]>, GetRelatedTagsByTagsQueryHandler>();
 
-        builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkCommandHandler>();
-        builder.Services.AddSingleton<IRequestHandler<SubmitLinkByUserCommand, Guid>, SubmitLinkByUserCommandHandler>();
+        builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, string>, AddLinkCommandHandler>();
+        builder.Services.AddSingleton<IRequestHandler<SubmitLinkByUserCommand, string>, SubmitLinkByUserCommandHandler>();
 
     }
 
@@ -58,7 +57,7 @@ public static class StartupExtensions
 
         builder.Services.AddSingleton<IRequestHandler<GetUserLinkByIdQuery, UserLink?>, GetUserLinkByIdQueryHandler>();
         builder.Services.AddSingleton<IRequestHandler<GetUserLinksQuery, PagedResults<UserLink>>, GetUserLinksQueryHandler>();
-        builder.Services.AddSingleton<IRequestHandler<AddLinkToUserCommand, Guid>, AddLinkToUserCommandHandler>();
+        builder.Services.AddSingleton<IRequestHandler<AddLinkToUserCommand, string>, AddLinkToUserCommandHandler>();
 
     }
 }

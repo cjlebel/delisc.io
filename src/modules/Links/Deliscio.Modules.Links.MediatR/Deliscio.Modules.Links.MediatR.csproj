@@ -7,6 +7,12 @@
         <!-- <LangVersion>preview</LangVersion> -->
     </PropertyGroup>
 
+    <ItemGroup>
+      <Compile Remove="Commands\Handlers\**" />
+      <EmbeddedResource Remove="Commands\Handlers\**" />
+      <None Remove="Commands\Handlers\**" />
+    </ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Ardalis.GuardClauses" Version="4.5.0" />
 		<PackageReference Include="MediatR" Version="12.2.0" />
@@ -21,10 +27,6 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
         <ProjectReference Include="..\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Commands\Handlers\" />
     </ItemGroup>
     <!--<Target Name="GitVersion" BeforeTargets="BeforeBuild">
 		 <Exec Command="dotnet gitversion /output buildserver" /> 

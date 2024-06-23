@@ -15,8 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ui\admin\mvc\Deliscio.Admin\Deliscio.Admin.csproj" />
-    <ProjectReference Include="..\..\ui\mvc\Deliscio.Web.Mvc.csproj" />
+    <ProjectReference Include="..\..\web.admin\Deliscio.Web.Admin\Deliscio.Web.Admin.csproj" />
   </ItemGroup>
 
 </Project>

@@ -17,7 +17,7 @@ namespace Deliscio.Modules.Authentication;
 
 public static class AuthenticationServiceExtensions
 {
-    public static IServiceCollection RegisterAuthenticationServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection RegisterAuthenticationServices(this IServiceCollection services, IConfiguration configuration, string loginPath = "/account/login")
     {
         var mongoDbAuthOptions = new MongoDbAuthOptions();
        configuration.Bind(MongoDbAuthOptions.SectionName, mongoDbAuthOptions);
@@ -48,8 +48,6 @@ public static class AuthenticationServiceExtensions
             o.Lockout.AllowedForNewUsers = true;
         });
 
-        var loginPath = !string.IsNullOrEmpty(mongoDbAuthOptions.LoginPath) ? mongoDbAuthOptions.LoginPath : "/account/login";
-
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(o =>
             {
@@ -65,6 +63,8 @@ public static class AuthenticationServiceExtensions
         //{
         //    o.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
         //});
+
+        services.AddHttpContextAccessor();
 
         services.AddScoped<UserManager<AuthUser>>();
         services.AddScoped<RoleManager<AuthRole>>();

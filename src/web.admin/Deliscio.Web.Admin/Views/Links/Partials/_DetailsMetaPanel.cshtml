@@ -1,0 +1,58 @@
+@using System.Globalization
+@using Deliscio.Modules.Links.Application.Dtos;
+
+@model LinkDto
+
+@{
+    var imgUrl = Model.ImageUrl;
+
+    if (string.IsNullOrWhiteSpace(imgUrl))
+    {
+        imgUrl = "/images/placeholder.png";
+    }
+}
+
+<div id="link-meta-details" class="col-md-4">
+    <!-- Image -->
+    <div class="mb-3">
+        <img id="link-image" data-src="@imgUrl" alt="Link Image" class="img-fluid" style="border: 2px #c0c0c0; border-radius: 1rem">
+        @* <button type="button" class="btn btn-secondary mt-2" onclick="replaceImage()">Replace Image</button> *@
+    </div>
+
+    <!-- Additional Details -->
+    <div class="mb-3">
+        <label for="date-submitted" class="form-label">Submit Date</label>
+        <input id="date-submitted" type="text" class="form-control" name="submitDate" value="@Model.DateCreated.ToLocalTime().DateTime" disabled>
+    </div>
+
+    <div class="mb-3">
+        <label for="date-updated" class="form-label">Last Update</label>
+        <input id="date-updated" type="text" class="form-control" name="lastUpdate" value="@(Model.DateUpdated?.ToLocalTime().DateTime.ToString(CultureInfo.InvariantCulture) ?? string.Empty)" disabled>
+    </div>
+
+    <div class="mb-3">
+        <label for="submitted-by" class="form-label">Submitted By</label>
+        <input id="submitted-by" type="text" class="form-control" name="submittedBy" value="@Model.CreatedByUserId" disabled>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-6 mb-3">
+            <label for="likes" class="form-label">Likes</label>
+            <input type="text" class="form-control" id="likes" name="likes" value="@Model.TotalLikes" disabled>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="saves" class="form-label">Saves</label>
+            <input type="url" class="form-control" id="saves" name="saves" value="@Model.TotalSaves" disabled>
+        </div>
+    </div>
+
+    <h4>Meta</h4>
+    <!-- Keywords -->
+    <div class="mb-3">
+        <label for="keywords" class="form-label">Meta-Keywords (comma-separated)</label>
+        @{
+            var keywords = Model.Keywords.Any() ? string.Join(", ", Model.Keywords) : string.Empty;
+        }
+        <input type="text" class="form-control" id="keywords" value="@keywords" name="keywords" disabled>
+    </div>
+</div>

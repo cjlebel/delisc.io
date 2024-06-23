@@ -62,7 +62,7 @@ public class UserLinksService : ServiceBase, IUserLinksService
     /// <exception cref="ArgumentException">
     /// Thrown if the <paramref name="userId"/> or <paramref name="linkId"/> are not valid Guids
     /// </exception>
-    public async Task<Guid> AddAsync(Guid userId, Guid linkId, string title = "", string[]? tags = default, bool isPrivate = false, CancellationToken token = default)
+    public async Task<string> AddAsync(string userId, string linkId, string title = "", string[]? tags = default, bool isPrivate = false, CancellationToken token = default)
     {
         Guard.Against.NullOrEmpty(userId);
         Guard.Against.NullOrEmpty(linkId);
@@ -73,7 +73,7 @@ public class UserLinksService : ServiceBase, IUserLinksService
 
         await _repository.AddAsync(userLink, token);
 
-        return Guid.Parse(userLink.Id.ToString());
+        return userLink.Id.ToString();
     }
 
     //public async Task<Guid> AddAsync(Guid userId, UserLink link, CancellationToken token = default)
@@ -101,7 +101,7 @@ public class UserLinksService : ServiceBase, IUserLinksService
     /// <param name="linkId">The id of the link to retrieve</param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public async Task<UserLink?> GetAsync(Guid userId, Guid linkId, CancellationToken token = default)
+    public async Task<UserLink?> GetAsync(string userId, string linkId, CancellationToken token = default)
     {
         Guard.Against.NullOrEmpty(userId);
         Guard.Against.NullOrEmpty(linkId);
@@ -121,25 +121,25 @@ public class UserLinksService : ServiceBase, IUserLinksService
     /// <param name="pageSize">The size of the page of results</param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public async Task<PagedResults<UserLink>> GetAsync(Guid userId, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async Task<PagedResults<UserLink>> GetAsync(string userId, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         // TODO: Refactor so that we can use the Find method throughout the application.
-        var rslts = await Find(l => l.UserId == userId, pageNo, pageSize, token);
+        var rslts = await Find(l => l.UserId == userId.ToObjectId(), pageNo, pageSize, token);
 
-        return new PagedResults<UserLink>(rslts.Results, pageNo, pageSize, rslts.TotalCount);
+        return new PagedResults<UserLink>(rslts.Results, pageNo, pageSize, rslts.TotalCount, skip: 0);
     }
 
-    public Task<PagedResults<UserLink>> GetByDomainAsync(Guid userId, string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public Task<PagedResults<UserLink>> GetByDomainAsync(string userId, string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }
 
-    public Task<PagedResults<UserLink>> GetByTagsAsync(Guid userId, IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public Task<PagedResults<UserLink>> GetByTagsAsync(string userId, IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<UserLinkTag> GetTagAsync(Guid userId, int count = 25, string[]? tags = default, CancellationToken token = default)
+    public async Task<UserLinkTag> GetTagAsync(string userId, int count = 25, string[]? tags = default, CancellationToken token = default)
     {
         throw new NotImplementedException();
     }

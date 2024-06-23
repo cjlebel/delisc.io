@@ -1,14 +1,14 @@
 using Ardalis.GuardClauses;
-using Deliscio.Modules.Links.Common.Models;
+using Deliscio.Modules.Links.Application.Dtos;
 using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Queries;
 
-public sealed record GetLinkRelatedLinksQuery : IRequest<LinkItem[]>
+public sealed record GetLinkRelatedLinksQuery : IRequest<LinkItemDto[]>
 {
-    public Guid Id { get; init; }
+    public string Id { get; init; }
 
-    public GetLinkRelatedLinksQuery(Guid id)
+    public GetLinkRelatedLinksQuery(string id)
     {
         Guard.Against.NullOrEmpty(id);
 

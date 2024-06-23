@@ -1,0 +1,9 @@
+@Deliscio.Web.Admin_HostAddress = https://localhost:7278/
+
+DELETE {{Deliscio.Web.Admin_HostAddress}}/links/deletes
+
+###
+
+DELETE {{Deliscio.Web.Admin_HostAddress}}/links/{linkId}/delete
+
+###

@@ -1,0 +1,165 @@
+@using System.Globalization
+
+@model LinkEditDetailsModel
+@{
+    var link = Model?.Link;
+    var title = link?.Title ?? string.Empty;
+    ViewData["Title"] = $"Link Details - {title}";
+
+}
+
+<div id="breadcrumbs">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Links" asp-action="Index">Links</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Details</li>
+        </ol>
+    </nav>
+</div>
+
+<div id="links-edit-container" class="container-fluid pl-3 pr-3" data-returnurl="@(Model?.ReturnUrl ?? string.Empty)">
+    <div id="message1" class="hide"></div>
+
+    @if (link is null)
+    {
+        <h1>There's Nothing to See Here</h1>
+    }
+    else
+    {
+        var titleCss = link.IsDeleted ? "text-danger" : link.IsFlagged ? "text-warning" : link.IsActive ? "text-success" : "";
+
+        <h1 class="@titleCss">@title</h1>
+        <div class="row g-3">
+            <!-- First Column -->
+            @(await Html.PartialAsync("Partials/_DetailsMetaPanel", link))
+
+            <!-- Second Column -->
+            <div class="col-md-8">
+                <form id="frmEditLink" method="post" asp-controller="Links" asp-action="Edit" data-link-id="@link.Id"
+                      data-isactive="@link.IsActive.ToString().ToLowerInvariant()"
+                      data-isflagged="@link.IsFlagged.ToString().ToLowerInvariant()"
+                      data-isdeleted="@link.IsDeleted.ToString().ToLowerInvariant()">
+                    <!-- Editable Title -->
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" value="@link.Title" required>
+
+                            @* <h1 class="h1 mb-0" id="editableTitle" onclick="enableEditTitle()">Title <i class="bi bi-pencil" style="cursor: pointer;"></i></h1>
+                        <input type="text" class="form-control d-none" id="titleInput" name="title" required> *@
+                        </div>
+                    </div>
+
+                    <!-- Domain and URL on the same line -->
+                    <div class="row g-3">
+                        <div class="col-md-3 mb-3">
+                            <label for="domain" class="form-label">Domain</label>
+                            <input type="text" class="form-control" id="domain" name="domain" value="@link.Domain" disabled>
+                        </div>
+                        <div class="col-md-9 mb-3">
+                            <label for="url" class="form-label">URL</label>
+                            <div class="input-group">
+                                <input type="url" class="form-control" id="url" name="url" value="@link.Url" tooltip="@link.Url" disabled>
+                                <div class="input-group-append">
+                                    <a href="@link.Url" class="btn btn-outline-secondary bg-success text-white" target="_blank"><i class="fa-solid fa-arrow-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- TagCollectionCollection -->
+                    <div class="mb-3">
+                        <label for="tags" class="form-label">TagCollectionCollection (comma-separated)</label>
+                        @{
+                            //var tagsArr = System.Text.Json.JsonSerializer.Serialize(link.TagsCollection.Select(t => t.Name).ToArray());
+                            var friendlyTags = link.TagCollection.Any() ? string.Join(", ", link.TagCollection.Select(t => t.Name).ToArray()) : string.Empty;
+                        }
+                        @* <input id="tags" type="hidden" value="@tagsArr" name="tags"/> *@
+                        <input type="text" class="form-control" id="tags" value="@friendlyTags">
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3">@link.Description</textarea>
+                    </div>
+
+                    <div class="mb-3 d-flex w-100 justify-content-evenly">
+                        <div id="message" class="alert hide"></div>
+                    </div>
+
+
+
+                    <div id="edit-footer" class="d-flex flex-row w-100" style="justify-content: space-between">
+                        <div>
+                            <!-- Submit Button -->
+                            <button id="btnSave" type="submit" class="btn btn-primary btn-success">Save</button>
+                        </div>
+                        <div>
+                            <button id="btnActivate" type="button" class="btn btn-primary">Activate</button>
+                        </div>
+                        <div>
+                            <button id="btnDelete" type="button" class="btn btn-primary btn-danger">Delete</button>
+                        </div>
+                        <div>
+                            <!-- Cancel Button -->
+                            <button id="btnCancel" type="reset" class="btn btn-primary btn-warning">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <h3>Related Content</h3>
+            <div class="col">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Domain</th>
+                            <th>Created</th>
+                            <th>Updated</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @if (!Model.RelatedLinks!.Any())
+                        {
+                            <tr>
+                                <td colspan="4">No related links</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var relatedLink in Model.RelatedLinks!)
+                            {
+                                <tr>
+                                    <td>
+                                        <a asp-controller="Links" asp-action="Details" asp-route-id="@relatedLink.Id">@relatedLink.Title</a>
+                                    </td>
+                                    <td>
+                                        @relatedLink.Domain
+                                    </td>
+                                    <td>
+                                        @relatedLink.DateCreated.ToLocalTime().DateTime
+                                    </td>
+                                    <td>
+                                        @(relatedLink.DateUpdated?.ToLocalTime().DateTime.ToString(CultureInfo.InvariantCulture) ?? string.Empty)
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script type="module" src="/client/links.mjs"></script>
+}

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <assemblyName>Habanerio.Core.BuildingBlocks.Domain</assemblyName>
+        <RootNamespace>Habanerio.Core.BuildingBlocks.Domain</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="12.2.0" />
+      <PackageReference Include="MongoDB.Bson" Version="2.25.0" />
+    </ItemGroup>
+
+</Project>

@@ -43,7 +43,7 @@ public sealed class UserProfilesService : ServiceBase, IUserProfilesService
     {
         Guard.Against.Null(userProfile);
 
-        var entity = UserProfileEntity.Create(Guid.Parse(userProfile.Id), userProfile.Email, userProfile.DisplayName);
+        var entity = UserProfileEntity.Create(userProfile.Id, userProfile.Email, userProfile.DisplayName);
 
         try
         {
@@ -89,6 +89,6 @@ public sealed class UserProfilesService : ServiceBase, IUserProfilesService
 
         var items = Mapper.Map<UserProfileItem>(rslts.Results);
 
-        return new PagedResults<UserProfileItem>(items, pageNo, pageNo, rslts.TotalCount);
+        return new PagedResults<UserProfileItem>(items, pageNo, pageNo, rslts.TotalCount, offset: 0);
     }
 }

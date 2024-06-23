@@ -116,10 +116,14 @@ public class MongoRepository<TDocument> : IRepository<TDocument, ObjectId> where
 
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
-        var cursor = Collection.Find(filter)
-            .Skip(skip)
-            .Limit(pageSize)
-            .Sort(Builders<TDocument>.Sort.Ascending(doc => doc.Id));
+        var options = new FindOptions<TDocument>
+        {
+            Skip = skip,
+            Limit = pageSize,
+            Sort = Builders<TDocument>.Sort.Ascending(doc => doc.Id)
+        };
+
+        var cursor = await Collection.FindAsync(filter, options, token);
 
         var results = await cursor.ToListAsync(token);
 
@@ -293,10 +297,21 @@ public class MongoRepository<TDocument> : IRepository<TDocument, ObjectId> where
         Collection.ReplaceOne(d => d.Id == entity.Id, entity, cancellationToken: token);
     }
 
-    public async Task UpdateAsync(TDocument entity, CancellationToken token = default)
+    public async Task<long> UpdateAsync(TDocument entity, CancellationToken token = default)
     {
         entity.DateUpdated = DateTime.UtcNow;
-        await Collection.ReplaceOneAsync(d => d.Id == entity.Id, entity, cancellationToken: token);
+
+        try
+        {
+            var rslt = await Collection.ReplaceOneAsync(d => d.Id == entity.Id, entity, cancellationToken: token);
+
+            return rslt.ModifiedCount;
+        }
+        catch (Exception e)
+        {
+            // Log
+            throw;
+        }
     }
 
     #region - Privates -

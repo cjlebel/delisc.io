@@ -65,7 +65,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
     {
         Guard.Against.NullOrWhiteSpace(id);
 
-        var query = new GetLinkByIdQuery(new Guid(id));
+        var query = new GetLinkByIdQuery(id);
 
         return _mediator.Send(query, token);
     }
@@ -138,7 +138,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
     {
         Guard.Against.NullOrWhiteSpace(id);
 
-        var query = new GetLinkRelatedLinksQuery(new Guid(id));
+        var query = new GetLinkRelatedLinksQuery(id);
 
         return await _mediator.Send(query, token);
     }
@@ -202,7 +202,7 @@ public sealed class LinksManager : ManagerBase<LinksManager>, ILinksManager
                     if (queuedLink.State == QueuedStates.Finished || queuedLink.State == QueuedStates.Exists)
                     {
                         // If state is Exists, then get the existing id.
-                        var existingLinkId = queuedLink.State == QueuedStates.Exists ? queuedLink.LinkId : Guid.Empty;
+                        var existingLinkId = queuedLink.State == QueuedStates.Exists ? queuedLink.LinkId : string.Empty;
 
                         if (queuedLink.State == QueuedStates.Finished)
                         {

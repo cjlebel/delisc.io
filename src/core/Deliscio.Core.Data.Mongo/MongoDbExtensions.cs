@@ -35,17 +35,22 @@ public static class MongoDbExtensions
     //    });
     //}
 
-    public static ObjectId ToObjectId(this Guid value)
+    public static ObjectId ToObjectId(this string value)
     {
-        if (value.Equals(Guid.Empty))
+        if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentNullException(nameof(value));
 
-        return ObjectId.Parse(value.ToString());
+        var rslt = ObjectId.TryParse(value, out var objectId);
+
+        if (!rslt)
+            throw new FormatException($"The value '{value}' is not a valid ObjectId.");
+
+        return objectId;
     }
 
-    public static IEnumerable<ObjectId> ToObjectIds(this IEnumerable<Guid> values)
+    public static IEnumerable<ObjectId> ToObjectIds(this IEnumerable<string> values)
     {
-        var valuesArray = values?.ToArray() ?? Array.Empty<Guid>();
+        var valuesArray = values?.ToArray() ?? Array.Empty<string>();
 
         if (!valuesArray.Any())
             throw new ArgumentNullException(nameof(values));
@@ -54,13 +59,5 @@ public static class MongoDbExtensions
         {
             yield return value.ToObjectId();
         }
-    }
-
-    public static Guid ToGuid(this ObjectId value)
-    {
-        if (value.Equals(ObjectId.Empty))
-            throw new ArgumentNullException(nameof(value));
-
-        return Guid.Parse(value.ToString());
     }
 }

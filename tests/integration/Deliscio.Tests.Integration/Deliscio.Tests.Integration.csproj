@@ -47,7 +47,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\ui\mvc\Deliscio.Web.Mvc.csproj" />
+    <ProjectReference Include="..\..\..\src\core\Deliscio.Core.Data.Mongo\Deliscio.Core.Data.Mongo.csproj" />
+    <ProjectReference Include="..\..\..\src\core\Deliscio.Core\Deliscio.Core.csproj" />
   </ItemGroup>
 
 </Project>

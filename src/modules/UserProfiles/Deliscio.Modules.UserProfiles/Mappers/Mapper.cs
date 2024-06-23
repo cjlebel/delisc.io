@@ -12,7 +12,7 @@ internal static class Mapper
         if (userProfile is null)
             return default;
 
-        return new UserProfileEntity(Guid.Parse(userProfile.Id), userProfile.Email, userProfile.DisplayName)
+        return new UserProfileEntity(userProfile.Id, userProfile.Email, userProfile.DisplayName)
         {
             FirstName = userProfile.FirstName,
             ImageUrl = userProfile.ImageUrl,

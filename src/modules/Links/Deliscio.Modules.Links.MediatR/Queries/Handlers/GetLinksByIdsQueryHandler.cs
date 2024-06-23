@@ -1,5 +1,5 @@
+using Deliscio.Modules.Links.Application.Dtos;
 using Deliscio.Modules.Links.Common.Interfaces;
-using Deliscio.Modules.Links.Common.Models;
 using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Queries.Handlers;
@@ -7,7 +7,7 @@ namespace Deliscio.Modules.Links.MediatR.Queries.Handlers;
 /// <summary>
 /// Handles executing the GetLinksByIds Query and getting a collection of links by their unique id
 /// </summary>
-public class GetLinksByIdsQueryHandler : IRequestHandler<GetLinksByIdsQuery, IEnumerable<LinkItem>>
+public class GetLinksByIdsQueryHandler : IRequestHandler<GetLinksByIdsQuery, IEnumerable<LinkItemDto>>
 {
     private readonly ILinksService _linksService;
 
@@ -16,7 +16,7 @@ public class GetLinksByIdsQueryHandler : IRequestHandler<GetLinksByIdsQuery, IEn
         _linksService = linksService;
     }
 
-    public async Task<IEnumerable<LinkItem>> Handle(GetLinksByIdsQuery command, CancellationToken cancellationToken)
+    public async Task<IEnumerable<LinkItemDto>> Handle(GetLinksByIdsQuery command, CancellationToken cancellationToken)
     {
         var link = await _linksService.GetByIdsAsync(command.Ids, cancellationToken);
 

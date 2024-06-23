@@ -1,6 +1,6 @@
-using Deliscio.Web.Mvc.Controllers;
-using Deliscio.Web.Mvc.Managers;
-using Deliscio.Web.Mvc.ViewModels.Home;
+using Deliscio.Web.Site.Controllers;
+using Deliscio.Web.Site.Managers;
+using Deliscio.Web.Site.ViewModels.Home;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

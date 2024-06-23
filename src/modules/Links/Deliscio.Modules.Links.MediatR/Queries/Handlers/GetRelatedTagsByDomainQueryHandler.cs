@@ -1,11 +1,11 @@
 using Ardalis.GuardClauses;
+using Deliscio.Modules.Links.Application.Dtos;
 using Deliscio.Modules.Links.Common.Interfaces;
-using Deliscio.Modules.Links.Common.Models;
 using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Queries.Handlers;
 
-public class GetRelatedTagsByDomainQueryHandler : IRequestHandler<GetRelatedTagsByDomainQuery, LinkTag[]>
+public class GetRelatedTagsByDomainQueryHandler : IRequestHandler<GetRelatedTagsByDomainQuery, LinkTagDto[]>
 {
     private readonly ILinksService _linksService;
 
@@ -16,7 +16,7 @@ public class GetRelatedTagsByDomainQueryHandler : IRequestHandler<GetRelatedTags
         _linksService = linksService;
     }
 
-    public async Task<LinkTag[]> Handle(GetRelatedTagsByDomainQuery command, CancellationToken cancellationToken)
+    public async Task<LinkTagDto[]> Handle(GetRelatedTagsByDomainQuery command, CancellationToken cancellationToken)
     {
         var results = (await _linksService.GetRelatedTagsByDomainAsync(command.Domain, command.Count.GetValueOrDefault(), token: cancellationToken)).ToArray();
 

@@ -13,7 +13,7 @@ public static class Mapper
 
         var tags = Map(link.Tags)?.ToArray() ?? Array.Empty<UserLinkTagEntity>();
 
-        var entity = new UserLinkEntity(Guid.Parse(link.Id), Guid.Parse(link.UserId), Guid.Parse(link.LinkId), link.DateCreated, link.DateUpdated, tags);
+        var entity = new UserLinkEntity(link.Id, link.UserId, link.LinkId, link.DateCreated, link.DateUpdated, tags);
 
         return entity;
     }
