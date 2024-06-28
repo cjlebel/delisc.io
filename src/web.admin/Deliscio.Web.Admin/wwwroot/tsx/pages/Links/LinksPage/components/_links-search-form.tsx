@@ -1,4 +1,4 @@
-import { initElement, ElementEvent } from '../../../../utils/dom/init-element';
+import { initElement, ElementEvent } from '@utils/dom/init-element';
 
 export class SearchLinksForm {
     formId = 'frmLinksSearch';
@@ -65,6 +65,12 @@ export class SearchLinksForm {
             '#btn-search',
             { eventType: 'click', eventFunction: this.handleSearchButtonClick } as ElementEvent
         )!;
+
+        this.btnClear = initElement<HTMLButtonElement>(
+            this.frmSearchLinks,
+            '#btn-clear',
+            { eventType: 'click', eventFunction: this.handleClearButtonClick } as ElementEvent
+        )!;
     }
 
     /**
@@ -87,8 +93,14 @@ export class SearchLinksForm {
         e.preventDefault();
         e.stopPropagation();
 
-        let url = `/links?term=${this.txtSearchText.value}&tags=${this.txtSearchTags.value}&domain=${this.txtSearchDomain.value}&isActive=${this.chkSearchIsActive.value}&isFlagged=${this.chkSearchIsFlagged.value}&isDeleted=${this.chkSearchIsDeleted.value}`;
+        const url = `/links?term=${this.txtSearchText.value}&tags=${this.txtSearchTags.value}&domain=${this.txtSearchDomain.value}&isActive=${this.chkSearchIsActive.value}&isFlagged=${this.chkSearchIsFlagged.value}&isDeleted=${this.chkSearchIsDeleted.value}`;
 
         window.location.href = url;
     };
+
+    handleClearButtonClick = (e: Event) => {
+        const url = '/links';
+
+        window.location.href = url;
+    }
 }

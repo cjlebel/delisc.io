@@ -37,6 +37,28 @@ class LinkDetailsApis extends ApiHelper {
             .catch((error:Error) => onFailure(error));
     }
 
+    public async activateLinkAsync(
+        linkId: string,
+        antiForgeryToken: string,
+        isActive: boolean,
+        onSuccess: Function,
+        onFailure: Function
+    ):Promise<ApiResponse> {
+        if (!(linkId?.trim())) {
+            onFailure('No id was provided');
+        }
+
+        return this.post(`/links/${linkId}/activate/${isActive}`, null, antiForgeryToken)
+            .then((response) => {
+                if (response.isSuccess) {
+                    onSuccess((response));
+                } else {
+                    onFailure(response.message ?? errorMessage);
+                }
+            })
+            .catch((error) => onFailure(error));
+    }
+
     /**
      * Deletes a single link
      * @param linkIds The ids of the links to delete

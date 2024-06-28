@@ -50,13 +50,8 @@ class ApiHelper {
                 const responseData = await response.json();
 
                 if (this.isApiDataResponse<T>(responseData)) {
-                    const apiDataResponse = {
-                        isSuccess: response.ok,
-                        message: response.ok ? null : `${response.status} ${response.statusText}`,
-                        data: responseData,
-                    } as T;
 
-                    return apiDataResponse;
+                    return responseData as T;
 
                 } else {
                     const apiResponse = {
@@ -102,7 +97,12 @@ class ApiHelper {
     }
 
     private isApiDataResponse<T>(value: any): value is ApiDataResponse<T> {
-        return (value as ApiDataResponse<T>).data !== undefined;
+        const val = value as ApiDataResponse<T>;
+        const data = val?.data ?? null
+
+        const isOfTypeT = data !== null;
+
+        return isOfTypeT;
     }
 
     /**

@@ -25,9 +25,9 @@ class LinksApis extends ApiHelper {
         return this.deletes<ApiDataResponse<string[]>>(`/links/deletes`, linkIds, antiForgeryToken)
             .then((response) => {
                 if (response.isSuccess) {
-                    onSuccess(response.data);
+                    onSuccess(response);
                 } else {
-                    onFailure(response.message ?? errorMessage);
+                    onFailure(response);
                 }
             })
             .catch((error) => onFailure(error));

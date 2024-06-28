@@ -1035,7 +1035,7 @@
     <ItemGroup>
         <Folder Include="wwwroot\client\" />
         <Folder Include="wwwroot\css\" />
-        <Folder Include="wwwroot\tsx\components\Alerts\" />
+        <Folder Include="wwwroot\tsx\components\forms\" />
         <Folder Include="wwwroot\tsx\pages\Links\LinkDetailsPage\types\" />
     </ItemGroup>
 

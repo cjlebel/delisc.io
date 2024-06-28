@@ -1,6 +1,7 @@
-import { initElement } from '../../../../utils/dom/init-element';
+import { initElement } from '@utils/dom/init-element';
 import { getAntiForgeryToken } from '@utils/dom/get-antiforgery-token';
 import { validateForm } from '@utils/dom/validate-form';
+import WindowsReload from '@utils/window/window-reload';
 
 import LinkApis from '../apis';
 import { EditLinkRequest } from '../apis/editLinkRequest';
@@ -39,7 +40,7 @@ export class LinkEditForm {
         this.initForm(onEditChange);
     }
 
-
+    //#region - Activate/Deactivate
     /**
      *  Sets the state of the Activate/Deactivate button based on the value.
      * If the link is NOT active, the button will say "Activate" and be a primary button.
@@ -60,11 +61,38 @@ export class LinkEditForm {
     private handleOnActivateClick = (e: Event) => {
         const isNowActive = !this.isActive;
 
+        const antiForgeryToken = getAntiForgeryToken(this.frmEditLink);
+
+        this.linkApis.activateLinkAsync(this.linkId, antiForgeryToken, isNowActive, this.onActivateSuccess, this.onActivateFailure);
+
         this.isActive = isNowActive;
 
         this.setActiveButtonState(isNowActive);
     };
 
+    private onActivateSuccess = (response: { isSuccess: boolean; message: string }) => {
+        if (response.isSuccess) {
+            this.isActive = !this.isActive;
+            this.setActiveButtonState(this.isActive);
+
+            if (this.isActive)
+                this.handleOnEditChanged(true, response.message, 'Activate');
+            else
+                this.handleOnEditChanged(true, response.message, 'Deactivate');
+        }
+        else {
+            console.log('Ooops, how did we get here?')
+        }
+    }
+
+    private onActivateFailure = (error: Error) => {
+        console.error(error ?? 'An error occurred while trying to set the active state of the link');
+        this.handleOnEditChanged(false, error.toString(), 'Deactivate');
+    }
+
+    //#endregion
+
+    //#region - Delete/Undelete
 
     private setDeleteButtonState = (isLinkDeleted: boolean) => {
         if (!isLinkDeleted) {
@@ -144,6 +172,10 @@ export class LinkEditForm {
         this.handleOnEditChanged(false, error.toString(), 'Undelete');
     };
 
+    //#endregion
+
+    //#region - Save
+
     private handleOnSaveClick = (e: Event) => {
         e.preventDefault();
         e.stopPropagation();
@@ -185,13 +217,19 @@ export class LinkEditForm {
 
     };
 
-    private handleOnCancelClick = (e: Event) => {
+    //#endregion
 
+    //#region - Cancel
+
+    private handleOnCancelClick = (e: Event) => {
+        WindowsReload();
     }
+
+    //#endregion
 
     /**
      * Initializes the elements on the Edit form. 
-     * @param onEditChanged
+     * @param onEditChanged - The function to call when the form is changed.
      */
     private initForm(onEditChanged: Function | undefined): void {
 
