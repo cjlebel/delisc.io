@@ -9,14 +9,14 @@ namespace Deliscio.Modules.Authentication.Common.Interfaces;
 
 public interface IAuthService
 {
-    ValueTask<Result<bool>> UserAssignRole(string userId, string roleId);
+    ValueTask<Result<bool>> AddUserToRoleAsync(string userId, string roleId);
 
     /// <summary>
     /// Creates a new user without signing them in
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    ValueTask<Result<User?>> UserCreateAsync(CreateUserRequest request);
+    ValueTask<Result<User?>> CreateUserAsync(CreateAuthUserRequest request);
 
     /// <summary>
     /// Gets a Paged Results of Users
@@ -24,28 +24,30 @@ public interface IAuthService
     /// <param name="pageNo">The number of the page of results to be returned</param>
     /// <param name="pageSize">The number of users to return with the page</param>
     /// <returns></returns>
-    Result<PagedResults<User>> UsersGet(int pageNo = 1, int pageSize = 50);
+    Result<PagedResults<User>> GetUsersAsync(int pageNo = 1, int pageSize = 50);
 
-    Task<Result<User>> UsersGetByIdAsync(string id);
+    Task<Result<User>> GetUserAsync(string id);
 
-    Task<Result<User>> UsersGetByNameAsync(string name);
+    Task<Result<User>> GetUserByEmailAsync(string email);
 
-    ValueTask<Result<AuthUser?>> UserRegisterAsync(string username, string email, string password, bool isPersistent);
+    Task<Result<User>> GetUserByNameAsync(string name);
+
+    ValueTask<Result<AuthUserEntity?>> RegisterUserAsync(string username, string email, string password, bool isPersistent);
 
 
-    Task<Result<SignInResult>> UserSignInAsync(LoginRequest request);
+    Task<Result<SignInResult>> SignInAsync(LoginRequest request);
 
-    Task UserSignOutAsync();
+    Task SignOutAsync();
 
-    ValueTask<Result<Role?>> RolesCreateAsync(string name);
+    ValueTask<Result<Role?>> CreateRoleAsync(string name);
 
-    ValueTask<Result<Role?>> RolesDeleteAsync(string id, string name);
+    ValueTask<Result<Role?>> DeleteRoleAsync(string id, string name);
 
-    ValueTask<Result<Role[]>> RolesGetAsync();
+    Result<Role?> GetRoleAsync(string id);
 
-    Result<Role?> RolesGetById(string id);
+    Result<Role?> GetRoleByNameAsync(string name);
 
-    Result<Role?> RolesGetByName(string name);
+    ValueTask<Result<Role[]>> GetRolesAsync();
 
-    Result<Role[]> RolesGetByIds(string[] ids);
+    Result<Role[]> GetRolesAsync(string[] ids);
 }

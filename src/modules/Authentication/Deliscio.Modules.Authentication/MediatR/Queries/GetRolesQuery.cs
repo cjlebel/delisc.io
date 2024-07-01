@@ -3,7 +3,7 @@ using Deliscio.Modules.Authentication.Common.Models;
 using FluentResults;
 using MediatR;
 
-namespace Deliscio.Modules.Authentication.MediatR.Requests;
+namespace Deliscio.Modules.Authentication.MediatR.Queries;
 
 public sealed record GetRolesQuery : IRequest<FluentResults.Result<Role[]>>
 {
@@ -22,6 +22,6 @@ public class GetRolesQueryHandler : IRequestHandler<GetRolesQuery, FluentResults
 
     public async Task<Result<Role[]>> Handle(GetRolesQuery request, CancellationToken cancellationToken)
     {
-        return await _authService.RolesGetAsync();
+        return await _authService.GetRolesAsync();
     }
 }

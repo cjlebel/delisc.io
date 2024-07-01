@@ -1,11 +1,9 @@
 @using Deliscio.Modules.Authentication.Common.Models
-@model FluentResults.Result<Deliscio.Core.Models.PagedResults<Deliscio.Modules.Authentication.Common.Models.Role>>
 
 @{
     ViewBag.Title = "Roles";
 
-    var page = Model.ValueOrDefault;
-    var roles = page?.Items?.ToArray() ?? Array.Empty<Role>();
+    var availableRoles = ViewData["AvailableRoles"] as Role[] ?? Array.Empty<Role>();
 }
 
 <div class="row">
@@ -25,7 +23,7 @@
                         </thead>
                         <tbody>
 
-                            @if (Model.IsFailed)
+                            @if (!availableRoles.Any())
                             {
                                 <tr>
                                     <td colspan="4" class="alert alert-danger">
@@ -34,26 +32,17 @@
                                 </tr>
                             }
 
-                            @if (!roles.Any())
+                            @foreach (var role in availableRoles)
                             {
                                 <tr>
-                                    <td colspan="2">No roles found</td>
+                                    <td>@role.Name</td>
+                                    <td>
+                                        @* <a href="@Url.Action("Edit", new { id = role.id })" class="btn btn-primary btn-sm">Edit</a>
+                                    <a href="@Url.Action("Delete", new { id = role.id })" class="btn btn-danger btn-sm">Delete</a> *@
+                                    </td>
                                 </tr>
                             }
-                            else
-                            {
 
-                                @foreach (var role in roles)
-                                {
-                                    <tr>
-                                        <td>@role.Name</td>
-                                        <td>
-                                            @* <a href="@Url.Action("Edit", new { id = role.id })" class="btn btn-primary btn-sm">Edit</a>
-                                    <a href="@Url.Action("Delete", new { id = role.id })" class="btn btn-danger btn-sm">Delete</a> *@
-                                        </td>
-                                    </tr>
-                                }
-                            }
                         </tbody>
                     </table>
                 </div>

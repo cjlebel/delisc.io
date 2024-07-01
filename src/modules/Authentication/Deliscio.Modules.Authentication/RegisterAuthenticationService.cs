@@ -4,7 +4,7 @@ using Deliscio.Modules.Authentication.Common.Interfaces;
 using Deliscio.Modules.Authentication.Common.Models;
 using Deliscio.Modules.Authentication.Data.Entities;
 using Deliscio.Modules.Authentication.MediatR.Commands;
-using Deliscio.Modules.Authentication.MediatR.Requests;
+using Deliscio.Modules.Authentication.MediatR.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
@@ -20,15 +20,15 @@ public static class AuthenticationServiceExtensions
     public static IServiceCollection RegisterAuthenticationServices(this IServiceCollection services, IConfiguration configuration, string loginPath = "/account/login")
     {
         var mongoDbAuthOptions = new MongoDbAuthOptions();
-       configuration.Bind(MongoDbAuthOptions.SectionName, mongoDbAuthOptions);
+        configuration.Bind(MongoDbAuthOptions.SectionName, mongoDbAuthOptions);
 
         services.AddOptions<MongoDbAuthOptions>()
             .BindConfiguration(MongoDbAuthOptions.SectionName)
             .ValidateDataAnnotations();
 
 
-        services.AddIdentity<AuthUser, AuthRole>()
-            .AddMongoDbStores<AuthUser, AuthRole, ObjectId>(mongoDbAuthOptions.ConnectionString, mongoDbAuthOptions.DatabaseName)
+        services.AddIdentity<AuthUserEntity, AuthRoleEntity>()
+            .AddMongoDbStores<AuthUserEntity, AuthRoleEntity, ObjectId>(mongoDbAuthOptions.ConnectionString, mongoDbAuthOptions.DatabaseName)
             .AddDefaultTokenProviders();
 
         services.Configure<IdentityOptions>(o =>
@@ -66,14 +66,14 @@ public static class AuthenticationServiceExtensions
 
         services.AddHttpContextAccessor();
 
-        services.AddScoped<UserManager<AuthUser>>();
-        services.AddScoped<RoleManager<AuthRole>>();
+        services.AddScoped<UserManager<AuthUserEntity>>();
+        services.AddScoped<RoleManager<AuthRoleEntity>>();
 
         services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IRequestHandler<CreateUserCommand, FluentResults.Result<User?>>, CreateCommandHandler>();
+        services.AddScoped<IRequestHandler<CreateAuthUserCommand, FluentResults.Result<User?>>, CreateUserCommandHandler>();
         services.AddScoped<IRequestHandler<LoginCommand, FluentResults.Result<SignInResult>>, LoginCommandHandler>();
-        services.AddScoped<IRequestHandler<RegisterUserCommand, FluentResults.Result<AuthUser?>>, RegisterCommandHandler>();
 
+        services.AddScoped<IRequestHandler<GetUserQuery, FluentResults.Result<User?>>, GetUserQueryHandler>();
         services.AddScoped<IRequestHandler<GetUsersQuery, FluentResults.Result<PagedResults<User>>>, GetUsersQueryHandler>();
 
 

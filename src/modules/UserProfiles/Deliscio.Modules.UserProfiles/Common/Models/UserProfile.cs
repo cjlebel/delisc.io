@@ -32,15 +32,16 @@ public sealed record UserProfile
 
     public string DateLastSeenFormatted => DateLastSeen.ToString("yyyy-MM-dd");
 
-    public UserProfile(string id, string email, string displayName)
+    public UserProfile(string id, string email, string displayName, DateTimeOffset dateRegistered)
     {
         Id = id;
         Email = email;
         DisplayName = displayName;
+        DateRegistered = dateRegistered;
     }
 
-    public static UserProfile Create(string id, string email, string displayName)
+    public static UserProfile Create(string id, string email, string displayName, DateTimeOffset dateRegistered)
     {
-        return new UserProfile(id, email, displayName);
+        return new UserProfile(id, email, displayName, dateRegistered);
     }
 }

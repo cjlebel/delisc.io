@@ -1,14 +1,14 @@
-using Deliscio.Modules.Authentication.MediatR.Requests;
+using Deliscio.Modules.Authentication.MediatR.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Deliscio.Web.Admin.Controllers;
-public class RolesController : Controller
+public class RolesController : ControllerBase
 {
     private readonly ILogger<RolesController> _logger;
     private readonly IMediator _mediator;
 
-    public RolesController(IMediator mediator, ILogger<RolesController> logger)
+    public RolesController(IMediator mediator, ILogger<RolesController> logger) : base(mediator)
     {
         _mediator = mediator;
         _logger = logger;
@@ -16,10 +16,8 @@ public class RolesController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var query = new GetRolesQuery();
+        await WithAvailableRolesAsync();
 
-        var rslts = await _mediator.Send(query);
-
-        return View(default);
+        return View();
     }
 }

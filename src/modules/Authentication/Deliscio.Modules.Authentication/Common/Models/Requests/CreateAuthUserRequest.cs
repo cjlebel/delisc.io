@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Deliscio.Modules.Authentication.Common.Models.Requests;
 
-public record RegisterUserRequest
+public record CreateAuthUserRequest
 {
     [Required]
     public string Email { get; set; }
@@ -13,14 +13,15 @@ public record RegisterUserRequest
     [Required]
     public string Username { get; set; }
 
-    public bool IsPersistent { get; set; }
+    public string[] RoleIds { get; set; }
 
-    public RegisterUserRequest() { }
+    public CreateAuthUserRequest() { }
 
-    public RegisterUserRequest(string email, string password, string username)
+    public CreateAuthUserRequest(string email, string password, string username, string[] roleIds)
     {
         Email = email;
         Password = password;
         Username = username;
+        RoleIds = roleIds ?? [];
     }
 }

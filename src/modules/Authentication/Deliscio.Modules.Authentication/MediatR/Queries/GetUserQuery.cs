@@ -1,12 +1,11 @@
-using Deliscio.Core.Models;
 using Deliscio.Modules.Authentication.Common.Interfaces;
 using Deliscio.Modules.Authentication.Common.Models;
 using FluentResults;
 using MediatR;
 
-namespace Deliscio.Modules.Authentication.MediatR.Requests;
+namespace Deliscio.Modules.Authentication.MediatR.Queries;
 
-public sealed record GetUserQuery : IRequest<FluentResults.Result<User>>
+public sealed record GetUserQuery : IRequest<Result<User?>>
 {
     public string UserId { get; }
 
@@ -16,7 +15,7 @@ public sealed record GetUserQuery : IRequest<FluentResults.Result<User>>
     }
 }
 
-public class GetUserQueryHandler : IRequestHandler<GetUserQuery, FluentResults.Result<User>>
+public class GetUserQueryHandler : IRequestHandler<GetUserQuery, Result<User?>>
 {
     private readonly IAuthService _authService;
 
@@ -26,12 +25,12 @@ public class GetUserQueryHandler : IRequestHandler<GetUserQuery, FluentResults.R
     }
 
 
-    public async Task<FluentResults.Result<User>> Handle(GetUserQuery request, CancellationToken cancellationToken)
+    public async Task<FluentResults.Result<User?>> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(request.UserId))
             return Result.Fail("The userId is required");
 
-        var user = await _authService.UsersGetByIdAsync(request.UserId);
+        var user = await _authService.GetUserAsync(request.UserId);
 
         return user;
     }

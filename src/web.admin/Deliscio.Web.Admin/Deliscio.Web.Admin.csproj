@@ -48,11 +48,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Controllers\RolesController.cs" />
-      <Compile Remove="Controllers\UsersController.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
         <Content Remove="compilerconfig.json" />
         <Content Remove="wwwroot\scss\styles.scss" />
         <Content Remove="wwwroot\scss\_variables.scss" />
@@ -1043,6 +1038,7 @@
       <ProjectReference Include="..\..\containers\Delsicio.Containers.Common\Delisicio.Containers.Common.csproj" />
       <ProjectReference Include="..\..\modules\Authentication\Deliscio.Modules.Authentication\Deliscio.Modules.Authentication.csproj" />
       <ProjectReference Include="..\..\modules\Links\Deliscio.Modules.Links\Deliscio.Modules.Links.csproj" />
+      <ProjectReference Include="..\..\modules\UserProfiles\Deliscio.Modules.UserProfiles.MediatR\Deliscio.Modules.UserProfiles.MediatR.csproj" />
     </ItemGroup>
 
     <ItemGroup>

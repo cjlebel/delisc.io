@@ -27,7 +27,7 @@ public class UserProfilesRepository : MongoRepository<UserProfileEntity>, IUserP
 
         if (ObjectId.TryParse(userId, out var userObjectId))
         {
-            return FirstOrDefaultAsync(x => x.Id == userObjectId, token);
+            return GetAsync(userObjectId, token);
         }
 
         _logger.LogWarning("Could not find profile for user id {UserId}", userId);

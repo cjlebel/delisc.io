@@ -195,6 +195,12 @@ public class LinksController : ControllerBase
         }));
     }
 
+    /// <summary>
+    /// Deletes one or more links
+    /// </summary>
+    /// <param name="linkIds">Collection of link ids to be deleted</param>
+    /// <param name="token"></param>
+    /// <returns></returns>
     [HttpDelete]
     [ValidateAntiForgeryToken]
     [Route("/links/deletes")]

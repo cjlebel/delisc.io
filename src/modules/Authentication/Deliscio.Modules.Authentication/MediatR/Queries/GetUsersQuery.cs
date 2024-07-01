@@ -3,7 +3,7 @@ using Deliscio.Modules.Authentication.Common.Interfaces;
 using Deliscio.Modules.Authentication.Common.Models;
 using MediatR;
 
-namespace Deliscio.Modules.Authentication.MediatR.Requests;
+namespace Deliscio.Modules.Authentication.MediatR.Queries;
 
 public sealed record GetUsersQuery : IRequest<FluentResults.Result<PagedResults<User>>>
 {
@@ -31,7 +31,7 @@ public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, FluentResults
     public async Task<FluentResults.Result<PagedResults<User>>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     {
         // Due to MediatR not having a synchronous version of the method, we have to use Task.Run to run the method synchronously
-        var rslt = await Task.Run(() => _authService.UsersGet(request.PageNo, request.PageSize), cancellationToken);
+        var rslt = await Task.Run(() => _authService.GetUsersAsync(request.PageNo, request.PageSize), cancellationToken);
 
         return rslt;
     }

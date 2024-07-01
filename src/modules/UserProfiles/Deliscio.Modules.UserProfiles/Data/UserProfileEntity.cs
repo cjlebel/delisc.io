@@ -10,7 +10,7 @@ namespace Deliscio.Modules.UserProfiles.Data;
 /// </summary>
 /// <seealso cref="MongoEntityBase" />
 [Table("UserProfile")]
-[BsonCollection("user_profiles")]
+[BsonCollection("User_Profiles")]
 public class UserProfileEntity : MongoEntityBase
 {
     [Required]
@@ -31,17 +31,16 @@ public class UserProfileEntity : MongoEntityBase
 
     public DateTimeOffset DateLastSeen { get; set; }
 
-    public UserProfileEntity(string id, string email, string displayName)
+    public UserProfileEntity(string id, string email, string displayName, DateTimeOffset dateRegistered)
     {
         Id = id.ToObjectId();
         Email = email;
         DisplayName = displayName;
+        DateRegistered = dateRegistered;
     }
 
-    public static UserProfileEntity Create(string id, string email, string displayName)
+    public static UserProfileEntity Create(string id, string email, string displayName, DateTimeOffset dateRegistered)
     {
-        return new UserProfileEntity(id, email, displayName);
+        return new UserProfileEntity(id, email, displayName, dateRegistered);
     }
-
-
 }

@@ -1,5 +1,7 @@
+using System.Collections.Immutable;
 using Ardalis.GuardClauses;
 using Deliscio.Core.Models;
+using Deliscio.Modules.Authentication.Common.Errors;
 using Deliscio.Modules.Authentication.Common.Interfaces;
 using Deliscio.Modules.Authentication.Common.Models;
 using Deliscio.Modules.Authentication.Common.Models.Requests;
@@ -13,9 +15,9 @@ namespace Deliscio.Modules.Authentication;
 
 public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthService
 {
-    private readonly UserManager<AuthUser> _userManager;
-    private readonly RoleManager<AuthRole> _roleManager;
-    private readonly SignInManager<AuthUser> _signInManager;
+    private readonly UserManager<AuthUserEntity> _userManager;
+    private readonly RoleManager<AuthRoleEntity> _roleManager;
+    private readonly SignInManager<AuthUserEntity> _signInManager;
     private readonly ILogger<AuthService> _logger;
 
     private const string ERROR_EMAIL_REQUIRED = "Email is required.";
@@ -35,9 +37,9 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
     private Role[] _availableRoles = [];
 
     public AuthService(
-        UserManager<AuthUser> userManager,
-        RoleManager<AuthRole> roleManager,
-        SignInManager<AuthUser> signInManager,
+        UserManager<AuthUserEntity> userManager,
+        RoleManager<AuthRoleEntity> roleManager,
+        SignInManager<AuthUserEntity> signInManager,
         ILogger<AuthService> logger)
     {
         Guard.Against.Null(userManager);
@@ -61,7 +63,7 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
         }
     }
 
-    public async ValueTask<Result<bool>> UserAssignRole(string userId, string roleId)
+    public async ValueTask<Result<bool>> AddUserToRoleAsync(string userId, string roleId)
     {
         if (string.IsNullOrWhiteSpace(userId))
             return Result.Fail<bool>("User ID is required.");
@@ -87,7 +89,13 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
         return Result.Ok(true);
     }
 
-    public async ValueTask<Result<User?>> UserCreateAsync(CreateUserRequest request)
+    /// <summary>
+    /// Creates a new Auth User.
+    /// This does not include the creation of a Profile.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    public async ValueTask<Result<User?>> CreateUserAsync(CreateAuthUserRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Username))
             return Result.Fail(ERROR_USERNAME_REQUIRED);
@@ -105,7 +113,7 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
             if (userRslt.DoesExist)
                 return Result.Fail(ERROR_USER_EXISTS);
 
-            var authUser = new AuthUser { UserName = request.Username, Email = request.Email };
+            var authUser = new AuthUserEntity { UserName = request.Username, Email = request.Email };
             var result = await _userManager.CreateAsync(authUser, request.Password);
 
             if (!result.Succeeded)
@@ -120,7 +128,7 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
 
             if (request.RoleIds.Any())
             {
-                var usersRoles = new List<Role>();
+                var usersRoles = new List<string>();
 
                 foreach (var roleId in request.RoleIds)
                 {
@@ -132,12 +140,7 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
 
                         if (didRoleSave.Succeeded)
                         {
-                            var mappedRole = Mapper.Map(role);
-
-                            if (mappedRole is not null)
-                            {
-                                usersRoles.Add(mappedRole);
-                            }
+                            usersRoles.Add(role.Name!);
                         }
                     }
                 }
@@ -157,7 +160,7 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
         return Result.Fail(ERROR_USER_CANNOT_CREATE);
     }
 
-    public Result<PagedResults<User>> UsersGet(int pageNo = 1, int pageSize = 50)
+    public Result<PagedResults<User>> GetUsersAsync(int pageNo = 1, int pageSize = 50)
     {
         var skip = (pageNo - 1) * pageSize;
         var take = pageSize;
@@ -181,7 +184,12 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
 
                     if (authUser.Roles.Any())
                     {
-                        var userRoles = (_availableRoles.Where(r => authUser.Roles.Select(u => u.ToString()).ToList().Contains(r.Id)).ToArray());
+                        var userRoles = (_availableRoles
+                            .Where(r => authUser.Roles
+                                .Select(u => u.ToString()).ToList()
+                                .Contains(r.Id))
+                            .Select(u => u.Name)
+                            .ToArray());
 
                         if (userRoles.Any())
                         {
@@ -200,14 +208,36 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
         return Result.Ok(page);
     }
 
-    public async Task<Result<User>> UsersGetByIdAsync(string id)
+    public async Task<Result<User>> GetUserAsync(string id)
     {
-        throw new NotImplementedException();
+        var authUser = await _userManager.FindByIdAsync(id);
+
+        if (authUser is null)
+            return Result.Fail<User>(new UserNotFoundError());
+
+        var user = Mapper.Map(authUser);
+
+        user.Roles = (await _userManager.GetRolesAsync(authUser))?.ToArray() ?? [];
+
+        return user!;
     }
 
-    public async Task<Result<User>> UsersGetByNameAsync(string name)
+    public async Task<Result<User>> GetUserByEmailAsync(string email)
     {
-        throw new NotImplementedException();
+        var authUser = await _userManager.FindByEmailAsync(email);
+
+        var user = Mapper.Map(authUser);
+
+        return user;
+    }
+
+    public async Task<Result<User>> GetUserByNameAsync(string name)
+    {
+        var authUser = await _userManager.FindByNameAsync(name);
+
+        var user = Mapper.Map(authUser);
+
+        return user;
     }
 
     /// <summary>
@@ -221,7 +251,7 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
     /// A tuple with a value indicating whether or not the registration was a success.
     /// If the registration failed for some reason, an array or error messages is populated
     /// </returns>
-    public async ValueTask<Result<AuthUser?>> UserRegisterAsync(string username, string email, string password, bool isPersistent)
+    public async ValueTask<Result<AuthUserEntity?>> RegisterUserAsync(string username, string email, string password, bool isPersistent)
     {
         if (string.IsNullOrWhiteSpace(username))
             return Result.Fail(ERROR_USERNAME_REQUIRED);
@@ -239,7 +269,7 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
             if (rslt.DoesExist)
                 return Result.Fail(ERROR_USER_EXISTS);
 
-            var user = new AuthUser { UserName = username, Email = email };
+            var user = new AuthUserEntity { UserName = username, Email = email };
             var result = await _userManager.CreateAsync(user, password);
 
             if (!result.Succeeded)
@@ -254,7 +284,7 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
 
             await _signInManager.SignInAsync(user, isPersistent: true);
 
-            return Result.Ok<AuthUser?>(user);
+            return Result.Ok<AuthUserEntity?>(user);
         }
         catch (Exception e)
         {
@@ -266,7 +296,7 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
         return Result.Fail(ERROR_USER_CANNOT_CREATE);
     }
 
-    public async Task<Result<SignInResult>> UserSignInAsync(LoginRequest request)
+    public async Task<Result<SignInResult>> SignInAsync(LoginRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Login))
             return Result.Fail("Login is required");
@@ -301,12 +331,12 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
         return Result.Ok(result);
     }
 
-    public async Task UserSignOutAsync()
+    public async Task SignOutAsync()
     {
         await _signInManager.SignOutAsync();
     }
 
-    public async ValueTask<Result<Role?>> RolesCreateAsync(string name)
+    public async ValueTask<Result<Role?>> CreateRoleAsync(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
             return Result.Fail<Role?>("Role name is required.");
@@ -316,7 +346,7 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
         if (existingRole is not null)
             return Result.Fail<Role?>("Role already exists.");
 
-        var role = new AuthRole { Name = name };
+        var role = new AuthRoleEntity { Name = name };
         var rslt = await _roleManager.CreateAsync(role);
 
         if (!rslt.Succeeded)
@@ -325,12 +355,12 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
         return Result.Ok(Mapper.Map(role));
     }
 
-    public ValueTask<Result<Role?>> RolesDeleteAsync(string id, string name)
+    public ValueTask<Result<Role?>> DeleteRoleAsync(string id, string name)
     {
         throw new NotImplementedException();
     }
 
-    public async ValueTask<Result<Role[]>> RolesGetAsync()
+    public async ValueTask<Result<Role[]>> GetRolesAsync()
     {
         if (!_availableRoles.Any())
         {
@@ -339,8 +369,8 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
             if (!authRoles.Any())
             {
                 // Create the default roles - too lazy to do this in a migration at the moment
-                await RolesCreateAsync("Admin");
-                await RolesCreateAsync("User");
+                await CreateRoleAsync("Admin");
+                await CreateRoleAsync("User");
 
                 authRoles = _roleManager.Roles.ToArray();
             }
@@ -351,7 +381,7 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
         return Result.Ok(_availableRoles);
     }
 
-    public Result<Role?> RolesGetById(string id)
+    public Result<Role?> GetRoleAsync(string id)
     {
         if (string.IsNullOrWhiteSpace(id))
             return Result.Fail<Role?>("Role ID is required.");
@@ -362,7 +392,7 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
         return _availableRoles.FirstOrDefault(r => r.Id.Equals(id, StringComparison.CurrentCultureIgnoreCase));
     }
 
-    public Result<Role?> RolesGetByName(string name)
+    public Result<Role?> GetRoleByNameAsync(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
             return Result.Fail<Role?>("Role name is required.");
@@ -373,7 +403,7 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
         return _availableRoles.FirstOrDefault(r => r.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
     }
 
-    public Result<Role[]> RolesGetByIds(string[] ids)
+    public Result<Role[]> GetRolesAsync(string[] ids)
     {
         if (!ids.Any())
             return Result.Ok(Array.Empty<Role>());
@@ -382,7 +412,7 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
 
         foreach (var id in ids)
         {
-            var role = RolesGetById(id);
+            var role = GetRoleAsync(id);
 
             if (role is { IsSuccess: true, ValueOrDefault: not null })
             {
@@ -393,7 +423,7 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
         return Result.Ok(roles.ToArray());
     }
 
-    public Task<IdentityResult> ValidateAsync(UserManager<AuthUser> manager, AuthUser authUser)
+    public Task<IdentityResult> ValidateAsync(UserManager<AuthUserEntity> manager, AuthUserEntity authUser)
     {
 
 
@@ -402,7 +432,7 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
 
 
 
-    private async Task<(bool DoesExist, AuthUser? User)> DoesUserExistAsync(string username, string email)
+    private async Task<(bool DoesExist, AuthUserEntity? User)> DoesUserExistAsync(string username, string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
 

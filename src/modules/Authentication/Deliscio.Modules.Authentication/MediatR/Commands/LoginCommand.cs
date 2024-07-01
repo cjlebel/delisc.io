@@ -27,6 +27,6 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, FluentResults.R
 
     public async Task<FluentResults.Result<SignInResult>> Handle(LoginCommand command, CancellationToken cancellationToken)
     {
-        return await _authService.UserSignInAsync(command.Request);
+        return await _authService.SignInAsync(command.Request);
     }
 }

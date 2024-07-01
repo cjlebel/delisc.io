@@ -3,6 +3,13 @@ using Deliscio.Core.Data.Mongo;
 using Deliscio.Modules.Authentication;
 using Deliscio.Modules.Authentication.Common;
 using Deliscio.Modules.Links.Infrastructure;
+using Deliscio.Modules.UserProfiles;
+using Deliscio.Modules.UserProfiles.Common.Interfaces;
+using Deliscio.Modules.UserProfiles.Common.Models;
+using Deliscio.Modules.UserProfiles.Data;
+using Deliscio.Modules.UserProfiles.MediatR.Commands;
+using Deliscio.Modules.UserProfiles.MediatR.Queries;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,16 +51,19 @@ var mongoDbAuthOptions = new MongoDbAuthOptions();
 builder.Configuration.Bind(MongoDbAuthOptions.SectionName, mongoDbAuthOptions);
 
 builder.Services.RegisterAuthenticationServices(config, "/login");
- 
+
 // Cannot seem to extract this away into the extension
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Admin", policy => policy.RequireClaim("Admin"));
 });
 
-//builder.Services.AddSingleton<IUserProfilesService, UserProfilesService>();
-//builder.Services.AddSingleton<IUserProfilesRepository, UserProfilesRepository>();
-//builder.Services.AddSingleton<IRequestHandler<GetUserProfileQuery, FluentResults.Result<UserProfile?>>, GetUserProfileQueryHandler>();
+
+
+builder.Services.AddSingleton<IUserProfilesService, UserProfilesService>();
+builder.Services.AddSingleton<IUserProfilesRepository, UserProfilesRepository>();
+builder.Services.AddSingleton<IRequestHandler<GetUserProfileQuery, FluentResults.Result<UserProfile?>>, GetUserProfileQueryHandler>();
+builder.Services.AddSingleton<IRequestHandler<CreateUserProfileCommand, FluentResults.Result<UserProfile>>, CreateUserProfileCommandHandler>();
 
 builder.Services.RegisterAdminLinksModule(config);
 

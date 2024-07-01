@@ -1,17 +1,24 @@
+using Deliscio.Modules.Authentication.Common.Models;
 using Deliscio.Modules.Authentication.Common.Models.Requests;
 using Deliscio.Modules.Authentication.MediatR.Commands;
-using Deliscio.Modules.Authentication.MediatR.Requests;
+using Deliscio.Modules.Authentication.MediatR.Queries;
+using Deliscio.Modules.UserProfiles.Common.Errors;
+using Deliscio.Modules.UserProfiles.Common.Models;
+using Deliscio.Modules.UserProfiles.Common.Models.Requests;
+using Deliscio.Modules.UserProfiles.MediatR.Commands;
 using Deliscio.Modules.UserProfiles.MediatR.Queries;
+using Deliscio.Web.Admin.Models;
 using MediatR;
+
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Deliscio.Web.Admin.Controllers;
-public class UsersController : Controller
+public class UsersController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public UsersController(IMediator mediator)
+    public UsersController(IMediator mediator) : base(mediator)
     {
         _mediator = mediator;
     }
@@ -27,7 +34,7 @@ public class UsersController : Controller
         return View(rslts);
     }
 
-    public async Task<IActionResult> Create()
+    public async Task<IActionResult> New()
     {
         var rolesQuery = new GetRolesQuery();
         var roles = await _mediator.Send(rolesQuery);
@@ -50,30 +57,70 @@ public class UsersController : Controller
         if (string.IsNullOrWhiteSpace(password))
             return TypedResults.BadRequest(new[] { "Password is required" });
 
-        var x = HttpContext.Request;
+        var newUserRequest = new CreateAuthUserRequest(email, password, username, roles);
+        var newUserCommand = new CreateAuthUserCommand(newUserRequest);
+        var response = await _mediator.Send(newUserCommand);
 
-        var request = new CreateUserRequest(email, password, username, roles);
-
-        var command = new CreateUserCommand(request);
-        var response = await _mediator.Send(command);
-
-        if (response.IsFailed)
+        if (response.IsFailed || response.ValueOrDefault is null)
             return TypedResults.BadRequest(response.Errors?.Select(e => e.Message).ToArray() ?? new[] { "Could not create the user" });
+
+        var user = response.ValueOrDefault;
+
+        _ = await CreateNewUserProfile(user.Id, user.Username, user.Email, user.DateCreated);
 
         return TypedResults.Ok();
     }
 
-    public async Task<IActionResult> Profile(string id)
+    [HttpGet]
+    [Route("users/profile/{userId}")]
+    public async Task<IActionResult> Profile(string userId)
     {
-        var query = new GetUserProfileQuery(id);
+        if (string.IsNullOrWhiteSpace(userId))
+            return BadRequest("User Profile Id is required");
 
-        var rslts = await _mediator.Send(query);
+        // Get th
+        var userQuery = new GetUserQuery(userId);
+        var userResult = await _mediator.Send(userQuery);
 
-        if (rslts.IsFailed)
-            return BadRequest(rslts.Errors);
+        if (userResult.IsFailed || userResult.Value is null)
+            return BadRequest(userResult.Errors?.Select(e => e.Message).ToArray() ?? new[] { "Could not find the user" });
 
-        return View(rslts.Value);
+        var user = userResult.Value;
+
+        UserProfile userProfile;
+        var userProfileQuery = new GetUserProfileQuery(userId);
+
+        var userProfileResult = await _mediator.Send(userProfileQuery);
+
+        if (userProfileResult.IsFailed || userProfileResult.ValueOrDefault is null)
+        {
+            if (userProfileResult.Errors.Any(e => e is UserProfileNotFound))
+            {
+                userProfile = await CreateNewUserProfile(user.Id, user.Username, user.Email, user.DateCreated);
+            }
+
+            return BadRequest(userProfileResult.Errors?.Select(e => e.Message).ToArray() ?? new[] { "Could not find the user profile" });
+        }
+
+        userProfile = userProfileResult.ValueOrDefault;
+
+        var model = new UserProfileViewModel(user, userProfile, Array.Empty<Role>());
+
+        await WithAvailableRolesAsync();
+
+        return View(model);
     }
 
+    private async Task<UserProfile> CreateNewUserProfile(string userId, string displayName, string email, DateTimeOffset dateRegistered)
+    {
+        var request = new CreateUserProfileRequest(userId, displayName, email, dateRegistered);
 
+        var command = new CreateUserProfileCommand(request);
+        var response = await _mediator.Send(command);
+
+        if (response.IsFailed)
+            throw new Exception("Could not create the user");
+
+        return response.Value;
+    }
 }
