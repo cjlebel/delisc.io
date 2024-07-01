@@ -1,11 +1,11 @@
 using Ardalis.GuardClauses;
 using Deliscio.Core.Models;
-using Deliscio.Modules.Links.Common.Models;
+using Deliscio.Modules.Links.Application.Dtos;
 using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Queries;
 
-public record GetLinksByDomainQuery : IRequest<PagedResults<LinkItem>>
+public record GetLinksByDomainQuery : IRequest<PagedResults<LinkItemDto>>
 {
     public string Domain { get; init; }
     public int PageNo { get; init; }

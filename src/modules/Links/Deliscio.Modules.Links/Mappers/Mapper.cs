@@ -1,5 +1,6 @@
-using Deliscio.Modules.Links.Common.Models;
-using Deliscio.Modules.Links.Data.Entities;
+using Deliscio.Modules.Links.Application.Dtos;
+using Deliscio.Modules.Links.Infrastructure.Data.Entities;
+using MongoDB.Bson;
 
 namespace Deliscio.Modules.Links.Mappers;
 
@@ -7,209 +8,227 @@ internal static class Mapper
 {
     private const string TYPE_NOT_SUPPORTED_ERROR = "Type {0} is not supported.";
 
-    internal static LinkEntity? Map(Link? link)
-    {
-        if (link is null)
-            return null;
+    ////internal static LinkEntity? Map(LinkDto? link)
+    ////{
+    ////    if (link is null)
+    ////        return null;
 
-        var entity = new LinkEntity(new Guid(link.Id), link.Url, link.Title, new Guid(link.SubmittedById))
-        {
-            Description = link.Description,
-            Domain = link.Domain,
-            ImageUrl = link.ImageUrl,
-            IsActive = link.IsActive,
-            IsFlagged = link.IsFlagged,
-            Keywords = link.Keywords,
-            LikesCount = link.LikesCount,
-            //IsExcluded = link.IsExcluded,
+    ////    var entity = new LinkEntity()
+    ////    {
+    ////        LinkId = ObjectId.Parse(link.LinkId),
+    ////        Description = link.Description,
+    ////        Domain = link.Domain,
+    ////        ImageUrl = link.ImageUrl,
+    ////        IsActive = link.IsActive,
+    ////        IsFlagged = link.IsFlagged,
+    ////        Keywords = link.Keywords,
+    ////        TotalLikes = link.TotalLikes,
+    ////        //IsExcluded = link.IsExcluded,
 
-            Tags = Map(link.Tags).ToList(),
-            Title = link.Title.Trim(),
+    ////        TagCollection = Map(link.TagCollection).ToArray(),
+    ////        Title = link.Title.Trim(),
+    ////        Url = link.Url,
 
-            DateCreated = link.DateCreated,
-            DateUpdated = link.DateUpdated
-        };
+    ////        DateCreated = link.DateCreated,
+    ////        CreatedById = ObjectId.Parse(link.CreatedByUserId),
 
-        return entity;
-    }
+    ////        DateUpdated = link.DateUpdated == DateTimeOffset.MinValue ? null : link.DateUpdated,
+    ////        UpdatedById = ObjectId.Parse(link.UpdatedByUserId),
+
+    ////        DateDeleted = link.DateDeleted == DateTimeOffset.MinValue ? null : link.DateDeleted,
+    ////    };
+
+    ////    return entity;
+    ////}
 
 
-    internal static Link? Map(LinkEntity? entity)
-    {
-        return entity == null ? null : Map<Link>(entity);
-    }
+    //////internal static LinkDto? Map(LinkEntity? entity)
+    //////{
+    //////    return entity == null ? null : Map<LinkDto>(entity);
+    //////}
 
-    /// <summary>
-    /// Gets an IEnumerable of Link from the collection of LinkEntities.
-    /// If any of the converted LinkEntities ends up being null, then they are discarded from the final results.
-    /// </summary>
-    /// <param name="entities"></param>
-    /// <returns>IEnumerable of non-nullable Link</returns>
-    internal static IEnumerable<Link> Map(IEnumerable<LinkEntity>? entities)
-    {
-        return Map<Link>(entities);
-    }
+    /////// <summary>
+    /////// Gets an IEnumerable of Link from the collection of LinkEntities.
+    /////// If any of the converted LinkEntities ends up being null, then they are discarded from the final results.
+    /////// </summary>
+    /////// <param name="entities"></param>
+    /////// <returns>IEnumerable of non-nullable Link</returns>
+    ////internal static IEnumerable<LinkDto> Map(IEnumerable<LinkEntity>? entities)
+    ////{
+    ////    return Map<LinkDto>(entities);
+    ////}
 
-    internal static T? Map<T>(LinkEntity? entity)
-    {
-        if (typeof(T) != typeof(Link) && typeof(T) != typeof(LinkItem))
-            throw new ArgumentException(string.Format(TYPE_NOT_SUPPORTED_ERROR, typeof(T).Name));
+    ////internal static T? Map<T>(LinkEntity? entity)
+    ////{
+    ////    if (typeof(T) != typeof(LinkDto) && typeof(T) != typeof(LinkItemDto))
+    ////        throw new ArgumentException(string.Format(TYPE_NOT_SUPPORTED_ERROR, typeof(T).Name));
 
-        if (entity is null)
-            return default;
+    ////    if (entity is null)
+    ////        return default;
 
-        Uri.TryCreate(entity.ImageUrl, UriKind.Absolute, out var imgUri);
-        var imgUrl = imgUri?.OriginalString ?? string.Empty;
+    ////    Uri.TryCreate(entity.ImageUrl, UriKind.Absolute, out var imgUri);
+    ////    var imgUrl = imgUri?.OriginalString ?? string.Empty;
 
-        if (!string.IsNullOrWhiteSpace(imgUrl))
-        {
-            //TODO: Do it better
-            if (imgUrl.Contains("//images/nomad-hydra.png"))
-            {
-                imgUrl = imgUrl.Replace("//images/", "/images/");
-            }
-        }
+    ////    if (!string.IsNullOrWhiteSpace(imgUrl))
+    ////    {
+    ////        //TODO: Do it better
+    ////        if (imgUrl.Contains("//images/nomad-hydra.png"))
+    ////        {
+    ////            imgUrl = imgUrl.Replace("//images/", "/images/");
+    ////        }
+    ////    }
 
-        if (typeof(T) == typeof(Link))
-        {
-            var model = new Link(entity.Id.ToString(), entity.Url, entity.SubmittedById.ToString())
-            {
-                Description = entity.Description,
-                Domain = entity.Domain,
-                ImageUrl = imgUrl, //entity.ImageUrl,
-                //IsExcluded = entity.IsExcluded,
-                IsActive = entity.IsActive,
-                IsFlagged = entity.IsFlagged,
-                LikesCount = entity.LikesCount,
-                SavesCount = entity.SavesCount,
-                Tags = Map(entity.Tags).ToList(),
-                Title = entity.Title.Trim(),
+    ////    if (typeof(T) == typeof(LinkDto))
+    ////    {
+    ////        var model = new LinkDto
+    ////        {
+    ////            LinkId = entity.LinkId.ToString(),
+    ////            Url = entity.Url,
 
-                DateCreated = entity.DateCreated,
-                DateUpdated = entity.DateUpdated,
-            };
+    ////            Description = entity.Description,
+    ////            Domain = entity.Domain,
+    ////            ImageUrl = imgUrl,
 
-            return (T)(object)model;
-        }
+    ////            IsActive = entity.IsActive,
+    ////            IsFlagged = entity.IsFlagged,
 
-        if (typeof(T) == typeof(LinkItem))
-        {
-            var model = new LinkItem(entity.Id.ToString(), entity.Url, entity.Title, entity.Description, entity.Domain, entity.ImageUrl, Map(entity.Tags), entity.DateCreated, entity.DateUpdated)
-            {
-                IsActive = entity.IsActive,
-                IsDeleted = entity.IsDeleted,
-                IsFlagged = entity.IsFlagged,
+    ////            TotalLikes = entity.TotalLikes,
+    ////            TotalSaves = entity.TotalSaves,
 
-                Likes = entity.LikesCount,
-                Saves = entity.SavesCount
-            };
+    ////            TagCollection = Map(entity.TagCollection).ToList(),
+    ////            Title = entity.Title.Trim(),
 
-            return (T)(object)model;
-        }
+    ////            DateCreated = entity.DateCreated,
+    ////            CreatedByUserId = entity.CreatedById.ToString(),
 
-        return default;
-    }
+    ////            DateUpdated = entity.DateUpdated,
+    ////            UpdatedByUserId = entity.UpdatedById.ToString(),
 
-    /// <summary>
-    /// Gets an IEnumerable of T (where T is either Link or a LinkItem from the collection of LinkEntities.
-    /// If any of the converted LinkEntities ends up being null, then they are discarded from the final results.
-    /// </summary>
-    /// <param name="entities">The collection of LinkEntities to be mapped to either Links or LinkItems</param>
-    /// <returns>IEnumerable of non-nullable Link</returns>
-    internal static IEnumerable<T> Map<T>(IEnumerable<LinkEntity>? entities)
-    {
-        if (entities == null)
-            return Enumerable.Empty<T>();
+    ////            DateDeleted = entity.DateDeleted,
+    ////            DeletedByUserId = entity.DeletedById.ToString()
+    ////        };
 
-        var entitiesArr = entities.ToArray();
+    ////        return (T)(object)model;
+    ////    }
 
-        if (!entitiesArr.Any())
-            return Enumerable.Empty<T>();
+    ////    if (typeof(T) == typeof(LinkItemDto))
+    ////    {
+    ////        var model = new LinkItemDto(entity.LinkId.ToString(), entity.Url, entity.Title, entity.Description, entity.Domain, entity.ImageUrl, Map(entity.TagCollection), entity.DateCreated, entity.DateUpdated)
+    ////        {
+    ////            IsActive = entity.IsActive,
+    ////            IsDeleted = entity.IsDeleted,
+    ////            IsFlagged = entity.IsFlagged,
 
-        var rslts = new List<T>();
+    ////            Likes = entity.TotalLikes,
+    ////            Saves = entity.TotalSaves
+    ////        };
 
-        foreach (var entity in entitiesArr)
-        {
-            var link = Map<T>(entity);
+    ////        return (T)(object)model;
+    ////    }
 
-            if (link != null)
-                rslts.Add(link);
-        }
+    ////    return default;
+    ////}
 
-        return rslts;
-    }
+    /////// <summary>
+    /////// Gets an IEnumerable of T (where T is either Link or a LinkItem from the collection of LinkEntities.
+    /////// If any of the converted LinkEntities ends up being null, then they are discarded from the final results.
+    /////// </summary>
+    /////// <param name="entities">The collection of LinkEntities to be mapped to either Links or LinkItems</param>
+    /////// <returns>IEnumerable of non-nullable Link</returns>
+    ////internal static IEnumerable<T> Map<T>(IEnumerable<LinkEntity>? entities) where T : class
+    ////{
+    ////    if (entities == null)
+    ////        return Enumerable.Empty<T>();
 
-    internal static LinkTagEntity? Map(LinkTag? tag)
-    {
-        if (tag is null)
-            return null;
+    ////    var entitiesArr = entities.ToArray();
 
-        var entity = new LinkTagEntity(tag.Name, tag.Count);
+    ////    if (!entitiesArr.Any())
+    ////        return Enumerable.Empty<T>();
 
-        return entity;
-    }
+    ////    var rslts = new List<T>();
 
-    internal static IEnumerable<LinkTagEntity> Map(IEnumerable<LinkTag>? tags)
-    {
-        if (tags == null)
-            return Enumerable.Empty<LinkTagEntity>();
+    ////    foreach (var entity in entitiesArr)
+    ////    {
+    ////        var link = Map<T>(entity);
 
-        var tagsArr = tags.ToArray();
+    ////        if (link != null)
+    ////            rslts.Add(link);
+    ////    }
 
-        if (!tagsArr.Any())
-            return Enumerable.Empty<LinkTagEntity>();
+    ////    return rslts;
+    ////}
 
-        var rslts = new List<LinkTagEntity>();
+    //internal static LinkTagEntity? Map(LinkTagDto? tag)
+    //{
+    //    if (tag is null)
+    //        return null;
 
-        foreach (var tag in tagsArr)
-        {
-            var entity = Map(tag);
+    //    var entity = new LinkTagEntity(tag.Name, tag.Count, tag.Weight);
 
-            if (entity != null)
-                rslts.Add(entity);
-        }
+    //    return entity;
+    //}
 
-        return rslts;
-    }
+    //internal static IEnumerable<LinkTagEntity> Map(IEnumerable<LinkTagDto>? tags)
+    //{
+    //    if (tags == null)
+    //        return Enumerable.Empty<LinkTagEntity>();
 
-    internal static LinkTag? Map(LinkTagEntity? entity)
-    {
-        if (entity == null)
-            return null;
+    //    var tagsArr = tags.ToArray();
 
-        var model = new LinkTag(entity.Name, entity.Count, entity.Weight);
+    //    if (!tagsArr.Any())
+    //        return Enumerable.Empty<LinkTagEntity>();
 
-        return model;
-    }
+    //    var rslts = new List<LinkTagEntity>();
 
-    /// <summary>
-    /// Maps a collection of Link Tag Entities to a collection of Link Tag Models
-    /// </summary>
-    /// <param name="entities">The entities to be mapped from</param>
-    /// <returns>
-    /// If entities is null or empty, then an empty IEnumerable of LinkTag is returned.
-    /// Else a collection of Link Tags
-    /// </returns>
-    internal static IEnumerable<LinkTag> Map(IEnumerable<LinkTagEntity>? entities)
-    {
-        if (entities == null)
-            return Enumerable.Empty<LinkTag>();
+    //    foreach (var tag in tagsArr)
+    //    {
+    //        var entity = Map(tag);
 
-        entities = entities.ToList();
+    //        if (entity != null)
+    //            rslts.Add(entity);
+    //    }
 
-        if (!entities.Any())
-            return Enumerable.Empty<LinkTag>();
+    //    return rslts;
+    //}
 
-        var rslts = new List<LinkTag>();
+    //internal static LinkTagDto? Map(LinkTagEntity? entity)
+    //{
+    //    if (entity == null)
+    //        return null;
 
-        foreach (var entity in entities)
-        {
-            var tag = Map(entity);
+    //    var model = new LinkTagDto(entity.Name, entity.Count, entity.Weight);
 
-            if (tag != null)
-                rslts.Add(tag);
-        }
+    //    return model;
+    //}
 
-        return rslts;
-    }
+    ///// <summary>
+    ///// Maps a collection of Link Tag Entities to a collection of Link Tag Models
+    ///// </summary>
+    ///// <param name="entities">The entities to be mapped from</param>
+    ///// <returns>
+    ///// If entities is null or empty, then an empty IEnumerable of LinkTag is returned.
+    ///// Else a collection of Link TagsCollection
+    ///// </returns>
+    //internal static IEnumerable<LinkTagDto> Map(IEnumerable<LinkTagEntity>? entities)
+    //{
+    //    if (entities == null)
+    //        return Enumerable.Empty<LinkTagDto>();
+
+    //    entities = entities.ToList();
+
+    //    if (!entities.Any())
+    //        return Enumerable.Empty<LinkTagDto>();
+
+    //    var rslts = new List<LinkTagDto>();
+
+    //    foreach (var entity in entities)
+    //    {
+    //        var tag = Map(entity);
+
+    //        if (tag != null)
+    //            rslts.Add(tag);
+    //    }
+
+    //    return rslts;
+    //}
 }

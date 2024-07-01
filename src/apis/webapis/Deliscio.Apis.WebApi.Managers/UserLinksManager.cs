@@ -80,9 +80,9 @@ public sealed class UserLinksManager : ManagerBase<UserLinksManager>, IUserLinks
         if (!userLinks.Items.Any())
             return new PagedResults<UserLink>([], pageNo, pageSize, 0);
 
-        var linkIds = userLinks.Items.Select(l => l.LinkId).ToList();
+        var linkIds = userLinks.Items.Select(l => l.LinkId).ToArray();
 
-        var queryLinks = new GetLinksByIdsQuery(linkIds.Select(Guid.Parse).ToArray());
+        var queryLinks = new GetLinksByIdsQuery(linkIds);
         var links = await _mediator.Send(queryLinks, token);
 
         var updatedUserLinks = MergeLinks(userLinks.Items, links).ToList();

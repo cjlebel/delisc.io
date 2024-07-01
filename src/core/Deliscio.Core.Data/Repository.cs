@@ -30,10 +30,12 @@ public abstract class BaseRepositoryWithTypedId<T, TId> : IRepositoryWithTypedId
     //protected DbSet<T> DbSet { get; }
     public abstract void Add(T entity);
 
+    [Obsolete("Do not use")]
     public abstract Task AddAsync(T entity, CancellationToken token = default);
 
     public abstract void AddRange(IEnumerable<T> entities, CancellationToken token = default);
 
+    [Obsolete("Do not use")]
     public abstract Task AddRangeAsync(IEnumerable<T> entities, CancellationToken token = default);
     public abstract Task<(IEnumerable<T> Results, int TotalPages, int TotalCount)> FindAsync(Expression<Func<T, bool>> predicate, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
 
@@ -56,16 +58,20 @@ public abstract class BaseRepositoryWithTypedId<T, TId> : IRepositoryWithTypedId
 
     public abstract void Remove(T entity, CancellationToken token = default);
 
+    [Obsolete("Do not use")]
     public abstract Task<bool> RemoveAsync(TId id, CancellationToken token = default);
 
+    [Obsolete("Do not use")]
     public abstract Task<bool> RemoveAsync(T entity, CancellationToken token = default);
 
     public abstract void RemoveRange(IEnumerable<TId> ids, CancellationToken token = default);
 
     public abstract void RemoveRange(IEnumerable<T> entities, CancellationToken token = default);
 
+    [Obsolete("Do not use")]
     public abstract Task RemoveRangeAsync(IEnumerable<TId> ids, CancellationToken token = default);
 
+    [Obsolete("Do not use")]
     public abstract Task RemoveRangeAsync(IEnumerable<T> entities, CancellationToken token = default);
 
     public abstract void Save();
@@ -73,5 +79,6 @@ public abstract class BaseRepositoryWithTypedId<T, TId> : IRepositoryWithTypedId
 
     public abstract void Update(T entity, CancellationToken token = default);
 
-    public abstract Task UpdateAsync(T entity, CancellationToken token = default);
+    [Obsolete("Do not use")]
+    public abstract Task<long> UpdateAsync(T entity, CancellationToken token = default);
 }

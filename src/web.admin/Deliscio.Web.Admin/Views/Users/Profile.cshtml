@@ -1,0 +1,87 @@
+@using Deliscio.Modules.Authentication.Common.Models
+@model UserProfileViewModel
+
+@{
+    var user = Model.User;
+    var profile = Model.UserProfile;
+    var roles = Model.Roles;
+
+    var availableRoles = ViewData["AvailableRoles"] as Role[] ?? Array.Empty<Role>();
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>User: @Model.UserProfile.DisplayName</h2>
+
+    </div>
+</div>
+
+<div class="row">
+
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">User Profile</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <td>Username</td>
+                                <td>@user.Username</td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>@user.Email</td>
+                            </tr>
+                            <tr>
+                                <td>Display Name</td>
+                                <td>@profile.DisplayName</td>
+                            </tr>
+                            <tr>
+                                <td>First Name</td>
+                                <td>@profile.FirstName</td>
+                            </tr>
+                            <tr>
+                                <td>Last Name</td>
+                                <td>@profile.LastName</td>
+                            </tr>
+                            <tr>
+                                <td>Roles</td>
+                                <td>@string.Join(',', user.Roles.Select(r => r))</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Roles</h2>
+        <AntiForgeryToken />
+        <div class="row">
+            <div class="col">
+                <div class="d-flex flex-md-column justify-content-evenly gap-1 px-1 py-2">
+                    @if (availableRoles.Any())
+                    {
+                        foreach (var role in availableRoles)
+                        {
+                            <label>
+                                <input type="checkbox" name="roles" value="@role.Id" @(user.Roles.Any(r => r == role.Name) ? "checked" : "") />
+                                @role.Name
+                            </label>
+                        }
+                    }
+
+                    <button id="btn-update-roles" class="btn btn-primary" type="submit">Update Roles</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

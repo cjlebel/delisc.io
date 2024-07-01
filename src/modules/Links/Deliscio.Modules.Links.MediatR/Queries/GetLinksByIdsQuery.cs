@@ -1,24 +1,17 @@
 using Ardalis.GuardClauses;
-using Deliscio.Modules.Links.Common.Models;
+using Deliscio.Modules.Links.Application.Dtos;
 using MediatR;
 
 namespace Deliscio.Modules.Links.MediatR.Queries;
 
-public sealed record GetLinksByIdsQuery : IRequest<IEnumerable<LinkItem>>
+public sealed record GetLinksByIdsQuery : IRequest<IEnumerable<LinkItemDto>>
 {
-    public Guid[] Ids { get; init; }
-
-    public GetLinksByIdsQuery(Guid[] ids)
-    {
-        Guard.Against.NullOrEmpty(ids);
-
-        Ids = ids;
-    }
+    public string[] Ids { get; init; }
 
     public GetLinksByIdsQuery(string[] ids)
     {
         Guard.Against.NullOrEmpty(ids);
 
-        Ids = ids.Select(Guid.Parse).ToArray();
+        Ids = ids;
     }
 }

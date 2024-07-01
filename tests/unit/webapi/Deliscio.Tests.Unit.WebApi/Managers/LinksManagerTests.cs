@@ -148,7 +148,7 @@ public class LinksManagerTests
         (bool IsSuccess, string Message, QueuedLink Link) expected = (true, $"Success Message: {now}", new QueuedLink
         {
             Url = url,
-            SubmittedById = Guid.Parse(submittedByUserId),
+            SubmittedById = submittedByUserId,
             Title = usersTitle,
             Description = usersDescription,
             Tags = tags,

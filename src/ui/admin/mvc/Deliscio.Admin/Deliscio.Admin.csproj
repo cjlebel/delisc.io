@@ -44,6 +44,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Remove="Controllers\LinksController.cs" />
+      <Compile Remove="Controllers\RolesController.cs" />
+      <Compile Remove="Controllers\UsersController.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Content Remove="compilerconfig.json" />
         <Content Remove="wwwroot\scss\styles.scss" />
         <Content Remove="wwwroot\scss\_variables.scss" />

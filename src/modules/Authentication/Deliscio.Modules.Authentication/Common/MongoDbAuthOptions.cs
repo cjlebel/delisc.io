@@ -22,6 +22,4 @@ public record MongoDbAuthOptions
     /// The name of the database.
     /// </value>
     public string DatabaseName { get; set; } = string.Empty;
-
-    public string LoginPath { get; set; } = "/account/login";
 }

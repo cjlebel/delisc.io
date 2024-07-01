@@ -6,7 +6,7 @@ namespace Deliscio.Modules.Authentication.Mappers;
 
 public static class Mapper
 {
-    public static User? Map(AuthUser? authUser)
+    public static User? Map(AuthUserEntity? authUser)
     {
         if (authUser is null)
             return default;
@@ -24,9 +24,9 @@ public static class Mapper
         };
     }
 
-    public static IEnumerable<User> Map(IEnumerable<AuthUser>? authUsers)
+    public static IEnumerable<User> Map(IEnumerable<AuthUserEntity>? authUsers)
     {
-        var arr = authUsers?.ToArray() ?? Array.Empty<AuthUser>();
+        var arr = authUsers?.ToArray() ?? Array.Empty<AuthUserEntity>();
 
         if (!arr.Any())
             yield break;
@@ -40,7 +40,7 @@ public static class Mapper
         }
     }
 
-    public static Role? Map(AuthRole? authRole)
+    public static Role? Map(AuthRoleEntity? authRole)
     {
         if (authRole is null)
             return default;
@@ -52,9 +52,9 @@ public static class Mapper
         };
     }
 
-    public static IEnumerable<Role> Map(IEnumerable<AuthRole>? authRoles)
+    public static IEnumerable<Role> Map(IEnumerable<AuthRoleEntity>? authRoles)
     {
-        var arr = authRoles?.ToArray() ?? Array.Empty<AuthRole>();
+        var arr = authRoles?.ToArray() ?? Array.Empty<AuthRoleEntity>();
 
         if (!arr.Any())
             yield break;

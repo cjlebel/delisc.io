@@ -1,11 +1,11 @@
 using System.Security.Cryptography;
 using System.Text;
 using Deliscio.Core.Configuration;
-using Deliscio.Web.Mvc;
+using Deliscio.Web.Site;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 
-namespace Deliscio.Tests.Functional.Web.Mvc;
+namespace Deliscio.Tests.Functional.Web.Site;
 
 public class BaseWebFunctionalTests
 {

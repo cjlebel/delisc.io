@@ -31,14 +31,15 @@ public sealed class UserLinksRepository : MongoRepository<UserLinkEntity>, IUser
     /// <returns>
     /// A UserLinkEntity if one exists for this user, otherwise null.
     /// </returns>
-    public async Task<UserLinkEntity?> GetAsync(Guid userId, Guid linkId, CancellationToken token = default)
+    public async Task<UserLinkEntity?> GetAsync(string userId, string linkId, CancellationToken token = default)
     {
-        Guard.Against.NullOrEmpty(userId);
-        Guard.Against.NullOrEmpty(linkId);
+        Guard.Against.NullOrWhiteSpace(userId);
+        Guard.Against.NullOrWhiteSpace(linkId);
 
-        var linkObjectId = ObjectId.Parse(linkId.ToString());
+        var linkObjectId = ObjectId.Parse(linkId);
+        var userObjectId = ObjectId.Parse(userId);
 
-        return await FirstOrDefaultAsync(x => x.UserId == userId && x.Id == linkObjectId, token);
+        return await FirstOrDefaultAsync(x => x.UserId == userObjectId && x.Id == linkObjectId, token);
     }
 
     /// <summary>
@@ -49,19 +50,27 @@ public sealed class UserLinksRepository : MongoRepository<UserLinkEntity>, IUser
     /// <param name="pageSize">The size of the page of results. This is the max.</param>
     /// <param name="token"></param>
     /// <returns></returns>
-    public async Task<(IEnumerable<UserLinkEntity> Results, int TotalPages, int TotalCount)> GetAsync(Guid userId, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async Task<(IEnumerable<UserLinkEntity> Results, int TotalPages, int TotalCount)> GetAsync(string userId, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
-        Guard.Against.NullOrEmpty(userId);
+        Guard.Against.NullOrWhiteSpace(userId);
 
-        return await FindAsync(x => x.UserId == userId, pageNo, pageSize, token);
+        var userObjectId = ObjectId.Parse(userId);
+
+        return await FindAsync(x => x.UserId == userObjectId, pageNo, pageSize, token);
     }
 
-    public async Task<(IEnumerable<UserLinkEntity> Results, int TotalPages, int TotalCount)> GetByTagsAsync(Guid userId, IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
+    public async Task<(IEnumerable<UserLinkEntity> Results, int TotalPages, int TotalCount)> GetByTagsAsync(string userId, IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default)
     {
+        Guard.Against.NullOrWhiteSpace(userId);
+        var userObjectId = ObjectId.Parse(userId);
+        
         var arrTags = tags as string[] ?? Array.Empty<string>();
 
         if (!arrTags.Any())
             return (Enumerable.Empty<UserLinkEntity>(), 0, 0);
+
+        throw new NotImplementedException();
+        // Need to filter by user id
 
         var filter =
             Builders<UserLinkEntity>.Filter.All(link => link.Tags.Select(tag => tag.Name), arrTags);

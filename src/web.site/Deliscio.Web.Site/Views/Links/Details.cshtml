@@ -1,0 +1,26 @@
+@model Deliscio.Web.Site.ViewModels.Links.LinksDetailsPageViewModel
+
+@{
+    ViewBag.PageTitle = Model.PageTitle;
+    ViewBag.PageDescription = Model.PageDescription;
+    ViewBag.CanonicalUrl = Model.CanonicalUrl;
+}
+
+<div id="links-details-page" class="">
+    <h1>@Model.Title</h1>
+    <div>
+        <img src="@Model.ImageUrl" alt="@Model.Title" data-src="@Model.ImageUrl" />
+    </div>
+    <p>@Model.Description</p>
+    <a href="@Model.Url" class="btn btn-warning" title="@Model.Title" target="_blank">Go to original content</a>
+
+    @if (Model.Tags.Count > 0)
+    {
+        <div class="tags">
+            @foreach (var tag in Model.Tags)
+            {
+                <a href="/links?t=@tag.Name" class="badge bg-primary">@tag.Name</a>
+            }
+        </div>
+    }
+</div>

@@ -1,14 +1,14 @@
 using Ardalis.GuardClauses;
 using Deliscio.Common.Abstracts;
-using Deliscio.Core.Data.Mongo;
 using Deliscio.Core.Models;
+using Deliscio.Modules.UserProfiles.Common.Errors;
 using Deliscio.Modules.UserProfiles.Common.Interfaces;
 using Deliscio.Modules.UserProfiles.Common.Models;
+using Deliscio.Modules.UserProfiles.Common.Models.Requests;
 using Deliscio.Modules.UserProfiles.Data;
 using Deliscio.Modules.UserProfiles.Mappers;
 using FluentResults;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Structurizr.Annotations;
 
 namespace Deliscio.Modules.UserProfiles;
@@ -39,35 +39,40 @@ public sealed class UserProfilesService : ServiceBase, IUserProfilesService
         _logger = logger;
     }
 
-    public async Task<string> AddAsync(UserProfile userProfile, CancellationToken token = default)
+    public async Task<Result<UserProfile>> AddAsync(CreateUserProfileRequest request, CancellationToken token = default)
     {
-        Guard.Against.Null(userProfile);
+        Guard.Against.Null(request);
 
-        var entity = UserProfileEntity.Create(Guid.Parse(userProfile.Id), userProfile.Email, userProfile.DisplayName);
+        var entity = UserProfileEntity.Create(request.UserId, request.Email, request.DisplayName, request.DateRegistered);
 
         try
         {
             await _repository.AddAsync(entity, token);
+
+            var userProfile = Mapper.Map(entity);
+
+            if (userProfile is null)
+                return Result.Fail(new UserProfileNotCreated());
+
+            return Result.Ok(userProfile);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error adding user profile", userProfile);
-            throw;
+            _logger.LogError(e, "Error adding user profile", entity);
+            return Result.Fail(new UserProfileNotCreated() { Reasons = { new Error(e.Message) } });
         }
-
-        return entity.Id.ToString();
     }
 
-    public async Task<Results<UserProfile?>> GetAsync(string userId, CancellationToken token = default)
+    public async Task<Result<UserProfile?>> GetAsync(string userId, CancellationToken token = default)
     {
         Guard.Against.NullOrWhiteSpace(userId);
 
         var user = await _repository.GetAsync(userId, token);
 
         if (user is null)
-            return Results<UserProfile?>.Fail("User not found");
+            return Result.Fail(new UserProfileNotFound());
 
-        return Results<UserProfile?>.Ok(Mapper.Map(user));
+        return Result.Ok(Mapper.Map(user));
     }
 
     /// <summary>
@@ -89,6 +94,6 @@ public sealed class UserProfilesService : ServiceBase, IUserProfilesService
 
         var items = Mapper.Map<UserProfileItem>(rslts.Results);
 
-        return new PagedResults<UserProfileItem>(items, pageNo, pageNo, rslts.TotalCount);
+        return new PagedResults<UserProfileItem>(items, pageNo, pageNo, rslts.TotalCount, offset: 0);
     }
 }

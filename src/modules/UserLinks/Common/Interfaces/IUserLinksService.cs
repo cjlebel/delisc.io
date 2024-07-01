@@ -5,9 +5,9 @@ namespace Deliscio.Modules.UserLinks.Common.Interfaces;
 
 public interface IUserLinksService
 {
-    Task<Guid> AddAsync(Guid userId, Guid linkId, string title = "", string[]? tags = default, bool isPrivate = false, CancellationToken token = default);
+    Task<string> AddAsync(string userId, string linkId, string title = "", string[]? tags = default, bool isPrivate = false, CancellationToken token = default);
 
-    Task<UserLink?> GetAsync(Guid userId, Guid linkId, CancellationToken token = default);
+    Task<UserLink?> GetAsync(string userId, string linkId, CancellationToken token = default);
 
     /// <summary>
     /// Gets a page of user links that belong to the user.
@@ -17,7 +17,7 @@ public interface IUserLinksService
     /// <param name="pageSize"></param>
     /// <param name="token"></param>
     /// <returns></returns>
-    Task<PagedResults<UserLink>> GetAsync(Guid userId, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
+    Task<PagedResults<UserLink>> GetAsync(string userId, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
 
     /// <summary>
     /// Gets a page of user links that belong to the provided domain.
@@ -28,7 +28,7 @@ public interface IUserLinksService
     /// <param name="pageSize"></param>
     /// <param name="token"></param>
     /// <returns></returns>
-    Task<PagedResults<UserLink>> GetByDomainAsync(Guid userId, string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
+    Task<PagedResults<UserLink>> GetByDomainAsync(string userId, string domain, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
 
     /// <summary>
     /// Gets a page of user links that are related to the provided tags.
@@ -39,7 +39,7 @@ public interface IUserLinksService
     /// <param name="pageSize"></param>
     /// <param name="token"></param>
     /// <returns></returns>
-    Task<PagedResults<UserLink>> GetByTagsAsync(Guid userId, IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
+    Task<PagedResults<UserLink>> GetByTagsAsync(string userId, IEnumerable<string> tags, int pageNo = 1, int pageSize = 25, CancellationToken token = default);
 
     /// <summary>
     /// Gets a list of most popular tags for this user.
@@ -50,5 +50,5 @@ public interface IUserLinksService
     /// <param name="tags"></param>
     /// <param name="token"></param>
     /// <returns></returns>
-    Task<UserLinkTag> GetTagAsync(Guid userId, int count = 25, string[]? tags = default, CancellationToken token = default);
+    Task<UserLinkTag> GetTagAsync(string userId, int count = 25, string[]? tags = default, CancellationToken token = default);
 }

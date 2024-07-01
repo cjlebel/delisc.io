@@ -28,10 +28,6 @@
         <ProjectReference Include="..\..\..\core\Deliscio.Core\Deliscio.Core.csproj" />
         <ProjectReference Include="..\Common\Deliscio.Modules.UserLinks.Common.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Commands\Handlers\" />
-    </ItemGroup>
     <!--<Target Name="GitVersion" BeforeTargets="BeforeBuild">
          <Exec Command="dotnet gitversion /output buildserver" /> 
     </Target>-->

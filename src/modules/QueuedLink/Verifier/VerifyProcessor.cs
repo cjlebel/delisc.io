@@ -21,10 +21,10 @@ public class VerifyProcessor : IVerifyProcessor
     private const string VERIFYING_LINK_ALREADY_EXISTS_MESSAGE = "{time}: Link already exists for: {url}";
 
 
-    // Simple list of invalid domains.
+    // Create list of invalid domains.
     private readonly string[] _invalidDomains;
 
-    // Simple list of valid protocols.
+    // Create list of valid protocols.
     private readonly string[] _validProtocols = { "http:", "https:" };
 
     public VerifyProcessor(IOptions<QueuedLinksSettingsOptions> options, IMediator mediator, ILogger<VerifyProcessor> logger)
@@ -73,7 +73,7 @@ public class VerifyProcessor : IVerifyProcessor
         if (existingLink is not null)
         {
             _logger.LogInformation(VERIFYING_LINK_ALREADY_EXISTS_MESSAGE, DateTimeOffset.Now, link.Url);
-            link = link with { LinkId = new Guid(existingLink.Id), DateLastFetched = existingLink.DateUpdated, State = QueuedStates.Exists };
+            link = link with { LinkId = existingLink.Id, DateLastFetched = existingLink.DateUpdated, State = QueuedStates.Exists };
 
             return (true, "Link already exists", link);
         }
@@ -116,7 +116,7 @@ public class VerifyProcessor : IVerifyProcessor
             "ftp"
         };
 
-        if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
+        if (Uri.TryCreate(url, UriKind.Absolute, out Uri? uri))
         {
             string host = uri.Host.ToLower();
 

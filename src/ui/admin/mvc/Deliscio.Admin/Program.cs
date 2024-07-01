@@ -2,22 +2,14 @@ using System.Reflection;
 using Deliscio.Apis.WebApi.Common.Clients;
 using Deliscio.Core.Configuration;
 using Deliscio.Core.Data.Mongo;
-using Deliscio.Core.Models;
 using Deliscio.Modules.Authentication;
 using Deliscio.Modules.Authentication.Common;
-using Deliscio.Modules.Links;
-using Deliscio.Modules.Links.Common.Interfaces;
-using Deliscio.Modules.Links.Common.Models;
-using Deliscio.Modules.Links.Data.Mongo;
-using Deliscio.Modules.Links.MediatR.Commands;
-using Deliscio.Modules.Links.MediatR.Queries;
-using Deliscio.Modules.Links.MediatR.Queries.Handlers;
 using Deliscio.Modules.UserProfiles;
 using Deliscio.Modules.UserProfiles.Common.Interfaces;
 using Deliscio.Modules.UserProfiles.Common.Models;
 using Deliscio.Modules.UserProfiles.Data;
 using Deliscio.Modules.UserProfiles.MediatR.Queries;
-using MediatR;
+//using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,30 +61,30 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddSingleton<IUserProfilesService, UserProfilesService>();
 builder.Services.AddSingleton<IUserProfilesRepository, UserProfilesRepository>();
-builder.Services.AddSingleton<IRequestHandler<GetUserProfileQuery, FluentResults.Result<UserProfile?>>, GetUserProfileQueryHandler>();
+//builder.Services.AddSingleton<IRequestHandler<GetUserProfileQuery, FluentResults.Result<UserProfile?>>, GetUserProfileQueryHandler>();
 
 //builder.Services.AddSingleton<ILinksManager, LinksManager>();
-builder.Services.AddSingleton<ILinksService, LinksService>();
-builder.Services.AddSingleton<ILinksAdminService, LinksAdminService>();
+//builder.Services.AddSingleton<ILinksService, LinksService>();
+//builder.Services.AddSingleton<ILinksAdminService, LinksAdminService>();
 
-builder.Services.AddSingleton<ILinksRepository, LinksRepository>();
+//builder.Services.AddSingleton<ILinksRepository, LinksRepository>();
 
-builder.Services.AddSingleton<IRequestHandler<FindLinksAdminQuery, PagedResults<LinkItem>>, FindLinksAdminQueryHandler>();
+//builder.Services.AddSingleton<IRequestHandler<FindLinksAdminQuery, PagedResults<LinkItem>>, FindLinksAdminQueryHandler>();
 
-builder.Services.AddSingleton<IRequestHandler<GetLinkByIdQuery, Link?>, GetLinkByIdQueryHandler>();
-builder.Services.AddSingleton<IRequestHandler<GetLinkByUrlQuery, Link?>, GetLinkByUrlQueryHandler>();
+//builder.Services.AddSingleton<IRequestHandler<GetLinkByIdQuery, Link?>, GetLinkByIdQueryHandler>();
+//builder.Services.AddSingleton<IRequestHandler<GetLinkByUrlQuery, Link?>, GetLinkByUrlQueryHandler>();
 
-builder.Services.AddSingleton<IRequestHandler<GetLinksByIdsQuery, IEnumerable<LinkItem>>, GetLinksByIdsQueryHandler>();
+//builder.Services.AddSingleton<IRequestHandler<GetLinksByIdsQuery, IEnumerable<LinkItem>>, GetLinksByIdsQueryHandler>();
 
-builder.Services.AddSingleton<IRequestHandler<GetLinksByDomainQuery, PagedResults<LinkItem>>, GetLinksByDomainQueryHandler>();
-builder.Services.AddSingleton<IRequestHandler<GetLinksByTagsQuery, PagedResults<LinkItem>>, GetLinksByTagsQueryHandler>();
-builder.Services.AddSingleton<IRequestHandler<GetLinkRelatedLinksQuery, LinkItem[]>, GetLinkRelatedLinksQueryHandler>();
-builder.Services.AddSingleton<IRequestHandler<GetRelatedTagsByTagsQuery, LinkTag[]>, GetRelatedTagsByTagsQueryHandler>();
+//builder.Services.AddSingleton<IRequestHandler<GetLinksByDomainQuery, PagedResults<LinkItem>>, GetLinksByDomainQueryHandler>();
+//builder.Services.AddSingleton<IRequestHandler<GetLinksByTagsQuery, PagedResults<LinkItem>>, GetLinksByTagsQueryHandler>();
+//builder.Services.AddSingleton<IRequestHandler<GetLinkRelatedLinksQuery, LinkItem[]>, GetLinkRelatedLinksQueryHandler>();
+//builder.Services.AddSingleton<IRequestHandler<GetRelatedTagsByTagsQuery, LinkTag[]>, GetRelatedTagsByTagsQueryHandler>();
 
-builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkCommandHandler>();
-builder.Services.AddSingleton<IRequestHandler<SubmitLinkByUserCommand, Guid>, SubmitLinkByUserCommandHandler>();
-builder.Services.AddSingleton<IRequestHandler<DeleteLinkCommand, bool>, DeleteLinkCommandHandler>();
-builder.Services.AddSingleton<IRequestHandler<EditLinkCommand, (bool IsSuccess, string Message)>, EditLinkCommandHandler>();
+//builder.Services.AddSingleton<IRequestHandler<AddLinkCommand, Guid>, AddLinkCommandHandler>();
+//builder.Services.AddSingleton<IRequestHandler<SubmitLinkByUserCommand, Guid>, SubmitLinkByUserCommandHandler>();
+//builder.Services.AddSingleton<IRequestHandler<DeleteLinkCommand, bool>, DeleteLinkCommandHandler>();
+//builder.Services.AddSingleton<IRequestHandler<EditLinkCommand, (bool IsSuccess, string Message)>, EditLinkCommandHandler>();
 
 var app = builder.Build();
 

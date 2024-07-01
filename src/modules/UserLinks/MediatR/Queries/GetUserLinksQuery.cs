@@ -7,7 +7,7 @@ namespace Deliscio.Modules.Links.MediatR.Queries;
 
 public sealed record GetUserLinksQuery : IRequest<PagedResults<UserLink>>
 {
-    public Guid UserId { get; init; }
+    public string UserId { get; init; }
     public int PageNo { get; init; }
 
     public int PageSize { get; init; }
@@ -18,7 +18,7 @@ public sealed record GetUserLinksQuery : IRequest<PagedResults<UserLink>>
         Guard.Against.NegativeOrZero(pageNo);
         Guard.Against.NegativeOrZero(pageSize);
 
-        UserId = Guid.Parse(userId);
+        UserId = userId;
 
         PageNo = pageNo;
         PageSize = pageSize;

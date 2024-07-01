@@ -1,0 +1,35 @@
+{
+   "compilerOptions": {
+      "baseUrl": "./wwwroot",
+      "paths": {
+         "@images/*": ["imgs/*"],
+         "@apis/*": ["tsx/apis/*"],
+         "@components/*": ["tsx/components/*"],
+         "@pages/*": ["tsx/pages/*"],
+         "@utils/*": ["tsx/utils/*"],
+         "@/*": ["tsx/*"]
+      },
+      "diagnostics": true,
+      "target": "es2022",
+      "lib": ["dom", "dom.iterable", "esnext"],
+      "allowJs": true,
+      "skipLibCheck": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "strict": true,
+      "forceConsistentCasingInFileNames": true,
+      "noFallthroughCasesInSwitch": true,
+      "module": "ES2022",
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "isolatedModules": true,
+      "noEmit": true,
+      "jsx": "react-jsx",
+      "outDir": "wwwroot/src/client"
+   },
+   "include": ["wwwroot/tsx", "eslint.config.js"],
+   "exclude": [
+      "node_modules", // Exclude the 'node_modules' directory
+      "**/*.spec.ts" // Exclude all files with the '.spec.ts' extension
+   ]
+}

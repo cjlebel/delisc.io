@@ -35,7 +35,7 @@ public sealed class BacklogItem
 
     public DateTimeOffset DateCreated { get; set; }
 
-    public DateTimeOffset DateUpdated { get; set; }
+    public DateTimeOffset? DateUpdated { get; set; }
 
     public string CreatedById { get; set; }
 
@@ -49,14 +49,14 @@ public sealed class BacklogItem
         CreatedById = createdById;
     }
 
-    public BacklogItem(Guid id, string url, string title, Guid createdById, DateTimeOffset dateCreated,
-        DateTimeOffset dateUpdated, bool isProcessed = false) : this(id.ToString(), url, title, createdById.ToString(),
-        dateCreated, dateUpdated, isProcessed)
-    {
-    }
+    // public BacklogItem(Guid id, string url, string title, Guid createdById, DateTimeOffset dateCreated,
+    //     DateTimeOffset dateUpdated, bool isProcessed = false) : this(id.ToString(), url, title, createdById.ToString(),
+    //     dateCreated, dateUpdated, isProcessed)
+    // {
+    // }
 
     public BacklogItem(string id, string url, string title, string createdById, DateTimeOffset dateCreated,
-        DateTimeOffset dateUpdated, bool isProcessed = false)
+        DateTimeOffset? dateUpdated, bool isProcessed = false)
     {
         if (!Guid.TryParse(id, out var newId))
             throw new ArgumentNullException(nameof(id));
@@ -81,18 +81,6 @@ public sealed class BacklogItem
     /// <returns>A an instance of a New backlog item</returns>
     public static BacklogItem Create(string url, string title, string createdById)
     {
-        return Create(url, title, Guid.Parse(createdById));
-    }
-
-    /// <summary>
-    /// Creates a instance of a NEW BackLink (Id is 0).
-    /// </summary>
-    /// <param name="title">The title of the link</param>
-    /// <param name="url">The url of the link</param>
-    /// <param name="createdById">The id of the user who is creating the link</param>
-    /// <returns>A an instance of a New backlog item</returns>
-    public static BacklogItem Create(string url, string title, Guid createdById)
-    {
-        return new BacklogItem(Guid.Empty, url, title, createdById, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, false);
+        return new BacklogItem(string.Empty, url, title, createdById, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, false);
     }
 }

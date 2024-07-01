@@ -1,0 +1,52 @@
+@using Deliscio.Modules.Authentication.Common.Models
+
+@{
+    ViewBag.Title = "Roles";
+
+    var availableRoles = ViewData["AvailableRoles"] as Role[] ?? Array.Empty<Role>();
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Roles</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (!availableRoles.Any())
+                            {
+                                <tr>
+                                    <td colspan="4" class="alert alert-danger">
+                                        <strong>Error:</strong> @Model.Reasons.FirstOrDefault()?.Message ?? "An error occurred"
+                                    </td>
+                                </tr>
+                            }
+
+                            @foreach (var role in availableRoles)
+                            {
+                                <tr>
+                                    <td>@role.Name</td>
+                                    <td>
+                                        @* <a href="@Url.Action("Edit", new { id = role.id })" class="btn btn-primary btn-sm">Edit</a>
+                                    <a href="@Url.Action("Delete", new { id = role.id })" class="btn btn-danger btn-sm">Delete</a> *@
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

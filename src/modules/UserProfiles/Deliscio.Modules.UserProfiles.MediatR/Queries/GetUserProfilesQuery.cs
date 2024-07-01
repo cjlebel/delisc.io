@@ -43,9 +43,9 @@ public class GetUserProfileItemsQueryHandler : IRequestHandler<GetUserProfilesQu
         _service = service;
     }
 
-    public async Task<Result<PagedResults<UserProfileItem>>> Handle(GetUserProfilesQuery command, CancellationToken token)
+    public async Task<Result<PagedResults<UserProfileItem>>> Handle(GetUserProfilesQuery command, CancellationToken cancellationToken)
     {
-        var results = await _service.SearchAsync(command.DisplayName, command.Email, command.PageNo, command.PageSize, token);
+        var results = await _service.SearchAsync(command.DisplayName, command.Email, command.PageNo, command.PageSize, cancellationToken);
 
         return results;
     }

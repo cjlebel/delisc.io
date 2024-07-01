@@ -1,0 +1,20 @@
+@model Deliscio.Web.Site.ViewModels.Models.Tags.TagModel
+
+@if (!string.IsNullOrWhiteSpace(Model.Name))
+{
+    // Font size cannot be less than 0.8rem
+    var fontSize = Model.Weight >= 0.0001 ?
+        1 + Model.Weight * 5 :
+        0.8f;
+
+    var tagCss = $"tag tag-{Model.Id}";
+    var tagTitle = $"{Model.Name} Tag";
+
+    <span key="@Model.Name" class="@tagCss">
+        <a href="@Model.Href"
+           style="font-size: @fontSize"
+           title="@tagTitle">
+            @Model.Name
+        </a>
+    </span>
+}

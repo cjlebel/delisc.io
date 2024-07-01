@@ -12,12 +12,13 @@ internal static class Mapper
         if (userProfile is null)
             return default;
 
-        return new UserProfileEntity(Guid.Parse(userProfile.Id), userProfile.Email, userProfile.DisplayName)
+        return new UserProfileEntity(userProfile.Id, userProfile.Email, userProfile.DisplayName, userProfile.DateRegistered)
         {
             FirstName = userProfile.FirstName,
             ImageUrl = userProfile.ImageUrl,
             LastName = userProfile.LastName,
-            Location = userProfile.Location
+            Location = userProfile.Location,
+            DateRegistered = userProfile.DateRegistered,
         };
     }
 
@@ -26,12 +27,13 @@ internal static class Mapper
         if (entity is null)
             return default;
 
-        return new UserProfile(entity.Id.ToString(), entity.Email, entity.DisplayName)
+        return new UserProfile(entity.Id.ToString(), entity.Email, entity.DisplayName, entity.DateRegistered)
         {
             FirstName = entity.FirstName,
             ImageUrl = entity.ImageUrl,
             LastName = entity.LastName,
-            Location = entity.Location
+            Location = entity.Location,
+            DateRegistered = entity.DateRegistered,
         };
     }
 

@@ -9,7 +9,7 @@ public record User
 
     public string Email { get; init; }
 
-    public Role[] Roles { get; set; } = [];
+    public string[] Roles { get; set; } = [];
 
     public bool IsAdmin { get; set; } = false;
 

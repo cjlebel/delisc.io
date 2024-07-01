@@ -8,12 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="MediatR\Queries\**" />
-	  <EmbeddedResource Remove="MediatR\Queries\**" />
-	  <None Remove="MediatR\Queries\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <PackageReference Include="AspNetCore.Identity.MongoDbCore" Version="3.1.2" />
 	  <PackageReference Include="MediatR" Version="12.2.0" />
 	  <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
@@ -25,7 +19,7 @@
 	  <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
 	  <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
 	  <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="8.0.0" />
-	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.23.1.88495">
+	  <PackageReference Include="SonarAnalyzer.CSharp" Version="9.25.0.90414">
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
@@ -41,6 +35,10 @@
 	  <Reference Include="Microsoft.AspNetCore.Identity">
 	    <HintPath>..\..\..\..\..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\7.0.10\Microsoft.AspNetCore.Identity.dll</HintPath>
 	  </Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Common\Errors\" />
 	</ItemGroup>
 
 </Project>

@@ -1,0 +1,27 @@
+@using Deliscio.Web.Site.ViewModels.Models.Tags
+
+@model TagsModel
+
+@{
+    var tags = Model.Tags?.ToList() ?? new List<TagModel>();
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.Title))
+{
+    <h2>Tag Cloud</h2>
+}
+
+<div id="tag-cloud" class="w-100">
+    @for (var i = 0; i < tags.Count; i++)
+    {
+        var idx = (i % 10) + 1;
+        var tag = tags[i];
+        var name = tag.Name.Replace(" ", "-");
+        var fontSize = $"{(tag.Weight >= 0.0001 ? 1 + tag.Weight * 5 : 0.8f)}rem";
+        var css = $"tag tag-{idx}";
+
+        <span class="tag tag-@idx">
+            <a href="@tag.Href" data-count="@tag.Count" tag-weight="@tag.Weight" style="font-size: @fontSize">@tag.Name</a>
+        </span>
+    }
+</div>

@@ -31,30 +31,31 @@ public class UsersManager : ManagerBase<UsersManager>, IUsersManager
 
     public async Task<SignInResponse> SignInAsync(SignInRequest request)
     {
-        var signinResponse = new SignInResponse();
+        throw new NotImplementedException();
+        //var signinResponse = new SignInResponse();
 
-        var signinCommand = new LoginCommand(request.EmailOrUserName, request.Password);
+        //var signinCommand = new LoginCommand(request.EmailOrUserName, request.Password);
 
-        var signinResult = await _mediator.Send(signinCommand);
+        //var signinResult = await _mediator.Send(signinCommand);
 
-        if (!signinResult.IsSuccess || signinResult.Value == null)
-        {
-            signinResponse.IsSuccess = false;
-            //signinResponse.Message = signinResult.Errors;
+        //if (!signinResult.IsSuccess || signinResult.Value == null)
+        //{
+        //    signinResponse.IsSuccess = false;
+        //    //signinResponse.Message = signinResult.Errors;
 
-            return signinResponse;
-        }
+        //    return signinResponse;
+        //}
 
-        var user = signinResult.Value;
+        //var user = signinResult.Value;
 
-        return new SignInResponse
-        {
-            IsSuccess = true,
-            Message = string.Empty,
-            User = new SignInResponse.UserInfo(user.Id.ToString(),
-                user.UserName ?? string.Empty, user.Email ?? string.Empty,
-                new[] { "User" })
-        };
+        //return new SignInResponse
+        //{
+        //    IsSuccess = true,
+        //    Message = string.Empty,
+        //    User = new SignInResponse.UserInfo(user.Id.ToString(),
+        //        user.UserName ?? string.Empty, user.Email ?? string.Empty,
+        //        new[] { "User" })
+        //};
     }
 
     public async Task SignOutAsync()
