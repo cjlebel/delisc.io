@@ -156,8 +156,6 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
 
             return Result.Fail(e.Message);
         }
-
-        return Result.Fail(ERROR_USER_CANNOT_CREATE);
     }
 
     public Result<PagedResults<User>> GetUsersAsync(int pageNo = 1, int pageSize = 50)
@@ -292,8 +290,6 @@ public sealed class AuthService : IAuthService// SignInManager<AuthUser>, IAuthS
 
             return Result.Fail(e.Message);
         }
-
-        return Result.Fail(ERROR_USER_CANNOT_CREATE);
     }
 
     public async Task<Result<SignInResult>> SignInAsync(LoginRequest request)
