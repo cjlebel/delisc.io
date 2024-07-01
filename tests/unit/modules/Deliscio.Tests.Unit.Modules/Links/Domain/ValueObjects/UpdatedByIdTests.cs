@@ -1,7 +1,7 @@
 using Deliscio.Modules.BuildingBlocks.Domain.ValueObjects;
 using MongoDB.Bson;
 
-namespace Deliscio.Tests.Unit.Modules.Domain.ValueObjects;
+namespace Deliscio.Tests.Unit.Modules.Links.Domain.ValueObjects;
 
 public class UpdatedByIdTests
 {
@@ -69,7 +69,7 @@ public class UpdatedByIdTests
     [InlineData("")]
     [InlineData("   ")]
     [InlineData("invalid")]
-    public void CannotCall_Create_With_String_WithInvalid_String_Value(string value)
+    public void CannotCall_Create_With_String_WithInvalid_String_Value(string? value)
     {
         if (value is null)
             Assert.Throws<ArgumentNullException>(() => UpdatedById.Create(value));

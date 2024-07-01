@@ -1,29 +1,25 @@
-using System;
-using AutoFixture;
-using AutoFixture.AutoMoq;
 using Deliscio.Modules.BuildingBlocks.Domain.ValueObjects;
 using MongoDB.Bson;
-using Xunit;
 
-namespace Deliscio.Tests.Unit.Modules.Domain.ValueObjects;
+namespace Deliscio.Tests.Unit.Modules.Links.Domain.ValueObjects;
 
-public class LinkIdTests
+public class DeletedByIdTests
 {
     private readonly ObjectId _objectId;
-    private readonly LinkId _testClass;
+    private readonly DeletedById _testClass;
 
-    public LinkIdTests()
+    public DeletedByIdTests()
     {
         _objectId = ObjectId.GenerateNewId();
-        _testClass = LinkId.Create(_objectId);
+        _testClass = DeletedById.Create(_objectId);
     }
 
     [Fact]
-    public void Implements_IEquatable_LinkId()
+    public void Implements_IEquatable_DeletedById()
     {
         // Arrange
-        var same = LinkId.Create(_objectId);
-        var different = LinkId.Create(ObjectId.GenerateNewId());
+        var same = DeletedById.Create(_objectId);
+        var different = DeletedById.Create(ObjectId.GenerateNewId());
 
         // Assert
         Assert.False(_testClass.Equals(default(object)));
@@ -44,10 +40,10 @@ public class LinkIdTests
     public void CanCall_Create_With_ObjectId()
     {
         // Arrange
-        var value =ObjectId.GenerateNewId();
+        var value = ObjectId.GenerateNewId();
 
         // Act
-        var result = LinkId.Create(value);
+        var result = DeletedById.Create(value);
 
         // Assert
         Assert.NotNull(result);
@@ -55,13 +51,13 @@ public class LinkIdTests
     }
 
     [Fact]
-    public void CanCall_Create_With_String()
+    public void CanCall_CreateWithString()
     {
         // Arrange
         var value = ObjectId.GenerateNewId().ToString();
 
         // Act
-        var result = LinkId.Create(value);
+        var result = DeletedById.Create(value);
 
         // Assert
         Assert.NotNull(result);
@@ -73,19 +69,20 @@ public class LinkIdTests
     [InlineData("")]
     [InlineData("   ")]
     [InlineData("invalid")]
-    public void CannotCall_CreateWithString_WithInvalid_String_Value(string value)
+    public void CannotCall_Create_With_String_WithInvalid_String_Value(string? value)
     {
         if (value is null)
-            Assert.Throws<ArgumentNullException>(() => LinkId.Create(value));
+            Assert.Throws<ArgumentNullException>(() => DeletedById.Create(value));
         else
-            Assert.Throws<ArgumentException>(() => LinkId.Create(value));
+            Assert.Throws<ArgumentException>(() => DeletedById.Create(value));
     }
 
     [Fact]
-    public void CannotCall_CreateWithString_WithInvalid_ObjectId_Value()
+    public void CannotCall_Create_With_String_WithInvalid_ObjectId_Value()
     {
         var value = ObjectId.Empty;
+        var deletedById = DeletedById.Create(value);
 
-        Assert.Throws<ArgumentException>(() => LinkId.Create(value));
+        Assert.Equal(ObjectId.Empty, deletedById.Value);
     }
 }

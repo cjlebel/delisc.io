@@ -9,13 +9,6 @@ public static class CollectionsExtensions
         return array;
     }
 
-    public static List<T> GetListOrEmpty<T>(this IEnumerable<T>? enumerable)
-    {
-        var list = enumerable?.ToList() ?? [];
-
-        return list;
-    }
-
     public static string[] GetArrayOrEmpty(this string s, char separator)
     {
         if (string.IsNullOrWhiteSpace(s.Trim()))
@@ -28,5 +21,12 @@ public static class CollectionsExtensions
             Array.Empty<string>();
 
         return result;
+    }
+
+    public static List<T> GetListOrEmpty<T>(this IEnumerable<T>? enumerable)
+    {
+        var list = enumerable?.ToList() ?? [];
+
+        return list;
     }
 }

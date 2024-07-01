@@ -94,6 +94,6 @@ public sealed class UserProfilesService : ServiceBase, IUserProfilesService
 
         var items = Mapper.Map<UserProfileItem>(rslts.Results);
 
-        return new PagedResults<UserProfileItem>(items, pageNo, pageNo, rslts.TotalCount, offset: 0);
+        return new PagedResults<UserProfileItem>(items, pageNo, pageSize, rslts.TotalCount, offset: 0);
     }
 }

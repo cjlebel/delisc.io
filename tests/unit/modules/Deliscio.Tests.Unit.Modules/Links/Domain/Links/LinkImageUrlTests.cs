@@ -1,16 +1,14 @@
-using System;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using Deliscio.Modules.Links.Domain.Links;
-using Xunit;
 
-namespace Deliscio.Tests.Unit.Modules.Domain.Links;
+namespace Deliscio.Tests.Unit.Modules.Links.Domain.Links;
 
 public class LinkImageUrlTests
 {
-    private LinkImageUrl _testClass;
-    private IFixture _fixture;
-    private string _value;
+    private readonly LinkImageUrl _testClass;
+    private readonly IFixture _fixture;
+    private readonly string _value;
 
     public LinkImageUrlTests()
     {
@@ -33,7 +31,7 @@ public class LinkImageUrlTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void Can_Construct_WithNullOrEmpty_Value(string value)
+    public void Can_Construct_WithNullOrEmpty_Value(string? value)
     {
         var instance = new LinkImageUrl(value);
 

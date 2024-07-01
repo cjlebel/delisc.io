@@ -1,17 +1,15 @@
-using System;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using Deliscio.Modules.Links.Domain.LinkTags;
 using Deliscio.Modules.Links.Infrastructure.Data.Entities;
 using MongoDB.Bson;
-using Xunit;
 
-namespace Deliscio.Tests.Unit.Modules.Domain.LinkTags;
+namespace Deliscio.Tests.Unit.Modules.Links.Domain.LinkTags;
 
 public class LinkTagTests
 {
-    private LinkTag _testClass;
-    private IFixture _fixture;
+    private readonly LinkTag _testClass;
+    private readonly IFixture _fixture;
 
     public LinkTagTests()
     {
@@ -39,7 +37,7 @@ public class LinkTagTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void CannotCall_New_WithInvalid_Name(string value)
+    public void CannotCall_New_WithInvalid_Name(string? value)
     {
         Assert.Throws<ArgumentException>(() => LinkTag.New(value));
     }
@@ -130,7 +128,7 @@ public class LinkTagTests
     [Fact]
     public void CannotCall_Map_WithNull_Entity_Returns_Null()
     {
-        var result = LinkTag.Map(default(LinkTagEntity));
+        var result = LinkTag.Map(default);
 
         Assert.Null(result);
     }

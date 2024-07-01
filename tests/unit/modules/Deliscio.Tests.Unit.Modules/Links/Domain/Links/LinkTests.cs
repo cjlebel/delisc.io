@@ -4,15 +4,14 @@ using Deliscio.Modules.BuildingBlocks.Domain.ValueObjects;
 using Deliscio.Modules.Links.Domain.Links;
 using Deliscio.Modules.Links.Domain.LinkTags;
 using Deliscio.Modules.Links.Infrastructure.Data.Entities;
-using FluentResults;
 using MongoDB.Bson;
 
-namespace Deliscio.Tests.Unit.Modules.Domain.Links;
+namespace Deliscio.Tests.Unit.Modules.Links.Domain.Links;
 
 public class LinkTests
 {
-    private Link _testClass;
-    private IFixture _fixture;
+    private readonly Link _testClass;
+    private readonly IFixture _fixture;
 
     protected CreatedById CreatedByUserIdValueObject;
     protected DeletedById DeletedByUserIdValueObject;
@@ -63,28 +62,28 @@ public class LinkTests
     [Fact]
     public void CannotCall_New_WithNull_Title()
     {
-        Assert.Throws<ArgumentNullException>(() => Link.New(default(LinkTitle), _fixture.Create<LinkDescription>(), _fixture.Create<LinkUrl>(), _fixture.Create<LinkImageUrl>(), _testClass.CreatedById, _fixture.Create<DateTimeOffset>(), _fixture.Create<LinkTag[]>(), _fixture.Create<string>()));
+        Assert.Throws<ArgumentNullException>(() => Link.New(default, _fixture.Create<LinkDescription>(), _fixture.Create<LinkUrl>(), _fixture.Create<LinkImageUrl>(), _testClass.CreatedById, _fixture.Create<DateTimeOffset>(), _fixture.Create<LinkTag[]>(), _fixture.Create<string>()));
     }
 
 
     [Fact]
     public void CannotCall_New_WithNull_Url()
     {
-        Assert.Throws<ArgumentNullException>(() => Link.New(_fixture.Create<LinkTitle>(), _fixture.Create<LinkDescription>(), default(LinkUrl), _fixture.Create<LinkImageUrl>(), _testClass.CreatedById, _fixture.Create<DateTimeOffset>(), _fixture.Create<LinkTag[]>(), _fixture.Create<string>()));
+        Assert.Throws<ArgumentNullException>(() => Link.New(_fixture.Create<LinkTitle>(), _fixture.Create<LinkDescription>(), default, _fixture.Create<LinkImageUrl>(), _testClass.CreatedById, _fixture.Create<DateTimeOffset>(), _fixture.Create<LinkTag[]>(), _fixture.Create<string>()));
     }
 
 
     [Fact]
     public void CannotCall_New_WithNull_CreatedBy()
     {
-        Assert.Throws<ArgumentNullException>(() => Link.New(_fixture.Create<LinkTitle>(), _fixture.Create<LinkDescription>(), _fixture.Create<LinkUrl>(), _fixture.Create<LinkImageUrl>(), default(CreatedById), _fixture.Create<DateTimeOffset>(), _fixture.Create<LinkTag[]>(), _fixture.Create<string>()));
+        Assert.Throws<ArgumentNullException>(() => Link.New(_fixture.Create<LinkTitle>(), _fixture.Create<LinkDescription>(), _fixture.Create<LinkUrl>(), _fixture.Create<LinkImageUrl>(), default, _fixture.Create<DateTimeOffset>(), _fixture.Create<LinkTag[]>(), _fixture.Create<string>()));
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void CanCall_New_WithEmpty_Keywords(string value)
+    public void CanCall_New_WithEmpty_Keywords(string? value)
     {
         var actual = Link.New(
             _fixture.Create<LinkTitle>(),
@@ -248,7 +247,7 @@ public class LinkTests
     [Fact]
     public void CannotCall_Map_WithNull_Entity()
     {
-        var actual = Link.Map(default(LinkEntity));
+        var actual = Link.Map(default);
 
         Assert.Null(actual);
     }
@@ -277,7 +276,7 @@ public class LinkTests
     [Fact]
     public void CannotCall_Delete_WithNull_DeletedById()
     {
-        Assert.Throws<ArgumentNullException>(() => _testClass.Delete(default(DeletedById)));
+        Assert.Throws<ArgumentNullException>(() => _testClass.Delete(default));
     }
 
     [Fact]
@@ -305,7 +304,7 @@ public class LinkTests
     [Fact]
     public void CannotCall_UnDelete_WithNull_UpdatedById()
     {
-        Assert.Throws<ArgumentNullException>(() => _testClass.UnDelete(default(UpdatedById)));
+        Assert.Throws<ArgumentNullException>(() => _testClass.UnDelete(default));
     }
 
     [Fact]
@@ -380,7 +379,7 @@ public class LinkTests
     {
         Assert.Throws<ArgumentNullException>(() =>
             _testClass.Edit(
-                default(LinkTitle),
+                default,
                 _fixture.Create<LinkDescription>(),
                 _fixture.Create<LinkTag[]>(),
                 UpdatedByUserIdValueObject
@@ -392,7 +391,7 @@ public class LinkTests
     [Fact]
     public void CannotCall_Edit_WithNull_UpdatedByUserId()
     {
-        Assert.Throws<ArgumentNullException>(() => _testClass.Edit(_fixture.Create<LinkTitle>(), _fixture.Create<LinkDescription>(), _fixture.Create<LinkTag[]>(), default(UpdatedById)));
+        Assert.Throws<ArgumentNullException>(() => _testClass.Edit(_fixture.Create<LinkTitle>(), _fixture.Create<LinkDescription>(), _fixture.Create<LinkTag[]>(), default));
     }
 
     [Fact]
@@ -419,7 +418,7 @@ public class LinkTests
     [Fact]
     public void CannotCall_SetLikesCount_WithNull_UpdatedByUserId()
     {
-        Assert.Throws<ArgumentNullException>(() => _testClass.SetLikesCount(_fixture.Create<int>(), default(UpdatedById)));
+        Assert.Throws<ArgumentNullException>(() => _testClass.SetLikesCount(_fixture.Create<int>(), default));
     }
 
     [Fact]
@@ -446,7 +445,7 @@ public class LinkTests
     [Fact]
     public void CannotCall_SetSavesCount_WithNull_UpdatedByUserId()
     {
-        Assert.Throws<ArgumentNullException>(() => _testClass.SetSavesCount(_fixture.Create<int>(), default(UpdatedById)));
+        Assert.Throws<ArgumentNullException>(() => _testClass.SetSavesCount(_fixture.Create<int>(), default));
     }
 
     [Fact]
@@ -467,7 +466,7 @@ public class LinkTests
     [Fact]
     public void CannotCall_SetActiveState_WithNull_UpdatedByUserId()
     {
-        Assert.Throws<ArgumentNullException>(() => _testClass.SetActiveState(_fixture.Create<bool>(), default(UpdatedById)));
+        Assert.Throws<ArgumentNullException>(() => _testClass.SetActiveState(_fixture.Create<bool>(), default));
     }
 
     [Fact]
@@ -488,7 +487,7 @@ public class LinkTests
     [Fact]
     public void CannotCall_SetFlaggedState_WithNull_UpdatedByUserId()
     {
-        Assert.Throws<ArgumentNullException>(() => _testClass.SetFlaggedState(_fixture.Create<bool>(), default(UpdatedById)));
+        Assert.Throws<ArgumentNullException>(() => _testClass.SetFlaggedState(_fixture.Create<bool>(), default));
     }
 
     [Fact]
@@ -645,7 +644,7 @@ public class LinkTests
         // Assert
         var result = Assert.IsType<bool>(_testClass.IsActive);
 
-        Assert.True((result && !_testClass.IsDeleted));
+        Assert.True(result && !_testClass.IsDeleted);
     }
 
     [Fact]
@@ -757,8 +756,6 @@ public class LinkTests
     {
         // Assert
         var result = Assert.IsType<bool>(_testClass.IsDeleted);
-
-        Assert.NotNull(result);
 
         if (result)
         {
@@ -878,11 +875,11 @@ public class LinkTests
 
         entity.Tags = new[]
         {
-            new LinkTagEntity("tag1",10, (10/40m)),
-            new LinkTagEntity("tag2",20, (10/40m)),
-            new LinkTagEntity("tag3",5, (10/40m)),
-            new LinkTagEntity("tag4",3, (10/40m)),
-            new LinkTagEntity("tag5",2, (10/40m)),
+            new LinkTagEntity("tag1",10, 10/40m),
+            new LinkTagEntity("tag2",20, 10/40m),
+            new LinkTagEntity("tag3",5, 10/40m),
+            new LinkTagEntity("tag4",3, 10/40m),
+            new LinkTagEntity("tag5",2, 10/40m),
         };
 
         return entity;

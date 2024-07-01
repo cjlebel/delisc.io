@@ -1,25 +1,25 @@
 using Deliscio.Modules.BuildingBlocks.Domain.ValueObjects;
 using MongoDB.Bson;
 
-namespace Deliscio.Tests.Unit.Modules.Domain.ValueObjects;
+namespace Deliscio.Tests.Unit.Modules.Links.Domain.ValueObjects;
 
-public class DeletedByIdTests
+public class CreatedByIdTests
 {
     private readonly ObjectId _objectId;
-    private readonly DeletedById _testClass;
+    private readonly CreatedById _testClass;
 
-    public DeletedByIdTests()
+    public CreatedByIdTests()
     {
         _objectId = ObjectId.GenerateNewId();
-        _testClass = DeletedById.Create(_objectId);
+        _testClass = CreatedById.Create(_objectId);
     }
 
     [Fact]
-    public void Implements_IEquatable_DeletedById()
+    public void Implements_IEquatable_CreatedById()
     {
         // Arrange
-        var same = DeletedById.Create(_objectId);
-        var different = DeletedById.Create(ObjectId.GenerateNewId());
+        var same = CreatedById.Create(_objectId);
+        var different = CreatedById.Create(ObjectId.GenerateNewId());
 
         // Assert
         Assert.False(_testClass.Equals(default(object)));
@@ -43,7 +43,7 @@ public class DeletedByIdTests
         var value = ObjectId.GenerateNewId();
 
         // Act
-        var result = DeletedById.Create(value);
+        var result = CreatedById.Create(value);
 
         // Assert
         Assert.NotNull(result);
@@ -57,7 +57,7 @@ public class DeletedByIdTests
         var value = ObjectId.GenerateNewId().ToString();
 
         // Act
-        var result = DeletedById.Create(value);
+        var result = CreatedById.Create(value);
 
         // Assert
         Assert.NotNull(result);
@@ -69,20 +69,15 @@ public class DeletedByIdTests
     [InlineData("")]
     [InlineData("   ")]
     [InlineData("invalid")]
-    public void CannotCall_Create_With_String_WithInvalid_String_Value(string value)
+    public void CannotCall_Create_With_String_WithInvalid_String_Value(string? value)
     {
-        if (value is null)
-            Assert.Throws<ArgumentNullException>(() => DeletedById.Create(value));
-        else
-            Assert.Throws<ArgumentException>(() => DeletedById.Create(value));
+        Assert.Throws<ArgumentException>(() => CreatedById.Create(value));
     }
 
     [Fact]
     public void CannotCall_Create_With_String_WithInvalid_ObjectId_Value()
     {
         var value = ObjectId.Empty;
-        var deletedById = DeletedById.Create(value);
-
-        Assert.Equal(ObjectId.Empty, deletedById.Value);
+        Assert.Throws<ArgumentException>(() => CreatedById.Create(value));
     }
 }

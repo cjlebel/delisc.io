@@ -4,14 +4,14 @@ using AutoFixture.AutoMoq;
 using Deliscio.Modules.Links.Domain.Links;
 using Xunit;
 
-namespace Deliscio.Tests.Unit.Modules.Domain.Links;
+namespace Deliscio.Tests.Unit.Modules.Links.Domain.Links;
 
 public class LinkDomainTests
 {
-    private LinkDomain _testClass;
-    private IFixture _fixture;
+    private readonly LinkDomain _testClass;
+    private readonly IFixture _fixture;
 
-    private string _domain;
+    private readonly string _domain;
     private string _url;
 
     public LinkDomainTests()
@@ -36,7 +36,7 @@ public class LinkDomainTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void Cannot_Construct_WithInvalid_Domain(string value)
+    public void Cannot_Construct_WithInvalid_Domain(string? value)
     {
         if (value is null)
             Assert.Throws<ArgumentNullException>(() => new LinkDomain(value));
@@ -62,7 +62,7 @@ public class LinkDomainTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void CannotCall_FromUrl_WithInvalid_Url(string value)
+    public void CannotCall_FromUrl_WithInvalid_Url(string? value)
     {
         if (value is null)
             Assert.Throws<ArgumentNullException>(() => LinkDomain.FromUrl(value));

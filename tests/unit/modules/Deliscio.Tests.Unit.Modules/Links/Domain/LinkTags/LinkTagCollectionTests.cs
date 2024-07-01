@@ -1,18 +1,15 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using Deliscio.Modules.Links.Domain.LinkTags;
-using Xunit;
 
-namespace Deliscio.Tests.Unit.Modules.Domain.LinkTags;
+namespace Deliscio.Tests.Unit.Modules.Links.Domain.LinkTags;
 
 public class LinkTagCollectionTests
 {
-    private LinkTagCollection _testClass;
-    private IFixture _fixture;
-    private IEnumerable<LinkTag> _tags;
+    private readonly LinkTagCollection _testClass;
+    private readonly IFixture _fixture;
+    private readonly IEnumerable<LinkTag> _tags;
 
     public LinkTagCollectionTests()
     {
@@ -42,7 +39,7 @@ public class LinkTagCollectionTests
     [Fact]
     public void Can_Construct_WithNull_Tags()
     {
-        var collection = new LinkTagCollection(default(IEnumerable<LinkTag>));
+        var collection = new LinkTagCollection(default);
 
         Assert.NotNull(collection);
     }
@@ -58,7 +55,7 @@ public class LinkTagCollectionTests
         };
 
         var linkTagCollections = new LinkTagCollection(linkTags);
-        
+
         int expectedCount = linkTags.Length;
         int actualCount = 0;
 
@@ -175,7 +172,7 @@ public class LinkTagCollectionTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void CannotCall_Delete_With_String_WithInvalid_Tag(string value)
+    public void CannotCall_Delete_With_String_WithInvalid_Tag(string? value)
     {
         var previousCount = _testClass.Count();
 

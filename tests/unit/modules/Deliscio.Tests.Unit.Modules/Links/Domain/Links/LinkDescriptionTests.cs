@@ -2,19 +2,18 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using Deliscio.Modules.Links.Domain.Links;
 
-namespace Deliscio.Tests.Unit.Modules.Domain.Links;
+namespace Deliscio.Tests.Unit.Modules.Links.Domain.Links;
 
 public class LinkDescriptionTests
 {
-    private LinkDescription _testClass;
-    private IFixture _fixture;
-    private string _value;
+    private readonly LinkDescription _testClass;
+    private readonly string _value;
 
     public LinkDescriptionTests()
     {
-        _fixture = new Fixture().Customize(new AutoMoqCustomization());
-        _value = _fixture.Create<string>();
-        _testClass = _fixture.Create<LinkDescription>();
+        IFixture fixture = new Fixture().Customize(new AutoMoqCustomization());
+        _value = fixture.Create<string>();
+        _testClass = fixture.Create<LinkDescription>();
     }
 
     [Fact]
@@ -31,7 +30,7 @@ public class LinkDescriptionTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public void Can_Construct_WithNullOrEmpty_Value(string value)
+    public void Can_Construct_WithNullOrEmpty_Value(string? value)
     {
         var instance = new LinkDescription(value);
 
